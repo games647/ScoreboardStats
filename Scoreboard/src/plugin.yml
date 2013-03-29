@@ -1,0 +1,5 @@
+name: GScoreboard
+main: me.games647.gscoreboard.GScoreboard
+author: games647
+version: 1.0
+database: true
