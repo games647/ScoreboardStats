@@ -15,7 +15,7 @@ public final class GScoreboard extends org.bukkit.plugin.java.JavaPlugin {
         try {
             getDatabase().find(PlayerStats.class).findRowCount();
         } catch (javax.persistence.PersistenceException ex) {
-            getLogger().info("Can't find a existing Database, so creating a new one");
+            getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }
         me.games647.gscoreboard.api.Database.setDatabase(getDatabase());

@@ -20,15 +20,22 @@ public final class Database {
         return stats;
     }
 
-    public static int increase(final String name, final boolean type) {
+    public static int increaseDeaths(final String name) {
         final PlayerStats stats = checkAccount(name);
-        if (type) {
-            stats.setKills(stats.getKills() + 1);
-            database.save(stats);
-            return stats.getKills();
-        }   
+
         stats.setDeaths(stats.getDeaths() + 1);
         database.save(stats);
+
         return stats.getDeaths();
     }
+
+    public static int increaseKills(final String name) {
+        final PlayerStats stats = checkAccount(name);
+
+        stats.setKills(stats.getKills() + 1);
+        database.save(stats);
+
+        return stats.getKills();
+    }
+    //Maybe I'll add more features such as a leaderboard
 }
