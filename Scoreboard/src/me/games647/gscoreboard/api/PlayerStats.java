@@ -1,16 +1,12 @@
 package me.games647.gscoreboard.api;
 
 import com.avaje.ebean.validation.NotNull;
-import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-@Entity
-@Table(name = "PlayerStats")
-public class PlayerStats implements Serializable {
+@javax.persistence.Entity
+@javax.persistence.Table(name = "PlayerStats")
+public class PlayerStats implements java.io.Serializable {
 
-    @Id
+    @javax.persistence.Id
     @NotNull
     private String playername;
 

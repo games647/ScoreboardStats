@@ -6,8 +6,8 @@ public final class Database {
 
     private static EbeanServer database;
 
-    public static void setDatabase(EbeanServer database) {
-        Database.database = database;
+    public static void setDatabase(final EbeanServer base) {
+        Database.database = base;
     }
 
     public static PlayerStats checkAccount(final String name) {
@@ -26,10 +26,9 @@ public final class Database {
             stats.setKills(stats.getKills() + 1);
             database.save(stats);
             return stats.getKills();
-        } else {
-            stats.setDeaths(stats.getDeaths() + 1);
-            database.save(stats);
-            return stats.getDeaths();
-        }
+        }   
+        stats.setDeaths(stats.getDeaths() + 1);
+        database.save(stats);
+        return stats.getDeaths();
     }
 }

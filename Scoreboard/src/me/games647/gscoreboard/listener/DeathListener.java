@@ -1,19 +1,17 @@
 package me.games647.gscoreboard.listener;
 
+
 import me.games647.gscoreboard.api.Database;
-import me.games647.gscoreboard.api.PlayerStats;
 import me.games647.gscoreboard.api.Score;
 import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
-public final class DeathListener implements Listener {
+public final class DeathListener implements org.bukkit.event.Listener {
 
     @EventHandler
-    public void onDeath(final PlayerDeathEvent death) {
+    public void onDeath(final org.bukkit.event.entity.PlayerDeathEvent death) {
+
         final Player killed = death.getEntity();
         final Player killer = killed.getKiller();
 
@@ -32,9 +30,9 @@ public final class DeathListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(final PlayerJoinEvent join) {
+    public void onJoin(final org.bukkit.event.player.PlayerJoinEvent join) {
 
-        final PlayerStats stats = Database.checkAccount(join.getPlayer().getName());
+        final me.games647.gscoreboard.api.PlayerStats stats = Database.checkAccount(join.getPlayer().getName());
 
         Score.createScoreboard(
                 ((CraftPlayer) join.getPlayer()).getHandle().playerConnection

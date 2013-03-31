@@ -1,34 +1,32 @@
 package me.games647.gscoreboard;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.PersistenceException;
-import me.games647.gscoreboard.api.Database;
 import me.games647.gscoreboard.api.PlayerStats;
-import me.games647.gscoreboard.listener.DeathListener;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public final class GScoreboard extends JavaPlugin {
+public final class GScoreboard extends org.bukkit.plugin.java.JavaPlugin {
 
     @Override
     public void onEnable() {
         setupDatabase();
-        this.getServer().getPluginManager().registerEvents(new DeathListener(), this);
+        this.getServer().getPluginManager().registerEvents(new me.games647.gscoreboard.listener.DeathListener(), this);
     }
 
     private void setupDatabase() {
         try {
             getDatabase().find(PlayerStats.class).findRowCount();
-        } catch (PersistenceException ex) {
+        } catch (javax.persistence.PersistenceException ex) {
+            getLogger().info("Can't find a existing Database, so creating a new one");
             installDDL();
         }
-        Database.setDatabase(getDatabase());
+        me.games647.gscoreboard.api.Database.setDatabase(getDatabase());
     }
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final List<Class<?>> list = new ArrayList<Class<?>>(1);
+
+        final List<Class<?>> list = new java.util.ArrayList<Class<?>>(1);
         list.add(PlayerStats.class);
+
         return list;
     }
 
