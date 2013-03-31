@@ -1,4 +1,4 @@
-package me.games647.gscoreboard.api;
+package me.games647.scoreboardstats.api;
 
 import com.avaje.ebean.EbeanServer;
 

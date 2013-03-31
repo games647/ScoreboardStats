@@ -1,14 +1,14 @@
-package me.games647.gscoreboard;
+package me.games647.scoreboardstats;
 
 import java.util.List;
-import me.games647.gscoreboard.api.PlayerStats;
+import me.games647.scoreboardstats.api.PlayerStats;
 
-public final class GScoreboard extends org.bukkit.plugin.java.JavaPlugin {
+public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     @Override
     public void onEnable() {
         setupDatabase();
-        this.getServer().getPluginManager().registerEvents(new me.games647.gscoreboard.listener.DeathListener(), this);
+        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.DeathListener(), this);
     }
 
     private void setupDatabase() {
@@ -18,7 +18,7 @@ public final class GScoreboard extends org.bukkit.plugin.java.JavaPlugin {
             getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }
-        me.games647.gscoreboard.api.Database.setDatabase(getDatabase());
+        me.games647.scoreboardstats.api.Database.setDatabase(getDatabase());
     }
 
     @Override

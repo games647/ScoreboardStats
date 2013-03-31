@@ -1,4 +1,4 @@
-package me.games647.gscoreboard.api;
+package me.games647.scoreboardstats.api;
 
 import net.minecraft.server.v1_5_R2.Packet206SetScoreboardObjective;
 import net.minecraft.server.v1_5_R2.Packet207SetScoreboardScore;
