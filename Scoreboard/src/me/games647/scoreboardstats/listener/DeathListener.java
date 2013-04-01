@@ -19,12 +19,12 @@ public final class DeathListener implements org.bukkit.event.Listener {
 
             Score.update(
                     ((CraftPlayer) killer).getHandle().playerConnection
-                    , "§9Kills     "
+                    , true
                     , Database.increaseKills(killer.getName()));
 
             Score.update(
                     ((CraftPlayer) killed).getHandle().playerConnection
-                    , "§9Deaths     "
+                    , false
                     , Database.increaseDeaths(killed.getName()));
         }
     }

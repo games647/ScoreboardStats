@@ -36,11 +36,15 @@ public final class Score {
         con.sendPacket(deaths);
     }
 
-    public static void update(final PlayerConnection con, final String key, final int value) {
+    public static void update(final PlayerConnection con, final boolean type, final int value) {
         final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
 
         packet.c = value;
-        packet.a = key;
+        if (type) {
+            packet.a = "§9Kills     ";
+        } else {
+            packet.a = "§9Deaths     ";
+        }
         packet.b = TITLE;
 
         con.sendPacket(packet);
