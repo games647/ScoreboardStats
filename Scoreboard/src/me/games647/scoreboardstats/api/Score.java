@@ -8,17 +8,17 @@ import net.minecraft.server.v1_5_R2.PlayerConnection;
 public final class Score {
 
     private static final String TITLE = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&a&lStats&f");
+    private static final Packet206SetScoreboardObjective OBJECTIVE =  new Packet206SetScoreboardObjective();
+    private static final Packet208SetScoreboardDisplayObjective DISPLAY = new Packet208SetScoreboardDisplayObjective();
+    static {
+        OBJECTIVE.a = TITLE;
+        OBJECTIVE.b = TITLE;
+        DISPLAY.b = TITLE;
+        DISPLAY.a = 1;
+    }
 
     public static void createScoreboard(final PlayerConnection con, final int value_kills, final int value_deaths) {
-
-        final Packet206SetScoreboardObjective objective = new Packet206SetScoreboardObjective();
-        objective.a = TITLE;
-        objective.b = TITLE;
 //        objective.c = 0; Integers have automatically zero as value
-
-        final Packet208SetScoreboardDisplayObjective display = new Packet208SetScoreboardDisplayObjective();
-        display.b = TITLE;
-        display.a = 1;
 
         final Packet207SetScoreboardScore kills = new Packet207SetScoreboardScore();
         kills.a = "§9Kills     ";
@@ -30,8 +30,8 @@ public final class Score {
         deaths.b = TITLE;
         deaths.c = value_deaths;
 
-        con.sendPacket(objective);
-        con.sendPacket(display);
+        con.sendPacket(OBJECTIVE);
+        con.sendPacket(DISPLAY);
         con.sendPacket(kills);
         con.sendPacket(deaths);
     }
