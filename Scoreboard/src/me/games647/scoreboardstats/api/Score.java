@@ -10,9 +10,11 @@ public final class Score {
     private static final String TITLE = org.bukkit.ChatColor.translateAlternateColorCodes('&', "&a&lStats&f");
     private static final Packet206SetScoreboardObjective OBJECTIVE =  new Packet206SetScoreboardObjective();
     private static final Packet208SetScoreboardDisplayObjective DISPLAY = new Packet208SetScoreboardDisplayObjective();
+
     static {
         OBJECTIVE.a = TITLE;
         OBJECTIVE.b = TITLE;
+
         DISPLAY.b = TITLE;
         DISPLAY.a = 1;
     }
@@ -40,11 +42,13 @@ public final class Score {
         final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
 
         packet.c = value;
+        
         if (type) {
             packet.a = "§9Kills     ";
         } else {
             packet.a = "§9Deaths     ";
         }
+
         packet.b = TITLE;
 
         con.sendPacket(packet);
