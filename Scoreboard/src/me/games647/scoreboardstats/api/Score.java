@@ -22,7 +22,6 @@ public final class Score {
     }
 
     public static void createScoreboard(final PlayerConnection con, final int value_kills, final int value_deaths) {
-//        objective.c = 0; Integers have automatically zero as value
 
         final Packet207SetScoreboardScore kills = new Packet207SetScoreboardScore();
         kills.a = KILLS_TITLE;
@@ -54,5 +53,16 @@ public final class Score {
         packet.b = TITLE;
 
         con.sendPacket(packet);
+    }
+
+    public static void disableScoreboard(final PlayerConnection con) {
+
+        final Packet206SetScoreboardObjective removepacket = new Packet206SetScoreboardObjective();
+
+        removepacket.a = TITLE;
+        removepacket.b = TITLE;
+        removepacket.c = 1;
+
+        con.sendPacket(removepacket);
     }
 }
