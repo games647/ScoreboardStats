@@ -16,6 +16,8 @@ public class PlayerStats implements java.io.Serializable {
     @NotNull
     private int deaths;
 
+    private int mobkills;
+
     public String getPlayername() {
         return playername;
     }
@@ -39,4 +41,13 @@ public class PlayerStats implements java.io.Serializable {
     public void setDeaths(final int deaths) {
         this.deaths = deaths;
     }
+
+    public int getMobkills() {
+        return mobkills;
+    }
+
+    public void setMobkills(final int mobkills) {
+        this.mobkills = mobkills;
+    }
+
 }

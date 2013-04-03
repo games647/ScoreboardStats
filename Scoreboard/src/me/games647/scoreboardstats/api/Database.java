@@ -37,5 +37,14 @@ public final class Database {
 
         return stats.getKills();
     }
+
+    public static int increaseMobKills(final String name) {
+        final PlayerStats stats = checkAccount(name);
+
+        stats.setMobkills(stats.getMobkills() + 1);
+        database.save(stats);
+
+        return stats.getMobkills();
+    }
     //Maybe I'll add more features such as a leaderboard
 }

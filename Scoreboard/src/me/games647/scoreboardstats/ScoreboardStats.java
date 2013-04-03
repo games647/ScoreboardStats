@@ -2,11 +2,19 @@ package me.games647.scoreboardstats;
 
 import java.util.List;
 import me.games647.scoreboardstats.api.PlayerStats;
+import me.games647.scoreboardstats.settings.SettingsHandler;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
+    private static SettingsHandler settings;
+
+    public static SettingsHandler getSettings() {
+        return settings;
+    }
+
     @Override
     public void onEnable() {
+        settings = new SettingsHandler(this);
         setupDatabase();
         this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.DeathListener(), this);
     }
@@ -29,5 +37,4 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
         return list;
     }
-
 }
