@@ -11,8 +11,12 @@ public final class PlayerListener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onDeath(final org.bukkit.event.entity.PlayerDeathEvent death) {
-
         final Player killed = death.getEntity();
+
+        if (getSettings().checkWorld(killed.getWorld().getName())) {
+            return;
+        }
+
         final Player killer = killed.getKiller();
 
         Score.update(
@@ -28,7 +32,7 @@ public final class PlayerListener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onJoin(final org.bukkit.event.player.PlayerJoinEvent join) {
-        if (!getSettings().checkWorld(join.getPlayer().getWorld().getName())) {
+        if (getSettings().checkWorld(join.getPlayer().getWorld().getName())) {
             return;
         }
         final me.games647.scoreboardstats.api.PlayerStats stats = Database.checkAccount(join.getPlayer().getName());
@@ -41,12 +45,14 @@ public final class PlayerListener implements org.bukkit.event.Listener {
     public void onChange(final org.bukkit.event.player.PlayerChangedWorldEvent teleport) {
         if (getSettings().checkWorld(teleport.getPlayer().getWorld().getName())) {
             if (!getSettings().checkWorld(teleport.getFrom().getName())) {
-               Score.disableScoreboard(((CraftPlayer) teleport.getPlayer()).getHandle().playerConnection);
+                Score.disableScoreboard(((CraftPlayer) teleport.getPlayer()).getHandle().playerConnection);
             }
-        } else if (!getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated
-            final me.games647.scoreboardstats.api.PlayerStats stats = Database.checkAccount(teleport.getPlayer().getName());
-            Score.createScoreboard(
-                    ((CraftPlayer) teleport.getPlayer()).getHandle().playerConnection, stats.getKills(), stats.getDeaths(), stats.getMobkills());
+        } else {
+            if (getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated
+                final me.games647.scoreboardstats.api.PlayerStats stats = Database.checkAccount(teleport.getPlayer().getName());
+                Score.createScoreboard(
+                        ((CraftPlayer) teleport.getPlayer()).getHandle().playerConnection, stats.getKills(), stats.getDeaths(), stats.getMobkills());
+            }
         }
     }
 }
