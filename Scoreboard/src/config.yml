@@ -6,8 +6,14 @@ mob-kills-enabled: false
 #Here can you enable if the player-kills should be counted and displayed
 player-kills-enabled: true
 
+deaths-enabled: true
+
 # Here can you change the color and the displayed name too
 Title: '&a&lStats'
 Kills: '&9Kills     '
 Deaths: '&9Deaths     '
 Mob-kills: '&9Mob-Kills     '
+
+disabled-worlds:
+  - world
+  - city

@@ -38,12 +38,16 @@ public final class Score {
             con.sendPacket(kills);
         }
 
-        final Packet207SetScoreboardScore deaths = new Packet207SetScoreboardScore();
-        deaths.a = DEAHS_TITLE;
-        deaths.b = TITLE;
-        deaths.c = deathsvalue;
+        if (getSettings().isDeath()) {
+            final Packet207SetScoreboardScore deaths = new Packet207SetScoreboardScore();
 
-        con.sendPacket(deaths);
+            deaths.a = DEAHS_TITLE;
+            deaths.b = TITLE;
+            deaths.c = deathsvalue;
+
+            con.sendPacket(deaths);
+        }
+
 
         if (getSettings().isMobkills()) {
             final Packet207SetScoreboardScore mobkills = new Packet207SetScoreboardScore();
@@ -73,6 +77,7 @@ public final class Score {
         removepacket.a = TITLE;
         removepacket.b = TITLE;
         removepacket.c = 1;
+
 
         con.sendPacket(removepacket);
     }

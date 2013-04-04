@@ -16,7 +16,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onEnable() {
         settings = new SettingsHandler(this);
         setupDatabase();
-        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.DeathListener(), this);
+        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
     }
 
     private void setupDatabase() {
