@@ -1,6 +1,6 @@
 package me.games647.scoreboardstats.listener;
 
-public final class EntityListener  {
+public final class EntityListener implements org.bukkit.event.Listener {
 
     @org.bukkit.event.EventHandler
     public void onMobDeath(final org.bukkit.event.entity.EntityDeathEvent event) {

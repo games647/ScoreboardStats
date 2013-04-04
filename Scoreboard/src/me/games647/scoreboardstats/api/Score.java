@@ -78,7 +78,6 @@ public final class Score {
         removepacket.b = TITLE;
         removepacket.c = 1;
 
-
         con.sendPacket(removepacket);
     }
 }

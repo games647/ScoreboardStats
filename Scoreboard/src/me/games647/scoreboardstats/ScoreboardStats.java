@@ -16,7 +16,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onEnable() {
         settings = new SettingsHandler(this);
         setupDatabase();
-        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
+        setupListeners();
     }
 
     private void setupDatabase() {
@@ -36,5 +36,11 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         list.add(PlayerStats.class);
 
         return list;
+    }
+
+    private void setupListeners() {
+        final org.bukkit.plugin.PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
+        pm.registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 }

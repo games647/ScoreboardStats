@@ -42,7 +42,7 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         if (getSettings().checkWorld(teleport.getPlayer().getWorld().getName())) {
             if (!getSettings().checkWorld(teleport.getFrom().getName())) {
                Score.disableScoreboard(((CraftPlayer) teleport.getPlayer()).getHandle().playerConnection);
-            }a
+            }
         } else if (!getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated
             final me.games647.scoreboardstats.api.PlayerStats stats = Database.checkAccount(teleport.getPlayer().getName());
             Score.createScoreboard(
