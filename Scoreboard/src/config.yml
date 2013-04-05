@@ -1,19 +1,22 @@
 #This is the default config
 
-#Here can you enable if the mob-kills should be counted and displayed
-mob-kills-enabled: false
-
-#Here can you enable if the player-kills should be counted and displayed
-player-kills-enabled: true
-
-deaths-enabled: true
-
-# Here can you change the color and the displayed name too
-Title: '&a&lStats'
-Kills: '&9Kills     '
-Deaths: '&9Deaths     '
-Mob-kills: '&9Mob-Kills     '
+enable-pvpstats: false
 
 disabled-worlds:
   - world
   - city
+
+Scoreboard:
+  Title: '&a&lStats'
+  #seconds
+  Update-delay: 60
+  Items:
+    1:
+      Title: '&aOnline'
+      Type: '%online%'
+#    2:
+#      Title: '&cMoney'
+#      Type: '%eco%'
+#    3:
+#      Title: '&9Level'
+#      Type: '%powlevel%'

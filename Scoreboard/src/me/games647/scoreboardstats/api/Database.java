@@ -20,31 +20,25 @@ public final class Database {
         return stats;
     }
 
-    public static int increaseDeaths(final String name) {
+    public static void increaseDeaths(final String name) {
         final PlayerStats stats = checkAccount(name);
 
         stats.setDeaths(stats.getDeaths() + 1);
         database.save(stats);
-
-        return stats.getDeaths();
     }
 
-    public static int increaseKills(final String name) {
+    public static void increaseKills(final String name) {
         final PlayerStats stats = checkAccount(name);
 
         stats.setKills(stats.getKills() + 1);
         database.save(stats);
-
-        return stats.getKills();
     }
 
-    public static int increaseMobKills(final String name) {
+    public static void increaseMobKills(final String name) {
         final PlayerStats stats = checkAccount(name);
 
         stats.setMobkills(stats.getMobkills() + 1);
         database.save(stats);
-
-        return stats.getMobkills();
     }
     //Maybe I'll add more features such as a leaderboard
 }

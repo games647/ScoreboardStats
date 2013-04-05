@@ -1,19 +1,16 @@
 package me.games647.scoreboardstats.api;
 
-import com.avaje.ebean.validation.NotNull;
-
 @javax.persistence.Entity
 @javax.persistence.Table(name = "PlayerStats")
 public class PlayerStats implements java.io.Serializable {
 
     @javax.persistence.Id
-    @NotNull
+    @com.avaje.ebean.validation.NotNull
+    @com.avaje.ebean.validation.NotEmpty
     private String playername;
 
-    @NotNull
     private int kills;
 
-    @NotNull
     private int deaths;
 
     private int mobkills;
