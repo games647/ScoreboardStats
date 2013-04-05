@@ -22,7 +22,7 @@ public final class SettingsHandler {
         loadConfig();
     }
 
-    public boolean isMobkills() {
+    public boolean Bukkit.getServer().getOnlinePlayers().length() {
         return mobkills;
     }
 
