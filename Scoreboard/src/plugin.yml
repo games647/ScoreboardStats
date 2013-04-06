@@ -4,6 +4,3 @@ author: games647
 version: 1.0
 database: true
 softdepend: [mcMMO, Vault]
-permissions:
-  scoreboardstats.sign:
-    default: op

@@ -3,6 +3,7 @@ package me.games647.scoreboardstats.listener;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 import me.games647.scoreboardstats.api.Database;
 import static me.games647.scoreboardstats.api.Score.createScoreboard;
+import static me.games647.scoreboardstats.api.Score.getRemovepacket;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -42,7 +43,7 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         if (getSettings().checkWorld(teleport.getPlayer().getWorld().getName())) {
 
             if (!getSettings().checkWorld(teleport.getFrom().getName())) {
-                me.games647.scoreboardstats.api.Score.disableScoreboard(((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) teleport.getPlayer()).getHandle().playerConnection);
+                ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) teleport.getPlayer()).getHandle().playerConnection.sendPacket(getRemovepacket());
             }
 
         } else if (getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated

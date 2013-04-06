@@ -31,7 +31,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             installDDL();
         }
         me.games647.scoreboardstats.api.Database.setDatabase(getDatabase());
-        
+
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 

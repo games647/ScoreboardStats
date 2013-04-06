@@ -11,20 +11,24 @@ public final class Score {
     private static final String TITLE = getSettings().getTitle();
     private static final Packet206SetScoreboardObjective OBJECTIVE = new Packet206SetScoreboardObjective();
     private static final Packet208SetScoreboardDisplayObjective DISPLAY = new Packet208SetScoreboardDisplayObjective();
-
+    private static final Packet206SetScoreboardObjective REMOVEPACKET = new Packet206SetScoreboardObjective();
     static {
         OBJECTIVE.a = TITLE;
         OBJECTIVE.b = TITLE;
 
         DISPLAY.b = TITLE;
         DISPLAY.a = 1;
+
+        REMOVEPACKET.a = TITLE;
+        REMOVEPACKET.b = TITLE;
+        REMOVEPACKET.c = 1;
     }
 
     public static void createScoreboard(final org.bukkit.entity.Player player) {
         final PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
         con.sendPacket(OBJECTIVE);
         con.sendPacket(DISPLAY);
-        
+
     }
 
     public static void sendScore(final PlayerConnection con, final String title, final int value) {
@@ -37,14 +41,14 @@ public final class Score {
         con.sendPacket(packet);
     }
 
-    public static void disableScoreboard(final PlayerConnection con) {
+    public static Packet206SetScoreboardObjective getRemovepacket() {
+        return REMOVEPACKET;
+    }
 
-        final Packet206SetScoreboardObjective removepacket = new Packet206SetScoreboardObjective();
-
-        removepacket.a = TITLE;
-        removepacket.b = TITLE;
-        removepacket.c = 1;
-
-        con.sendPacket(removepacket);
+    private int calculateKdr(final int kills, final int deaths) {
+        if (deaths == 0) {
+            return kills;
+        }
+        return kills / deaths;
     }
 }

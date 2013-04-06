@@ -14,9 +14,3 @@ Scoreboard:
     1:
       Title: '&aOnline'
       Type: '%online%'
-#    2:
-#      Title: '&cMoney'
-#      Type: '%eco%'
-#    3:
-#      Title: '&9Level'
-#      Type: '%powlevel%'
