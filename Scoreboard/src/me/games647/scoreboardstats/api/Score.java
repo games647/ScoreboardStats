@@ -5,7 +5,7 @@ import net.minecraft.server.v1_5_R2.Packet206SetScoreboardObjective;
 import net.minecraft.server.v1_5_R2.Packet207SetScoreboardScore;
 import net.minecraft.server.v1_5_R2.Packet208SetScoreboardDisplayObjective;
 import net.minecraft.server.v1_5_R2.PlayerConnection;
-import org.bukkit.ChatColor;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class Score {
 
@@ -37,7 +37,7 @@ public final class Score {
     public static void sendScore(final PlayerConnection con, final String title, final int value) {
         final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
 
-        packet.a = ChatColor.translateAlternateColorCodes('&', title);
+        packet.a = translateAlternateColorCodes('&', title);
         packet.b = TITLE;
         packet.c = value;
 

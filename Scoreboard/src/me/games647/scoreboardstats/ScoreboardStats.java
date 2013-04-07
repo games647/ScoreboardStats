@@ -11,7 +11,12 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     private static SettingsHandler settings;
     private static Economy econ;
     private static boolean mcmmo = false;
-
+    private static boolean survival = false;
+    private static boolean simpleclans = false;
+    private static boolean paintball = false;
+    private static boolean mobarena = false;
+    private static boolean nolagg = false;
+    private static boolean insigns = false;
     public static SettingsHandler getSettings() {
         return settings;
     }
@@ -22,6 +27,30 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     public static boolean isMcmmo() {
         return mcmmo;
+    }
+
+    public static boolean isSurvival() {
+        return survival;
+    }
+
+    public static boolean isSimpleclans() {
+        return simpleclans;
+    }
+
+    public static boolean isPaintball() {
+        return paintball;
+    }
+
+    public static boolean isMobarena() {
+        return mobarena;
+    }
+
+    public static boolean isNolagg() {
+        return nolagg;
+    }
+
+    public static boolean isInsigns() {
+        return insigns;
     }
 
     @Override
@@ -62,16 +91,35 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     private void setupPlugins() {
-        if (getServer().getPluginManager().getPlugin("mcMMO") != null) {
+        final org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
+        if (pm.getPlugin("mcMMO") != null) {
             mcmmo = true;
         }
 
-        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+        if (pm.getPlugin("Vault") != null) {
             final RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
             if (economyProvider != null) {
                 econ = economyProvider.getProvider();
             }
+        }
+        if (pm.getPlugin("SimpleClans") != null) {
+            simpleclans = true;
+        }
+        if (pm.getPlugin("SurvivalGames") != null) {
+            survival = true;
+        }
+        if (pm.getPlugin("Paintball") != null) {
+            paintball = true;
+        }
+        if (pm.getPlugin("MobArena") != null) {
+            mobarena = true;
+        }
+        if (pm.getPlugin("NoLagg") != null) {
+            nolagg = true;
+        }
+        if (pm.getPlugin("InSigns") != null) {
+            insigns = true;
         }
     }
 }

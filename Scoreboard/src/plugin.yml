@@ -3,4 +3,4 @@ main: me.games647.scoreboardstats.ScoreboardStats
 author: games647
 version: 1.0
 database: true
-softdepend: [mcMMO, Vault]
+softdepend: [mcMMO, Vault, SurvivalGames, SimpleClans, MobArena, Paintball, NoLagg, InSigns]
