@@ -3,7 +3,7 @@
 enable-pvpstats: false
 
 disabled-worlds:
-  - world
+  - world_nether
   - city
 
 Scoreboard:
@@ -11,6 +11,6 @@ Scoreboard:
   #seconds
   Update-delay: 60
   Items:
-    1:
-      Title: '&aOnline'
-      Type: '%online%'
+    #Title: Type
+    '&9Online': '%online%'
+    '&9Money': '%econ%'

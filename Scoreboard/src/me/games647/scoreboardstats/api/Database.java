@@ -40,5 +40,15 @@ public final class Database {
         stats.setMobkills(stats.getMobkills() + 1);
         database.save(stats);
     }
+
+    public static int getKdr(final String name) {
+        final PlayerStats stats = checkAccount(name);
+
+        if (stats.getDeaths() == 0) {
+            return stats.getKills();
+        }
+        
+        return stats.getKills() / stats.getDeaths();
+    }
     //Maybe I'll add more features such as a leaderboard
 }
