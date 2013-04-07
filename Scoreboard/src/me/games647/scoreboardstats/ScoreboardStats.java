@@ -4,6 +4,7 @@ import java.util.List;
 import me.games647.scoreboardstats.api.PlayerStats;
 import me.games647.scoreboardstats.settings.SettingsHandler;
 import net.milkbowl.vault.economy.Economy;
+import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
@@ -12,11 +13,15 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     private static Economy econ;
     private static boolean mcmmo = false;
     private static boolean survival = false;
-    private static boolean simpleclans = false;
     private static boolean paintball = false;
     private static boolean mobarena = false;
     private static boolean nolagg = false;
-    private static boolean insigns = false;
+    private static SimpleClans simpleclans;
+
+    public static SimpleClans getSimpleclans() {
+        return simpleclans;
+    }
+
     public static SettingsHandler getSettings() {
         return settings;
     }
@@ -33,10 +38,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         return survival;
     }
 
-    public static boolean isSimpleclans() {
-        return simpleclans;
-    }
-
     public static boolean isPaintball() {
         return paintball;
     }
@@ -47,10 +48,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     public static boolean isNolagg() {
         return nolagg;
-    }
-
-    public static boolean isInsigns() {
-        return insigns;
     }
 
     @Override
@@ -104,7 +101,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             }
         }
         if (pm.getPlugin("SimpleClans") != null) {
-            simpleclans = true;
+            simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
         }
         if (pm.getPlugin("SurvivalGames") != null) {
             survival = true;
@@ -118,8 +115,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         if (pm.getPlugin("NoLagg") != null) {
             nolagg = true;
         }
-        if (pm.getPlugin("InSigns") != null) {
-            insigns = true;
+        final org.bukkit.plugin.Plugin insigns = pm.getPlugin("InSigns");
+        if ((insigns != null) && (insigns.isEnabled())) {
+            new me.games647.scoreboardstats.listener.SignsListener(insigns);
         }
     }
 }

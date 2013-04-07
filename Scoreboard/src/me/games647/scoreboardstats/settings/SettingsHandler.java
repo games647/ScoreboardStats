@@ -115,6 +115,8 @@ public final class SettingsHandler {
             if ("%kdr%".equals(key)) {
                 return Database.getKdr(player.getName());
             }
+            if ("%rank%".equals(key)) {
+            }
         }
         if (ScoreboardStats.isMcmmo()) { //mcMMO part
             if ("%powlvl%".equals(key)) {
@@ -161,30 +163,72 @@ public final class SettingsHandler {
             }
         }
         if (ScoreboardStats.isMobarena()) {
-
+            return -1;
         }
         if ((ScoreboardStats.isNolagg()) && ("%ticks%".equals(key))) {
             return (int) PerformanceMonitor.tps;
         }
         if (ScoreboardStats.isPaintball()) {
-
+            return -1;
         }
-        if (ScoreboardStats.isSimpleclans()) {
-            if ("%kills%".equals(key)) {
-
+        if (ScoreboardStats.getSimpleclans() != null) {
+            if ("%kills_civilian%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getCivilianKills();
+            }
+            if ("%kills_neutral%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getNeutralKills();
+            }
+            if ("%kills_rival%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getRivalKills();
             }
             if ("%deaths%".equals(key)) {
-
-            }
-            if ("%mob%".equals(key)) {
-
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getDeaths();
             }
             if ("%kdr%".equals(key)) {
-
+                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getKDR();
+            }
+            if ("%mebers%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getMembers().size();
+            }
+            if ("%clan_kdr%".equals(key)) {
+                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalKDR();
+            }
+            if ("%clan_money%".equals(key)) {
+                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getBalance();
+            }
+            if ("%members_online%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getOnlineMembers().size();
+            }
+            if ("%rivals%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getRivals().size();
+            }
+            if ("%allies%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllies().size();
+            }
+            if ("allies_total%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllAllyMembers().size();
+            }
+            if ("claims%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllowedClaims();
+            }
+            if ("clan_rival%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalRival();
+            }
+            if ("clan_neutral%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalNeutral();
+            }
+            if ("clan_deaths%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalDeaths();
+            }
+            if ("clan_civilian%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalCivilian();
+            }
+            if ("power%".equals(key)) {
+                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getPower();
             }
         }
         if (ScoreboardStats.isSurvival()) {
-
+            return -1;
         }
 
         return -1;
