@@ -8,3 +8,4 @@
 8: Different types of Scoreboard instances can be displayed via commands or in intervalls
 9: Compatible with Survival Games
 10: compatible variables with Paintball (I hate that obfuscated code, but I can make it)
+11: Cache-System against servers with bad database connections
