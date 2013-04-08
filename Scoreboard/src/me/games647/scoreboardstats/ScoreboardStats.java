@@ -115,9 +115,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         if (pm.getPlugin("NoLagg") != null) {
             nolagg = true;
         }
-        final org.bukkit.plugin.Plugin insigns = pm.getPlugin("InSigns");
-        if ((insigns != null) && (insigns.isEnabled())) {
-            new me.games647.scoreboardstats.listener.SignsListener(insigns);
+        if (pm.getPlugin("InSigns") != null) {
+            new me.games647.scoreboardstats.listener.SignsListener(pm.getPlugin("InSigns"));
         }
     }
 }
