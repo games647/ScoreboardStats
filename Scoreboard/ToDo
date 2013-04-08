@@ -1,10 +1,10 @@
 1: Top Kills (Variables)
-2: Reset the Database
+2: Reset the Database with commands
 3: Command for disabling the Scoreboard
 4: compatible with SimpleClans (done)
 5: compatible with NoLagg (done)
 6: Add more Variables (almost done)
 7: PvP/E displayed on Signs (done with help of InSigns)
-8: Different types of Scoreboard instances can be displayed
+8: Different types of Scoreboard instances can be displayed via commands or in intervalls
 9: Compatible with Survival Games
 10: compatible variables with Paintball (I hate that obfuscated code, but I can make it)
