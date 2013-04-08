@@ -52,7 +52,7 @@ public final class SettingsHandler {
                     (String) items.get(localtitle), player));
         }
     }
-
+// I will try to increase the performance for that before i will released it
     private int getValue(final String key, final Player player) { // force to use if/else because of using java 6
         if ("%online%".equals(key)) {
             return Bukkit.getOnlinePlayers().length;
