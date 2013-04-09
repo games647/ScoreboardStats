@@ -11,5 +11,4 @@ public final class UpdateThread implements Runnable {
             me.games647.scoreboardstats.ScoreboardStats.getSettings().sendUpdate(player);
         }
     }
-
 }

@@ -9,7 +9,8 @@ disabled-worlds:
 Scoreboard:
   Title: '&a&lStats'
   #seconds
-  Update-delay: 60
+  # For instant updates you can or 1 and it will update every second
+  Update-delay: 1
   Items:
     #Title: Type
     '&9Online': '%online%'

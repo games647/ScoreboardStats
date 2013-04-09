@@ -47,8 +47,7 @@ public final class Database {
         if (stats.getDeaths() == 0) {
             return stats.getKills();
         }
-        
+
         return stats.getKills() / stats.getDeaths();
     }
-    //Maybe I'll add more features such as a leaderboard
 }

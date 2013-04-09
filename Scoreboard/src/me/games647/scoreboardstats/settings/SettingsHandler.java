@@ -1,12 +1,6 @@
 package me.games647.scoreboardstats.settings;
 
-import java.util.List;
 import me.games647.scoreboardstats.ScoreboardStats;
-import static me.games647.scoreboardstats.api.Score.sendScore;
-import me.games647.scoreboardstats.api.VariableReplacer;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
-import org.bukkit.entity.Player;
 
 public final class SettingsHandler {
 
@@ -14,7 +8,7 @@ public final class SettingsHandler {
     private boolean pvpstats;
     private String title;
     private java.util.Map<String, Object> items;
-    private List<String> disabledworlds;
+    private java.util.List<String> disabledworlds;
 
     public SettingsHandler(final ScoreboardStats instance) {
         this.plugin = instance;
@@ -25,7 +19,7 @@ public final class SettingsHandler {
     private void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = this.plugin.getConfig();
         this.pvpstats = config.getBoolean("enable-pvpstats");
-        this.title = translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
+        this.title = org.bukkit.ChatColor.translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
         items = config.getConfigurationSection("Scoreboard.Items").getValues(false);
         this.disabledworlds = config.getStringList("disabled-worlds");
     }
@@ -42,10 +36,12 @@ public final class SettingsHandler {
         return disabledworlds.contains(world);
     }
 
-    public void sendUpdate(final Player player) {
+    public void sendUpdate(final org.bukkit.entity.Player player) {
         for (String localtitle : items.keySet()) {
-            sendScore(((CraftPlayer) player).getHandle().playerConnection, localtitle, VariableReplacer.getValue(
-                    (String) items.get(localtitle), player));
+            me.games647.scoreboardstats.api.Score.sendScore((
+                    (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
+                    , localtitle
+                    , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player));
         }
     }
 }

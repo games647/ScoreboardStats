@@ -1,42 +1,41 @@
 package me.games647.scoreboardstats.listener;
 
 import de.blablubbabc.insigns.Changer;
-import de.blablubbabc.insigns.InSigns;
-import me.games647.scoreboardstats.api.Database;
+import static me.games647.scoreboardstats.api.Database.checkAccount;
+import static me.games647.scoreboardstats.api.Database.getKdr;
 import org.bukkit.entity.Player;
 
 public final class SignsListener {
 
-    public SignsListener(final org.bukkit.plugin.Plugin insignsPlugin) {
+    public SignsListener(final de.blablubbabc.insigns.InSigns instance) {
 
         final String permission = "scoreboardstats.sign";
-        final InSigns insigns = (InSigns) insignsPlugin;
 
-        insigns.addChanger(new Changer("[Kills]", permission) {
+        instance.addChanger(new Changer("[Kills]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(Database.checkAccount(player.getName()).getKills());
+                return String.valueOf(checkAccount(player.getName()).getKills());
             }
         });
 
-        insigns.addChanger(new Changer("[Deaths]", permission) {
+        instance.addChanger(new Changer("[Deaths]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(Database.checkAccount(player.getName()).getDeaths());
+                return String.valueOf(checkAccount(player.getName()).getDeaths());
             }
         });
 
-        insigns.addChanger(new Changer("[Mob]", permission) {
+        instance.addChanger(new Changer("[Mob]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(Database.checkAccount(player.getName()).getMobkills());
+                return String.valueOf(checkAccount(player.getName()).getMobkills());
             }
         });
 
-        insigns.addChanger(new Changer("[KDR]", permission) {
+        instance.addChanger(new Changer("[KDR]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(Database.getKdr(player.getName()));
+                return String.valueOf(getKdr(player.getName()));
             }
         });
     }

@@ -19,7 +19,11 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         setupDatabase();
         PluginListener.init();
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, getConfig().getInt("Scoreboard.Update-delay") * 20L);
+        if (getConfig().getInt("Scoreboard.Update-delay") <= 0) {
+            getLogger().warning("Please use a number that is higher than 0");
+        } else {
+            this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, getConfig().getInt("Scoreboard.Update-delay") * 20L);
+        }
     }
 
     private void setupDatabase() {

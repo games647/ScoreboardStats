@@ -27,10 +27,11 @@ public final class Score {
 
     public static void createScoreboard(final org.bukkit.entity.Player player) {
         final PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
+
         con.sendPacket(OBJECTIVE);
         con.sendPacket(DISPLAY);
-        getSettings().sendUpdate(player);
 
+        getSettings().sendUpdate(player);
     }
 
     public static void sendScore(final PlayerConnection con, final String title, final int value) {

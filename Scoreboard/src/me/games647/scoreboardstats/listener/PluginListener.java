@@ -56,7 +56,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         mobarena = (pm.getPlugin("MobArena") != null);
         nolagg = (pm.getPlugin("NoLagg") != null);
         if (pm.getPlugin("InSigns") != null) {
-            new me.games647.scoreboardstats.listener.SignsListener(pm.getPlugin("InSigns"));
+            new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
     }
 }
