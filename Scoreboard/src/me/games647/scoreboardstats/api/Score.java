@@ -17,8 +17,8 @@ public final class Score {
         OBJECTIVE.a = TITLE;
         OBJECTIVE.b = TITLE;
 
-        DISPLAY.b = TITLE;
         DISPLAY.a = 1;
+        DISPLAY.b = TITLE;
 
         REMOVEPACKET.a = TITLE;
         REMOVEPACKET.b = TITLE;

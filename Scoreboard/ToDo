@@ -1,18 +1,8 @@
-1: Top Kills (Variables)
-2: Reset the Database with commands
-3: Command for disabling the Scoreboard
-4: compatible with SimpleClans (done)
-5: compatible with NoLagg (done)
-6: Add more Variables (almost done)
-7: PvP/E displayed on Signs (done with help of InSigns)
-8: Different types of Scoreboard instances can be displayed via commands or in intervalls
-9: Compatible with Survival Games
-10: compatible variables with Paintball (I hate that obfuscated code, but I can make it)
-11: Cache-System against servers with bad database connections
-12: make it compatible with MobArena
-13: and Jobs too
-14: Add Bungee variables support
-15: Add a new variable for mcMMO that displayed the need xp for the next level
-16: try to add the leaderboard from mcMMO in the scoreboard
-17: Add Heroes support
-18: make independent from InSigns
+: Command for disabling the Scoreboard
+: Leaderboard (Variables)
+: Reset the Database with commands
+: Different types of Scoreboard instances should be displayed via commands or in intervalls
+: Cache-System for a better Performance
+: mcMMO leaderboard + xp_to_next_level support
+: make independent from InSigns
+: Add Survival Games, Jobs, Heroes, MobArena, Bungee and Paintball support

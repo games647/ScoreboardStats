@@ -22,6 +22,11 @@ public final class SettingsHandler {
         this.title = org.bukkit.ChatColor.translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
         items = config.getConfigurationSection("Scoreboard.Items").getValues(false);
         this.disabledworlds = config.getStringList("disabled-worlds");
+        int delay = config.getInt("Scoreboard.Update-delay");
+        if (delay <= 0) {
+            delay = 1;
+        }
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new me.games647.scoreboardstats.api.UpdateThread(), 60L, delay * 20L);
     }
 
     public String getTitle() {

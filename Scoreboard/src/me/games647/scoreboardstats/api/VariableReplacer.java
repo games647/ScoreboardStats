@@ -25,7 +25,7 @@ public final class VariableReplacer {
             return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) / 1000);
         }
         if ("%date%".equals(key)) {
-            return new Date(System.currentTimeMillis()).getDate();
+            return new Date().getDate();
         }
         if ("%time%".equals(key)) {
             return (int) (player.getWorld().getTime() / 1000);
@@ -187,16 +187,16 @@ public final class VariableReplacer {
             }
         }
         if (PluginListener.isSurvival()) {
-            if ("surival_kills_current".equals(key)) {
+            if ("%surival_kills_current%".equals(key)) {
                 return -1;
             }
-            if ("surival_kills".equals(key)) {
+            if ("%surival_kills%".equals(key)) {
                 return -1;
             }
-            if ("surival_deaths".equals(key)) {
+            if ("%surival_deaths%".equals(key)) {
                 return -1;
             }
-            if ("survival_players".equals(key)) {
+            if ("%survival_players%".equals(key)) {
                 return -1;
             }
         }
