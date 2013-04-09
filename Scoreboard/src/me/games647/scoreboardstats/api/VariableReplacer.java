@@ -3,6 +3,7 @@ package me.games647.scoreboardstats.api;
 import com.gmail.nossr50.api.ExperienceAPI;
 import java.util.Date;
 import me.games647.scoreboardstats.ScoreboardStats;
+import me.games647.scoreboardstats.listener.PluginListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -56,8 +57,8 @@ public final class VariableReplacer {
         if ("%first_month%".equals(key)) {
             return new Date(player.getFirstPlayed()).getMonth();
         }
-        if ((ScoreboardStats.getEcon() != null) && ("%econ%".equals(key))) {
-            return (int) ScoreboardStats.getEcon().getBalance(player.getName());
+        if ((PluginListener.getEcon() != null) && ("%econ%".equals(key))) {
+            return (int) PluginListener.getEcon().getBalance(player.getName());
         }
         if (ScoreboardStats.getSettings().isPvpstats()) {
             if ("%kills%".equals(key)) {
@@ -76,7 +77,7 @@ public final class VariableReplacer {
                 return -1;
             }
         }
-        if (ScoreboardStats.isMcmmo()) {
+        if (PluginListener.isMcmmo()) {
             if ("%powlvl%".equals(key)) {
                 return ExperienceAPI.getPowerLevel(player);
             }
@@ -120,72 +121,72 @@ public final class VariableReplacer {
                 return ExperienceAPI.getLevel(player, "UNARMED");
             }
         }
-        if (ScoreboardStats.isMobarena()) {
+        if (PluginListener.isMobarena()) {
             return -1;
         }
-        if ((ScoreboardStats.isNolagg()) && ("%ticks%".equals(key))) {
+        if ((PluginListener.isNolagg()) && ("%ticks%".equals(key))) {
             return (int) com.bergerkiller.bukkit.nolagg.monitor.PerformanceMonitor.tps;
         }
-        if (ScoreboardStats.isPaintball()) {
+        if (PluginListener.isPaintball()) {
             return -1;
         }
-        if (ScoreboardStats.getSimpleclans() != null) {
+        if (PluginListener.getSimpleclans() != null) {
             if ("%kills_civilian%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getCivilianKills();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getCivilianKills();
             }
             if ("%kills_neutral%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getNeutralKills();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getNeutralKills();
             }
             if ("%kills_rival%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getRivalKills();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getRivalKills();
             }
             if ("%deaths%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getDeaths();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getDeaths();
             }
             if ("%kdr%".equals(key)) {
-                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getKDR();
+                return (int) PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getKDR();
             }
             if ("%mebers%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getMembers().size();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getMembers().size();
             }
             if ("%clan_kdr%".equals(key)) {
-                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalKDR();
+                return (int) PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalKDR();
             }
             if ("%clan_money%".equals(key)) {
-                return (int) ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getBalance();
+                return (int) PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getBalance();
             }
             if ("%members_online%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getOnlineMembers().size();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getOnlineMembers().size();
             }
             if ("%rivals%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getRivals().size();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getRivals().size();
             }
             if ("%allies%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllies().size();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllies().size();
             }
             if ("allies_total%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllAllyMembers().size();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllAllyMembers().size();
             }
             if ("claims%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllowedClaims();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getAllowedClaims();
             }
             if ("clan_rival%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalRival();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalRival();
             }
             if ("clan_neutral%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalNeutral();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalNeutral();
             }
             if ("clan_deaths%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalDeaths();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalDeaths();
             }
             if ("clan_civilian%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalCivilian();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getTotalCivilian();
             }
             if ("power%".equals(key)) {
-                return ScoreboardStats.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getPower();
+                return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getPower();
             }
         }
-        if (ScoreboardStats.isSurvival()) {
+        if (PluginListener.isSurvival()) {
             if ("surival_kills_current".equals(key)) {
                 return -1;
             }
