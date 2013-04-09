@@ -1,6 +1,6 @@
 #This is the default config
 
-enable-pvpstats: false
+enable-pvpstats: true
 
 disabled-worlds:
   - world_nether

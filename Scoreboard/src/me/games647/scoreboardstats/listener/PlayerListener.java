@@ -23,7 +23,6 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         if (killer != null) {
             Database.increaseKills(killer.getName());
         }
-
     }
 
     @EventHandler
@@ -49,6 +48,5 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         } else if (getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated
             createScoreboard(teleport.getPlayer());
         }
-
     }
 }

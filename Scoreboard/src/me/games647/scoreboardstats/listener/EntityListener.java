@@ -10,7 +10,7 @@ public final class EntityListener implements org.bukkit.event.Listener {
         if ((!getSettings().isPvpstats()) || (getSettings().checkWorld(event.getEntity().getWorld().getName()))) {
             return;
         }
-
+        
         final org.bukkit.entity.LivingEntity entity = event.getEntity();
 
         if (!(entity.getType().equals(org.bukkit.entity.EntityType.PLAYER))) {
@@ -19,7 +19,6 @@ public final class EntityListener implements org.bukkit.event.Listener {
             if (killer != null) {
                 me.games647.scoreboardstats.api.Database.increaseMobKills(killer.getName());
             }
-
         }
     }
 }

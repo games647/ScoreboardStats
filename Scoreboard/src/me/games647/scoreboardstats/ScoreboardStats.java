@@ -5,17 +5,12 @@ import me.games647.scoreboardstats.api.PlayerStats;
 import me.games647.scoreboardstats.settings.SettingsHandler;
 import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     private static SettingsHandler settings;
     private static Economy econ;
-    private static boolean mcmmo = false;
-    private static boolean survival = false;
-    private static boolean paintball = false;
-    private static boolean mobarena = false;
-    private static boolean nolagg = false;
+    private static boolean mcmmo, survival, paintball, mobarena, nolagg;
     private static SimpleClans simpleclans;
 
     public static SimpleClans getSimpleclans() {
@@ -60,9 +55,11 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     private void setupDatabase() {
+
         if (!getSettings().isPvpstats()) {
             return;
         }
+
         try {
             getDatabase().find(PlayerStats.class).findRowCount();
         } catch (javax.persistence.PersistenceException ex) {
@@ -70,7 +67,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             installDDL();
         }
         me.games647.scoreboardstats.api.Database.setDatabase(getDatabase());
-
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 
@@ -92,9 +88,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         if (pm.getPlugin("mcMMO") != null) {
             mcmmo = true;
         }
-
         if (pm.getPlugin("Vault") != null) {
-            final RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
             if (economyProvider != null) {
                 econ = economyProvider.getProvider();

@@ -10,9 +10,8 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 public final class Score {
 
     private static final String TITLE = getSettings().getTitle();
-    private static final Packet206SetScoreboardObjective OBJECTIVE = new Packet206SetScoreboardObjective();
+    private static final Packet206SetScoreboardObjective OBJECTIVE = new Packet206SetScoreboardObjective(), REMOVEPACKET = new Packet206SetScoreboardObjective();
     private static final Packet208SetScoreboardDisplayObjective DISPLAY = new Packet208SetScoreboardDisplayObjective();
-    private static final Packet206SetScoreboardObjective REMOVEPACKET = new Packet206SetScoreboardObjective();
 
     static {
         OBJECTIVE.a = TITLE;

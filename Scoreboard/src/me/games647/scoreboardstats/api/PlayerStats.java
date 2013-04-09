@@ -9,12 +9,8 @@ public class PlayerStats implements java.io.Serializable {
     @com.avaje.ebean.validation.NotEmpty
     private String playername;
 
-    private int kills;
-
-    private int deaths;
-
-    private int mobkills;
-
+    private int kills, deaths, mobkills;
+    
     public String getPlayername() {
         return playername;
     }
