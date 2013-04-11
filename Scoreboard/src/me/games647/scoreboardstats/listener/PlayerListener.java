@@ -3,10 +3,10 @@ package me.games647.scoreboardstats.listener;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.Database;
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import static me.games647.scoreboardstats.api.Score.createScoreboard;
 import static me.games647.scoreboardstats.api.Score.getCLEARPACKET;
-import me.games647.scoreboardstats.api.TempScoreboardThread;
+import me.games647.scoreboardstats.api.pvpstats.TempScoreboardThread;
 import static org.bukkit.Bukkit.getScheduler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +38,9 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         }
 
         createScoreboard(join.getPlayer(), true);
-        getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(join.getPlayer()), getSettings().getTempshow() * 20L);
+        if (getSettings().isTempscoreboard()) {
+            getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(join.getPlayer()), getSettings().getTempshow() * 20L);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

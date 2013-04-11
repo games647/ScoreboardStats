@@ -1,9 +1,11 @@
 package me.games647.scoreboardstats.api;
 
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import com.gmail.nossr50.api.ExperienceAPI;
 import java.util.Date;
 import me.games647.scoreboardstats.ScoreboardStats;
 import me.games647.scoreboardstats.listener.PluginListener;
+import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -23,9 +25,6 @@ public final class VariableReplacer {
             }
             if ("%kdr%".equals(key)) {
                 return Database.getKdr(player.getName());
-            }
-            if ("%rank%".equals(key)) {
-                return -1;
             }
         }
         if ((PluginListener.getEcon() != null) && ("%econ%".equals(key))) {
@@ -133,13 +132,17 @@ public final class VariableReplacer {
             if ("%kills_rival%".equals(key)) {
                 return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getRivalKills();
             }
+            if ("%kills_total%".equals(key)) {
+                final ClanPlayer clanPlayer = PluginListener.getSimpleclans().getClanManager().getClanPlayer(player);
+                return clanPlayer.getCivilianKills() + clanPlayer.getNeutralKills() + clanPlayer.getRivalKills();
+            }
             if ("%deaths%".equals(key)) {
                 return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getDeaths();
             }
             if ("%kdr%".equals(key)) {
                 return (int) PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getKDR();
             }
-            if ("%mebers%".equals(key)) {
+            if ("%members%".equals(key)) {
                 return PluginListener.getSimpleclans().getClanManager().getClanPlayer(player).getClan().getMembers().size();
             }
             if ("%clan_kdr%".equals(key)) {

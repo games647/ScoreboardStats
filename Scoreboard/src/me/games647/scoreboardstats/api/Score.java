@@ -48,7 +48,6 @@ public final class Score {
 
         con.sendPacket(TOPOBJECTIVE);
         con.sendPacket(TOPDISPLAY);
-
     }
 
     public static void sendScore(final PlayerConnection con, final String title, final int value, final boolean type) {

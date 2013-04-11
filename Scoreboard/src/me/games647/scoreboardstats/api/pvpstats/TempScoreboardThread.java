@@ -1,6 +1,8 @@
-package me.games647.scoreboardstats.api;
+package me.games647.scoreboardstats.api.pvpstats;
 
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import me.games647.scoreboardstats.ScoreboardStats;
+import me.games647.scoreboardstats.api.Score;
 import me.games647.scoreboardstats.listener.PlayerListener;
 import net.minecraft.server.v1_5_R2.PlayerConnection;
 import org.bukkit.entity.Player;

@@ -1,5 +1,6 @@
-package me.games647.scoreboardstats.api;
+package me.games647.scoreboardstats.api.pvpstats;
 
+import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
 import com.avaje.ebean.EbeanServer;
 import java.util.HashMap;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;

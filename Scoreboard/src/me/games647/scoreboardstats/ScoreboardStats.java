@@ -1,9 +1,8 @@
 package me.games647.scoreboardstats;
 
 import java.util.List;
-import me.games647.scoreboardstats.api.PlayerStats;
+import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
 import me.games647.scoreboardstats.listener.PluginListener;
-import me.games647.scoreboardstats.settings.SettingsHandler;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
@@ -40,7 +39,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }
-        me.games647.scoreboardstats.api.Database.setDatabase(getDatabase());
+        me.games647.scoreboardstats.api.pvpstats.Database.setDatabase(getDatabase());
         this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 

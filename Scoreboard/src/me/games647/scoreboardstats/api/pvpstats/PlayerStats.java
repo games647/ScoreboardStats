@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api;
+package me.games647.scoreboardstats.api.pvpstats;
 
 @javax.persistence.Entity
 @javax.persistence.Table(name = "PlayerStats")

@@ -1,8 +1,8 @@
 package me.games647.scoreboardstats.listener;
 
 import de.blablubbabc.insigns.Changer;
-import static me.games647.scoreboardstats.api.Database.checkAccount;
-import static me.games647.scoreboardstats.api.Database.getKdr;
+import static me.games647.scoreboardstats.api.pvpstats.Database.checkAccount;
+import static me.games647.scoreboardstats.api.pvpstats.Database.getKdr;
 import org.bukkit.entity.Player;
 
 public final class SignsListener {
