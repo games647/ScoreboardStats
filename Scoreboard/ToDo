@@ -5,4 +5,6 @@
 : Cache-System for a better Performance
 : mcMMO leaderboard + xp_to_next_level support
 : make independent from InSigns
-: Add Survival Games, Jobs, Heroes, MobArena, Bungee and Paintball support
+: Add Survival Games, Jobs, Heroes, MobArena, Bungee, Factions and Paintball support
+: Add killstreaks
+: Don't register new Accounts if the done nothing

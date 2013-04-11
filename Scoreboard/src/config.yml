@@ -15,3 +15,12 @@ Scoreboard:
     #Title: Type
     '&9Online': '%online%'
     '&9Money': '%econ%'
+
+Temp-Scoreboard-enabled: true
+
+Temp-Scoreboard:
+  Title: '&a&lTop Kills'
+  #How many Players would be displayed
+  Items: 5
+  Intervall-show: 60
+  Intervall-disappear: 10

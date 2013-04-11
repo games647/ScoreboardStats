@@ -8,22 +8,29 @@ import me.games647.scoreboardstats.settings.SettingsHandler;
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     private static SettingsHandler settings;
+    private static ScoreboardStats instance;
 
     public static SettingsHandler getSettings() {
         return settings;
+    }
+
+    public static ScoreboardStats getInstance() {
+        return instance;
     }
 
     @Override
     public void onEnable() {
         settings = new SettingsHandler(this);
         setupDatabase();
+        instance = this;
         PluginListener.init();
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, settings.getIntervall() * 20L);
     }
 
     private void setupDatabase() {
 
-        if (!getSettings().isPvpstats()) {
+        if (!settings.isPvpstats()) {
             return;
         }
 
@@ -34,7 +41,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             installDDL();
         }
         me.games647.scoreboardstats.api.Database.setDatabase(getDatabase());
-        getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
+        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 
     @Override

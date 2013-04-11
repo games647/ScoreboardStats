@@ -1,6 +1,8 @@
 package me.games647.scoreboardstats.api;
 
 import com.avaje.ebean.EbeanServer;
+import java.util.HashMap;
+import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 
 public final class Database {
 
@@ -49,5 +51,15 @@ public final class Database {
         }
 
         return stats.getKills() / stats.getDeaths();
+    }
+
+    public static HashMap<String, Integer> getTop() {
+        final java.util.List<PlayerStats> list = database.find(PlayerStats.class).orderBy("kills asc").setMaxRows(getSettings().getTopitems()).findList();
+        final HashMap<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
+        for (int i = 0; i < list.size(); i++) {
+            final PlayerStats stats = list.get(i);
+            top.put(stats.getPlayername(), stats.getKills());
+        }
+        return top;
     }
 }

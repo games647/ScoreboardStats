@@ -9,8 +9,8 @@ public class PlayerStats implements java.io.Serializable {
     @com.avaje.ebean.validation.NotEmpty
     private String playername;
 
-    private int kills, deaths, mobkills;
-    
+    private int kills, deaths, mobkills; //Add killStreaks
+
     public String getPlayername() {
         return playername;
     }
@@ -42,5 +42,4 @@ public class PlayerStats implements java.io.Serializable {
     public void setMobkills(final int mobkills) {
         this.mobkills = mobkills;
     }
-
 }

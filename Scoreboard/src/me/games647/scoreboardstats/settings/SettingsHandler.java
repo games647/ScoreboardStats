@@ -1,12 +1,14 @@
 package me.games647.scoreboardstats.settings;
 
 import me.games647.scoreboardstats.ScoreboardStats;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
 
     private final ScoreboardStats plugin;
-    private boolean pvpstats;
-    private String title;
+    private boolean pvpstats, tempscoreboard;
+    private String title, temptitle;
+    private int intervall, topitems, tempshow, tempdisapper;
     private java.util.Map<String, Object> items;
     private java.util.List<String> disabledworlds;
 
@@ -19,14 +21,15 @@ public final class SettingsHandler {
     private void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = this.plugin.getConfig();
         this.pvpstats = config.getBoolean("enable-pvpstats");
-        this.title = org.bukkit.ChatColor.translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
+        this.title = translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
         items = config.getConfigurationSection("Scoreboard.Items").getValues(false);
         this.disabledworlds = config.getStringList("disabled-worlds");
-        int delay = config.getInt("Scoreboard.Update-delay");
-        if (delay <= 0) {
-            delay = 1;
-        }
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new me.games647.scoreboardstats.api.UpdateThread(), 60L, delay * 20L);
+        this.intervall = config.getInt("Scoreboard.Update-delay");
+        this.tempscoreboard = config.getBoolean("Temp-Scoreboard-enabled");
+        this.temptitle = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Title"));
+        this.topitems = config.getInt("Temp-Scoreboard.Items");
+        this.tempshow = config.getInt("Temp-Scoreboard.Intervall-show");
+        this.tempdisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
     }
 
     public String getTitle() {
@@ -41,12 +44,36 @@ public final class SettingsHandler {
         return disabledworlds.contains(world);
     }
 
+    public boolean isTempscoreboard() {
+        return tempscoreboard;
+    }
+
+    public String getTemptitle() {
+        return temptitle;
+    }
+
+    public int getIntervall() {
+        return intervall;
+    }
+
+    public int getTopitems() {
+        return topitems;
+    }
+
+    public int getTempshow() {
+        return tempshow;
+    }
+
+    public int getTempdisapper() {
+        return tempdisapper;
+    }
+
     public void sendUpdate(final org.bukkit.entity.Player player) {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore((
                     (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
                     , localtitle
-                    , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player));
+                    , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player), true);
         }
     }
 }
