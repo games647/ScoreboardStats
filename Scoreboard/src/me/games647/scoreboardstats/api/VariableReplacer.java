@@ -9,57 +9,8 @@ import org.bukkit.entity.Player;
 
 public final class VariableReplacer {
 
-    // I will try to increase the performance for that before i will released it
     @SuppressWarnings("deprecation")
     public static int getValue(final String key, final Player player) {
-        if ("%online%".equals(key)) {
-            return Bukkit.getOnlinePlayers().length;
-        }
-        if ("%free_ram%".equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() / 1000);
-        }
-        if ("%max_ram%".equals(key)) {
-            return (int) Runtime.getRuntime().maxMemory() / 1000;
-        }
-        if ("%used_ram".equals(key)) {
-            return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) / 1000);
-        }
-        if ("%date%".equals(key)) {
-            return new Date().getDate();
-        }
-        if ("%time%".equals(key)) {
-            return (int) (player.getWorld().getTime() / 1000);
-        }
-        if ("%lifetime%".equals(key)) {
-            return player.getTicksLived();
-        }
-        if ("%exp%".equals(key)) {
-            return player.getTotalExperience();
-        }
-        if ("%no_damage_ticks%".equals(key)) {
-            return player.getNoDamageTicks();
-        }
-        if ("%xp_to_level%".equals(key)) {
-            return player.getExpToLevel();
-        }
-        if ("%last_damage%".equals(key)) {
-            return player.getLastDamage();
-        }
-        if ("%max_player%".equals(key)) {
-            return Bukkit.getMaxPlayers();
-        }
-        if ("%ping%".equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().ping;
-        }
-        if ("%first_day%".equals(key)) {
-            return new Date(player.getFirstPlayed()).getDay();
-        }
-        if ("%first_month%".equals(key)) {
-            return new Date(player.getFirstPlayed()).getMonth();
-        }
-        if ((PluginListener.getEcon() != null) && ("%econ%".equals(key))) {
-            return (int) PluginListener.getEcon().getBalance(player.getName());
-        }
         if (ScoreboardStats.getSettings().isPvpstats()) {
             if ("%kills%".equals(key)) {
                 return Database.checkAccount(player.getName()).getKills();
@@ -76,6 +27,9 @@ public final class VariableReplacer {
             if ("%rank%".equals(key)) {
                 return -1;
             }
+        }
+        if ((PluginListener.getEcon() != null) && ("%econ%".equals(key))) {
+            return (int) PluginListener.getEcon().getBalance(player.getName());
         }
         if (PluginListener.isMcmmo()) {
             if ("%powlvl%".equals(key)) {
@@ -121,14 +75,53 @@ public final class VariableReplacer {
                 return ExperienceAPI.getLevel(player, "UNARMED");
             }
         }
-        if (PluginListener.isMobarena()) {
-            return -1;
+        if ("%online%".equals(key)) {
+            return Bukkit.getOnlinePlayers().length;
         }
-        if ((PluginListener.isNolagg()) && ("%ticks%".equals(key))) {
-            return (int) com.bergerkiller.bukkit.nolagg.monitor.PerformanceMonitor.tps;
+        if ("%free_ram%".equals(key)) {
+            return (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024);
         }
-        if (PluginListener.isPaintball()) {
-            return -1;
+        if ("%max_ram%".equals(key)) {
+            return (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        }
+        if ("%used_ram".equals(key)) {
+            return (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
+        }
+        if ("%date%".equals(key)) {
+            return new Date().getDate();
+        }
+        if ("%time%".equals(key)) {
+            return (int) (player.getWorld().getTime() / 1000);
+        }
+        if ("%lifetime%".equals(key)) {
+            return player.getTicksLived();
+        }
+        if ("%exp%".equals(key)) {
+            return player.getTotalExperience();
+        }
+        if ("%no_damage_ticks%".equals(key)) {
+            return player.getNoDamageTicks();
+        }
+        if ("%xp_to_level%".equals(key)) {
+            return player.getExpToLevel();
+        }
+        if ("%last_damage%".equals(key)) {
+            return player.getLastDamage();
+        }
+        if ("%max_player%".equals(key)) {
+            return Bukkit.getMaxPlayers();
+        }
+        if ("%ping%".equals(key)) {
+            return ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().ping;
+        }
+        if ("%first_day%".equals(key)) {
+            return new Date(player.getFirstPlayed()).getDay();
+        }
+        if ("%first_month%".equals(key)) {
+            return new Date(player.getFirstPlayed()).getMonth();
+        }
+        if ((PluginListener.getEssentials() != null) && ("%ticks%".equals(key))) {
+            return (int) PluginListener.getEssentials().getTimer().getAverageTPS();
         }
         if (PluginListener.getSimpleclans() != null) {
             if ("%kills_civilian%".equals(key)) {
@@ -200,6 +193,16 @@ public final class VariableReplacer {
                 return -1;
             }
         }
+        if (PluginListener.isMobarena()) {
+            return -1;
+        }
+        if (PluginListener.isPaintball()) {
+            return -1;
+        }
         return -1;
+    }
+
+    public static String getTitle(String variable) {
+        return "";
     }
 }

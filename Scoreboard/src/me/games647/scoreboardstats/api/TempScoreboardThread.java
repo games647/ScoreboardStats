@@ -16,6 +16,9 @@ public final class TempScoreboardThread implements Runnable {
 
     @Override
     public void run() {
+        if (!player.isOnline()) {
+            return;
+        }
         final java.util.HashMap<String, Integer> top = Database.getTop();
         Score.createScoreboard(player, false);
         for (String key : top.keySet()) {

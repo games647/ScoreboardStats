@@ -1,5 +1,6 @@
 package me.games647.scoreboardstats.listener;
 
+import com.earth2me.essentials.Essentials;
 import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
@@ -7,7 +8,8 @@ import org.bukkit.Bukkit;
 public final class PluginListener implements org.bukkit.event.Listener {
 
     private static Economy econ;
-    private static boolean mcmmo, survival, paintball, mobarena, nolagg;
+    private static boolean mcmmo, survival, paintball, mobarena;
+    private static Essentials essentials;
     private static SimpleClans simpleclans;
 
     public static Economy getEcon() {
@@ -30,12 +32,12 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return mobarena;
     }
 
-    public static boolean isNolagg() {
-        return nolagg;
-    }
-
     public static SimpleClans getSimpleclans() {
         return simpleclans;
+    }
+
+    public static Essentials getEssentials() {
+        return essentials;
     }
 
     public static void init() {
@@ -48,13 +50,11 @@ public final class PluginListener implements org.bukkit.event.Listener {
                 econ = economyProvider.getProvider();
             }
         }
-        if (pm.getPlugin("SimpleClans") != null) {
-            simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
-        }
+        simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
         survival = (pm.getPlugin("SurvivalGames") != null);
         paintball = (pm.getPlugin("Paintball") != null);
         mobarena = (pm.getPlugin("MobArena") != null);
-        nolagg = (pm.getPlugin("NoLagg") != null);
+        essentials = (Essentials) pm.getPlugin("Essentials");
         if (pm.getPlugin("InSigns") != null) {
             new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
