@@ -3,7 +3,6 @@ package me.games647.scoreboardstats.api.pvpstats;
 import me.games647.scoreboardstats.ScoreboardStats;
 import me.games647.scoreboardstats.api.Score;
 import me.games647.scoreboardstats.listener.PlayerListener;
-import net.minecraft.server.v1_5_R2.PlayerConnection;
 import org.bukkit.entity.Player;
 
 public final class TempScoreboardThread implements Runnable {
@@ -19,8 +18,9 @@ public final class TempScoreboardThread implements Runnable {
         if (!player.isOnline()) {
             return;
         }
+        Database.saveAccount(player.getName(), false);
         PlayerListener.list.add(player.getName());
-        final java.util.HashMap<String, Integer> top = Database.getTop();
+        final java.util.Map<String, Integer> top = Database.getTop();
         Score.createScoreboard(player, false);
         for (String key : top.keySet()) {
             Score.sendScore(
@@ -33,7 +33,7 @@ public final class TempScoreboardThread implements Runnable {
             @Override
             public void run() {
                 PlayerListener.list.remove(player.getName());
-                final PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
+                final net.minecraft.server.v1_5_R2.PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
                 con.sendPacket(Score.getTEMPCLEARPACKET());
                 con.sendPacket(Score.getCLEARPACKET());
                 Score.createScoreboard(player, true);

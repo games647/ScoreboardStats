@@ -12,6 +12,9 @@ public final class VariableReplacer {
 
     @SuppressWarnings("deprecation")
     public static int getValue(final String key, final org.bukkit.entity.Player player) {
+        if (!player.isOnline()) {
+            return -1;
+        }
         if (ScoreboardStats.getSettings().isPvpstats()) {
             if ("%kills%".equals(key)) {
                 return Database.getCache(player.getName()).getKills();
@@ -77,13 +80,13 @@ public final class VariableReplacer {
             return Bukkit.getOnlinePlayers().length;
         }
         if ("%free_ram%".equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024);
+            return (int) (Runtime.getRuntime().freeMemory() / 1048576); // / 1024 / 1024
         }
         if ("%max_ram%".equals(key)) {
-            return (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
+            return (int) Runtime.getRuntime().maxMemory() / 1048576;
         }
         if ("%used_ram%".equals(key)) {
-            return (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
+            return (int) Runtime.getRuntime().totalMemory() / 1048576;
         }
         if ("%date%".equals(key)) {
             return new Date().getDate();

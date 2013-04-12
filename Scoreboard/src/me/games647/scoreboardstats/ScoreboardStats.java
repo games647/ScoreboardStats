@@ -1,6 +1,7 @@
 package me.games647.scoreboardstats;
 
 import java.util.List;
+import static me.games647.scoreboardstats.api.pvpstats.Database.saveAll;
 import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
 import me.games647.scoreboardstats.listener.PluginListener;
 
@@ -54,5 +55,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     @Override
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
+        saveAll();
     }
 }

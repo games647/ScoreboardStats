@@ -18,10 +18,12 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         if ((!getSettings().isPvpstats()) || (getSettings().checkWorld(death.getEntity().getWorld().getName()))) {
             return;
         }
+
         final Player killed = death.getEntity();
         Database.getCache(killed.getName()).increaseDeaths();
         final Player killer = killed.getKiller();
-        if (killer != null) {
+
+        if ((killer != null) && (killer.isOnline())) {
             Database.getCache(killer.getName()).increaseKills();
         }
     }
@@ -56,11 +58,11 @@ public final class PlayerListener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onKick(final org.bukkit.event.player.PlayerKickEvent kick) {
-        Database.saveAccount(kick.getPlayer().getName());
+        Database.saveAccount(kick.getPlayer().getName(), true);
     }
 
     @EventHandler
     public void onQuit(final org.bukkit.event.player.PlayerQuitEvent quit) {
-        Database.saveAccount(quit.getPlayer().getName());
+        Database.saveAccount(quit.getPlayer().getName(), true);
     }
 }
