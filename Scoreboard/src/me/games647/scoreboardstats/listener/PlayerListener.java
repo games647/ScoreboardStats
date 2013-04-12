@@ -1,13 +1,10 @@
 package me.games647.scoreboardstats.listener;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.pvpstats.Database;
 import static me.games647.scoreboardstats.api.Score.createScoreboard;
 import static me.games647.scoreboardstats.api.Score.getCLEARPACKET;
-import me.games647.scoreboardstats.api.pvpstats.TempScoreboardThread;
-import static org.bukkit.Bukkit.getScheduler;
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
@@ -18,15 +15,14 @@ public final class PlayerListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onDeath(final org.bukkit.event.entity.PlayerDeathEvent death) {
 
-        if ((!getSettings().isPvpstats()) || (getSettings().checkWorld(death.getEntity().getWorld().getName())) || (list.contains(death.getEntity().getName()))) {
+        if ((!getSettings().isPvpstats()) || (getSettings().checkWorld(death.getEntity().getWorld().getName()))) {
             return;
         }
         final Player killed = death.getEntity();
-        Database.increaseDeaths(killed.getName());
+        Database.getCache(killed.getName()).increaseDeaths();
         final Player killer = killed.getKiller();
-
         if (killer != null) {
-            Database.increaseKills(killer.getName());
+            Database.getCache(killer.getName()).increaseKills();
         }
     }
 
@@ -37,10 +33,11 @@ public final class PlayerListener implements org.bukkit.event.Listener {
             return;
         }
 
-        createScoreboard(join.getPlayer(), true);
-        if (getSettings().isTempscoreboard()) {
-            getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(join.getPlayer()), getSettings().getTempshow() * 20L);
+        if (getSettings().isPvpstats()) {
+            Database.loadAccount(join.getPlayer().getName());
         }
+
+        createScoreboard(join.getPlayer(), true);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -55,5 +52,15 @@ public final class PlayerListener implements org.bukkit.event.Listener {
         } else if (getSettings().checkWorld(teleport.getFrom().getName())) { // Check if the Scoreboard was activated
             createScoreboard(teleport.getPlayer(), true);
         }
+    }
+
+    @EventHandler
+    public void onKick(final org.bukkit.event.player.PlayerKickEvent kick) {
+        Database.saveAccount(kick.getPlayer().getName());
+    }
+
+    @EventHandler
+    public void onQuit(final org.bukkit.event.player.PlayerQuitEvent quit) {
+        Database.saveAccount(quit.getPlayer().getName());
     }
 }

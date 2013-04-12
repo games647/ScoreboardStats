@@ -1,7 +1,7 @@
 package me.games647.scoreboardstats.listener;
 
 import de.blablubbabc.insigns.Changer;
-import static me.games647.scoreboardstats.api.pvpstats.Database.checkAccount;
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import static me.games647.scoreboardstats.api.pvpstats.Database.getKdr;
 import org.bukkit.entity.Player;
 
@@ -14,21 +14,21 @@ public final class SignsListener {
         instance.addChanger(new Changer("[Kills]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(checkAccount(player.getName()).getKills());
+                return String.valueOf(Database.getCache(player.getName()).getKills());
             }
         });
 
         instance.addChanger(new Changer("[Deaths]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(checkAccount(player.getName()).getDeaths());
+                return String.valueOf(Database.getCache(player.getName()).getDeaths());
             }
         });
 
         instance.addChanger(new Changer("[Mob]", permission) {
             @Override
             public String getValue(final Player player) {
-                return String.valueOf(checkAccount(player.getName()).getMobkills());
+                return String.valueOf(Database.getCache(player.getName()).getMob());
             }
         });
 

@@ -1,9 +1,5 @@
 package me.games647.scoreboardstats;
 
-import me.games647.scoreboardstats.ScoreboardStats;
-import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
-import me.games647.scoreboardstats.api.pvpstats.TempScoreboardThread;
-import static org.bukkit.Bukkit.getScheduler;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
@@ -77,9 +73,6 @@ public final class SettingsHandler {
                     (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
                     , localtitle
                     , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player), true);
-        }
-        if (tempscoreboard) {
-            getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(player), tempshow * 20L);
         }
     }
 }

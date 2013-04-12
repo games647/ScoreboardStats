@@ -1,6 +1,5 @@
 package me.games647.scoreboardstats.api.pvpstats;
 
-import me.games647.scoreboardstats.api.pvpstats.Database;
 import me.games647.scoreboardstats.ScoreboardStats;
 import me.games647.scoreboardstats.api.Score;
 import me.games647.scoreboardstats.listener.PlayerListener;
@@ -12,7 +11,6 @@ public final class TempScoreboardThread implements Runnable {
     public final Player player;
 
     public TempScoreboardThread(final Player paramplayer) {
-        PlayerListener.list.add(paramplayer.getName());
         this.player = paramplayer;
     }
 
@@ -21,6 +19,7 @@ public final class TempScoreboardThread implements Runnable {
         if (!player.isOnline()) {
             return;
         }
+        PlayerListener.list.add(player.getName());
         final java.util.HashMap<String, Integer> top = Database.getTop();
         Score.createScoreboard(player, false);
         for (String key : top.keySet()) {

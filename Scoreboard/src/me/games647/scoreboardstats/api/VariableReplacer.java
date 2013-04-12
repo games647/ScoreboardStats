@@ -1,27 +1,26 @@
 package me.games647.scoreboardstats.api;
 
-import me.games647.scoreboardstats.api.pvpstats.Database;
 import com.gmail.nossr50.api.ExperienceAPI;
 import java.util.Date;
 import me.games647.scoreboardstats.ScoreboardStats;
+import me.games647.scoreboardstats.api.pvpstats.Database;
 import me.games647.scoreboardstats.listener.PluginListener;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 public final class VariableReplacer {
 
     @SuppressWarnings("deprecation")
-    public static int getValue(final String key, final Player player) {
+    public static int getValue(final String key, final org.bukkit.entity.Player player) {
         if (ScoreboardStats.getSettings().isPvpstats()) {
             if ("%kills%".equals(key)) {
-                return Database.checkAccount(player.getName()).getKills();
+                return Database.getCache(player.getName()).getKills();
             }
             if ("%deaths%".equals(key)) {
-                return Database.checkAccount(player.getName()).getDeaths();
+                return Database.getCache(player.getName()).getDeaths();
             }
             if ("%mob%".equals(key)) {
-                return Database.checkAccount(player.getName()).getMobkills();
+                return Database.getCache(player.getName()).getMob();
             }
             if ("%kdr%".equals(key)) {
                 return Database.getKdr(player.getName());
@@ -83,7 +82,7 @@ public final class VariableReplacer {
         if ("%max_ram%".equals(key)) {
             return (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
         }
-        if ("%used_ram".equals(key)) {
+        if ("%used_ram%".equals(key)) {
             return (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         }
         if ("%date%".equals(key)) {
@@ -205,7 +204,7 @@ public final class VariableReplacer {
         return -1;
     }
 
-    public static String getTitle(String variable) {
+    public static String getTitle(final String variable) {
         return "";
     }
 }

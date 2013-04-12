@@ -1,10 +1,13 @@
 package me.games647.scoreboardstats.api;
 
+import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
+import me.games647.scoreboardstats.api.pvpstats.TempScoreboardThread;
 import net.minecraft.server.v1_5_R2.Packet206SetScoreboardObjective;
 import net.minecraft.server.v1_5_R2.Packet207SetScoreboardScore;
 import net.minecraft.server.v1_5_R2.Packet208SetScoreboardDisplayObjective;
 import net.minecraft.server.v1_5_R2.PlayerConnection;
+import static org.bukkit.Bukkit.getScheduler;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class Score {
@@ -43,6 +46,9 @@ public final class Score {
             con.sendPacket(OBJECTIVE);
             con.sendPacket(DISPLAY);
             getSettings().sendUpdate(player);
+            if (getSettings().isTempscoreboard()) {
+                getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(player), getSettings().getTempshow() * 20L);
+            }
             return;
         }
 

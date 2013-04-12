@@ -1,7 +1,6 @@
 : Command for disabling the Scoreboard
 : Reset the Database with commands
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
-: Cache-System for a better Performance
 : mcMMO leaderboard + xp_to_next_level support
 : make independent from InSigns
 : Add Survival Games, Jobs, Heroes, MobArena, Bungee, Factions and Paintball support

@@ -17,7 +17,7 @@ public final class EntityListener implements org.bukkit.event.Listener {
             final org.bukkit.entity.Player killer = entity.getKiller();
 
             if (killer != null) {
-                me.games647.scoreboardstats.api.pvpstats.Database.increaseMobKills(killer.getName());
+                me.games647.scoreboardstats.api.pvpstats.Database.getCache(killer.getName()).increaseMob();
             }
         }
     }
