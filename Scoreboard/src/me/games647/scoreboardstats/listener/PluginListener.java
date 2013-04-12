@@ -1,6 +1,6 @@
 package me.games647.scoreboardstats.listener;
 
-import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.EssentialsTimer;
 import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
@@ -9,7 +9,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
 
     private static Economy econ;
     private static boolean mcmmo, survival, paintball, mobarena;
-    private static Essentials essentials;
+    private static EssentialsTimer essentials;
     private static SimpleClans simpleclans;
 
     public static Economy getEcon() {
@@ -36,7 +36,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return simpleclans;
     }
 
-    public static Essentials getEssentials() {
+    public static EssentialsTimer getEssentials() {
         return essentials;
     }
 
@@ -54,7 +54,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         survival = (pm.getPlugin("SurvivalGames") != null);
         paintball = (pm.getPlugin("Paintball") != null);
         mobarena = (pm.getPlugin("MobArena") != null);
-        essentials = (Essentials) pm.getPlugin("Essentials");
+        essentials = ((com.earth2me.essentials.Essentials) pm.getPlugin("Essentials")).getTimer();
         if (pm.getPlugin("InSigns") != null) {
             new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }

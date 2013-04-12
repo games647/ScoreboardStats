@@ -119,7 +119,7 @@ public final class VariableReplacer {
             return new Date(player.getFirstPlayed()).getMonth();
         }
         if ((PluginListener.getEssentials() != null) && ("%ticks%".equals(key))) {
-            return (int) PluginListener.getEssentials().getTimer().getAverageTPS();
+            return (int) PluginListener.getEssentials().getAverageTPS();
         }
         if (PluginListener.getSimpleclans() != null) {
             if ("%kills_civilian%".equals(key)) {

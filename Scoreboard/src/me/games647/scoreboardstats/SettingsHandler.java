@@ -52,19 +52,19 @@ public final class SettingsHandler {
     }
 
     public int getIntervall() {
-        return intervall;
+        return intervall; //Change to short
     }
 
     public int getTopitems() {
-        return topitems;
+        return topitems; //Change to byte
     }
 
     public int getTempshow() {
-        return tempshow;
+        return tempshow; //Change to short
     }
 
     public int getTempdisapper() {
-        return tempdisapper;
+        return tempdisapper; //Change to short
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player) {
