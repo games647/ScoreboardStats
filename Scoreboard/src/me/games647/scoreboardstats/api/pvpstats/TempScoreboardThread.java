@@ -22,6 +22,7 @@ public final class TempScoreboardThread implements Runnable {
         PlayerListener.list.add(player.getName());
         final java.util.Map<String, Integer> top = Database.getTop();
         Score.createScoreboard(player, false);
+
         for (String key : top.keySet()) {
             Score.sendScore(
                     ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
@@ -29,6 +30,7 @@ public final class TempScoreboardThread implements Runnable {
                     , top.get(key)
                     , false);
         }
+        
         org.bukkit.Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new Runnable() {
             @Override
             public void run() {
