@@ -54,11 +54,13 @@ public final class PluginListener implements org.bukkit.event.Listener {
         survival = (pm.getPlugin("SurvivalGames") != null);
         paintball = (pm.getPlugin("Paintball") != null);
         mobarena = (pm.getPlugin("MobArena") != null);
+
         if (pm.getPlugin("Essentials") != null) {
             essentials = ((com.earth2me.essentials.Essentials) pm.getPlugin("Essentials")).getTimer();
         } else {
             essentials = null;
         }
+        
         if (pm.getPlugin("InSigns") != null) {
             new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
