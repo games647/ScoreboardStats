@@ -12,6 +12,7 @@ Scoreboard:
   # For instant updates you can or 1 and it will update every second
   Update-delay: 1
   Items:
+    #The Title must have under 16 characters
     #Title: Type
     '&9Online': '%online%'
     '&9Money': '%econ%'
@@ -22,5 +23,5 @@ Temp-Scoreboard:
   Title: '&a&lTop Kills'
   #How many Players would be displayed
   Items: 5
-  Intervall-show: 60
+  Intervall-show: 10
   Intervall-disappear: 10

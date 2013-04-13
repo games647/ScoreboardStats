@@ -71,7 +71,7 @@ public final class SettingsHandler {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore((
                     (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
-                    , localtitle
+                    , localtitle.length() > 16 ? localtitle.substring(0, 16) : localtitle
                     , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player), true);
         }
     }

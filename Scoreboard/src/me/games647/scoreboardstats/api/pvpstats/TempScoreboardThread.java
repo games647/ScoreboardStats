@@ -26,11 +26,11 @@ public final class TempScoreboardThread implements Runnable {
         for (String key : top.keySet()) {
             Score.sendScore(
                     ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
-                    , String.format("\u00a79%s", key)
+                    , String.format("\u00a79%s", key.length() > 16 ? key.substring(0, 16) : key)
                     , top.get(key)
                     , false);
         }
-        
+
         org.bukkit.Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new Runnable() {
             @Override
             public void run() {
