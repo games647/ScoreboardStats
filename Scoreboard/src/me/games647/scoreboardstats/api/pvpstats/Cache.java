@@ -4,10 +4,10 @@ public final class Cache {
 
     private int kills, mob, deaths;
 
-    public Cache(final int kills, final int mob, final int deaths) {
-        this.kills = kills;
-        this.mob = mob;
-        this.deaths = deaths;
+    public Cache(final int paramkills, final int parammob, final int paramdeaths) {
+        this.kills = paramkills;
+        this.mob = parammob;
+        this.deaths = paramdeaths;
     }
 
     public Cache() {
