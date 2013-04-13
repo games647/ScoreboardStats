@@ -1,8 +1,8 @@
 : Command for disabling the Scoreboard
 : Reset the Database with commands
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
-: mcMMO leaderboard + xp_to_next_level support
+: mcMMO leaderboard support
 : make independent from InSigns
-: Add Survival Games, Jobs, Heroes, MobArena, Bungee, Factions and Paintball support
+: Add Survival Games, Jobs, Heroes, MobArena, Bungee, Factions, Towny and Paintball support
 : Add killstreaks
 : Don't register new Accounts if the done nothing
