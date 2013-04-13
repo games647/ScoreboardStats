@@ -43,6 +43,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
     public static void init() {
         final org.bukkit.plugin.PluginManager pm = Bukkit.getServer().getPluginManager();
         mcmmo = (pm.getPlugin("mcMMO") != null);
+
         if (pm.getPlugin("Vault") != null) {
             final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
@@ -50,6 +51,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
                 econ = economyProvider.getProvider();
             }
         }
+        
         simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
         survival = (pm.getPlugin("SurvivalGames") != null);
         paintball = (pm.getPlugin("Paintball") != null);
@@ -60,7 +62,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         } else {
             essentials = null;
         }
-        
+
         if (pm.getPlugin("InSigns") != null) {
             new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
