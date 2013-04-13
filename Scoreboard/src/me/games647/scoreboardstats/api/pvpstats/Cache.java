@@ -11,7 +11,7 @@ public final class Cache {
     }
 
     public Cache() {
-        //Do nothing, because all variables are automatically init as 0
+       //Do nothing, because all variables are automatically init as 0
     }
 
     public int getKills() {
