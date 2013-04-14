@@ -2,6 +2,7 @@
 
 : decrease packets
 : Add killstreaks
+: Add configurationsection for Temp-Scoreboard
 : make independent from InSigns
 : Factions support
 : Bungee support
