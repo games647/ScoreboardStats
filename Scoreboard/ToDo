@@ -1,9 +1,24 @@
+- 0.5
+
+: decrease packets
+: Add killstreaks
+: make independent from InSigns
+: Factions support
+: Bungee support
+
+- 0.6
+
+: Make it reload compatible
 : Command for disabling the Scoreboard
 : Reset the Database with commands
+: Add variables in for text
+: Survival Games support
+: Add Jobs support
+: Paintball support
+
+- 0.7
+
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
 : mcMMO leaderboard support
-: make independent from InSigns
-: Add Survival Games, Jobs, Heroes, MobArena, Bungee, Factions, Towny and Paintball support
-: Add killstreaks
-: decrease packets
-: Make it reload compatible
+: Towny support
+: Add Heroes variables
