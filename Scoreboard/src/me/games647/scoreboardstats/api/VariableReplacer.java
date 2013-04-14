@@ -95,7 +95,7 @@ public final class VariableReplacer {
             return (int) (player.getWorld().getTime() / 1000);
         }
         if ("%lifetime%".equals(key)) {
-            return player.getTicksLived();
+            return player.getTicksLived() / 120;
         }
         if ("%exp%".equals(key)) {
             return player.getTotalExperience();
