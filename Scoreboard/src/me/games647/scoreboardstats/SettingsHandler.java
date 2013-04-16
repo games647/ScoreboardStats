@@ -20,12 +20,12 @@ public final class SettingsHandler {
     private void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = this.plugin.getConfig();
         this.pvpstats = config.getBoolean("enable-pvpstats");
-        this.title = translateAlternateColorCodes('&', config.getString("Scoreboard.Title"));
+        this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));
         items = config.getConfigurationSection("Scoreboard.Items").getValues(false);
         this.disabledworlds = config.getStringList("disabled-worlds");
         this.intervall = config.getInt("Scoreboard.Update-delay");
         this.tempscoreboard = config.getBoolean("Temp-Scoreboard-enabled");
-        this.temptitle = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Title"));
+        this.temptitle = translateAlternateColorCodes('&', checkLength(config.getString("Temp-Scoreboard.Title")));
         this.topitems = config.getInt("Temp-Scoreboard.Items");
         this.tempshow = config.getInt("Temp-Scoreboard.Intervall-show");
         this.tempdisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
@@ -52,27 +52,34 @@ public final class SettingsHandler {
     }
 
     public int getIntervall() {
-        return intervall; //Change to short
+        return intervall;
     }
 
     public int getTopitems() {
-        return topitems; //Change to byte
+        return topitems;
     }
 
     public int getTempshow() {
-        return tempshow; //Change to short
+        return tempshow;
     }
 
     public int getTempdisapper() {
-        return tempdisapper; //Change to short
+        return tempdisapper;
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player) {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore((
                     (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
-                    , localtitle.length() > 16 ? localtitle.substring(0, 16) : localtitle
+                    , checkLength(localtitle)
                     , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player), true);
         }
+    }
+
+    private static String checkLength(final String check) {
+        if (check.length() < 17) {
+            return check;
+        }
+        return check.substring(0, 16);
     }
 }

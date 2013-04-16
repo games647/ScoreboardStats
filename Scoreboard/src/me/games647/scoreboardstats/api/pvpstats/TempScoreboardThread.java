@@ -26,7 +26,7 @@ public final class TempScoreboardThread implements Runnable {
         for (String key : top.keySet()) {
             Score.sendScore(
                     ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
-                    , String.format("\u00a79%s", key.length() > 16 ? key.substring(0, 14) : key)
+                    , String.format("\u00a79%s", checkLength(key))
                     , top.get(key)
                     , false);
         }
@@ -41,5 +41,12 @@ public final class TempScoreboardThread implements Runnable {
                 Score.createScoreboard(player, true);
             }
         }, ScoreboardStats.getSettings().getTempdisapper() * 20L);
+    }
+
+    private static String checkLength(final String check) {
+        if (check.length() < 15) {
+            return check;
+        }
+        return check.substring(0, 14);
     }
 }
