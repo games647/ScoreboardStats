@@ -78,6 +78,7 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
         </plugins>
@@ -91,5 +92,15 @@
             </resource>
         </resources>
     </build>
-
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
