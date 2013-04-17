@@ -18,14 +18,6 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
-        <repository>
-            <id>SimpleClans</id>
-            <url>file://${project.basedir}/lib/SimpleClans-2.4.1.jar</url>
-        </repository>
-        <repository>
-            <id>InSigns</id>
-            <url>file://${project.basedir}/lib/InSigns_v1.2.jar</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -45,6 +37,34 @@
             <artifactId>Vault</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>Essentials</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Essentials.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/SimpleClans-2.4.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>InSigns</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/InSigns_v1.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
         </dependency>
     </dependencies>
 
