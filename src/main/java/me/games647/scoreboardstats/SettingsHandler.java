@@ -72,7 +72,7 @@ public final class SettingsHandler {
             me.games647.scoreboardstats.api.Score.sendScore((
                     (org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
                     , checkLength(localtitle)
-                    , me.games647.scoreboardstats.api.VariableReplacer.getValue((String) items.get(localtitle), player), true);
+                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player), true);
         }
     }
 

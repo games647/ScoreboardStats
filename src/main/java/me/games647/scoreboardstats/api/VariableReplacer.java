@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 public final class VariableReplacer {
 
     @SuppressWarnings("deprecation")
-    public static int getValue(final String key, final org.bukkit.entity.Player player) {
+    public static int getReplacedInt(final String key, final org.bukkit.entity.Player player) {
         if (!player.isOnline()) {
             return -1;
         }
@@ -207,7 +207,7 @@ public final class VariableReplacer {
         return -1;
     }
 
-    public static String getTitle(final String variable) {
+    public static String getReplacedString(final String variable) {
         return "";
     }
 }
