@@ -1,6 +1,7 @@
 *.class
 
 # Package Files #
-*.jar
-*.war
 *.ear
+/Scoreboard/target/
+/Scoreboard/nb-configuration.xml
+/nb-configuration.xml
