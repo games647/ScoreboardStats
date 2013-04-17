@@ -18,6 +18,10 @@
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
         </repository>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -28,9 +32,36 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.5.1-R0.1</version>
+            <groupId>.</groupId>
+            <artifactId>Essentials</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Essentials.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/SimpleClans-2.4.1.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>InSigns</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/InSigns_v1.2.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -39,32 +70,10 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>.</groupId>
-            <artifactId>Essentials</artifactId>
-            <version>0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Essentials.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>.</groupId>
-            <artifactId>SimpleClans</artifactId>
-            <version>0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/SimpleClans-2.4.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>.</groupId>
-            <artifactId>InSigns</artifactId>
-            <version>0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/InSigns_v1.2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>.</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.5.1-R0.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
@@ -78,7 +87,7 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <debug>false</debug>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
         </plugins>
