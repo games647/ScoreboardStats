@@ -87,7 +87,9 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <debug>true</debug>
+                    <debug>false</debug>
+                    <minimizeJar>true</minimizeJar>
+                    <optimize>true</optimize>
                 </configuration>
             </plugin>
         </plugins>
