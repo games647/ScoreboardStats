@@ -2,7 +2,7 @@ package me.games647.scoreboardstats.api;
 
 import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.pvpstats.TempScoreboardThread;
+import me.games647.scoreboardstats.api.pvpstats.TempScoreShow;
 import net.minecraft.server.v1_5_R2.Packet206SetScoreboardObjective;
 import net.minecraft.server.v1_5_R2.Packet207SetScoreboardScore;
 import net.minecraft.server.v1_5_R2.Packet208SetScoreboardDisplayObjective;
@@ -43,12 +43,13 @@ public final class Score {
         final PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
 
         if (type) {
+            if (getSettings().isTempscoreboard()) {
+                getScheduler().runTaskLater(getInstance(), new TempScoreShow(player), getSettings().getTempshow() * 20L);
+            }
+
             con.sendPacket(OBJECTIVE);
             con.sendPacket(DISPLAY);
             getSettings().sendUpdate(player);
-            if (getSettings().isTempscoreboard()) {
-                getScheduler().runTaskLater(getInstance(), new TempScoreboardThread(player), getSettings().getTempshow() * 20L);
-            }
             return;
         }
 

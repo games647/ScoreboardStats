@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ScoreboardStats</groupId>
-    <artifactId>ScoreboardStats</artifactId>
+    <groupId>me.games647</groupId>
+    <artifactId>scoreboardstats</artifactId>
     <version>0.4</version>
     <packaging>jar</packaging>
-
-    <name>Scoreboard</name>
-    <url>http://maven.apache.org</url>
+    <description>Show the Scoreboard with custom variables</description>
+    <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
+    <name>ScoreboardStats</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -99,6 +99,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>plugin.yml</include>
+                    <include>config.yml</include>
                 </includes>
             </resource>
         </resources>

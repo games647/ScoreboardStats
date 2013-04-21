@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 public final class PluginListener implements org.bukkit.event.Listener {
 
     private static Economy econ;
-    private static boolean mcmmo, survival, paintball, mobarena;
+    private static boolean mcmmo, paintball;
     private static EssentialsTimer essentials;
     private static SimpleClans simpleclans;
 
@@ -20,16 +20,8 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return mcmmo;
     }
 
-    public static boolean isSurvival() {
-        return survival;
-    }
-
     public static boolean isPaintball() {
         return paintball;
-    }
-
-    public static boolean isMobarena() {
-        return mobarena;
     }
 
     public static SimpleClans getSimpleclans() {
@@ -42,7 +34,18 @@ public final class PluginListener implements org.bukkit.event.Listener {
 
     public static void init() {
         final org.bukkit.plugin.PluginManager pm = Bukkit.getServer().getPluginManager();
+
         mcmmo = (pm.getPlugin("mcMMO") != null);
+        simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
+        paintball = (pm.getPlugin("Paintball") != null);
+
+        if (pm.getPlugin("Essentials") != null) {
+            essentials = ((com.earth2me.essentials.Essentials) pm.getPlugin("Essentials")).getTimer();
+        }
+
+        if (pm.getPlugin("InSigns") != null) {
+            new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
+        }
 
         if (pm.getPlugin("Vault") != null) {
             final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
@@ -50,21 +53,6 @@ public final class PluginListener implements org.bukkit.event.Listener {
             if (economyProvider != null) {
                 econ = economyProvider.getProvider();
             }
-        }
-        
-        simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
-        survival = (pm.getPlugin("SurvivalGames") != null);
-        paintball = (pm.getPlugin("Paintball") != null);
-        mobarena = (pm.getPlugin("MobArena") != null);
-
-        if (pm.getPlugin("Essentials") != null) {
-            essentials = ((com.earth2me.essentials.Essentials) pm.getPlugin("Essentials")).getTimer();
-        } else {
-            essentials = null;
-        }
-
-        if (pm.getPlugin("InSigns") != null) {
-            new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
     }
 }

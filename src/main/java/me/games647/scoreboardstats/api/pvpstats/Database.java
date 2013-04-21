@@ -25,7 +25,7 @@ public final class Database {
         if (stats == null) {
             playercache = new Cache();
         } else {
-            playercache = new Cache(stats.getKills(), stats.getMobkills(), stats.getDeaths());
+            playercache = new Cache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak());
         }
 
         cache.put(name, playercache);
@@ -63,6 +63,7 @@ public final class Database {
         stats.setDeaths(playercache.getDeaths());
         stats.setKills(playercache.getKills());
         stats.setMobkills(playercache.getMob());
+        stats.setKillstreak(playercache.getStreak());
         databaseinstance.save(stats);
     }
 
@@ -74,7 +75,17 @@ public final class Database {
     }
 
     public static Map<String, Integer> getTop() {
-        final java.util.List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
+        java.util.List<PlayerStats> list;
+        final String type = getSettings().getToptype();
+
+        if (type.equals("%killstreak%")) {
+            list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
+        } else if (type.equals("%mobkills%")) {
+            list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
+        } else {
+            list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
+        }
+        
         final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
 
         for (int i = 0; i < list.size(); i++) {

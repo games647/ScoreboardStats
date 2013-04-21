@@ -1,6 +1,8 @@
-name: ScoreboardStats
-main: me.games647.scoreboardstats.ScoreboardStats
+name: ${project.name}
+main: ${project.groupId}.${project.artifactId}.${project.name}
 author: games647
-version: 1.0
+version: ${project.version}
+description: ${project.description}
+website: ${project.url}
 database: true
 softdepend: [mcMMO, Vault, SurvivalGames, SimpleClans, MobArena, Paintball, InSigns, Essentials]

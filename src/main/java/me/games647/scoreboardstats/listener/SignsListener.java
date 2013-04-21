@@ -14,6 +14,10 @@ public final class SignsListener {
         instance.addChanger(new Changer("[Kills]", permission) {
             @Override
             public String getValue(final Player player) {
+                if (Database.getCache(player.getName()) == null) {
+                    return "";
+                }
+                
                 return String.valueOf(Database.getCache(player.getName()).getKills());
             }
         });
@@ -21,6 +25,10 @@ public final class SignsListener {
         instance.addChanger(new Changer("[Deaths]", permission) {
             @Override
             public String getValue(final Player player) {
+                if (Database.getCache(player.getName()) == null) {
+                    return "";
+                }
+
                 return String.valueOf(Database.getCache(player.getName()).getDeaths());
             }
         });
@@ -28,6 +36,10 @@ public final class SignsListener {
         instance.addChanger(new Changer("[Mob]", permission) {
             @Override
             public String getValue(final Player player) {
+                if (Database.getCache(player.getName()) == null) {
+                    return "";
+                }
+
                 return String.valueOf(Database.getCache(player.getName()).getMob());
             }
         });
@@ -35,6 +47,10 @@ public final class SignsListener {
         instance.addChanger(new Changer("[KDR]", permission) {
             @Override
             public String getValue(final Player player) {
+                if (Database.getCache(player.getName()) == null) {
+                    return "";
+                }
+
                 return String.valueOf(getKdr(player.getName()));
             }
         });

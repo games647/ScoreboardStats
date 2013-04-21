@@ -6,7 +6,7 @@ public final class SettingsHandler {
 
     private final ScoreboardStats plugin;
     private boolean pvpstats, tempscoreboard;
-    private String title, temptitle;
+    private String title, temptitle, tempcolor, toptype;
     private int intervall, topitems, tempshow, tempdisapper;
     private java.util.Map<String, Object> items;
     private java.util.List<String> disabledworlds;
@@ -29,6 +29,8 @@ public final class SettingsHandler {
         this.topitems = config.getInt("Temp-Scoreboard.Items");
         this.tempshow = config.getInt("Temp-Scoreboard.Intervall-show");
         this.tempdisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
+        this.tempcolor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
+        this.toptype = config.getString("Temp-Scoreboard.Type");
     }
 
     public String getTitle() {
@@ -67,6 +69,14 @@ public final class SettingsHandler {
         return tempdisapper;
     }
 
+    public String getTempcolor() {
+        return tempcolor;
+    }
+
+    public String getToptype() {
+        return toptype;
+    }
+
     public void sendUpdate(final org.bukkit.entity.Player player) {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore((
@@ -80,6 +90,7 @@ public final class SettingsHandler {
         if (check.length() < 17) {
             return check;
         }
+
         return check.substring(0, 16);
     }
 }

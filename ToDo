@@ -1,14 +1,15 @@
 - 0.5
 
 : decrease packets
-: Add killstreaks
-: Add configurationsection for Temp-Scoreboard
+
+- 0.6
+
 : make independent from InSigns
 : Factions support
 : Bungee support
 : Add Permission
 
-- 0.6
+- 0.7
 
 : Make it reload compatible
 : Command for disabling the Scoreboard
@@ -18,7 +19,7 @@
 : Add Jobs support
 : Paintball support
 
-- 0.7
+- 0.8
 
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
 : mcMMO leaderboard support
