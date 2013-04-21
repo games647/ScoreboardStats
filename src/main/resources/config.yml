@@ -1,0 +1,30 @@
+#This is the default config
+
+enable-pvpstats: true
+
+disabled-worlds:
+  - world_nether
+  - city
+
+Scoreboard:
+  Title: '&a&lStats'
+  #seconds
+  # For instant updates you can or 1 and it will update every second
+  Update-delay: 1
+  Items:
+    #The Title must have under 16 characters
+    #Title: Type
+    '&9Online': '%online%'
+    '&9Money': '%econ%'
+
+Temp-Scoreboard-enabled: true
+
+Temp-Scoreboard:
+  Title: '&a&lTop Kills'
+  #%mobkills% | %kills% | %killstreak%
+  Type: '%kills%'
+  Color: '&9'
+  #How many Players would be displayed
+  Items: 5
+  Intervall-show: 300
+  Intervall-disappear: 300

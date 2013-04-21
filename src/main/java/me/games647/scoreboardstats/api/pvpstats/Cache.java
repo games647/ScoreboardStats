@@ -2,12 +2,13 @@ package me.games647.scoreboardstats.api.pvpstats;
 
 public final class Cache {
 
-    private int kills, mob, deaths;
+    private int kills, mob, deaths, streak, laststreak;
 
-    public Cache(final int paramkills, final int parammob, final int paramdeaths) {
+    public Cache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
         this.kills = paramkills;
         this.mob = parammob;
         this.deaths = paramdeaths;
+        this.streak = paramstreak;
     }
 
     public Cache() {
@@ -26,6 +27,10 @@ public final class Cache {
         return deaths;
     }
 
+    public int getStreak() {
+        return streak;
+    }
+
     public void increaseKills() {
         this.kills++;
     }
@@ -36,5 +41,19 @@ public final class Cache {
 
     public void increaseDeaths() {
         this.deaths++;
+    }
+
+    public int getLastStreak() {
+        return laststreak;
+    }
+
+    public void increaseLastSreak() {
+        this.laststreak++;
+    }
+
+    public void onDie() {
+        if (laststreak > streak) {
+            this.streak = this.laststreak;
+        }
     }
 }
