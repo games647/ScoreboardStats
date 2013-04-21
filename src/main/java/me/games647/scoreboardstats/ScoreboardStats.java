@@ -28,6 +28,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         settings = new SettingsHandler(this);
         setupDatabase();
         instance = this;
+        regAll();
         PluginListener.init();
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, settings.getIntervall() * 20L);
@@ -47,7 +48,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         }
 
         me.games647.scoreboardstats.api.pvpstats.Database.setDatabase(getDatabase());
-        regAll();
         this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
     }
 
@@ -85,8 +85,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
             if (PlayerListener.list.contains(player.getName())) {
               ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getTEMPCLEARPACKET());
+              ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getCLEARPACKET());
             } else {
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getCLEARPACKET());
+              ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getCLEARPACKET());
             }
         }
     }

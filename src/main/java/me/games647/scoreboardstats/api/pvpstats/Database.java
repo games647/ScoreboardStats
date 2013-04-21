@@ -77,20 +77,27 @@ public final class Database {
     public static Map<String, Integer> getTop() {
         java.util.List<PlayerStats> list;
         final String type = getSettings().getToptype();
+        final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
+
 
         if (type.equals("%killstreak%")) {
             list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
+            for (int i = 0; i < list.size(); i++) {
+                final PlayerStats stats = list.get(i);
+                top.put(stats.getPlayername(), stats.getKillstreak());
+            }
         } else if (type.equals("%mobkills%")) {
             list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
+            for (int i = 0; i < list.size(); i++) {
+                final PlayerStats stats = list.get(i);
+                top.put(stats.getPlayername(), stats.getMobkills());
+            }
         } else {
             list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
-        }
-        
-        final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
-
-        for (int i = 0; i < list.size(); i++) {
-            final PlayerStats stats = list.get(i);
-            top.put(stats.getPlayername(), stats.getKills());
+            for (int i = 0; i < list.size(); i++) {
+                final PlayerStats stats = list.get(i);
+                top.put(stats.getPlayername(), stats.getKills());
+            }
         }
 
         return top;

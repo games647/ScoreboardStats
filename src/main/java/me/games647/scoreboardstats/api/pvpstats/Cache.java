@@ -55,5 +55,6 @@ public final class Cache {
         if (laststreak > streak) {
             this.streak = this.laststreak;
         }
+        laststreak = 0;
     }
 }
