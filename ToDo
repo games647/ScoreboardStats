@@ -1,30 +1,21 @@
-- 0.5
+-high priority
 
 : Add some special characters like hearts
-
-- 0.6
-
 : decrease packets
-
-- 0.7
-
 : make independent from InSigns
 : Factions support
 : Bungee support
 : Add Permission
-
-- 0.8
-
 : Make it reload compatible
 : Command for disabling the Scoreboard
 : Reset the Database with commands
 : Add variables in for text
-: Survival Games support
 : Add Jobs support
+
+-low priority
+
+: Survival Games support
 : Paintball support
-
-- 0.9
-
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
 : mcMMO leaderboard support
 : Towny support
