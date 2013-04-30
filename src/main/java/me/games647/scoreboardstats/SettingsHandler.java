@@ -82,7 +82,7 @@ public final class SettingsHandler {
             me.games647.scoreboardstats.api.Score.sendScore(
                     player
                     , checkLength(localtitle)
-                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player), true);
+                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player));
         }
     }
 

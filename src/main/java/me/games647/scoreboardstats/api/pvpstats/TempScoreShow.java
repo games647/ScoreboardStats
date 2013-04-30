@@ -7,14 +7,6 @@ import org.bukkit.entity.Player;
 
 public final class TempScoreShow implements Runnable {
 
-    private static String checkLength(final String check) {
-        if (check.length() < 15) {
-            return check;
-        }
-
-        return check.substring(0, 14);
-    }
-
     private final Player player;
 
     public TempScoreShow(final Player paramplayer) {
@@ -29,17 +21,7 @@ public final class TempScoreShow implements Runnable {
 
         Database.saveAccount(player.getName(), false);
         PlayerListener.list.add(player.getName());
-        final java.util.Map<String, Integer> top = Database.getTop();
-        Score.createScoreboard(player, false);
-
-        for (String key : top.keySet()) {
-            Score.sendScore(
-                    player
-                    , String.format("%s%s", ScoreboardStats.getSettings().getTempcolor(), checkLength(key))
-                    , top.get(key)
-                    , false);
-        }
-
+        Score.createTopListScoreboard(player);
         org.bukkit.Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new TempScoreDisapper(this.player), ScoreboardStats.getSettings().getTempdisapper() * 20L);
     }
 }
