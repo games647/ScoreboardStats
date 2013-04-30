@@ -8,4 +8,7 @@ database: true
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials]
 commands:
   Scoreboard:
-    
+    usage: /Scoreboard
+permissions:
+  scoreboardstats.use:
+    default: true
