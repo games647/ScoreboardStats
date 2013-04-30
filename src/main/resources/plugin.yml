@@ -5,4 +5,7 @@ version: ${project.version}
 description: ${project.description}
 website: ${project.url}
 database: true
-softdepend: [mcMMO, Vault, SurvivalGames, SimpleClans, MobArena, Paintball, InSigns, Essentials]
+softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials]
+commands:
+  Scoreboard:
+    

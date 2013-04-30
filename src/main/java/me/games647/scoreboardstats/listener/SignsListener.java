@@ -7,22 +7,22 @@ import org.bukkit.entity.Player;
 
 public final class SignsListener {
 
-    public SignsListener(final de.blablubbabc.insigns.InSigns instance) {
+    public static void registerSigns(final de.blablubbabc.insigns.InSigns instance) {
 
         final String permission = "scoreboardstats.sign";
 
-        instance.addChanger(new Changer("[Kills]", permission) {
+        instance.addChanger(new Changer("[Kill]", permission) {
             @Override
             public String getValue(final Player player) {
                 if (Database.getCache(player.getName()) == null) {
                     return "";
                 }
-                
+
                 return String.valueOf(Database.getCache(player.getName()).getKills());
             }
         });
 
-        instance.addChanger(new Changer("[Deaths]", permission) {
+        instance.addChanger(new Changer("[Death]", permission) {
             @Override
             public String getValue(final Player player) {
                 if (Database.getCache(player.getName()) == null) {
@@ -52,6 +52,17 @@ public final class SignsListener {
                 }
 
                 return String.valueOf(getKdr(player.getName()));
+            }
+        });
+
+        instance.addChanger(new Changer("[Killstreak]", permission) {
+            @Override
+            public String getValue(final Player player) {
+                if (Database.getCache(player.getName()) == null) {
+                    return "";
+                }
+
+                return String.valueOf(Database.getCache(player.getName()).getStreak());
             }
         });
     }

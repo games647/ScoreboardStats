@@ -34,7 +34,7 @@ public final class TempScoreShow implements Runnable {
 
         for (String key : top.keySet()) {
             Score.sendScore(
-                    ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection
+                    player
                     , String.format("%s%s", ScoreboardStats.getSettings().getTempcolor(), checkLength(key))
                     , top.get(key)
                     , false);

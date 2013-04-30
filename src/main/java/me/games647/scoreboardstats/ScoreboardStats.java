@@ -5,10 +5,9 @@ import me.games647.scoreboardstats.api.Score;
 import me.games647.scoreboardstats.api.pvpstats.Database;
 import static me.games647.scoreboardstats.api.pvpstats.Database.saveAll;
 import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
-import me.games647.scoreboardstats.listener.PlayerListener;
 import me.games647.scoreboardstats.listener.PluginListener;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer;
+import org.bukkit.scoreboard.DisplaySlot;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
@@ -23,11 +22,32 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         return instance;
     }
 
+    private static void regAll() {
+        for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+
+            Database.loadAccount(player.getName());
+            Score.createScoreboard(player, true);
+        }
+    }
+
+    private static void unregisterAll() {
+        for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        }
+    }
+
     @Override
     public void onEnable() {
+        instance = this;
         settings = new SettingsHandler(this);
         setupDatabase();
-        instance = this;
         regAll();
         PluginListener.init();
         getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
@@ -64,31 +84,5 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         this.getServer().getScheduler().cancelTasks(this);
         saveAll();
         unregisterAll();
-    }
-
-    private void regAll() {
-        for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
-            if (!player.isOnline()) {
-                continue;
-            }
-
-            Database.loadAccount(player.getName());
-            Score.createScoreboard(player, true);
-        }
-    }
-
-    private void unregisterAll() {
-        for (org.bukkit.entity.Player player : Bukkit.getOnlinePlayers()) {
-            if (!player.isOnline()) {
-                continue;
-            }
-
-            if (PlayerListener.list.contains(player.getName())) {
-              ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getTEMPCLEARPACKET());
-              ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getCLEARPACKET());
-            } else {
-              ((CraftPlayer) player).getHandle().playerConnection.sendPacket(Score.getCLEARPACKET());
-            }
-        }
     }
 }
