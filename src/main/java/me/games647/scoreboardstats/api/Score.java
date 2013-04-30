@@ -3,91 +3,63 @@ package me.games647.scoreboardstats.api;
 import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 import me.games647.scoreboardstats.api.pvpstats.TempScoreShow;
-import net.minecraft.server.v1_5_R2.Packet206SetScoreboardObjective;
-import net.minecraft.server.v1_5_R2.Packet207SetScoreboardScore;
-import net.minecraft.server.v1_5_R2.Packet208SetScoreboardDisplayObjective;
-import net.minecraft.server.v1_5_R2.PlayerConnection;
+import org.bukkit.Bukkit;
 import static org.bukkit.Bukkit.getScheduler;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
 public final class Score {
 
-    private static final Packet206SetScoreboardObjective OBJECTIVE = new Packet206SetScoreboardObjective(), CLEARPACKET = new Packet206SetScoreboardObjective(), TOPOBJECTIVE = new Packet206SetScoreboardObjective(), TEMPCLEARPACKET = new Packet206SetScoreboardObjective();
-    private static final Packet208SetScoreboardDisplayObjective DISPLAY = new Packet208SetScoreboardDisplayObjective(), TOPDISPLAY = new Packet208SetScoreboardDisplayObjective();
+    public static void createScoreboard(final Player player, final boolean type) {
+        Objective oldobjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-    static {
-        final String stitle = getSettings().getTitle();
-        OBJECTIVE.a = stitle;
-        OBJECTIVE.b = stitle;
+        if (oldobjective != null) {
+            oldobjective.unregister();
+        }
 
-        CLEARPACKET.a = stitle;
-        CLEARPACKET.b = stitle;
-        CLEARPACKET.c = 1;
+        oldobjective = player.getScoreboard().registerNewObjective("ScoreboardStats", "dummy");
+        oldobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        DISPLAY.a = 1;
-        DISPLAY.b = stitle;
-
-        final String toptitle = getSettings().getTemptitle();
-        TOPOBJECTIVE.a = toptitle;
-        TOPOBJECTIVE.b = toptitle;
-
-        TOPDISPLAY.a = 1;
-        TOPDISPLAY.b = toptitle;
-
-        TEMPCLEARPACKET.a = toptitle;
-        TEMPCLEARPACKET.b = toptitle;
-        TEMPCLEARPACKET.c = 1;
-    }
-
-    public static void createScoreboard(final org.bukkit.entity.Player player, final boolean type) {
-        final PlayerConnection con = ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().playerConnection;
 
         if (type) {
             if (getSettings().isTempscoreboard()) {
                 getScheduler().runTaskLater(getInstance(), new TempScoreShow(player), getSettings().getTempshow() * 20L);
             }
 
-            con.sendPacket(OBJECTIVE);
-            con.sendPacket(DISPLAY);
+            oldobjective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
             getSettings().sendUpdate(player);
             return;
         }
 
-        con.sendPacket(TOPOBJECTIVE);
-        con.sendPacket(TOPDISPLAY);
+        oldobjective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
     }
 
-    public static void sendScore(final PlayerConnection con, final String title, final int value, final boolean type) {
-        final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
+    public static void sendScore(final Player player, final String title, final int value, final boolean type) {
+        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        packet.a = translateAlternateColorCodes('&', title);
-
-        if (type) {
-            packet.b = getSettings().getTitle();
-        } else {
-            packet.b = getSettings().getTemptitle();
+        if ((objective == null) || (!objective.getName().equalsIgnoreCase("ScoreboardStats"))) {
+            return;
         }
 
-        packet.c = value;
+        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(title));
 
-        con.sendPacket(packet);
+        if (score.getScore() == value) {
+            return;
+        }
+
+        score.setScore(value);
+        player.setScoreboard(objective.getScoreboard());
     }
 
-    public static void sendRemoveScore(final PlayerConnection con, final String title) {
-        final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
-
-        packet.a = translateAlternateColorCodes('&', title);
-        packet.b = getSettings().getTitle();
-        packet.d = 1;
-
-        con.sendPacket(packet);
-    }
-
-    public static Packet206SetScoreboardObjective getCLEARPACKET() {
-        return CLEARPACKET;
-    }
-
-    public static Packet206SetScoreboardObjective getTEMPCLEARPACKET() {
-        return TEMPCLEARPACKET;
-    }
+//    public static void sendRemoveScore(final Player player, final String title) {
+//        final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
+//
+//        packet.a = translateAlternateColorCodes('&', title);
+//        packet.b = getSettings().getTitle();
+//        packet.d = 1;
+//
+//        con.sendPacket(packet);
+//    }
 }

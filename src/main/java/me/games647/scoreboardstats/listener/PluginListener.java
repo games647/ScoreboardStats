@@ -44,7 +44,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         }
 
         if (pm.getPlugin("InSigns") != null) {
-            new me.games647.scoreboardstats.listener.SignsListener((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
+            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
         }
 
         if (pm.getPlugin("Vault") != null) {
