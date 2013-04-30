@@ -13,15 +13,19 @@ import org.bukkit.scoreboard.Objective;
 public final class Score {
 
     public static void createScoreboard(final Player player, final boolean type) {
-        Objective oldobjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        if (!player.hasPermission("scoreboardstats.use")) {
+            return;
+        }
+        
+        Objective oldobjective = player.getScoreboard().getObjective("ScoreboardStats");
 
-        if (oldobjective != null) {
-            oldobjective.unregister();
+        if (oldobjective == null) {
+            oldobjective = player.getScoreboard().registerNewObjective("ScoreboardStats", "dummy");
         }
 
-        oldobjective = player.getScoreboard().registerNewObjective("ScoreboardStats", "dummy");
-        oldobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
+        if (oldobjective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
+            oldobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        }
 
         if (type) {
             if (getSettings().isTempscoreboard()) {
@@ -29,6 +33,7 @@ public final class Score {
             }
 
             oldobjective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
+            player.setScoreboard(oldobjective.getScoreboard());
             getSettings().sendUpdate(player);
             return;
         }
@@ -39,27 +44,17 @@ public final class Score {
     public static void sendScore(final Player player, final String title, final int value, final boolean type) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if ((objective == null) || (!objective.getName().equalsIgnoreCase("ScoreboardStats"))) {
+        if (objective == null) {
             return;
         }
 
-        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(title));
+        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if (score.getScore() == value) {
+        if ((score.getScore() != 0) && (score.getScore() == value)) { // Send not much packets
             return;
         }
 
         score.setScore(value);
         player.setScoreboard(objective.getScoreboard());
     }
-
-//    public static void sendRemoveScore(final Player player, final String title) {
-//        final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
-//
-//        packet.a = translateAlternateColorCodes('&', title);
-//        packet.b = getSettings().getTitle();
-//        packet.d = 1;
-//
-//        con.sendPacket(packet);
-//    }
 }
