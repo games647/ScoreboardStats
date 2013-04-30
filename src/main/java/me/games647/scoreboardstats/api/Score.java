@@ -1,10 +1,8 @@
 package me.games647.scoreboardstats.api;
 
-import me.games647.scoreboardstats.ScoreboardStats;
 import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 import me.games647.scoreboardstats.api.pvpstats.Database;
-import me.games647.scoreboardstats.api.pvpstats.TempScoreShow;
 import org.bukkit.Bukkit;
 import static org.bukkit.Bukkit.getScheduler;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -19,23 +17,15 @@ public final class Score {
             return;
         }
 
-        Objective oldobjective = player.getScoreboard().getObjective("ScoreboardStats");
-
-        if (oldobjective == null) {
-            oldobjective = player.getScoreboard().registerNewObjective("ScoreboardStats", "dummy");
-        }
-
-        if (oldobjective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
-            oldobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        }
-
         if (getSettings().isTempscoreboard()) {
-            getScheduler().runTaskLater(getInstance(), new TempScoreShow(player), getSettings().getTempshow() * 20L);
+            getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
         }
 
-        oldobjective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
-        player.setScoreboard(oldobjective.getScoreboard());
-        getSettings().sendUpdate(player);
+        final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStats", "dummy"); //Use new Scoreboard because if something was removed it will no longer send it to the client
+        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        player.setScoreboard(objective.getScoreboard());
+        getSettings().sendUpdate(player, true);
     }
 
     public static void createTopListScoreboard(final Player player) {
@@ -43,39 +33,33 @@ public final class Score {
             return;
         }
 
-        Objective oldobjective = player.getScoreboard().getObjective("ScoreboardStats T");
-
-        if (oldobjective == null) {
-            oldobjective = player.getScoreboard().registerNewObjective("ScoreboardStats T", "dummy");
-        }
-
-        if (oldobjective.getDisplaySlot() != DisplaySlot.SIDEBAR) {
-            oldobjective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        }
-
-        oldobjective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
+        final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStatsT", "dummy");
+        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        player.setScoreboard(objective.getScoreboard());
         final java.util.Map<String, Integer> top = Database.getTop();
 
         for (String key : top.keySet()) {
-            Score.sendScore(player, String.format("%s%s", ScoreboardStats.getSettings().getTempcolor(), checkLength(key)), top.get(key));
+            Score.sendScore(player, String.format("%s%s", getSettings().getTempcolor(), checkLength(key)), top.get(key), false);
         }
-
-        player.setScoreboard(oldobjective.getScoreboard());
     }
 
-    public static void sendScore(final Player player, final String title, final int value) {
+    public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if ((objective == null) || (!objective.getName().startsWith("ScoreboardStats"))) {
+        if ((!player.hasPermission("scoreboardstats.use")) || (objective == null) || (!objective.getName().startsWith("ScoreboardStats"))) {
             return;
         }
 
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if (score.getScore() == value) { // Send not much packets
+        if ((!complete) && (score.getScore() == value)) { // Send not much packets
             return;
         }
 
+        if (value == 0) {
+            score.setScore(-1);
+        }
         score.setScore(value);
         player.setScoreboard(objective.getScoreboard());
     }

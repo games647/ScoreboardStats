@@ -8,7 +8,7 @@ public final class SettingsHandler {
     private boolean pvpstats, tempscoreboard;
     private String title, temptitle, tempcolor, toptype;
     private int intervall, topitems, tempshow, tempdisapper;
-    private java.util.Map<String, Object> items;
+    private static java.util.Map<String, Object> items = new java.util.HashMap<String, Object>();
     private java.util.List<String> disabledworlds;
 
     public SettingsHandler(final ScoreboardStats instance) {
@@ -21,7 +21,6 @@ public final class SettingsHandler {
         final org.bukkit.configuration.file.FileConfiguration config = this.plugin.getConfig();
         this.pvpstats = config.getBoolean("enable-pvpstats");
         this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));
-        items = config.getConfigurationSection("Scoreboard.Items").getValues(false);
         this.disabledworlds = config.getStringList("disabled-worlds");
         this.intervall = config.getInt("Scoreboard.Update-delay");
         this.tempscoreboard = config.getBoolean("Temp-Scoreboard-enabled");
@@ -31,6 +30,7 @@ public final class SettingsHandler {
         this.tempdisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
         this.tempcolor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         this.toptype = config.getString("Temp-Scoreboard.Type");
+        loaditems(config.getConfigurationSection("Scoreboard.Items"));
     }
 
     public String getTitle() {
@@ -77,12 +77,12 @@ public final class SettingsHandler {
         return toptype;
     }
 
-    public void sendUpdate(final org.bukkit.entity.Player player) {
+    public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore(
                     player
-                    , checkLength(localtitle)
-                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player));
+                    , localtitle
+                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player), complete);
         }
     }
 
@@ -92,5 +92,23 @@ public final class SettingsHandler {
         }
 
         return check.substring(0, 16);
+    }
+
+    private static void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
+        final java.util.Set<String> keys = config.getKeys(false);
+
+        if (!items.isEmpty()) {
+            items.clear();
+        }
+
+        for (String key : keys) {
+            items.put(translateAlternateColorCodes('&', checkLength(key)), config.getString(key));
+        }
+    }
+
+    private static String replaceSpecialChars(final String replaceString) {
+
+
+        return replaceString;
     }
 }

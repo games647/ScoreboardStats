@@ -24,7 +24,7 @@ public final class VariableReplacer {
             }
         }
 
-        if ((PluginListener.getEcon() != null) && ("%econ%".equals(key))) {
+        if ((PluginListener.getEcon() != null) && (VariableList.ECONOMY.equals(key))) {
             return (int) PluginListener.getEcon().getBalance(player.getName());
         }
 
@@ -35,7 +35,7 @@ public final class VariableReplacer {
             }
         }
 
-        if ((PluginListener.getEssentials() != null) && ("%ticks%".equals(key))) {
+        if ((PluginListener.getEssentials() != null) && (VariableList.TICKS.equals(key))) {
             return (int) PluginListener.getEssentials().getAverageTPS();
         }
 
@@ -53,74 +53,70 @@ public final class VariableReplacer {
 
         return -1;
     }
-
-    public static String getReplacedString(final String variable) {
-        return "";
-    }
-
+    
     private static int getPvpValue(final String key, final Player player) {
-        if ("%kills%".equals(key)) {
+        if (VariableList.KILLS.equals(key)) {
             return Database.getCache(player.getName()).getKills();
         }
-        if ("%deaths%".equals(key)) {
+        if (VariableList.DEATHS.equals(key)) {
             return Database.getCache(player.getName()).getDeaths();
         }
-        if ("%mob%".equals(key)) {
+        if (VariableList.MOB.equals(key)) {
             return Database.getCache(player.getName()).getMob();
         }
-        if ("%kdr%".equals(key)) {
+        if (VariableList.KDR.equals(key)) {
             return Database.getKdr(player.getName());
         }
-        if ("%killstreak%".equals(key)) {
+        if (VariableList.KILLSTREAK.equals(key)) {
             return Database.getCache(player.getName()).getStreak();
         }
-        if ("%current_streak%".equals(key)) {
+        if (VariableList.CURRENTSTREAK.equals(key)) {
             return Database.getCache(player.getName()).getLastStreak();
         }
         return -1;
     }
 
     private static int getMcmmoValue(final String key, final Player player) {
-        if ("%powlvl%".equals(key)) {
+        if (VariableList.POWLVL.equals(key)) {
             return ExperienceAPI.getPowerLevel(player);
         }
-        if ("%woodcutting%".equals(key)) {
+        if (VariableList.WOODCUTTING.equals(key)) {
             return ExperienceAPI.getLevel(player, "WOODCUTTING");
         }
-        if ("%acrobatics%".equals(key)) {
+        if (VariableList.ACROBATICS.equals(key)) {
             return ExperienceAPI.getLevel(player, "ACROBATICS");
         }
-        if ("%archery%".equals(key)) {
+        if (VariableList.ARCHERY.equals(key)) {
             return ExperienceAPI.getLevel(player, "ARCHERY");
         }
-        if ("%axes%".equals(key)) {
+        if (VariableList.AXES.equals(key)) {
             return ExperienceAPI.getLevel(player, "AXES");
         }
-        if ("%excavation%".equals(key)) {
+        if (VariableList.EXCAVATION.equals(key)) {
             return ExperienceAPI.getLevel(player, "EXCAVATION");
         }
-        if ("%fishing%".equals(key)) {
+        if (VariableList.FISHING.equals(key)) {
             return ExperienceAPI.getLevel(player, "FISHING");
         }
-        if ("%herbalism%".equals(key)) {
+        if (VariableList.HERBALISM.equals(key)) {
             return ExperienceAPI.getLevel(player, "HERBALISM");
         }
-        if ("%mining%".equals(key)) {
+        if (VariableList.MINING.equals(key)) {
             return ExperienceAPI.getLevel(player, "MINING");
         }
-        if ("%repair%".equals(key)) {
+        if (VariableList.REPAIR.equals(key)) {
             return ExperienceAPI.getLevel(player, "REPAIR");
         }
-        if ("%smelting%".equals(key)) {
+        if (VariableList.SMELTING.equals(key)) {
             return ExperienceAPI.getLevel(player, "SMELTING");
         }
-        if ("%swords%".equals(key)) {
+        if (VariableList.SWORDS.equals(key)) {
             return ExperienceAPI.getLevel(player, "SWORDS");
         }
-        if ("%taming%".equals(key)) {
+        if (VariableList.TAMING.equals(key)) {
             return ExperienceAPI.getLevel(player, "TAMING");
         }
-        if ("%unarmed%".equals(key)) {
+        if (VariableList.UNARMED.equals(key)) {
             return ExperienceAPI.getLevel(player, "UNARMED");
         }
         return -1;
@@ -190,50 +186,44 @@ public final class VariableReplacer {
 
     @SuppressWarnings("deprecation")
     private static int getBukkitValues(final String key, final Player player) {
-        if ("%online%".equals(key)) {
+        if (VariableList.ONLINE.equals(key)) {
             return Bukkit.getOnlinePlayers().length;
         }
-        if ("%free_ram%".equals(key)) {
+        if (VariableList.FREE_RAM.equals(key)) {
             return (int) (Runtime.getRuntime().freeMemory() / 1048576); // / 1024 / 1024
         }
-        if ("%max_ram%".equals(key)) {
+        if (VariableList.MAX_RAM.equals(key)) {
             return (int) Runtime.getRuntime().maxMemory() / 1048576;
         }
-        if ("%used_ram%".equals(key)) {
+        if (VariableList.USED_RAM.equals(key)) {
             return (int) Runtime.getRuntime().totalMemory() / 1048576;
         }
-        if ("%date%".equals(key)) {
+        if (VariableList.DATE.equals(key)) {
             return new Date().getDate();
         }
-        if ("%time%".equals(key)) {
+        if (VariableList.TIME.equals(key)) {
             return (int) (player.getWorld().getTime() / 1000);
         }
-        if ("%lifetime%".equals(key)) {
+        if (VariableList.LIFETIME.equals(key)) {
             return player.getTicksLived() / 1200;
         }
-        if ("%exp%".equals(key)) {
+        if (VariableList.EXP.equals(key)) {
             return player.getTotalExperience();
         }
-        if ("%no_damage_ticks%".equals(key)) {
+        if (VariableList.NODAMAGE.equals(key)) {
             return player.getNoDamageTicks();
         }
-        if ("%xp_to_level%".equals(key)) {
+        if (VariableList.XPTOLEVEL.equals(key)) {
             return player.getExpToLevel();
         }
-        if ("%last_damage%".equals(key)) {
+        if (VariableList.LASTDAMAGE.equals(key)) {
             return player.getLastDamage();
         }
-        if ("%max_player%".equals(key)) {
+        if (VariableList.MAXPLAYER.equals(key)) {
             return Bukkit.getMaxPlayers();
         }
-        if ("%ping%".equals(key)) {
+        if (VariableList.PING.equals(key)) {
             return ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().ping;
-        }
-        if ("%first_day%".equals(key)) {
-            return new Date(player.getFirstPlayed()).getDay();
-        }
-        if ("%first_month%".equals(key)) {
-            return new Date(player.getFirstPlayed()).getMonth();
         }
         return -1;
     }
