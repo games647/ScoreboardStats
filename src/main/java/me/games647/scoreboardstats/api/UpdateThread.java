@@ -10,8 +10,8 @@ public final class UpdateThread implements Runnable {
             if ((!player.isOnline()) || (PlayerListener.list.contains(player.getName()))) {
                 continue;
             }
-            
-            me.games647.scoreboardstats.ScoreboardStats.getSettings().sendUpdate(player);
+
+            me.games647.scoreboardstats.ScoreboardStats.getSettings().sendUpdate(player, false);
         }
     }
 }

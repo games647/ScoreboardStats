@@ -3,22 +3,25 @@
 : decrease packets
 : Make it reload compatible
 : Add Permission (scoreboardstats.use)
+: Little performance increasment
 
 -high priority
 
+: little more decreasing for packets
 : Add some special characters like hearts
-: make independent from InSigns
 : Factions support
 : Bungee support
 : Command for disabling the Scoreboard
 : Reset the Database with commands
 : Add variables in for text
 : Add Jobs support
+: Code Cleanup
 
 -low priority
 
 : Survival Games support
 : Paintball support
+: make independent from InSigns
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
 : mcMMO leaderboard support
 : Towny support

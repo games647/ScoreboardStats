@@ -71,6 +71,15 @@
         </dependency>
 
         <dependency>
+            <groupId>.</groupId>
+            <artifactId>Jobs</artifactId>
+            <version>0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Jobs.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>0.0.1-SNAPSHOT</version>
