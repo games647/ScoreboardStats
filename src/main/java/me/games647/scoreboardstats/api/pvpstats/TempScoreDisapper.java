@@ -16,6 +16,6 @@ public final class TempScoreDisapper implements Runnable {
     public void run() {
         me.games647.scoreboardstats.listener.PlayerListener.list.remove(player.getName());
         player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-        Score.createScoreboard(player, true);
+        Score.createScoreboard(player);
     }
 }

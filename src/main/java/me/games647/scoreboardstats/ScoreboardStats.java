@@ -29,7 +29,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             }
 
             Database.loadAccount(player.getName());
-            Score.createScoreboard(player, true);
+            Score.createScoreboard(player);
         }
     }
 
