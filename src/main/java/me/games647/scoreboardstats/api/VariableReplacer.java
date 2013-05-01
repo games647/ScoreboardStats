@@ -186,6 +186,9 @@ public final class VariableReplacer {
 
     @SuppressWarnings("deprecation")
     private static int getBukkitValues(final String key, final Player player) {
+        if (VariableList.HEALTH.equals(key)) {
+            return player.getHealth();
+        }
         if (VariableList.ONLINE.equals(key)) {
             return Bukkit.getOnlinePlayers().length;
         }
@@ -211,13 +214,13 @@ public final class VariableReplacer {
             return player.getTotalExperience();
         }
         if (VariableList.NODAMAGE.equals(key)) {
-            return player.getNoDamageTicks();
+            return player.getNoDamageTicks() / 1200;
         }
         if (VariableList.XPTOLEVEL.equals(key)) {
             return player.getExpToLevel();
         }
         if (VariableList.LASTDAMAGE.equals(key)) {
-            return player.getLastDamage();
+            return player.getLastDamage() / 1200;
         }
         if (VariableList.MAXPLAYER.equals(key)) {
             return Bukkit.getMaxPlayers();
