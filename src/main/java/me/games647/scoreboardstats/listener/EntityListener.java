@@ -16,7 +16,7 @@ public final class EntityListener implements org.bukkit.event.Listener {
         if (!(entity.getType().equals(org.bukkit.entity.EntityType.PLAYER))) {
             final org.bukkit.entity.Player killer = entity.getKiller();
 
-            if ((killer != null) && (killer.isOnline() && (!(Database.getCache(killer.getName()) == null)))) {
+            if ((killer != null) && (killer.isOnline() && (Database.getCache(killer.getName()) != null))) {
                 Database.getCache(killer.getName()).increaseMob();
             }
         }
