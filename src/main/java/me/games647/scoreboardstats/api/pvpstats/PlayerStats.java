@@ -14,39 +14,39 @@ public class PlayerStats implements java.io.Serializable {
         return playername;
     }
 
-    public void setPlayername(final String playername) {
-        this.playername = playername;
+    public void setPlayername(final String paramplayername) {
+        this.playername = paramplayername;
     }
 
     public int getKills() {
         return kills;
     }
 
-    public void setKills(final int kills) {
-        this.kills = kills;
+    public void setKills(final int paramkills) {
+        this.kills = paramkills;
     }
 
     public int getDeaths() {
         return deaths;
     }
 
-    public void setDeaths(final int deaths) {
-        this.deaths = deaths;
+    public void setDeaths(final int paramdeaths) {
+        this.deaths = paramdeaths;
     }
 
     public int getMobkills() {
         return mobkills;
     }
 
-    public void setMobkills(final int mobkills) {
-        this.mobkills = mobkills;
+    public void setMobkills(final int parammobkills) {
+        this.mobkills = parammobkills;
     }
 
     public int getKillstreak() {
         return killstreak;
     }
 
-    public void setKillstreak(final int killstreak) {
-        this.killstreak = killstreak;
+    public void setKillstreak(final int paramkillstreak) {
+        this.killstreak = paramkillstreak;
     }
 }

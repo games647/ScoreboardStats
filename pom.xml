@@ -57,7 +57,7 @@
             <artifactId>InSigns</artifactId>
             <version>0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/InSigns_v1.2.jar</systemPath>
+            <systemPath>${project.basedir}/lib/InSigns_v1.3.jar</systemPath>
             <type>jar</type>
         </dependency>
 

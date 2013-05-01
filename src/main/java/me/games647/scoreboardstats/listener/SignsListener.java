@@ -2,7 +2,7 @@ package me.games647.scoreboardstats.listener;
 
 import de.blablubbabc.insigns.Changer;
 import me.games647.scoreboardstats.api.pvpstats.Database;
-import static me.games647.scoreboardstats.api.pvpstats.Database.getKdr;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public final class SignsListener {
@@ -13,56 +13,36 @@ public final class SignsListener {
 
         instance.addChanger(new Changer("[Kill]", permission) {
             @Override
-            public String getValue(final Player player) {
-                if (Database.getCache(player.getName()) == null) {
-                    return "";
-                }
-
-                return String.valueOf(Database.getCache(player.getName()).getKills());
+            public String getValue(final Player player, final Location lctn) {
+                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getCache(player.getName()).getKills());
             }
         });
 
         instance.addChanger(new Changer("[Death]", permission) {
             @Override
-            public String getValue(final Player player) {
-                if (Database.getCache(player.getName()) == null) {
-                    return "";
-                }
-
-                return String.valueOf(Database.getCache(player.getName()).getDeaths());
+            public String getValue(final Player player, final Location lctn) {
+                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getCache(player.getName()).getDeaths());
             }
         });
 
         instance.addChanger(new Changer("[Mob]", permission) {
             @Override
-            public String getValue(final Player player) {
-                if (Database.getCache(player.getName()) == null) {
-                    return "";
-                }
-
-                return String.valueOf(Database.getCache(player.getName()).getMob());
+            public String getValue(final Player player, final Location lctn) {
+                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getCache(player.getName()).getMob());
             }
         });
 
         instance.addChanger(new Changer("[KDR]", permission) {
             @Override
-            public String getValue(final Player player) {
-                if (Database.getCache(player.getName()) == null) {
-                    return "";
-                }
-
-                return String.valueOf(getKdr(player.getName()));
+            public String getValue(final Player player, final Location lctn) {
+                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getKdr(player.getName()));
             }
         });
 
         instance.addChanger(new Changer("[Killstreak]", permission) {
             @Override
-            public String getValue(final Player player) {
-                if (Database.getCache(player.getName()) == null) {
-                    return "";
-                }
-
-                return String.valueOf(Database.getCache(player.getName()).getStreak());
+            public String getValue(final Player player, final Location lctn) {
+                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getCache(player.getName()).getStreak());
             }
         });
     }

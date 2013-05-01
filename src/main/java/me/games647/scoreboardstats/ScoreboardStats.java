@@ -4,7 +4,6 @@ import java.util.List;
 import me.games647.scoreboardstats.api.Score;
 import static me.games647.scoreboardstats.api.pvpstats.Database.saveAll;
 import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
-import me.games647.scoreboardstats.listener.PluginListener;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
@@ -25,8 +24,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         settings = new SettingsHandler(this);
         setupDatabase();
         Score.regAll();
-        PluginListener.init();
-        getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
+        me.games647.scoreboardstats.listener.PluginListener.init();
+        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, settings.getIntervall() * 20L);
     }
 
@@ -42,7 +41,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
         saveAll();
-        me.games647.scoreboardstats.api.Score.unregisterAll();
+        Score.unregisterAll();
     }
 
     private void setupDatabase() {

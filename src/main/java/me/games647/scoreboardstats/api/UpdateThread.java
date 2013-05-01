@@ -1,13 +1,11 @@
 package me.games647.scoreboardstats.api;
 
-import me.games647.scoreboardstats.listener.PlayerListener;
-
 public final class UpdateThread implements Runnable {
 
     @Override
     public void run() {
         for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
-            if ((!player.isOnline()) || (PlayerListener.list.contains(player.getName()))) {
+            if (!player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR).getName().equals("ScoreboardStats")) {
                 continue;
             }
 

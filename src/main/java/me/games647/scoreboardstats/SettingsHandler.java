@@ -8,7 +8,7 @@ public final class SettingsHandler {
     private boolean pvpstats, tempscoreboard;
     private String title, temptitle, tempcolor, toptype;
     private int intervall, topitems, tempshow, tempdisapper;
-    private java.util.Map<String, Object> items = new java.util.HashMap<String, Object>();
+    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>();
     private java.util.List<String> disabledworlds;
 
     public SettingsHandler(final ScoreboardStats instance) {
@@ -80,18 +80,13 @@ public final class SettingsHandler {
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         for (String localtitle : items.keySet()) {
             me.games647.scoreboardstats.api.Score.sendScore(
-                    player
-                    , localtitle
-                    , me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt((String) items.get(localtitle), player), complete);
+                    player, localtitle, me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
         }
     }
 
     private static String checkLength(final String check) {
-        if (check.length() < 17) {
-            return check;
-        }
 
-        return check.substring(0, 16);
+        return check.length() > 16 ? check.substring(0, 16) : check;
     }
 
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {

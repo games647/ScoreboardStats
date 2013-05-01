@@ -8,7 +8,7 @@ import org.bukkit.Bukkit;
 public final class PluginListener implements org.bukkit.event.Listener {
 
     private static Economy econ;
-    private static boolean mcmmo, paintball;
+    private static boolean mcmmo;
     private static EssentialsTimer essentials;
     private static SimpleClans simpleclans;
 
@@ -20,10 +20,6 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return mcmmo;
     }
 
-    public static boolean isPaintball() {
-        return paintball;
-    }
-
     public static SimpleClans getSimpleclans() {
         return simpleclans;
     }
@@ -33,21 +29,20 @@ public final class PluginListener implements org.bukkit.event.Listener {
     }
 
     public static void init() {
-        final org.bukkit.plugin.PluginManager pm = Bukkit.getServer().getPluginManager();
+        final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
-        mcmmo = (pm.getPlugin("mcMMO") != null);
-        simpleclans = (SimpleClans) pm.getPlugin("SimpleClans");
-        paintball = (pm.getPlugin("Paintball") != null);
+        mcmmo = (pluginm.getPlugin("mcMMO") != null);
+        simpleclans = (SimpleClans) pluginm.getPlugin("SimpleClans");
 
-        if (pm.getPlugin("Essentials") != null) {
-            essentials = ((com.earth2me.essentials.Essentials) pm.getPlugin("Essentials")).getTimer();
+        if (pluginm.getPlugin("Essentials") != null) {
+            essentials = ((pluginm.getPlugin("Essentials") != null) ? (((com.earth2me.essentials.Essentials) pluginm.getPlugin("Essentials")).getTimer()) : null);
         }
 
-        if (pm.getPlugin("InSigns") != null) {
-            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pm.getPlugin("InSigns"));
+        if (pluginm.getPlugin("InSigns") != null) {
+            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pluginm.getPlugin("InSigns"));
         }
 
-        if (pm.getPlugin("Vault") != null) {
+        if (pluginm.getPlugin("Vault") != null) {
             final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
             if (economyProvider != null) {
