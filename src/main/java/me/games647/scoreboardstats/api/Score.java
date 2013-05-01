@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.Objective;
 public final class Score {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use")) {
+        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use"))) {
             return;
         }
 
@@ -28,7 +28,7 @@ public final class Score {
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if ((!player.hasPermission("scoreboardstats.use")) || (!player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats"))) {
+        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use")) || (!player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats"))) {
             return;
         }
 
@@ -44,23 +44,23 @@ public final class Score {
     }
 
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
+        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use"))) {
+            return;
+        }
+
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if ((!player.hasPermission("scoreboardstats.use")) || (objective == null) || (!objective.getName().startsWith("ScoreboardStats"))) {
+        if ((objective == null) || (!objective.getName().startsWith("ScoreboardStats"))) {
             return;
         }
 
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if ((!complete) && (score.getScore() == value)) { // Send not much packets
-            return;
-        }
-
-        if (value == 0) { //Have to use this because the score wouldn't set otherwise
+        if ((value == 0) && (score.getScore() == 0)) { //Have to use this because the score wouldn't send otherwise
             score.setScore(-1);
         }
+
         score.setScore(value);
-        player.setScoreboard(objective.getScoreboard());
     }
 
     private static String checkLength(final String check) {
@@ -71,7 +71,7 @@ public final class Score {
         return check.substring(0, 14);
     }
 
-   public static void regAll() {
+    public static void regAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.isOnline()) {
                 continue;
@@ -84,7 +84,6 @@ public final class Score {
             createScoreboard(player);
         }
     }
-
 
     public static void unregisterAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
