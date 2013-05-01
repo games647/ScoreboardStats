@@ -106,6 +106,7 @@
                     <target>1.6</target>
                     <debug>false</debug>
                     <showWarnings>true</showWarnings>
+                    <verbose>true</verbose>
                     <minimizeJar>true</minimizeJar>
                     <optimize>true</optimize>
                 </configuration>

@@ -8,7 +8,7 @@ public final class SettingsHandler {
     private boolean pvpstats, tempscoreboard;
     private String title, temptitle, tempcolor, toptype;
     private int intervall, topitems, tempshow, tempdisapper;
-    private static java.util.Map<String, Object> items = new java.util.HashMap<String, Object>();
+    private java.util.Map<String, Object> items = new java.util.HashMap<String, Object>();
     private java.util.List<String> disabledworlds;
 
     public SettingsHandler(final ScoreboardStats instance) {
@@ -94,7 +94,7 @@ public final class SettingsHandler {
         return check.substring(0, 16);
     }
 
-    private static void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
+    private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
         final java.util.Set<String> keys = config.getKeys(false);
 
         if (!items.isEmpty()) {
@@ -104,11 +104,5 @@ public final class SettingsHandler {
         for (String key : keys) {
             items.put(translateAlternateColorCodes('&', checkLength(key)), config.getString(key));
         }
-    }
-
-    private static String replaceSpecialChars(final String replaceString) {
-
-
-        return replaceString;
     }
 }
