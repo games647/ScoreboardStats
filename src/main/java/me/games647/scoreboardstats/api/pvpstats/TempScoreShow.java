@@ -1,7 +1,5 @@
 package me.games647.scoreboardstats.api.pvpstats;
 
-import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
-import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 import org.bukkit.entity.Player;
 
 public final class TempScoreShow implements Runnable {
@@ -19,8 +17,6 @@ public final class TempScoreShow implements Runnable {
         }
 
         Database.saveAccount(player.getName(), false);
-        me.games647.scoreboardstats.listener.PlayerListener.list.add(player.getName());
         me.games647.scoreboardstats.api.Score.createTopListScoreboard(player);
-        org.bukkit.Bukkit.getScheduler().runTaskLater(getInstance(), new TempScoreDisapper(this.player), getSettings().getTempdisapper() * 20L);
     }
 }

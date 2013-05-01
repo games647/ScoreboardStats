@@ -12,8 +12,6 @@ public final class TempScoreDisapper implements Runnable {
 
     @Override
     public void run() {
-        me.games647.scoreboardstats.listener.PlayerListener.list.remove(player.getName());
-        player.getScoreboard().clearSlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
         me.games647.scoreboardstats.api.Score.createScoreboard(player);
     }
 }

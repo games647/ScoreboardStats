@@ -5,10 +5,11 @@
 : Add Permission (scoreboardstats.use)
 : Little performance increasment
 : Use Bukkit API Method
+: Changed to InSigns 1.3
+: Little cleanup
 
 -high priority
 
-: little more decreasing for packets
 : Add some special characters like hearts
 : Factions support
 : Bungee support
@@ -23,9 +24,8 @@
 -low priority
 
 : Survival Games support
-: Paintball support
+: Paintball support //I hate that obfuscated code
 : make independent from InSigns
 : Different types of Scoreboard instances should be displayed via commands or in intervalls
-: mcMMO leaderboard support
 : Towny support
 : Add Heroes variables

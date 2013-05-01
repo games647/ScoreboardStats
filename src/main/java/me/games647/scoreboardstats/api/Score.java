@@ -16,15 +16,15 @@ public final class Score {
             return;
         }
 
-        if (getSettings().isTempscoreboard()) {
-            Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
-        }
-
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStats", "dummy"); //Use new Scoreboard because if something was removed it will no longer send it to the client
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         player.setScoreboard(objective.getScoreboard());
         getSettings().sendUpdate(player, true);
+
+        if (getSettings().isTempscoreboard()) {
+            Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
+        }
     }
 
     public static void createTopListScoreboard(final Player player) {
@@ -32,6 +32,7 @@ public final class Score {
             return;
         }
 
+        Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStatsT", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -56,7 +57,7 @@ public final class Score {
 
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if ((value == 0) && (score.getScore() == 0)) { //Have to use this because the score wouldn't send otherwise
+        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise
             score.setScore(-1);
         }
 
