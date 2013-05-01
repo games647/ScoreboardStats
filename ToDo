@@ -4,6 +4,7 @@
 : Make it reload compatible
 : Add Permission (scoreboardstats.use)
 : Little performance increasment
+: Use Bukkit API Method
 
 -high priority
 
@@ -16,6 +17,8 @@
 : Add variables in for text
 : Add Jobs support
 : Code Cleanup
+: Message support
+: Adding stuff with help of commands
 
 -low priority
 

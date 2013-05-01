@@ -4,7 +4,6 @@ import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
 import me.games647.scoreboardstats.api.pvpstats.Database;
 import org.bukkit.Bukkit;
-import static org.bukkit.Bukkit.getScheduler;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -18,7 +17,7 @@ public final class Score {
         }
 
         if (getSettings().isTempscoreboard()) {
-            getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
         }
 
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStats", "dummy"); //Use new Scoreboard because if something was removed it will no longer send it to the client
@@ -57,7 +56,7 @@ public final class Score {
             return;
         }
 
-        if (value == 0) {
+        if (value == 0) { //Have to use this because the score wouldn't set otherwise
             score.setScore(-1);
         }
         score.setScore(value);
@@ -70,5 +69,30 @@ public final class Score {
         }
 
         return check.substring(0, 14);
+    }
+
+   public static void regAll() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+
+            if (getSettings().isPvpstats()) {
+                Database.loadAccount(player.getName());
+            }
+
+            createScoreboard(player);
+        }
+    }
+
+
+    public static void unregisterAll() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isOnline()) {
+                continue;
+            }
+
+            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        }
     }
 }

@@ -46,4 +46,25 @@ public final class VariableList  {
     public static final String TAMING           = "%taming%";
     public static final String UNARMED          = "%unarmed%";
     public static final String REPAIR           = "%repair%";
+
+    //SimpleClans
+    public static final String KILLS_CIVILIAN   = "%kills_civilian%";
+    public static final String KILLS_NEUTRAL    = "%kills_neutral%";
+    public static final String KILLS_TOTAL      = "%kills_total%";
+    public static final String KILLS_RIVAL      = "%kills_rival%";
+//    public static final String DEATHS           = "%deaths%";
+//    public static final String KDR              = "%kdr%";
+    public static final String MEMBER           = "%member%";
+    public static final String CLAN_KDR         = "%clan_kdr%";
+    public static final String POWER            = "%power%";
+    public static final String CLAN_CIVILIAN    = "%%";
+    public static final String CLAN_DEATHS      = "clan_deaths%";
+    public static final String CLAN_NEUTRAL     = "clan_neutral%";
+    public static final String CLAN_RIVAL       = "clan_rival%";
+    public static final String CLAIMS           = "claims%";
+    public static final String ALLIES_TOTAL     = "allies_total%";
+    public static final String ALLIES           = "%allies%";
+    public static final String RIVAL            = "%rivals%";
+    public static final String MEMBER_ONLINE    = "%members_online%";
+    public static final String CLAN_MONEY       = "%clan_money%";
 }
