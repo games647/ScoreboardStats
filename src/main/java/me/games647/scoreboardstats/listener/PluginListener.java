@@ -5,7 +5,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 
-public final class PluginListener implements org.bukkit.event.Listener {
+public final class PluginListener {
 
     private static Economy econ;
     private static boolean mcmmo;
