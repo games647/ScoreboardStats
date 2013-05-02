@@ -2,6 +2,7 @@ package me.games647.scoreboardstats;
 
 import java.util.List;
 import me.games647.scoreboardstats.api.Score;
+import me.games647.scoreboardstats.api.VariableReplacer;
 import static me.games647.scoreboardstats.api.pvpstats.Database.saveAll;
 import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
 
@@ -9,6 +10,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     private static SettingsHandler settings;
     private static ScoreboardStats instance;
+    private static VariableReplacer replacer;
 
     public static SettingsHandler getSettings() {
         return settings;
@@ -51,7 +53,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
         try {
             getDatabase().find(PlayerStats.class).findRowCount();
-        } catch (javax.persistence.PersistenceException ex) {
+        }
+        catch (javax.persistence.PersistenceException ex) {
             getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }

@@ -190,7 +190,17 @@ public final class VariableReplacer {
             return player.getHealth();
         }
         if (VariableList.ONLINE.equals(key)) {
-            return Bukkit.getOnlinePlayers().length;
+            if (getSettings().isHidevanished()) {
+                int online = 0;
+                for (Player other : Bukkit.getOnlinePlayers()) {
+                    if (player.canSee(other)) {
+                        online++;
+                    }
+                }
+                return online;
+            } else {
+                return Bukkit.getOnlinePlayers().length;
+            }
         }
         if (VariableList.FREE_RAM.equals(key)) {
             return (int) (Runtime.getRuntime().freeMemory() / 1048576); // / 1024 / 1024

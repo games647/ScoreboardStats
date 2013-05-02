@@ -5,7 +5,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 public final class SettingsHandler {
 
     private final ScoreboardStats plugin;
-    private boolean pvpstats, tempscoreboard;
+    private boolean pvpstats, tempscoreboard, hidevanished;
     private String title, temptitle, tempcolor, toptype;
     private int intervall, topitems, tempshow, tempdisapper;
     private final java.util.Map<String, String> items = new java.util.HashMap<String, String>();
@@ -30,6 +30,7 @@ public final class SettingsHandler {
         this.tempdisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
         this.tempcolor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         this.toptype = config.getString("Temp-Scoreboard.Type");
+        this.hidevanished = config.getBoolean("hide-vanished");
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
     }
 
@@ -75,6 +76,10 @@ public final class SettingsHandler {
 
     public String getToptype() {
         return toptype;
+    }
+
+    public boolean isHidevanished() {
+        return hidevanished;
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
