@@ -226,7 +226,7 @@ public final class VariableReplacer {
             return Bukkit.getMaxPlayers();
         }
         if (VariableList.PING.equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_5_R2.entity.CraftPlayer) player).getHandle().ping;
+            return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
         }
         return -1;
     }
