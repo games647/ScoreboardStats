@@ -23,7 +23,7 @@ public final class SettingsHandler {
         this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));
         this.disabledworlds = config.getStringList("disabled-worlds");
         this.intervall = config.getInt("Scoreboard.Update-delay");
-        this.tempscoreboard = config.getBoolean("Temp-Scoreboard-enabled");
+        this.tempscoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpstats;
         this.temptitle = translateAlternateColorCodes('&', checkLength(config.getString("Temp-Scoreboard.Title")));
         this.topitems = config.getInt("Temp-Scoreboard.Items");
         this.tempshow = config.getInt("Temp-Scoreboard.Intervall-show");
