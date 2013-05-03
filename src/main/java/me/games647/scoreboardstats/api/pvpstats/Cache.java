@@ -51,11 +51,11 @@ public final class Cache {
         this.laststreak++;
     }
 
-    public void onDie() {
+    public void onKill() {
         if (laststreak > streak) {
             this.streak = this.laststreak;
         }
-        
+
         laststreak = 0;
     }
 }
