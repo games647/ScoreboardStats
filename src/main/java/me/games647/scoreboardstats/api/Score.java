@@ -23,12 +23,12 @@ public final class Score {
         getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempscoreboard()) {
-            Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
         }
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use")) || (!player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats"))) {
+        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use")) || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
             return;
         }
 
