@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api.pvpstats;
+package com.github.games647.scoreboardstats.pvpstats;
 
 import org.bukkit.entity.Player;
 
@@ -12,6 +12,6 @@ public final class TempScoreDisapper implements Runnable {
 
     @Override
     public void run() {
-        me.games647.scoreboardstats.api.Score.createScoreboard(player);
+        com.github.games647.scoreboardstats.scoreboard.Score.createScoreboard(player);
     }
 }

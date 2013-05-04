@@ -1,8 +1,8 @@
-package me.games647.scoreboardstats.api;
+package com.github.games647.scoreboardstats.scoreboard;
 
-import static me.games647.scoreboardstats.ScoreboardStats.getInstance;
-import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.pvpstats.Database;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.pvpstats.Database;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public final class Score {
         getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempscoreboard()) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
         }
     }
 
@@ -37,7 +37,7 @@ public final class Score {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(getInstance(), new me.games647.scoreboardstats.api.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStatsT", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

@@ -1,10 +1,10 @@
-package me.games647.scoreboardstats;
+package com.github.games647.scoreboardstats;
 
 import java.util.List;
-import me.games647.scoreboardstats.api.Score;
-import me.games647.scoreboardstats.api.VariableReplacer;
-import static me.games647.scoreboardstats.api.pvpstats.Database.saveAll;
-import me.games647.scoreboardstats.api.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.scoreboard.Score;
+import com.github.games647.scoreboardstats.scoreboard.VariableReplacer;
+import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
@@ -26,9 +26,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         settings = new SettingsHandler(this);
         setupDatabase();
         Score.regAll();
-        me.games647.scoreboardstats.listener.PluginListener.init();
-        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.PlayerListener(), this);
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new me.games647.scoreboardstats.api.UpdateThread(), 60L, settings.getIntervall() * 20L);
+        com.github.games647.scoreboardstats.listener.PluginListener.init();
+        this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
+        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.UpdateThread(), 60L, settings.getIntervall() * 20L);
     }
 
     @Override
@@ -59,7 +59,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             installDDL();
         }
 
-        me.games647.scoreboardstats.api.pvpstats.Database.setDatabase(getDatabase());
-        this.getServer().getPluginManager().registerEvents(new me.games647.scoreboardstats.listener.EntityListener(), this);
+        com.github.games647.scoreboardstats.pvpstats.Database.setDatabase(getDatabase());
+        this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
     }
 }

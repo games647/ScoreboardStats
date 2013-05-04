@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api.pvpstats;
+package com.github.games647.scoreboardstats.pvpstats;
 
 public final class Cache {
 

@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api;
+package com.github.games647.scoreboardstats.scoreboard;
 
 public final class VariableList  {
 

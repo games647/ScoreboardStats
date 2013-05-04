@@ -1,7 +1,7 @@
-package me.games647.scoreboardstats.listener;
+package com.github.games647.scoreboardstats.listener;
 
-import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.pvpstats.Database;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.pvpstats.Database;
 
 public final class EntityListener implements org.bukkit.event.Listener {
 

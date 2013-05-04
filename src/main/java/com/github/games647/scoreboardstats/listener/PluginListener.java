@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.listener;
+package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
 import net.milkbowl.vault.economy.Economy;
