@@ -1,10 +1,10 @@
-package me.games647.scoreboardstats.api;
+package com.github.games647.scoreboardstats.scoreboard;
 
 import com.gmail.nossr50.api.ExperienceAPI;
 import java.util.Date;
-import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
-import me.games647.scoreboardstats.api.pvpstats.Database;
-import me.games647.scoreboardstats.listener.PluginListener;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.listener.PluginListener;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

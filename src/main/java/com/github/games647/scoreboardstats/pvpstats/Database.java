@@ -1,9 +1,9 @@
-package me.games647.scoreboardstats.api.pvpstats;
+package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
 import java.util.HashMap;
 import java.util.Map;
-import static me.games647.scoreboardstats.ScoreboardStats.getSettings;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 
 public final class Database {
 

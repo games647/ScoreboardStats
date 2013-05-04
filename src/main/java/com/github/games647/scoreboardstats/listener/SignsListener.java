@@ -1,7 +1,7 @@
-package me.games647.scoreboardstats.listener;
+package com.github.games647.scoreboardstats.listener;
 
 import de.blablubbabc.insigns.Changer;
-import me.games647.scoreboardstats.api.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvpstats.Database;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api;
+package com.github.games647.scoreboardstats;
 
 import org.bukkit.scoreboard.DisplaySlot;
 
@@ -11,7 +11,7 @@ public final class UpdateThread implements Runnable {
                 continue;
             }
             
-            me.games647.scoreboardstats.ScoreboardStats.getSettings().sendUpdate(player, false);
+            com.github.games647.scoreboardstats.ScoreboardStats.getSettings().sendUpdate(player, false);
         }
     }
 }

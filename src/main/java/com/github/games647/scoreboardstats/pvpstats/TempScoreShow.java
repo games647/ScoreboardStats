@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats.api.pvpstats;
+package com.github.games647.scoreboardstats.pvpstats;
 
 import org.bukkit.entity.Player;
 
@@ -18,6 +18,6 @@ public final class TempScoreShow implements Runnable {
         }
         
         Database.saveAccount(player.getName(), false);
-        me.games647.scoreboardstats.api.Score.createTopListScoreboard(player);
+        com.github.games647.scoreboardstats.scoreboard.Score.createTopListScoreboard(player);
     }
 }

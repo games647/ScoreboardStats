@@ -1,4 +1,4 @@
-package me.games647.scoreboardstats;
+package com.github.games647.scoreboardstats;
 
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
@@ -84,8 +84,8 @@ public final class SettingsHandler {
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         for (String localtitle : items.keySet()) {
-            me.games647.scoreboardstats.api.Score.sendScore(
-                    player, localtitle, me.games647.scoreboardstats.api.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
+            com.github.games647.scoreboardstats.scoreboard.Score.sendScore(
+                    player, localtitle, com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
         }
     }
 
