@@ -42,11 +42,9 @@ public final class Score {
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-
         if (!player.isOnline()) {
             return;
         }
-
 
         player.setScoreboard(objective.getScoreboard());
         final java.util.Map<String, Integer> top = Database.getTop();

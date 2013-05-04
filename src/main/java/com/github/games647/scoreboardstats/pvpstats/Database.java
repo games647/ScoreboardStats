@@ -1,9 +1,9 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import java.util.HashMap;
 import java.util.Map;
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 
 public final class Database {
 
@@ -27,6 +27,10 @@ public final class Database {
 
     public static int getKdr(final String name) {
         final Cache stats = getCache(name);
+
+        if (stats == null) {
+            return 0;
+        }
 
         return stats.getDeaths() == 0 ? stats.getKills() : (stats.getKills() / stats.getDeaths());
     }
