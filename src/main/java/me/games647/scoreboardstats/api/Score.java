@@ -12,13 +12,18 @@ import org.bukkit.scoreboard.Objective;
 public final class Score {
 
     public static void createScoreboard(final Player player) {
-        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use"))) {
+        if (!player.hasPermission("scoreboardstats.use")) {
             return;
         }
 
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStats", "dummy"); //Use new Scoreboard because if something was removed it will no longer send it to the client
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+        if (!player.isOnline()) {
+            return;
+        }
+
         player.setScoreboard(objective.getScoreboard());
         getSettings().sendUpdate(player, true);
 
@@ -28,7 +33,7 @@ public final class Score {
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use")) || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+        if ((!player.hasPermission("scoreboardstats.use")) || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
             return;
         }
 
@@ -36,6 +41,13 @@ public final class Score {
         final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStatsT", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+
+        if (!player.isOnline()) {
+            return;
+        }
+
+
         player.setScoreboard(objective.getScoreboard());
         final java.util.Map<String, Integer> top = Database.getTop();
 
