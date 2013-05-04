@@ -8,6 +8,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 public final class Score {
 
@@ -16,7 +17,13 @@ public final class Score {
             return;
         }
 
-        final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStats", "dummy"); //Use new Scoreboard because if something was removed it will no longer send it to the client
+        final Scoreboard scoreboard = player.getScoreboard();
+
+        if (scoreboard.getObjective("ScoreboardStats") != null) {
+            scoreboard.getObjective("ScoreboardStats").unregister();  //to remove the old scores
+        }
+
+        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -33,12 +40,18 @@ public final class Score {
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if ((!player.hasPermission("scoreboardstats.use")) || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+        if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
             return;
         }
 
         Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
-        final Objective objective = Bukkit.getScoreboardManager().getNewScoreboard().registerNewObjective("ScoreboardStatsT", "dummy");
+        final Scoreboard scoreboard = player.getScoreboard();;
+
+        if (scoreboard.getObjective("ScoreboardStatsT") != null) {
+            scoreboard.getObjective("ScoreboardStatsT").unregister();  //to remove the old scores
+        }
+
+        final Objective objective = scoreboard.registerNewObjective("ScoreboardStatsT", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -94,6 +107,15 @@ public final class Score {
 
             createScoreboard(player);
         }
+
+        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        final Objective objective = scoreboard.getObjective("ScoreboardStats");
+
+        if (objective == null) {
+            scoreboard.registerNewObjective("ScoreboardStats", "dummy");
+        }
+
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
     public static void unregisterAll() {
