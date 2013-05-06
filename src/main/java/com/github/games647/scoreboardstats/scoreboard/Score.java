@@ -18,12 +18,12 @@ public final class Score {
         }
 
         final Scoreboard scoreboard = player.getScoreboard();
+        Objective objective = scoreboard.getObjective("ScoreboardStats");
 
-        if (scoreboard.getObjective("ScoreboardStats") == null) {
-            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");  
+        if (objective == null) {
+            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
         }
 
-        final Objective objective = scoreboard.getObjective("ScoreboardStats");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -31,7 +31,7 @@ public final class Score {
             return;
         }
 
-        player.setScoreboard(objective.getScoreboard());
+        player.setScoreboard(scoreboard);
         getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempscoreboard()) {
@@ -45,7 +45,7 @@ public final class Score {
         }
 
         Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
-        final Scoreboard scoreboard = player.getScoreboard();;
+        final Scoreboard scoreboard = player.getScoreboard();
 
         if (scoreboard.getObjective("ScoreboardStatsT") != null) {
             scoreboard.getObjective("ScoreboardStatsT").unregister();  //to remove the old scores
@@ -59,7 +59,7 @@ public final class Score {
             return;
         }
 
-        player.setScoreboard(objective.getScoreboard());
+        player.setScoreboard(scoreboard);
         final java.util.Map<String, Integer> top = Database.getTop();
 
         for (String key : top.keySet()) {
@@ -68,13 +68,13 @@ public final class Score {
     }
 
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
-        if ((!player.isOnline()) || (!player.hasPermission("scoreboardstats.use"))) {
+        if (!player.isOnline() || !player.hasPermission("scoreboardstats.use")) {
             return;
         }
 
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if ((objective == null) || (!objective.getName().startsWith("ScoreboardStats"))) {
+        if (objective == null || !objective.getName().startsWith("ScoreboardStats")) {
             return;
         }
 
@@ -88,20 +88,19 @@ public final class Score {
     }
 
     private static String checkLength(final String check) {
-        if (check.length() < 15) {
-            return check;
-        }
 
-        return check.substring(0, 14);
+        return check.length() < 15 ? check : check.substring(0, 14);
     }
 
     public static void regAll() {
+        final boolean ispvpstats = getSettings().isPvpstats();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.isOnline()) {
                 continue;
             }
 
-            if (getSettings().isPvpstats()) {
+            if (ispvpstats) {
                 Database.loadAccount(player.getName());
             }
 
@@ -109,10 +108,10 @@ public final class Score {
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        final Objective objective = scoreboard.getObjective("ScoreboardStats");
+        Objective objective = scoreboard.getObjective("ScoreboardStats");
 
         if (objective == null) {
-            scoreboard.registerNewObjective("ScoreboardStats", "dummy");
+            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
         }
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

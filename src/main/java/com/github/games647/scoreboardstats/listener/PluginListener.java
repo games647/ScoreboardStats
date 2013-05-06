@@ -2,7 +2,7 @@ package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
 import net.milkbowl.vault.economy.Economy;
-import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
 
 public final class PluginListener {
@@ -10,7 +10,7 @@ public final class PluginListener {
     private static Economy econ;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
-    private static SimpleClans simpleclans;
+    private static ClanManager simpleclans;
 
     public static Economy getEcon() {
         return econ;
@@ -20,7 +20,7 @@ public final class PluginListener {
         return mcmmo;
     }
 
-    public static SimpleClans getSimpleclans() {
+    public static ClanManager getSimpleclans() {
         return simpleclans;
     }
 
@@ -32,10 +32,13 @@ public final class PluginListener {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
         mcmmo = (pluginm.getPlugin("mcMMO") != null);
-        simpleclans = (SimpleClans) pluginm.getPlugin("SimpleClans");
+
+        if (pluginm.getPlugin("SimpleClans") != null) {
+           simpleclans = ((net.sacredlabyrinth.phaed.simpleclans.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanManager();
+        }
 
         if (pluginm.getPlugin("Essentials") != null) {
-            essentials = ((pluginm.getPlugin("Essentials") != null) ? (((com.earth2me.essentials.Essentials) pluginm.getPlugin("Essentials")).getTimer()) : null);
+            essentials = ((com.earth2me.essentials.Essentials) pluginm.getPlugin("Essentials")).getTimer();
         }
 
         if (pluginm.getPlugin("InSigns") != null) {

@@ -7,8 +7,8 @@ website: ${project.url}
 database: true
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs]
 commands:
-  Scoreboard:
-    usage: /Scoreboard
+  sbs:
+    usage: /sbs
 permissions:
   scoreboardstats.use:
     default: true

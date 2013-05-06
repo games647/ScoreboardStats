@@ -27,7 +27,6 @@ Temp-Scoreboard:
   #%mobkills% | %kills% | %killstreak%
   Type: '%kills%'
   Color: '&9'
-  Show-displayname: false
   #How many Players would be displayed
   Items: 5
   Intervall-show: 300

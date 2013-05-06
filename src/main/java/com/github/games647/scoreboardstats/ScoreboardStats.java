@@ -1,16 +1,14 @@
 package com.github.games647.scoreboardstats;
 
-import java.util.List;
-import com.github.games647.scoreboardstats.scoreboard.Score;
-import com.github.games647.scoreboardstats.scoreboard.VariableReplacer;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.scoreboard.Score;
+import java.util.List;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     private static SettingsHandler settings;
     private static ScoreboardStats instance;
-    private static VariableReplacer replacer;
 
     public static SettingsHandler getSettings() {
         return settings;
@@ -53,8 +51,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
         try {
             getDatabase().find(PlayerStats.class).findRowCount();
-        }
-        catch (javax.persistence.PersistenceException ex) {
+        } catch (final javax.persistence.PersistenceException ex) {
             getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }
