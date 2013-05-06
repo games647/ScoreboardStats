@@ -19,11 +19,11 @@ public final class Score {
 
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (scoreboard.getObjective("ScoreboardStats") != null) {
-            scoreboard.getObjective("ScoreboardStats").unregister();  //to remove the old scores
+        if (scoreboard.getObjective("ScoreboardStats") == null) {
+            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");  
         }
 
-        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
+        final Objective objective = scoreboard.getObjective("ScoreboardStats");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
