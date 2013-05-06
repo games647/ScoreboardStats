@@ -31,31 +31,25 @@ public final class Cache {
         return streak;
     }
 
-    public void increaseKills() {
+    public void onKill() {
         this.kills++;
+        this.laststreak++;
     }
 
     public void increaseMob() {
         this.mob++;
     }
 
-    public void increaseDeaths() {
-        this.deaths++;
-    }
-
     public int getLastStreak() {
         return laststreak;
     }
 
-    public void increaseLastSreak() {
-        this.laststreak++;
-    }
-
-    public void onKill() {
+    public void onDeath() {
         if (laststreak > streak) {
             this.streak = this.laststreak;
         }
 
         laststreak = 0;
+        this.deaths++;
     }
 }

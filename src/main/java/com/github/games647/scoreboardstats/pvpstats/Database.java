@@ -21,24 +21,27 @@ public final class Database {
     public static void loadAccount(final String name) {
         final PlayerStats stats = databaseinstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
 
-        cache.put(name
-                , stats == null ? new Cache() : new Cache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        cache.put(name, stats == null ? new Cache() : new Cache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
 
     public static int getKdr(final String name) {
         final Cache stats = getCache(name);
 
-        if (stats == null) {
-            return 0;
-        }
-
-        return stats.getDeaths() == 0 ? stats.getKills() : (stats.getKills() / stats.getDeaths());
+        return stats == null ? 0 : stats.getDeaths() == 0 ? stats.getKills() : (stats.getKills() / stats.getDeaths());
     }
 
     public static void saveAccount(final String name, final boolean remove) {
         final Cache playercache = cache.get(name);
 
-        if ((playercache == null) || ((playercache.getKills() == 0) && (playercache.getDeaths() == 0) && (playercache.getMob() == 0))) {
+        if (playercache == null) {
+            return;
+        }
+
+        if (remove) {
+            cache.remove(name);
+        }
+
+        if (playercache.getKills() == 0 && playercache.getDeaths() == 0 && playercache.getMob() == 0) { //There are no need to save these data
             return;
         }
 
@@ -54,10 +57,6 @@ public final class Database {
         stats.setMobkills(playercache.getMob());
         stats.setKillstreak(playercache.getStreak());
         databaseinstance.save(stats);
-
-        if (remove) {
-            cache.remove(name);
-        }
     }
 
     public static void saveAll() {
@@ -75,24 +74,30 @@ public final class Database {
 
         if ("%killstreak%".equals(type)) {
             list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
+
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
+
             return top;
         } else if ("%mobkills%".equals(type)) {
             list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
+
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
+
             return top;
         } else {
             list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
+
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
                 top.put(stats.getPlayername(), stats.getKills());
             }
+
             return top;
         }
     }

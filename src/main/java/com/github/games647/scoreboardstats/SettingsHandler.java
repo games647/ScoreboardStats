@@ -18,7 +18,8 @@ public final class SettingsHandler {
     }
 
     private void loadConfig() {
-        final org.bukkit.configuration.file.FileConfiguration config = this.plugin.getConfig();
+        final org.bukkit.configuration.file.FileConfiguration config = org.bukkit.configuration.file.
+                YamlConfiguration.loadConfiguration(new java.io.File(plugin.getDataFolder(), "config.yml")); //Will not save a other version in the Bukkit Server
         this.pvpstats = config.getBoolean("enable-pvpstats");
         this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));
         this.disabledworlds = config.getStringList("disabled-worlds");
