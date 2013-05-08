@@ -13,17 +13,12 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class Score {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use")) {
+        if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
             return;
         }
 
-        final Scoreboard scoreboard = player.getScoreboard();
-        Objective objective = scoreboard.getObjective("ScoreboardStats");
-
-        if (objective == null) {
-            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
-        }
-
+        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -74,7 +69,12 @@ public final class Score {
 
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if (objective == null || !objective.getName().startsWith("ScoreboardStats")) {
+        if (objective == null) {
+            createScoreboard(player);
+            return;
+        }
+
+        if (!objective.getName().startsWith("ScoreboardStats")) {
             return;
         }
 
@@ -106,15 +106,6 @@ public final class Score {
 
             createScoreboard(player);
         }
-
-        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-        Objective objective = scoreboard.getObjective("ScoreboardStats");
-
-        if (objective == null) {
-            objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
-        }
-
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
     public static void unregisterAll() {
