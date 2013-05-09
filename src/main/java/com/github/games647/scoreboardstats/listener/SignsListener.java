@@ -7,12 +7,14 @@ import org.bukkit.entity.Player;
 
 public final class SignsListener {
 
+    private SignsListener() {}
+
     public static void registerSigns(final de.blablubbabc.insigns.InSigns instance) {
 
         final String permission = "scoreboardstats.sign";
 
         instance.addChanger(new Changer("[Kill]", permission) {
-            
+
             @Override
             public String getValue(final Player player, final Location lctn) {
                 return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getCache(player.getName()).getKills());

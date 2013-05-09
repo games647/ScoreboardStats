@@ -7,6 +7,8 @@ import org.bukkit.Bukkit;
 
 public final class PluginListener {
 
+    private PluginListener() {}
+
     private static Economy econ;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
