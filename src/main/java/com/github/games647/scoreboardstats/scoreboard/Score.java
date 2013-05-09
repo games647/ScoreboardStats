@@ -12,6 +12,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public final class Score {
 
+    private Score() {}
+
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
             return;
