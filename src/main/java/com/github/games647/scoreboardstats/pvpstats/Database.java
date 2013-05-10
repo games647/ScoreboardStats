@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class Database {
@@ -35,9 +36,7 @@ public final class Database {
 
         if (playercache == null) {
             return;
-        }
-
-        if (remove) {
+        } else if (remove) {
             cache.remove(name);
         }
 
@@ -68,12 +67,11 @@ public final class Database {
     }
 
     public static Map<String, Integer> getTop() {
-        java.util.List<PlayerStats> list;
         final String type = getSettings().getToptype();
         final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
 
         if ("%killstreak%".equals(type)) {
-            list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
+            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
 
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
@@ -82,7 +80,7 @@ public final class Database {
 
             return top;
         } else if ("%mobkills%".equals(type)) {
-            list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
+            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
 
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
@@ -91,7 +89,7 @@ public final class Database {
 
             return top;
         } else {
-            list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
+            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList();
 
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);

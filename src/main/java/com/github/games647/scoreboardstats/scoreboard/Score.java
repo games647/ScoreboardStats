@@ -12,7 +12,8 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public final class Score {
 
-    private Score() {}
+    private Score() {
+    }
 
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
@@ -41,7 +42,6 @@ public final class Score {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
         final Scoreboard scoreboard = player.getScoreboard();
 
         if (scoreboard.getObjective("ScoreboardStatsT") != null) {
@@ -57,10 +57,12 @@ public final class Score {
         }
 
         player.setScoreboard(scoreboard);
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
         final java.util.Map<String, Integer> top = Database.getTop();
+        final String color = getSettings().getTempcolor();
 
         for (String key : top.keySet()) {
-            Score.sendScore(player, String.format("%s%s", getSettings().getTempcolor(), checkLength(key)), top.get(key), false);
+            Score.sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), false);
         }
     }
 

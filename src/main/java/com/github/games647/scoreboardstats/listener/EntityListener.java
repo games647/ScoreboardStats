@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.listener;
 
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.pvpstats.Cache;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 
 public final class EntityListener implements org.bukkit.event.Listener {
@@ -15,8 +16,14 @@ public final class EntityListener implements org.bukkit.event.Listener {
 
         final org.bukkit.entity.Player killer = entity.getKiller();
 
-        if (killer != null && killer.isOnline() && Database.getCache(killer.getName()) != null) {
-            Database.getCache(killer.getName()).increaseMob();
+        if (killer == null || !killer.isOnline()) {
+            return;
+        }
+
+        final Cache killercache = Database.getCache(killer.getName());
+
+        if (killercache != null) {
+            killercache.increaseMob();
         }
     }
 }
