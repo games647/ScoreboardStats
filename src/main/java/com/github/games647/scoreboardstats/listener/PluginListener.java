@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 
 public final class PluginListener {
 
-    private PluginListener() {}
-
+    private PluginListener() {
+    }
     private static Economy econ;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
@@ -36,7 +36,7 @@ public final class PluginListener {
         mcmmo = (pluginm.getPlugin("mcMMO") != null);
 
         if (pluginm.getPlugin("SimpleClans") != null) {
-           simpleclans = ((net.sacredlabyrinth.phaed.simpleclans.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanManager();
+            simpleclans = ((net.sacredlabyrinth.phaed.simpleclans.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanManager();
         }
 
         if (pluginm.getPlugin("Essentials") != null) {

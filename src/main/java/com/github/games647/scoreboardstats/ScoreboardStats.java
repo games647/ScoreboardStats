@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.Score;
@@ -49,14 +50,16 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             return;
         }
 
+        final EbeanServer database = getDatabase();
+
         try {
-            getDatabase().find(PlayerStats.class).findRowCount();
+            database.find(PlayerStats.class).findRowCount();
         } catch (final javax.persistence.PersistenceException ex) {
             getLogger().info("Can't find an existing Database, so creating a new one");
             installDDL();
         }
 
-        com.github.games647.scoreboardstats.pvpstats.Database.setDatabase(getDatabase());
+        com.github.games647.scoreboardstats.pvpstats.Database.setDatabase(database);
         this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
     }
 }

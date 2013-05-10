@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <version>0.5.3</version>
+    <version>0.5.4</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
     <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
@@ -101,12 +101,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                     <debug>false</debug>
                     <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
                     <verbose>true</verbose>
                     <minimizeJar>true</minimizeJar>
                     <optimize>true</optimize>

@@ -10,7 +10,7 @@ public final class UpdateThread implements Runnable {
             if (objective == null) {
                 com.github.games647.scoreboardstats.scoreboard.Score.createScoreboard(player);
                 continue;
-            } else if (!objective.getName().startsWith("ScoreboardStats")){
+            } else if (!objective.getName().startsWith("ScoreboardStats")) {
                 continue;
             }
 
