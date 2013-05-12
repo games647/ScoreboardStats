@@ -109,8 +109,8 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <verbose>true</verbose>
-                    <minimizeJar>true</minimizeJar>
                     <optimize>true</optimize>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
             </plugin>
         </plugins>

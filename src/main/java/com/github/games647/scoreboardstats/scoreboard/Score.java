@@ -23,7 +23,6 @@ public final class Score {
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (!player.isOnline()) {
             return;
@@ -31,6 +30,7 @@ public final class Score {
 
         player.setScoreboard(scoreboard);
         getSettings().sendUpdate(player, true);
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (getSettings().isTempscoreboard()) {
             Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
@@ -38,11 +38,15 @@ public final class Score {
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) == null || !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+        if (!player.hasPermission("scoreboardstats.use")) {
             return;
         }
 
         final Scoreboard scoreboard = player.getScoreboard();
+
+        if (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+            return;
+        }
 
         if (scoreboard.getObjective("ScoreboardStatsT") != null) {
             scoreboard.getObjective("ScoreboardStatsT").unregister();  //to remove the old scores
@@ -62,7 +66,7 @@ public final class Score {
         final String color = getSettings().getTempcolor();
 
         for (String key : top.keySet()) {
-            Score.sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), false);
+            Score.sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
         }
     }
 
@@ -73,7 +77,7 @@ public final class Score {
 
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if (objective == null) {
+        if (objective == null && !complete) {
             createScoreboard(player);
             return;
         }
