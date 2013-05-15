@@ -2,14 +2,14 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class Database {
 
     private static EbeanServer databaseinstance;
-    private static Map<String, Cache> cache = new HashMap<String, Cache>();
+    private static Map<String, Cache> cache = new ConcurrentHashMap<String, Cache>();
 
     public static void setDatabase(final EbeanServer base) {
         Database.databaseinstance = base;
@@ -68,7 +68,7 @@ public final class Database {
 
     public static Map<String, Integer> getTop() {
         final String type = getSettings().getToptype();
-        final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
+        final Map<String, Integer> top = new ConcurrentHashMap<String, Integer>(getSettings().getTopitems());
 
         if ("%killstreak%".equals(type)) {
             final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
