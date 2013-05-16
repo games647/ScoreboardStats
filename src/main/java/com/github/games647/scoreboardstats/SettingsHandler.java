@@ -85,7 +85,7 @@ public final class SettingsHandler {
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         for (String localtitle : items.keySet()) {
-            com.github.games647.scoreboardstats.scoreboard.Score.sendScore(
+            com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.sendScore(
                     player, localtitle, com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
         }
     }

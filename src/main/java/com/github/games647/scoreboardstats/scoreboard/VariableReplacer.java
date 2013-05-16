@@ -244,15 +244,15 @@ public final class VariableReplacer {
         }
 
         if (VariableList.FREE_RAM.equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() / 1048576); // / 1024 / 1024
+            return (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024); // / 1024 / 1024
         }
 
         if (VariableList.MAX_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().maxMemory() / 1048576;
+            return (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
         }
 
         if (VariableList.USED_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().totalMemory() / 1048576;
+            return (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         }
 
         if (VariableList.DATE.equals(key)) {
@@ -264,7 +264,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LIFETIME.equals(key)) {
-            return player.getTicksLived() / 1200;
+            return player.getTicksLived() / 20 / 60;
         }
 
         if (VariableList.EXP.equals(key)) {
@@ -272,7 +272,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.NODAMAGE.equals(key)) {
-            return player.getNoDamageTicks() / 1200;
+            return player.getNoDamageTicks() / 20 / 60;
         }
 
         if (VariableList.XPTOLEVEL.equals(key)) {
@@ -280,7 +280,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LASTDAMAGE.equals(key)) {
-            return player.getLastDamage() / 1200;
+            return player.getLastDamage() / 20 / 60;
         }
 
         if (VariableList.MAXPLAYER.equals(key)) {

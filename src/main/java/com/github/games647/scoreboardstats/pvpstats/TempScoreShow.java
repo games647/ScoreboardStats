@@ -17,6 +17,6 @@ public final class TempScoreShow implements Runnable {
         }
 
         Database.saveAccount(player.getName(), false);
-        com.github.games647.scoreboardstats.scoreboard.Score.createTopListScoreboard(player);
+        com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.createTopListScoreboard(player);
     }
 }

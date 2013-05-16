@@ -8,9 +8,6 @@ import org.bukkit.entity.Player;
 
 public final class SignsListener {
 
-    private SignsListener() {
-    }
-
     public static void registerSigns(final de.blablubbabc.insigns.InSigns instance) {
 
         final String permission = "scoreboardstats.sign";
