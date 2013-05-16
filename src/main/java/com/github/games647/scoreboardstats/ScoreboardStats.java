@@ -48,7 +48,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     private void setupDatabase() {
         final EbeanServer database = getDatabase();
 
-        if (!settings.isPvpstats()) {
+        if (!settings.isPvpStats()) {
             return;
         }
 

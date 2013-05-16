@@ -67,7 +67,7 @@ public final class Database {
     }
 
     public static Map<String, Integer> getTop() {
-        final String type = getSettings().getToptype();
+        final String type = getSettings().getTopType();
         final Map<String, Integer> top = new ConcurrentHashMap<String, Integer>(getSettings().getTopitems());
 
         if ("%killstreak%".equals(type)) {
