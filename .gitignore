@@ -21,8 +21,6 @@
 /dist
 /manifest.mf
 
-/world
-
 # Mac filesystem dust
 .DS_Store
 
@@ -31,5 +29,3 @@
 *.ipr
 *.iws
 .idea/
-
-/Scoreboard/target/
