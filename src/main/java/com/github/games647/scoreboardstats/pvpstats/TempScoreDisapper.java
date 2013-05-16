@@ -12,6 +12,6 @@ public final class TempScoreDisapper implements Runnable {
 
     @Override
     public void run() {
-        com.github.games647.scoreboardstats.scoreboard.Score.createScoreboard(player);
+        com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.createScoreboard(player);
     }
 }

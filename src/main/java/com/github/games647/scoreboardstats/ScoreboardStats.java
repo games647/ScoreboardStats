@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats;
 import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
-import com.github.games647.scoreboardstats.scoreboard.Score;
+import com.github.games647.scoreboardstats.scoreboard.ScoreboardManager;
 import java.util.List;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
@@ -24,7 +24,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         instance = this;
         settings = new SettingsHandler(this);
         setupDatabase();
-        Score.regAll();
+        ScoreboardManager.regAll();
         com.github.games647.scoreboardstats.listener.PluginListener.init();
         this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.UpdateThread(), 60L, settings.getIntervall() * 20L);
@@ -42,15 +42,15 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);
         saveAll();
-        Score.unregisterAll();
+        ScoreboardManager.unregisterAll();
     }
 
     private void setupDatabase() {
+        final EbeanServer database = getDatabase();
+
         if (!settings.isPvpstats()) {
             return;
         }
-
-        final EbeanServer database = getDatabase();
 
         try {
             database.find(PlayerStats.class).findRowCount();

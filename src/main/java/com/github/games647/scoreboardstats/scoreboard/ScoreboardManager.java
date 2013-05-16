@@ -10,10 +10,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-public final class Score {
-
-    private Score() {
-    }
+public final class ScoreboardManager {
 
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
@@ -38,13 +35,9 @@ public final class Score {
     }
 
     public static void createTopListScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use")) {
-            return;
-        }
-
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+        if (!player.hasPermission("scoreboardstats.use") || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
             return;
         }
 
@@ -66,23 +59,23 @@ public final class Score {
         final String color = getSettings().getTempcolor();
 
         for (String key : top.keySet()) {
-            Score.sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
+            sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
         }
     }
 
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
+        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+
         if (!player.isOnline() || !player.hasPermission("scoreboardstats.use")) {
             return;
         }
-
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
         if (objective == null && !complete) {
             createScoreboard(player);
             return;
         }
 
-        if (!objective.getName().startsWith("ScoreboardStats")) {
+        if (objective == null || !objective.getName().startsWith("ScoreboardStats")) {
             return;
         }
 

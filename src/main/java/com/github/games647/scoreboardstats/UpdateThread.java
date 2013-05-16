@@ -8,7 +8,7 @@ public final class UpdateThread implements Runnable {
             final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
 
             if (objective == null) {
-                com.github.games647.scoreboardstats.scoreboard.Score.createScoreboard(player);
+                com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.createScoreboard(player);
                 continue;
             } else if (!objective.getName().startsWith("ScoreboardStats")) {
                 continue;
