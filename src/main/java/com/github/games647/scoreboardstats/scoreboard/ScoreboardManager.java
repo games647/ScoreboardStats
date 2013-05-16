@@ -29,8 +29,8 @@ public final class ScoreboardManager {
         getSettings().sendUpdate(player, true);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        if (getSettings().isTempscoreboard()) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempshow() * 20L);
+        if (getSettings().isTempScoreboard()) {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * 20L);
         }
     }
 
@@ -46,21 +46,22 @@ public final class ScoreboardManager {
         }
 
         final Objective objective = scoreboard.registerNewObjective("ScoreboardStatsT", "dummy");
-        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTemptitle()));
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTempTitle()));
 
         if (!player.isOnline()) {
             return;
         }
 
         player.setScoreboard(scoreboard);
-        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempdisapper() * 20L);
         final java.util.Map<String, Integer> top = Database.getTop();
-        final String color = getSettings().getTempcolor();
+        final String color = getSettings().getTempColor();
 
         for (String key : top.keySet()) {
             sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
         }
+
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * 20L);
     }
 
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
@@ -94,7 +95,7 @@ public final class ScoreboardManager {
     }
 
     public static void regAll() {
-        final boolean ispvpstats = getSettings().isPvpstats();
+        final boolean ispvpstats = getSettings().isPvpStats();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.isOnline()) {

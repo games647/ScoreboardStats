@@ -17,7 +17,7 @@ public final class VariableReplacer {
             return -1;
         }
 
-        if (getSettings().isPvpstats()) {
+        if (getSettings().isPvpStats()) {
             final int value = getPvpValue(key, player);
             if (value != -1) {
                 return value;
@@ -230,7 +230,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.ONLINE.equals(key)) {
-            if (getSettings().isHidevanished()) {
+            if (getSettings().isHideVanished()) {
                 int online = 0;
                 for (Player other : Bukkit.getOnlinePlayers()) {
                     if (player.canSee(other)) {
