@@ -82,7 +82,7 @@ public final class ScoreboardManager {
 
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise
+        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise 
             score.setScore(-1);
         }
 
