@@ -17,7 +17,7 @@
         <url>https://github.com/games647/ScoreboardStats</url>
         <tag>HEAD</tag>
         <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
-        <developerConnection>scm:git:git@github.com:games647/ScoreboardStats.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
     </scm>
 
     <repositories>
