@@ -2,7 +2,11 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 public final class Cache {
 
-    private int kills, mob, deaths, streak, laststreak;
+    private int kills
+            , mob
+            , deaths
+            , streak
+            , laststreak;
 
     public Cache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
         this.kills = paramkills;

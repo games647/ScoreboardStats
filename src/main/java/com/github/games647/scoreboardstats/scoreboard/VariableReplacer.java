@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 public final class VariableReplacer {
 
-    @SuppressWarnings("deprecation")
     public static int getReplacedInt(final String key, final Player player) {
         if (!player.isOnline()) {
             return -1;

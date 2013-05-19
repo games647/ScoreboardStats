@@ -30,7 +30,7 @@ public final class ScoreboardManager {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (getSettings().isTempScoreboard()) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * 20L);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * 20L);
         }
     }
 
@@ -82,7 +82,7 @@ public final class ScoreboardManager {
 
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise 
+        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise
             score.setScore(-1);
         }
 
