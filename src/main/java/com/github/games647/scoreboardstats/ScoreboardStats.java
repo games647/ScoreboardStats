@@ -38,6 +38,10 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         return list;
     }
 
+    public static void onReload() {
+
+    }
+
     @Override
     public void onDisable() {
         this.getServer().getScheduler().cancelTasks(this);

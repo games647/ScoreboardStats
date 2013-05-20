@@ -19,6 +19,10 @@ public final class Database {
         return cache.get(name);
     }
 
+    public static void clearTable() {
+        
+    }
+
     public static void loadAccount(final String name) {
         final PlayerStats stats = databaseinstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
 
