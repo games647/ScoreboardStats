@@ -13,6 +13,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <scm>
+        <url>https://github.com/games647/ScoreboardStats</url>
+        <tag>HEAD</tag>
+        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
+    </scm>
+
     <repositories>
         <repository>
             <id>vault-repo</id>
@@ -126,5 +133,4 @@
             </resource>
         </resources>
     </build>
-
 </project>
