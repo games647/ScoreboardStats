@@ -16,7 +16,7 @@ public final class SettingsHandler {
             , topitems
             , tempShow
             , tempDisapper;
-    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>();
+    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(10);
     private java.util.List<String> disabledWorlds;
 
     public SettingsHandler(final ScoreboardStats instance) {
@@ -25,7 +25,7 @@ public final class SettingsHandler {
         loadConfig();
     }
 
-    private void loadConfig() {
+    public void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(plugin.getDataFolder(), "config.yml")); //Will not save a other version in the Bukkit Server
         this.pvpStats = config.getBoolean("enable-pvpstats");
         this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));

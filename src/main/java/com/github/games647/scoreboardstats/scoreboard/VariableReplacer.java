@@ -17,7 +17,7 @@ public final class VariableReplacer {
         }
 
         if (getSettings().isPvpStats()) {
-            final int value = getPvpValue(key, player);
+            final int value = getPvpValue(key, player.getName());
             if (value != -1) {
                 return value;
             }
@@ -45,37 +45,39 @@ public final class VariableReplacer {
             }
         }
 
-        final int value = getBukkitValues(key, player);
-        if (value != -1) {
-            return value;
-        }
-
         return -1;
     }
 
-    private static int getPvpValue(final String key, final Player player) {
+    private static int getPvpValue(final String key, final String name) {
+        com.github.games647.scoreboardstats.pvpstats.Cache cache = Database.getCache(name);
+
+        if (cache == null) {
+            Database.loadAccount(name);
+            cache = Database.getCache(name);
+        }
+
         if (VariableList.KILLS.equals(key)) {
-            return Database.getCache(player.getName()).getKills();
+            return cache.getKills();
         }
 
         if (VariableList.DEATHS.equals(key)) {
-            return Database.getCache(player.getName()).getDeaths();
+            return cache.getDeaths();
         }
 
         if (VariableList.MOB.equals(key)) {
-            return Database.getCache(player.getName()).getMob();
+            return cache.getMob();
         }
 
         if (VariableList.KDR.equals(key)) {
-            return Database.getKdr(player.getName());
+            return Database.getKdr(name);
         }
 
         if (VariableList.KILLSTREAK.equals(key)) {
-            return Database.getCache(player.getName()).getStreak();
+            return cache.getStreak();
         }
 
         if (VariableList.CURRENTSTREAK.equals(key)) {
-            return Database.getCache(player.getName()).getLastStreak();
+            return cache.getLastStreak();
         }
 
         return -1;
