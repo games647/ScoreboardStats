@@ -9,13 +9,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class Database {
 
     private static EbeanServer databaseinstance;
-    private static Map<String, Cache> cache = new ConcurrentHashMap<String, Cache>();
+    private static Map<String, PlayerCache> cache = new ConcurrentHashMap<String, PlayerCache>();
 
     public static void setDatabase(final EbeanServer base) {
         Database.databaseinstance = base;
     }
 
-    public static Cache getCache(final String name) {
+    public static PlayerCache getCache(final String name) {
         return cache.get(name);
     }
 
@@ -26,17 +26,17 @@ public final class Database {
     public static void loadAccount(final String name) {
         final PlayerStats stats = databaseinstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
 
-        cache.put(name, stats == null ? new Cache() : new Cache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        cache.put(name, stats == null ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
 
     public static int getKdr(final String name) {
-        final Cache stats = getCache(name);
+        final PlayerCache stats = getCache(name);
 
         return stats == null ? 0 : stats.getDeaths() == 0 ? stats.getKills() : (stats.getKills() / stats.getDeaths());
     }
 
     public static void saveAccount(final String name, final boolean remove) {
-        final Cache playercache = cache.get(name);
+        final PlayerCache playercache = cache.get(name);
 
         if (playercache == null) {
             return;

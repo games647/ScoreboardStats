@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-public final class Cache {
+public final class PlayerCache {
 
     private int kills
             , mob
@@ -8,14 +8,14 @@ public final class Cache {
             , streak
             , laststreak;
 
-    public Cache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
+    public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
         this.kills = paramkills;
         this.mob = parammob;
         this.deaths = paramdeaths;
         this.streak = paramstreak;
     }
 
-    public Cache() {
+    public PlayerCache() {
        //Do nothing, because all variables are automatically init as 0
     }
 

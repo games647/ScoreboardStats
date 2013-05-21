@@ -1,6 +1,6 @@
-package com.github.games647.commands;
+package com.github.games647.scoreboardstats.commands;
 
-public class ReloadCommand implements org.bukkit.command.CommandExecutor {
+public class ClearCommand implements org.bukkit.command.CommandExecutor {
 
     @Override
     public boolean onCommand(final org.bukkit.command.CommandSender cs, final org.bukkit.command.Command cmd, final String label, final String[] args) {
@@ -9,8 +9,8 @@ public class ReloadCommand implements org.bukkit.command.CommandExecutor {
             return true;
         }
 
-        com.github.games647.scoreboardstats.ScoreboardStats.onReload();
-        cs.sendMessage("§6Successfully reloaded the config");
+        com.github.games647.scoreboardstats.pvpstats.Database.clearTable();
+        cs.sendMessage("§6You have successfully cleared the table");
         return true;
     }
 

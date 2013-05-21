@@ -8,12 +8,14 @@ public final class EntityListener implements org.bukkit.event.Listener {
         final org.bukkit.entity.Player killer = entity.getKiller();
 
         if (com.github.games647.scoreboardstats.ScoreboardStats.getSettings().checkWorld(entity.getWorld().getName())
-                || entity.getType().equals(org.bukkit.entity.EntityType.PLAYER) || killer == null || !killer.isOnline()) {
+                || entity.getType().equals(org.bukkit.entity.EntityType.PLAYER)
+                || killer == null
+                || !killer.isOnline()) {
             return;
         }
 
-        final com.github.games647.scoreboardstats.pvpstats.Cache killercache = com.github.games647.scoreboardstats.pvpstats.Database.getCache(killer.getName());
-
+        final com.github.games647.scoreboardstats.pvpstats.PlayerCache killercache = com.github.games647.scoreboardstats.pvpstats.Database.getCache(killer.getName());
+        
         if (killercache != null) {
             killercache.increaseMob();
         }

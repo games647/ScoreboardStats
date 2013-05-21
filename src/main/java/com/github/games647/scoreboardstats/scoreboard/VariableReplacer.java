@@ -45,11 +45,11 @@ public final class VariableReplacer {
             }
         }
 
-        return -1;
+        return getBukkitValues(key, player);
     }
 
     private static int getPvpValue(final String key, final String name) {
-        com.github.games647.scoreboardstats.pvpstats.Cache cache = Database.getCache(name);
+        com.github.games647.scoreboardstats.pvpstats.PlayerCache cache = Database.getCache(name);
 
         if (cache == null) {
             Database.loadAccount(name);
