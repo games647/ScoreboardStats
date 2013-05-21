@@ -115,11 +115,11 @@ public final class SettingsHandler {
     }
 
     private String replaceSpecialCharacters(final String input) {
-        return input.replaceAll("[<3]", "❤").replaceAll("[check]", "✔").replaceAll("[<]", "◄").replaceAll("[>]", "►")
-                    .replaceAll("[star]", "★").replaceAll("[grid]", "▓").replaceAll("[round_star]", "✪")
-                    .replaceAll("[stars]", "⁂").replaceAll("[crown]", "♛").replaceAll("[chess]", "♜").replaceAll("[top]", "▀")
-                    .replaceAll("[button]", "▄").replaceAll("[side]", "▌").replaceAll("[1]", "▂").replaceAll("[2]", "▃")
-                    .replaceAll("[3]", "▄").replaceAll("[4]", "▅").replaceAll("[5]", "▆").replaceAll("[6]", "▇").replaceAll("[7]", "█")
-                    .replaceAll("[8]", "▓").replaceAll("[9]", "▒").replaceAll("[10]", "░");
+        return input.replace("[<3]", "❤").replace("[check]", "✔").replace("[<]", "◄").replace("[>]", "►")
+                    .replace("[star]", "★").replace("[grid]", "▓").replace("[round_star]", "✪")
+                    .replace("[stars]", "⁂").replace("[crown]", "♛").replace("[chess]", "♜").replace("[top]", "▀")
+                    .replace("[button]", "▄").replace("[side]", "▌").replace("[1]", "▂").replace("[2]", "▃")
+                    .replace("[3]", "▄").replace("[4]", "▅").replace("[5]", "▆").replace("[6]", "▇").replace("[7]", "█")
+                    .replace("[8]", "▓").replace("[9]", "▒").replace("[10]", "░");
     }
 }
