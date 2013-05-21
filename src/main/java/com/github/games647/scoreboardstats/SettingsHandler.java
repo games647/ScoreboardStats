@@ -28,11 +28,11 @@ public final class SettingsHandler {
     public void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, "config.yml")); //Will not save a other version in the Bukkit Server
         this.pvpStats = config.getBoolean("enable-pvpstats");
-        this.title = translateAlternateColorCodes('&', checkLength(config.getString("Scoreboard.Title")));
+        this.title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
         this.disabledWorlds = config.getStringList("disabled-worlds");
         this.intervall = config.getInt("Scoreboard.Update-delay");
         this.tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
-        this.tempTitle = translateAlternateColorCodes('&', checkLength(config.getString("Temp-Scoreboard.Title")));
+        this.tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
         this.topitems = config.getInt("Temp-Scoreboard.Items");
         this.tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
         this.tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
@@ -110,7 +110,16 @@ public final class SettingsHandler {
         }
 
         for (String key : keys) {
-            items.put(translateAlternateColorCodes('&', checkLength(key)), config.getString(key));
+            items.put(translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(key))), config.getString(key));
         }
+    }
+
+    private String replaceSpecialCharacters(final String input) {
+        return input.replaceAll("[<3]", "❤").replaceAll("[check]", "✔").replaceAll("[<]", "◄").replaceAll("[>]", "►")
+                    .replaceAll("[star]", "★").replaceAll("[grid]", "▓").replaceAll("[round_star]", "✪")
+                    .replaceAll("[stars]", "⁂").replaceAll("[crown]", "♛").replaceAll("[chess]", "♜").replaceAll("[top]", "▀")
+                    .replaceAll("[button]", "▄").replaceAll("[side]", "▌").replaceAll("[1]", "▂").replaceAll("[2]", "▃")
+                    .replaceAll("[3]", "▄").replaceAll("[4]", "▅").replaceAll("[5]", "▆").replaceAll("[6]", "▇").replaceAll("[7]", "█")
+                    .replaceAll("[8]", "▓").replaceAll("[9]", "▒").replaceAll("[10]", "░");
     }
 }
