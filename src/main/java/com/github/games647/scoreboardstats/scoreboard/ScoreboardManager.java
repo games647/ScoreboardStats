@@ -13,7 +13,11 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class ScoreboardManager {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use") || player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null) {
+        if (!player.hasPermission("scoreboardstats.use")) {
+            return;
+        }
+
+        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals("ScoreboardStatsT")) {
             return;
         }
 
@@ -26,8 +30,8 @@ public final class ScoreboardManager {
         }
 
         player.setScoreboard(scoreboard);
-        getSettings().sendUpdate(player, true);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempScoreboard()) {
             Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * 20L);
@@ -55,13 +59,12 @@ public final class ScoreboardManager {
         player.setScoreboard(scoreboard);
         final java.util.Map<String, Integer> top = Database.getTop();
         final String color = getSettings().getTempColor();
-
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * 20L);
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        
         for (String key : top.keySet()) {
             sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
         }
-
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * 20L);
     }
 
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
