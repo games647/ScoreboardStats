@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
 import java.util.Date;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
@@ -245,15 +246,15 @@ public final class VariableReplacer {
         }
 
         if (VariableList.FREE_RAM.equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() / 1024 / 1024); // / 1024 / 1024
+            return (int) (Runtime.getRuntime().freeMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE); // / 1024 / 1024
         }
 
         if (VariableList.MAX_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
+            return (int) Runtime.getRuntime().maxMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE;
         }
 
         if (VariableList.USED_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
+            return (int) Runtime.getRuntime().totalMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE;
         }
 
         if (VariableList.DATE.equals(key)) {
@@ -265,7 +266,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LIFETIME.equals(key)) {
-            return player.getTicksLived() / 20 / 60;
+            return player.getTicksLived() / VariableList.TICKS_INT / VariableList.SECONDS;
         }
 
         if (VariableList.EXP.equals(key)) {
@@ -273,7 +274,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.NODAMAGE.equals(key)) {
-            return player.getNoDamageTicks() / 20 / 60;
+            return player.getNoDamageTicks() / VariableList.TICKS_INT / VariableList.SECONDS;
         }
 
         if (VariableList.XPTOLEVEL.equals(key)) {
@@ -281,7 +282,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LASTDAMAGE.equals(key)) {
-            return player.getLastDamage() / 20 / 60;
+            return player.getLastDamage() / VariableList.TICKS_INT / VariableList.SECONDS;
         }
 
         if (VariableList.MAXPLAYER.equals(key)) {

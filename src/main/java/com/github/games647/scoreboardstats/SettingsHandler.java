@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.variables.VariableList;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
@@ -99,7 +100,7 @@ public final class SettingsHandler {
 
     private static String checkLength(final String check) {
 
-        return check.length() > 16 ? check.substring(0, 16) : check;
+        return check.length() > VariableList.MINECRAFT_LIMIT ? check.substring(0, VariableList.MINECRAFT_LIMIT) : check;
     }
 
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
