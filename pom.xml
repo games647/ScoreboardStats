@@ -13,6 +13,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/games647/ScoreboardStats/issues</url>
+    </issueManagement>
+
     <scm>
         <url>https://github.com/games647/ScoreboardStats</url>
         <tag>HEAD</tag>
