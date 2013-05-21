@@ -58,7 +58,7 @@ public final class VariableList  {
     public static final String MEMBER           = "%member%";
     public static final String CLAN_KDR         = "%clan_kdr%";
     public static final String POWER            = "%power%";
-    public static final String CLAN_CIVILIAN    = "%%";
+    public static final String CLAN_CIVILIAN    = "%clan_civilian%";
     public static final String CLAN_DEATHS      = "clan_deaths%";
     public static final String CLAN_NEUTRAL     = "clan_neutral%";
     public static final String CLAN_RIVAL       = "clan_rival%";
