@@ -14,16 +14,16 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class ScoreboardManager {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission("scoreboardstats.use")) {
+        if (!player.hasPermission(VariableList.USE_PERMISSION)) {
             return;
         }
 
-        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals("ScoreboardStatsT")) {
+        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals(VariableList.TOPLIST)) {
             return;
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
+        final Objective objective = scoreboard.registerNewObjective(VariableList.PLUGIN_NAME, "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
 
         if (!player.isOnline()) {
@@ -42,15 +42,15 @@ public final class ScoreboardManager {
     public static void createTopListScoreboard(final Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (!player.hasPermission("scoreboardstats.use") || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+        if (!player.hasPermission(VariableList.USE_PERMISSION) || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(VariableList.PLUGIN_NAME)) {
             return;
         }
 
-        if (scoreboard.getObjective("ScoreboardStatsT") != null) {
-            scoreboard.getObjective("ScoreboardStatsT").unregister();  //to remove the old scores
+        if (scoreboard.getObjective(VariableList.TOPLIST) != null) {
+            scoreboard.getObjective(VariableList.TOPLIST).unregister();  //to remove the old scores
         }
 
-        final Objective objective = scoreboard.registerNewObjective("ScoreboardStatsT", "dummy");
+        final Objective objective = scoreboard.registerNewObjective(VariableList.TOPLIST, "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTempTitle()));
 
         if (!player.isOnline()) {
@@ -71,7 +71,7 @@ public final class ScoreboardManager {
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if (!player.isOnline() || !player.hasPermission("scoreboardstats.use")) {
+        if (!player.isOnline() || !player.hasPermission(VariableList.USE_PERMISSION)) {
             return;
         }
 
@@ -80,7 +80,7 @@ public final class ScoreboardManager {
             return;
         }
 
-        if (objective == null || !objective.getName().startsWith("ScoreboardStats")) {
+        if (objective == null || !objective.getName().startsWith(VariableList.PLUGIN_NAME)) {
             return;
         }
 

@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.variables.VariableList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +21,7 @@ public final class Database {
     }
 
     public static void clearTable() {
-        
+
     }
 
     public static void loadAccount(final String name) {
@@ -74,8 +75,8 @@ public final class Database {
         final String type = getSettings().getTopType();
         final Map<String, Integer> top = new ConcurrentHashMap<String, Integer>(getSettings().getTopitems());
 
-        if ("%killstreak%".equals(type)) {
-            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList();
+        if (VariableList.KILLSTREAK.equals(type)) {
+            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy(VariableList.KILLSTREAK.replace("%", "") + "desc").setMaxRows(getSettings().getTopitems()).findList();
 
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);
@@ -83,8 +84,8 @@ public final class Database {
             }
 
             return top;
-        } else if ("%mobkills%".equals(type)) {
-            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList();
+        } else if (VariableList.MOB.equals(type)) {
+            final List<PlayerStats> list = databaseinstance.find(PlayerStats.class).orderBy(VariableList.MOB.replace("%", "") + "desc").setMaxRows(getSettings().getTopitems()).findList();
 
             for (int i = 0; i < list.size(); i++) {
                 final PlayerStats stats = list.get(i);

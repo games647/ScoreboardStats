@@ -1,8 +1,8 @@
 package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
+import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
-import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
 
 public final class PluginListener {
@@ -10,7 +10,7 @@ public final class PluginListener {
     private static Economy econ;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
-    private static ClanManager simpleclans;
+    private static CraftClanPlayerManager simpleclans;
 
     public static Economy getEcon() {
         return econ;
@@ -20,7 +20,7 @@ public final class PluginListener {
         return mcmmo;
     }
 
-    public static ClanManager getSimpleclans() {
+    public static CraftClanPlayerManager getSimpleclans() {
         return simpleclans;
     }
 
@@ -34,7 +34,7 @@ public final class PluginListener {
         mcmmo = (pluginm.getPlugin("mcMMO") != null);
 
         if (pluginm.getPlugin("SimpleClans") != null) {
-            simpleclans = ((net.sacredlabyrinth.phaed.simpleclans.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanManager();
+            simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanPlayerManager();
         }
 
         if (pluginm.getPlugin("Essentials") != null) {

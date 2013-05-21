@@ -9,9 +9,21 @@ public final class VariableList  {
     public static final String PLUGIN_NAME      = "ScoreboardStats";
     public static final String TOPLIST          = "ScoreboardStatsT";
 
+    //Permissions
+    public static final String SIGN_PERMISSION  = "scoreboardstats.sign";
+    public static final String USE_PERMISSION   = "scoreboardstats.use";
+
     public static final long   STARTUP_DELAY    = 60L;
     public static final int    SECONDS          = 60;
     public static final int    INTO_NEXT_SIZE   = 1024;
+
+    //Signs
+    public static final String SIGN_KILL        = "[Kill]";
+    public static final String SIGN_DEATH       = "[Death]";
+    public static final String SIGN_KDR         = "[KDR]";
+    public static final String SIGN_STREAK      = "[Streak]";
+    public static final String SIGN_MOB         = "[Mob]";
+
     //Bukkit
     public static final String ONLINE           = "%online%";
     public static final String FREE_RAM         = "%free_ram%";
@@ -31,7 +43,7 @@ public final class VariableList  {
     //PvP
     public static final String KILLS            = "%kills%";
     public static final String DEATHS           = "%deaths%";
-    public static final String MOB              = "%mob%";
+    public static final String MOB              = "%mobkills%";
     public static final String KDR              = "%kdr%";
     public static final String KILLSTREAK       = "%killstreak%";
     public static final String CURRENTSTREAK    = "%current_streak%";
@@ -67,15 +79,12 @@ public final class VariableList  {
 //    public static final String KDR              = "%kdr%";
     public static final String MEMBER           = "%member%";
     public static final String CLAN_KDR         = "%clan_kdr%";
-    public static final String POWER            = "%power%";
-    public static final String CLAN_CIVILIAN    = "%clan_civilian%";
+    public static final String CLAN_KILLS       = "%clan_kills%";
     public static final String CLAN_DEATHS      = "clan_deaths%";
     public static final String CLAN_NEUTRAL     = "clan_neutral%";
     public static final String CLAN_RIVAL       = "clan_rival%";
-    public static final String CLAIMS           = "claims%";
     public static final String ALLIES_TOTAL     = "allies_total%";
     public static final String ALLIES           = "%allies%";
     public static final String RIVAL            = "%rivals%";
-    public static final String MEMBER_ONLINE    = "%members_online%";
     public static final String CLAN_MONEY       = "%clan_money%";
 }

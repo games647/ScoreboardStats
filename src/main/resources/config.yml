@@ -9,8 +9,6 @@ disabled-worlds:
 #This will not count vanished players in the online value
 hide-vanished: false
 
-use-packet-system: false
-
 Scoreboard:
   Title: '&a&lStats'
   #seconds
