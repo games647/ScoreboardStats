@@ -5,8 +5,8 @@ import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
+import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
 import java.util.Date;
-import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -175,15 +175,11 @@ public final class VariableReplacer {
         }
 
         if (VariableList.CLAN_KDR.equals(key)) {
-            return (int) PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalKDR();
+            return (int) PluginListener.getSimpleclans().getClanPlayer(player).getClan().getKDR();
         }
 
         if (VariableList.CLAN_MONEY.equals(key)) {
             return (int) PluginListener.getSimpleclans().getClanPlayer(player).getClan().getBalance();
-        }
-
-        if (VariableList.MEMBER_ONLINE.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getOnlineMembers().size();
         }
 
         if (VariableList.RIVAL.equals(key)) {
@@ -198,28 +194,8 @@ public final class VariableReplacer {
             return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getAllAllyMembers().size();
         }
 
-        if (VariableList.CLAIMS.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getAllowedClaims();
-        }
-
-        if (VariableList.CLAN_RIVAL.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalRival();
-        }
-
-        if (VariableList.CLAN_NEUTRAL.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalNeutral();
-        }
-
-        if (VariableList.CLAN_DEATHS.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalDeaths();
-        }
-
-        if (VariableList.CLAN_CIVILIAN.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalCivilian();
-        }
-
-        if (VariableList.POWER.equals(key)) {
-            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getPower();
+        if (VariableList.CLAN_KILLS.equals(key)) {
+            return PluginListener.getSimpleclans().getClanPlayer(player).getClan().getTotalKills().length;
         }
 
         return -1;

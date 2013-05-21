@@ -27,7 +27,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         ScoreboardManager.regAll();
         com.github.games647.scoreboardstats.listener.PluginListener.init();
         this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
-        this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.UpdateThread(), VariableList.STARTUP_DELAY, settings.getIntervall() * VariableList.TICKS_PER_SECOND);
+        this.getServer().getScheduler()
+                .scheduleSyncRepeatingTask(this
+                    , new com.github.games647.scoreboardstats.UpdateThread(), VariableList.STARTUP_DELAY, settings.getIntervall() * VariableList.TICKS_PER_SECOND);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.listener;
 
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
+import com.github.games647.variables.VariableList;
 import de.blablubbabc.insigns.Changer;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,9 +11,7 @@ public final class SignsListener {
 
     public static void registerSigns(final de.blablubbabc.insigns.InSigns instance) {
 
-        final String PERMISSION = "scoreboardstats.sign";
-
-        instance.addChanger(new Changer("[Kill]", PERMISSION) {
+        instance.addChanger(new Changer(VariableList.SIGN_KILL, VariableList.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
@@ -21,7 +20,7 @@ public final class SignsListener {
             }
         });
 
-        instance.addChanger(new Changer("[Death]", PERMISSION) {
+        instance.addChanger(new Changer(VariableList.SIGN_DEATH, VariableList.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
@@ -30,7 +29,7 @@ public final class SignsListener {
             }
         });
 
-        instance.addChanger(new Changer("[Mob]", PERMISSION) {
+        instance.addChanger(new Changer(VariableList.SIGN_MOB, VariableList.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
@@ -39,14 +38,14 @@ public final class SignsListener {
             }
         });
 
-        instance.addChanger(new Changer("[KDR]", PERMISSION) {
+        instance.addChanger(new Changer(VariableList.SIGN_KDR, VariableList.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
                 return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getKdr(player.getName()));
             }
         });
 
-        instance.addChanger(new Changer("[Killstreak]", PERMISSION) {
+        instance.addChanger(new Changer(VariableList.SIGN_STREAK, VariableList.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
