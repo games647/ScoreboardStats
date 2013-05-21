@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.VariableList;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public final class ScoreboardManager {
         getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempScoreboard()) {
-            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * 20L);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * VariableList.TICKS_PER_SECOND);
         }
     }
 
@@ -59,9 +60,9 @@ public final class ScoreboardManager {
         player.setScoreboard(scoreboard);
         final java.util.Map<String, Integer> top = Database.getTop();
         final String color = getSettings().getTempColor();
-        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * 20L);
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * VariableList.TICKS_PER_SECOND);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        
+
         for (String key : top.keySet()) {
             sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
         }
@@ -94,7 +95,7 @@ public final class ScoreboardManager {
 
     private static String checkLength(final String check) {
 
-        return check.length() < 15 ? check : check.substring(0, 14);
+        return check.length() > VariableList.MINECRAFT_LIMIT - 2 ? check.substring(0, VariableList.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
 
     public static void regAll() {

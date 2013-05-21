@@ -15,7 +15,7 @@ public final class EntityListener implements org.bukkit.event.Listener {
         }
 
         final com.github.games647.scoreboardstats.pvpstats.PlayerCache killercache = com.github.games647.scoreboardstats.pvpstats.Database.getCache(killer.getName());
-        
+
         if (killercache != null) {
             killercache.increaseMob();
         }
