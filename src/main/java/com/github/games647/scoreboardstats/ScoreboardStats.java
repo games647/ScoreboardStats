@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.ScoreboardManager;
+import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         this.getServer().getScheduler()
                 .scheduleSyncRepeatingTask(this
-                    , new com.github.games647.scoreboardstats.UpdateThread(), VariableList.STARTUP_DELAY, settings.getIntervall() * VariableList.TICKS_PER_SECOND);
+                    , new com.github.games647.scoreboardstats.UpdateThread(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
     }
 
     @Override
