@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
@@ -222,15 +223,15 @@ public final class VariableReplacer {
         }
 
         if (VariableList.FREE_RAM.equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE); // / 1024 / 1024
+            return (int) (Runtime.getRuntime().freeMemory() / Other.INTO_NEXT_SIZE / Other.INTO_NEXT_SIZE); // / 1024 / 1024
         }
 
         if (VariableList.MAX_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().maxMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE;
+            return (int) Runtime.getRuntime().maxMemory() / Other.INTO_NEXT_SIZE / Other.INTO_NEXT_SIZE;
         }
 
         if (VariableList.USED_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().totalMemory() / VariableList.INTO_NEXT_SIZE / VariableList.INTO_NEXT_SIZE;
+            return (int) Runtime.getRuntime().totalMemory() / Other.INTO_NEXT_SIZE / Other.INTO_NEXT_SIZE;
         }
 
         if (VariableList.DATE.equals(key)) {
@@ -242,7 +243,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LIFETIME.equals(key)) {
-            return player.getTicksLived() / VariableList.TICKS_INT / VariableList.SECONDS;
+            return player.getTicksLived() / Other.TICKS_INT / Other.SECONDS;
         }
 
         if (VariableList.EXP.equals(key)) {
@@ -250,7 +251,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.NODAMAGE.equals(key)) {
-            return player.getNoDamageTicks() / VariableList.TICKS_INT / VariableList.SECONDS;
+            return player.getNoDamageTicks() / Other.TICKS_INT / Other.SECONDS;
         }
 
         if (VariableList.XPTOLEVEL.equals(key)) {
@@ -258,7 +259,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LASTDAMAGE.equals(key)) {
-            return player.getLastDamage() / VariableList.TICKS_INT / VariableList.SECONDS;
+            return player.getLastDamage() / Other.TICKS_INT / Other.SECONDS;
         }
 
         if (VariableList.MAXPLAYER.equals(key)) {

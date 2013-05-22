@@ -3,6 +3,8 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.Other;
+import com.github.games647.variables.Permissions;
 import com.github.games647.variables.VariableList;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -14,16 +16,16 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class ScoreboardManager {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission(VariableList.USE_PERMISSION)) {
+        if (!player.hasPermission(Permissions.USE_PERMISSION)) {
             return;
         }
 
-        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals(VariableList.TOPLIST)) {
+        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals(Other.TOPLIST)) {
             return;
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective(VariableList.PLUGIN_NAME, "dummy");
+        final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
 
         if (!player.isOnline()) {
@@ -35,22 +37,22 @@ public final class ScoreboardManager {
         getSettings().sendUpdate(player, true);
 
         if (getSettings().isTempScoreboard()) {
-            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * VariableList.TICKS_PER_SECOND);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * Other.TICKS_PER_SECOND);
         }
     }
 
     public static void createTopListScoreboard(final Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (!player.hasPermission(VariableList.USE_PERMISSION) || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(VariableList.PLUGIN_NAME)) {
+        if (!player.hasPermission(Permissions.USE_PERMISSION) || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)) {
             return;
         }
 
-        if (scoreboard.getObjective(VariableList.TOPLIST) != null) {
-            scoreboard.getObjective(VariableList.TOPLIST).unregister();  //to remove the old scores
+        if (scoreboard.getObjective(Other.TOPLIST) != null) {
+            scoreboard.getObjective(Other.TOPLIST).unregister();  //to remove the old scores
         }
 
-        final Objective objective = scoreboard.registerNewObjective(VariableList.TOPLIST, "dummy");
+        final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, "dummy");
         objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTempTitle()));
 
         if (!player.isOnline()) {
@@ -60,7 +62,7 @@ public final class ScoreboardManager {
         player.setScoreboard(scoreboard);
         final java.util.Map<String, Integer> top = Database.getTop();
         final String color = getSettings().getTempColor();
-        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * VariableList.TICKS_PER_SECOND);
+        Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         for (String key : top.keySet()) {
@@ -71,7 +73,7 @@ public final class ScoreboardManager {
     public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
-        if (!player.isOnline() || !player.hasPermission(VariableList.USE_PERMISSION)) {
+        if (!player.isOnline() || !player.hasPermission(Permissions.USE_PERMISSION)) {
             return;
         }
 
@@ -80,7 +82,7 @@ public final class ScoreboardManager {
             return;
         }
 
-        if (objective == null || !objective.getName().startsWith(VariableList.PLUGIN_NAME)) {
+        if (objective == null || !objective.getName().startsWith(Other.PLUGIN_NAME)) {
             return;
         }
 
@@ -95,7 +97,7 @@ public final class ScoreboardManager {
 
     private static String checkLength(final String check) {
 
-        return check.length() > VariableList.MINECRAFT_LIMIT - 2 ? check.substring(0, VariableList.MINECRAFT_LIMIT - 2) : check; //Because adding the color
+        return check.length() > Other.MINECRAFT_LIMIT - 2 ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
 
     public static void regAll() {
