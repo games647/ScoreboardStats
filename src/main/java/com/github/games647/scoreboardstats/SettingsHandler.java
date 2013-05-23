@@ -1,7 +1,8 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Other;
+import com.github.games647.variables.Permissions;
+import java.util.Map;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
@@ -25,7 +26,7 @@ public final class SettingsHandler {
     private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(10);
     private java.util.List<String> disabledWorlds;
 
-    public SettingsHandler(final MainClass instance) {
+    public SettingsHandler(final ScoreboardStats instance) {
         datafolder = instance.getDataFolder();
         instance.saveDefaultConfig();
         loadConfig();
@@ -98,9 +99,15 @@ public final class SettingsHandler {
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
-        for (final String localtitle : items.keySet()) {
-            SbManager.sendScore(
-                    player, localtitle, com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
+        final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
+
+        if (!player.hasPermission(Permissions.USE_PERMISSION) || objective == null || !objective.getName().startsWith(Other.PLUGIN_NAME)) {
+            return;
+        }
+
+        for (final Map.Entry<String, String> entry : items.entrySet()) {
+            com.github.games647.scoreboardstats.scoreboard.SbManager.sendScore(
+                    objective, entry.getKey(), com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
         }
     }
 
@@ -125,7 +132,7 @@ public final class SettingsHandler {
         return input.replace("[<3]", "❤").replace("[check]", "✔").replace("[<]", "◄").replace("[>]", "►")
                     .replace("[star]", "★").replace("[grid]", "▓").replace("[round_star]", "✪")
                     .replace("[stars]", "⁂").replace("[crown]", "♛").replace("[chess]", "♜").replace("[top]", "▀")
-                    .replace("[button]", "▄").replace("[side]", "▌").replace("[1]", "▂").replace("[2]", "▃")
+                    .replace("[button]", "▄").replace("[side]", "▌").replace("[mid]", "▬").replace("[1]", "▂").replace("[2]", "▃")
                     .replace("[3]", "▄").replace("[4]", "▅").replace("[5]", "▆").replace("[6]", "▇").replace("[7]", "█")
                     .replace("[8]", "▓").replace("[9]", "▒").replace("[10]", "░");
     }

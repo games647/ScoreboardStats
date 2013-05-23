@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import org.bukkit.entity.Player;
 
 public final class TempScoreShow implements Runnable {
@@ -15,7 +14,7 @@ public final class TempScoreShow implements Runnable {
     public void run() {
         if (player.isOnline()) {
             Database.saveAccount(player.getName(), false);
-            SbManager.createTopListScoreboard(player);
+            com.github.games647.scoreboardstats.scoreboard.SbManager.createTopListScoreboard(player);
         }
     }
 }

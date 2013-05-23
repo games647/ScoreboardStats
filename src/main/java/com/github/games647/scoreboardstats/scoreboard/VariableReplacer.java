@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Date;
 
-import static com.github.games647.scoreboardstats.MainClass.getSettings;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 
 public final class VariableReplacer {
 

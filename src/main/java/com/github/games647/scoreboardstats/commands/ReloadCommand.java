@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.MainClass;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 
 public class ReloadCommand implements org.bukkit.command.CommandExecutor {
 
@@ -11,7 +11,7 @@ public class ReloadCommand implements org.bukkit.command.CommandExecutor {
             return true;
         }
 
-        MainClass.onReload();
+        ScoreboardStats.onReload();
         cs.sendMessage("§6Successfully reloaded the config");
         return true;
     }

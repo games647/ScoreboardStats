@@ -1,13 +1,11 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.variables.VariableList;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static com.github.games647.scoreboardstats.MainClass.getSettings;
 
 public final class Database {
 

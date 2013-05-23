@@ -5,7 +5,6 @@ package com.github.games647.scoreboardstats.pvpstats;
 public class PlayerStats {
 
     @javax.persistence.Id
-    @com.avaje.ebean.validation.NotNull
     @com.avaje.ebean.validation.NotEmpty
     private String playername;
 
