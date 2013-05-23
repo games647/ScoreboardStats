@@ -25,7 +25,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     @Override
     public void onEnable() {
-        settings = new SettingsHandler(this);
+        saveDefaultConfig();
+        settings = new SettingsHandler();
         setupDatabase();
         SbManager.regAll();
         com.github.games647.scoreboardstats.listener.PluginListener.init();

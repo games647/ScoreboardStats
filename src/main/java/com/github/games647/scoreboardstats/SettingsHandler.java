@@ -7,8 +7,6 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
 
-    private final java.io.File  datafolder;
-
     private boolean             pvpStats;
     private boolean             tempScoreboard;
     private boolean             hideVanished;
@@ -27,15 +25,12 @@ public final class SettingsHandler {
     private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(10);
     private java.util.List<String> disabledWorlds;
 
-    public SettingsHandler(final ScoreboardStats instance) {
-        datafolder = instance.getDataFolder();
-        instance.saveDefaultConfig();
+    public SettingsHandler() {
         loadConfig();
     }
 
     public void loadConfig() {
-        final org.bukkit.configuration.file.FileConfiguration config = org
-                .bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, Other.CONFIG_NAME)); //Will not save a other version in the Bukkit Server
+        final org.bukkit.configuration.file.FileConfiguration config = ScoreboardStats.getInstance().getConfig(); //Will not save a other version in the Bukkit Server
         pvpStats = config.getBoolean("enable-pvpstats");
         title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
         disabledWorlds = config.getStringList("disabled-worlds");
