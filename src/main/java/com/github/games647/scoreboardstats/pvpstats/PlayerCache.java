@@ -2,17 +2,17 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 public final class PlayerCache {
 
-    private int kills
-            , mob
-            , deaths
-            , streak
-            , laststreak;
+    private int kills;
+    private int mob;
+    private int deaths;
+    private int streak;
+    private int laststreak;
 
     public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
-        this.kills = paramkills;
-        this.mob = parammob;
-        this.deaths = paramdeaths;
-        this.streak = paramstreak;
+        kills = paramkills;
+        mob = parammob;
+        deaths = paramdeaths;
+        streak = paramstreak;
     }
 
     public PlayerCache() {
@@ -36,12 +36,12 @@ public final class PlayerCache {
     }
 
     public void onKill() {
-        this.kills++;
-        this.laststreak++;
+        kills++;
+        laststreak++;
     }
 
     public void increaseMob() {
-        this.mob++;
+        mob++;
     }
 
     public int getLastStreak() {
@@ -50,10 +50,10 @@ public final class PlayerCache {
 
     public void onDeath() {
         if (laststreak > streak) {
-            this.streak = this.laststreak;
+            streak = laststreak;
         }
 
         laststreak = 0;
-        this.deaths++;
+        deaths++;
     }
 }

@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import org.bukkit.entity.Player;
 
 public final class TempScoreDisapper implements Runnable {
@@ -7,11 +8,11 @@ public final class TempScoreDisapper implements Runnable {
     private final Player player;
 
     public TempScoreDisapper(final Player paramplayer) {
-        this.player = paramplayer;
+        player = paramplayer;
     }
 
     @Override
     public void run() {
-        com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.createScoreboard(player);
+        SbManager.createScoreboard(player);
     }
 }

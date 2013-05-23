@@ -1,15 +1,17 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
-import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.Date;
+
+import static com.github.games647.scoreboardstats.MainClass.getSettings;
 
 public final class VariableReplacer {
 
@@ -25,8 +27,8 @@ public final class VariableReplacer {
             }
         }
 
-        if (PluginListener.getEcon() != null && VariableList.ECONOMY.equals(key)) {
-            return (int) PluginListener.getEcon().getBalance(player.getName());
+        if (PluginListener.getEconomy() != null && VariableList.ECONOMY.equals(key)) {
+            return (int) PluginListener.getEconomy().getBalance(player.getName());
         }
 
         if (PluginListener.isMcmmo()) {
@@ -91,55 +93,55 @@ public final class VariableReplacer {
         }
 
         if (VariableList.WOODCUTTING.equals(key)) {
-            return ExperienceAPI.getLevel(player, "WOODCUTTING");
+            return ExperienceAPI.getLevel(player, VariableList.WOODCUTTING);
         }
 
         if (VariableList.ACROBATICS.equals(key)) {
-            return ExperienceAPI.getLevel(player, "ACROBATICS");
+            return ExperienceAPI.getLevel(player, VariableList.ACROBATICS);
         }
 
         if (VariableList.ARCHERY.equals(key)) {
-            return ExperienceAPI.getLevel(player, "ARCHERY");
+            return ExperienceAPI.getLevel(player, VariableList.ARCHERY);
         }
 
         if (VariableList.AXES.equals(key)) {
-            return ExperienceAPI.getLevel(player, "AXES");
+            return ExperienceAPI.getLevel(player, VariableList.AXES);
         }
 
         if (VariableList.EXCAVATION.equals(key)) {
-            return ExperienceAPI.getLevel(player, "EXCAVATION");
+            return ExperienceAPI.getLevel(player, VariableList.EXCAVATION);
         }
 
         if (VariableList.FISHING.equals(key)) {
-            return ExperienceAPI.getLevel(player, "FISHING");
+            return ExperienceAPI.getLevel(player, VariableList.FISHING);
         }
 
         if (VariableList.HERBALISM.equals(key)) {
-            return ExperienceAPI.getLevel(player, "HERBALISM");
+            return ExperienceAPI.getLevel(player, VariableList.HERBALISM);
         }
 
         if (VariableList.MINING.equals(key)) {
-            return ExperienceAPI.getLevel(player, "MINING");
+            return ExperienceAPI.getLevel(player, VariableList.MINING);
         }
 
         if (VariableList.REPAIR.equals(key)) {
-            return ExperienceAPI.getLevel(player, "REPAIR");
+            return ExperienceAPI.getLevel(player, VariableList.REPAIR);
         }
 
         if (VariableList.SMELTING.equals(key)) {
-            return ExperienceAPI.getLevel(player, "SMELTING");
+            return ExperienceAPI.getLevel(player, VariableList.SMELTING);
         }
 
         if (VariableList.SWORDS.equals(key)) {
-            return ExperienceAPI.getLevel(player, "SWORDS");
+            return ExperienceAPI.getLevel(player, VariableList.SWORDS);
         }
 
         if (VariableList.TAMING.equals(key)) {
-            return ExperienceAPI.getLevel(player, "TAMING");
+            return ExperienceAPI.getLevel(player, VariableList.TAMING);
         }
 
         if (VariableList.UNARMED.equals(key)) {
-            return ExperienceAPI.getLevel(player, "UNARMED");
+            return ExperienceAPI.getLevel(player, VariableList.UNARMED);
         }
 
         return -1;
@@ -211,7 +213,7 @@ public final class VariableReplacer {
         if (VariableList.ONLINE.equals(key)) {
             if (getSettings().isHideVanished()) {
                 int online = 0;
-                for (Player other : Bukkit.getOnlinePlayers()) {
+                for (final Player other : Bukkit.getOnlinePlayers()) {
                     if (player.canSee(other)) {
                         online++;
                     }
@@ -236,10 +238,6 @@ public final class VariableReplacer {
 
         if (VariableList.DATE.equals(key)) {
             return new Date().getDate();
-        }
-
-        if (VariableList.TIME.equals(key)) {
-            return (int) (player.getWorld().getTime() / 1000);
         }
 
         if (VariableList.LIFETIME.equals(key)) {

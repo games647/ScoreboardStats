@@ -2,20 +2,24 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 @javax.persistence.Entity
 @javax.persistence.Table(name = "PlayerStats")
-public class PlayerStats implements java.io.Serializable {
+public class PlayerStats {
 
     @javax.persistence.Id
     @com.avaje.ebean.validation.NotNull
     @com.avaje.ebean.validation.NotEmpty
     private String playername;
-    private int kills, deaths, mobkills, killstreak; //Add killStreaks
+
+    private int kills;
+    private int deaths;
+    private int mobkills;
+    private int killstreak; //Add killStreaks
 
     public String getPlayername() {
         return playername;
     }
 
     public void setPlayername(final String paramplayername) {
-        this.playername = paramplayername;
+        playername = paramplayername;
     }
 
     public int getKills() {
@@ -23,7 +27,7 @@ public class PlayerStats implements java.io.Serializable {
     }
 
     public void setKills(final int paramkills) {
-        this.kills = paramkills;
+        kills = paramkills;
     }
 
     public int getDeaths() {
@@ -31,7 +35,7 @@ public class PlayerStats implements java.io.Serializable {
     }
 
     public void setDeaths(final int paramdeaths) {
-        this.deaths = paramdeaths;
+        deaths = paramdeaths;
     }
 
     public int getMobkills() {
@@ -39,7 +43,7 @@ public class PlayerStats implements java.io.Serializable {
     }
 
     public void setMobkills(final int parammobkills) {
-        this.mobkills = parammobkills;
+        mobkills = parammobkills;
     }
 
     public int getKillstreak() {
@@ -47,6 +51,6 @@ public class PlayerStats implements java.io.Serializable {
     }
 
     public void setKillstreak(final int paramkillstreak) {
-        this.killstreak = paramkillstreak;
+        killstreak = paramkillstreak;
     }
 }
