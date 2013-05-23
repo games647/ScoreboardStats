@@ -4,6 +4,7 @@ public final class Other  {
 
     public static final String  PLUGIN_NAME         = "MainClass";
     public static final String  TOPLIST             = "ScoreboardStatsT";
+    public static final String  CONFIG_NAME         = "config.yml";
 
     public static final long    STARTUP_DELAY       = 60L;
     public static final long    TICKS_PER_SECOND    = 20L;
