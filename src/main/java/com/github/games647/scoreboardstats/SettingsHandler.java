@@ -12,6 +12,7 @@ public final class SettingsHandler {
     private boolean             pvpStats;
     private boolean             tempScoreboard;
     private boolean             hideVanished;
+    private boolean             sound;
 
     private String              title;
     private String              tempTitle;
@@ -34,7 +35,7 @@ public final class SettingsHandler {
 
     public void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = org
-                .bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, "config.yml")); //Will not save a other version in the Bukkit Server
+                .bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, Other.CONFIG_NAME)); //Will not save a other version in the Bukkit Server
         pvpStats = config.getBoolean("enable-pvpstats");
         title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
         disabledWorlds = config.getStringList("disabled-worlds");
@@ -47,6 +48,7 @@ public final class SettingsHandler {
         tempColor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         topType = config.getString("Temp-Scoreboard.Type");
         hideVanished = config.getBoolean("hide-vanished");
+        sound = config.getBoolean("enable-sound");
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
     }
 
@@ -92,6 +94,10 @@ public final class SettingsHandler {
 
     public int getTempDisapper() {
         return tempDisapper;
+    }
+
+    public boolean isSound() {
+        return sound;
     }
 
     public boolean checkWorld(final String world) {
