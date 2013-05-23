@@ -1,17 +1,17 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
+import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
+import java.util.Map;
 import org.bukkit.Bukkit;
+import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-
-import static com.github.games647.scoreboardstats.MainClass.getInstance;
-import static com.github.games647.scoreboardstats.MainClass.getSettings;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SbManager {
 
@@ -60,28 +60,13 @@ public final class SbManager {
             Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-            for (final String key : top.keySet()) {
-                sendScore(player, String.format("%s%s", color, checkLength(key)), top.get(key), true);
+            for (final Map.Entry<String, Integer> entry : top.entrySet()) {
+                sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), true);
             }
         }
     }
 
-    public static void sendScore(final Player player, final String title, final int value, final boolean complete) {
-        if (!player.isOnline() || !player.hasPermission(Permissions.USE_PERMISSION)) {
-            return;
-        }
-        
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-
-        if (objective == null && !complete) {
-            createScoreboard(player);
-            return;
-        }
-
-        if (objective == null || !objective.getName().startsWith(Other.PLUGIN_NAME)) {
-            return;
-        }
-
+    public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
         if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise

@@ -1,27 +1,25 @@
 package com.github.games647.scoreboardstats;
 
+import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Other;
-
 import java.util.List;
 
-import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
-
-public final class MainClass extends org.bukkit.plugin.java.JavaPlugin {
+public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     private static SettingsHandler settings;
-    private static MainClass instance;
+    private static ScoreboardStats instance;
 
     public static SettingsHandler getSettings() {
         return settings;
     }
 
-    public static MainClass getInstance() {
+    public static ScoreboardStats getInstance() {
         return instance;
     }
 
-    public MainClass() {
+    public ScoreboardStats() {
         instance = this;
     }
 

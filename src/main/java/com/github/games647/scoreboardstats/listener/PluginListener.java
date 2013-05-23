@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
-import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayerManager;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -21,7 +20,7 @@ public final class PluginListener {
         return mcmmo;
     }
 
-    public static ClanPlayerManager getSimpleclans() {
+    public static CraftClanPlayerManager getSimpleclans() {
         return simpleclans;
     }
 
