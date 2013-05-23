@@ -1,14 +1,16 @@
 package com.github.games647.scoreboardstats.listener;
 
+import com.github.games647.scoreboardstats.MainClass;
+
 public final class EntityListener implements org.bukkit.event.Listener {
 
     @org.bukkit.event.EventHandler
-    public void onMobDeath(final org.bukkit.event.entity.EntityDeathEvent event) {
+    public static void onMobDeath(final org.bukkit.event.entity.EntityDeathEvent event) {
         final org.bukkit.entity.LivingEntity entity = event.getEntity();
         final org.bukkit.entity.Player killer = entity.getKiller();
 
-        if (com.github.games647.scoreboardstats.ScoreboardStats.getSettings().checkWorld(entity.getWorld().getName())
-                || entity.getType().equals(org.bukkit.entity.EntityType.PLAYER)
+        if (MainClass.getSettings().checkWorld(entity.getWorld().getName())
+                || entity.getType() == org.bukkit.entity.EntityType.PLAYER
                 || killer == null
                 || !killer.isOnline()) {
             return;

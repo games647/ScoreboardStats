@@ -2,7 +2,7 @@ package com.github.games647.variables;
 
 public final class Other  {
 
-    public static final String  PLUGIN_NAME         = "ScoreboardStats";
+    public static final String  PLUGIN_NAME         = "MainClass";
     public static final String  TOPLIST             = "ScoreboardStatsT";
 
     public static final long    STARTUP_DELAY       = 60L;

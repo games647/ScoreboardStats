@@ -122,7 +122,6 @@
                     <showDeprecation>true</showDeprecation>
                     <verbose>true</verbose>
                     <optimize>true</optimize>
-                    <minimizeJar>true</minimizeJar>
                 </configuration>
             </plugin>
         </plugins>

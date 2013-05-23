@@ -1,26 +1,27 @@
 package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
+import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayerManager;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 
 public final class PluginListener {
 
-    private static Economy econ;
+    private static Economy economy;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
     private static CraftClanPlayerManager simpleclans;
 
-    public static Economy getEcon() {
-        return econ;
+    public static Economy getEconomy() {
+        return economy;
     }
 
     public static boolean isMcmmo() {
         return mcmmo;
     }
 
-    public static CraftClanPlayerManager getSimpleclans() {
+    public static ClanPlayerManager getSimpleclans() {
         return simpleclans;
     }
 
@@ -31,7 +32,7 @@ public final class PluginListener {
     public static void init() {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
-        mcmmo = (pluginm.getPlugin("mcMMO") != null);
+        mcmmo = pluginm.getPlugin("mcMMO") != null;
 
         if (pluginm.getPlugin("SimpleClans") != null) {
             simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanPlayerManager();
@@ -49,7 +50,7 @@ public final class PluginListener {
             final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
             if (economyProvider != null) {
-                econ = economyProvider.getProvider();
+                economy = economyProvider.getProvider();
             }
         }
     }

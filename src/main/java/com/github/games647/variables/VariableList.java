@@ -1,5 +1,6 @@
 package com.github.games647.variables;
 
+@SuppressWarnings("HardCodedStringLiteral")
 public final class VariableList  {
 
     //Signs
@@ -15,7 +16,6 @@ public final class VariableList  {
     public static final String MAX_RAM          = "%max_ram%";
     public static final String USED_RAM         = "%used_ram%";
     public static final String DATE             = "%date%";
-    public static final String TIME             = "%time%";
     public static final String LIFETIME         = "%lifetime%";
     public static final String EXP              = "%exp%";
     public static final String NODAMAGE         = "%no_damage_ticks%";
@@ -32,6 +32,9 @@ public final class VariableList  {
     public static final String KDR              = "%kdr%";
     public static final String KILLSTREAK       = "%killstreak%";
     public static final String CURRENTSTREAK    = "%current_streak%";
+
+    //Faction
+    public static final String POWER_MAX        = "";
 
     //Economy
     public static final String ECONOMY          = "%econ%";

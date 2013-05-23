@@ -1,46 +1,51 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Other;
-import com.github.games647.variables.VariableList;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
 
-    private final java.io.File datafolder;
-    private boolean pvpStats
-            , tempScoreboard
-            , hideVanished;
-    private String title
-            , tempTitle
-            , tempColor
-            , topType;
-    private int intervall
-            , topitems
-            , tempShow
-            , tempDisapper;
+    private final java.io.File  datafolder;
+
+    private boolean             pvpStats;
+    private boolean             tempScoreboard;
+    private boolean             hideVanished;
+
+    private String              title;
+    private String              tempTitle;
+    private String              tempColor;
+    private String              topType;
+
+    private int                 intervall;
+    private int                 topitems;
+    private int                 tempShow;
+    private int                 tempDisapper;
+
     private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(10);
     private java.util.List<String> disabledWorlds;
 
-    public SettingsHandler(final ScoreboardStats instance) {
-        this.datafolder = instance.getDataFolder();
+    public SettingsHandler(final MainClass instance) {
+        datafolder = instance.getDataFolder();
         instance.saveDefaultConfig();
         loadConfig();
     }
 
     public void loadConfig() {
-        final org.bukkit.configuration.file.FileConfiguration config = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, "config.yml")); //Will not save a other version in the Bukkit Server
-        this.pvpStats = config.getBoolean("enable-pvpstats");
-        this.title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
-        this.disabledWorlds = config.getStringList("disabled-worlds");
-        this.intervall = config.getInt("Scoreboard.Update-delay");
-        this.tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
-        this.tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
-        this.topitems = config.getInt("Temp-Scoreboard.Items");
-        this.tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
-        this.tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
-        this.tempColor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
-        this.topType = config.getString("Temp-Scoreboard.Type");
-        this.hideVanished = config.getBoolean("hide-vanished");
+        final org.bukkit.configuration.file.FileConfiguration config = org
+                .bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.File(datafolder, "config.yml")); //Will not save a other version in the Bukkit Server
+        pvpStats = config.getBoolean("enable-pvpstats");
+        title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
+        disabledWorlds = config.getStringList("disabled-worlds");
+        intervall = config.getInt("Scoreboard.Update-delay");
+        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
+        tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
+        topitems = config.getInt("Temp-Scoreboard.Items");
+        tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
+        tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
+        tempColor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
+        topType = config.getString("Temp-Scoreboard.Type");
+        hideVanished = config.getBoolean("hide-vanished");
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
     }
 
@@ -93,15 +98,15 @@ public final class SettingsHandler {
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
-        for (String localtitle : items.keySet()) {
-            com.github.games647.scoreboardstats.scoreboard.ScoreboardManager.sendScore(
+        for (final String localtitle : items.keySet()) {
+            SbManager.sendScore(
                     player, localtitle, com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(items.get(localtitle), player), complete);
         }
     }
 
     private static String checkLength(final String check) {
 
-        return check.length() > Other.MINECRAFT_LIMIT ? check.substring(0, Other.MINECRAFT_LIMIT) : check;
+        return (check.length() > Other.MINECRAFT_LIMIT) ? check.substring(0, Other.MINECRAFT_LIMIT) : check;
     }
 
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
@@ -111,12 +116,12 @@ public final class SettingsHandler {
             items.clear();
         }
 
-        for (String key : keys) {
+        for (final String key : keys) {
             items.put(translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(key))), config.getString(key));
         }
     }
 
-    private String replaceSpecialCharacters(final String input) {
+    private static String replaceSpecialCharacters(final String input) {
         return input.replace("[<3]", "❤").replace("[check]", "✔").replace("[<]", "◄").replace("[>]", "►")
                     .replace("[star]", "★").replace("[grid]", "▓").replace("[round_star]", "✪")
                     .replace("[stars]", "⁂").replace("[crown]", "♛").replace("[chess]", "♜").replace("[top]", "▀")
