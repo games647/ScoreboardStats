@@ -27,7 +27,8 @@ public final class VariableReplacer {
             }
         }
 
-        if (PluginListener.getEconomy() != null && VariableList.ECONOMY.equals(key)) {
+        if (PluginListener.getEconomy() != null
+                && VariableList.ECONOMY.equals(key)) {
             return (int) PluginListener.getEconomy().getBalance(player.getName());
         }
 
@@ -38,7 +39,8 @@ public final class VariableReplacer {
             }
         }
 
-        if (PluginListener.getEssentials() != null && VariableList.TICKS.equals(key)) {
+        if (PluginListener.getEssentials() != null
+                && VariableList.TICKS.equals(key)) {
             return (int) PluginListener.getEssentials().getAverageTPS();
         }
 
@@ -211,17 +213,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.ONLINE.equals(key)) {
-            if (getSettings().isHideVanished()) {
-                int online = 0;
-                for (final Player other : Bukkit.getOnlinePlayers()) {
-                    if (player.canSee(other)) {
-                        online++;
-                    }
-                }
-                return online;
-            } else {
-                return Bukkit.getOnlinePlayers().length;
-            }
+            return getOnlinePlayers(player);
         }
 
         if (VariableList.FREE_RAM.equals(key)) {
@@ -269,5 +261,19 @@ public final class VariableReplacer {
         }
 
         return -1;
+    }
+
+    private static int getOnlinePlayers(final Player player) {
+        if (getSettings().isHideVanished()) {
+            int online = 0;
+            for (final Player other : Bukkit.getOnlinePlayers()) {
+                if (player.canSee(other)) {
+                    online++;
+                }
+            }
+            return online;
+        } else {
+            return Bukkit.getOnlinePlayers().length;
+        }
     }
 }

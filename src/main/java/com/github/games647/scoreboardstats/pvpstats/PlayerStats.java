@@ -11,7 +11,7 @@ public class PlayerStats {
     private int kills;
     private int deaths;
     private int mobkills;
-    private int killstreak; //Add killStreaks
+    private int killstreak;
 
     public String getPlayername() {
         return playername;

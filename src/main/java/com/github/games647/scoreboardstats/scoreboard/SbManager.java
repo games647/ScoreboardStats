@@ -20,13 +20,14 @@ public final class SbManager {
             return;
         }
 
-        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals(Other.TOPLIST)) {
+        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null
+                && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals(Other.TOPLIST)) {
             return;
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, "dummy");
-        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTitle()));
+        final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
+        objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTitle()));
 
         if (player.isOnline()) {
             player.setScoreboard(scoreboard);
@@ -42,7 +43,9 @@ public final class SbManager {
     public static void createTopListScoreboard(final Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
 
-        if (!player.hasPermission(Permissions.USE_PERMISSION) || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)) {
+        if (!player.hasPermission(Permissions.USE_PERMISSION)
+                || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null
+                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)) {
             return;
         }
 
@@ -50,8 +53,8 @@ public final class SbManager {
             scoreboard.getObjective(Other.TOPLIST).unregister();  //to remove the old scores
         }
 
-        final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, "dummy");
-        objective.setDisplayName(translateAlternateColorCodes('&', getSettings().getTempTitle()));
+        final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
+        objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTempTitle()));
 
         if (player.isOnline()) {
             player.setScoreboard(scoreboard);

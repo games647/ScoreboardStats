@@ -11,6 +11,7 @@ public final class SettingsHandler {
     private boolean             tempScoreboard;
     private boolean             hideVanished;
     private boolean             sound;
+    private boolean             displayname;
 
     private String              title;
     private String              tempTitle;
@@ -31,9 +32,9 @@ public final class SettingsHandler {
 
     public void loadConfig() {
         final org.bukkit.configuration.file.FileConfiguration config = ScoreboardStats.getInstance().getConfig(); //Will not save a other version in the Bukkit Server
-        pvpStats = config.getBoolean("enable-pvpstats");
+        pvpStats = config.getBoolean("Enable-pvpstats");
         title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
-        disabledWorlds = config.getStringList("disabled-worlds");
+        disabledWorlds = config.getStringList("Disabled-worlds");
         intervall = config.getInt("Scoreboard.Update-delay");
         tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
         tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
@@ -42,8 +43,9 @@ public final class SettingsHandler {
         tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
         tempColor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         topType = config.getString("Temp-Scoreboard.Type");
-        hideVanished = config.getBoolean("hide-vanished");
-        sound = config.getBoolean("enable-sound");
+        hideVanished = config.getBoolean("Hide-vanished");
+        sound = config.getBoolean("Enable-sound");
+        displayname = config.getBoolean("Display-displayname");
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
     }
 
@@ -95,6 +97,10 @@ public final class SettingsHandler {
         return sound;
     }
 
+    public boolean isDisplayname() {
+        return displayname;
+    }
+
     public boolean checkWorld(final String world) {
         return disabledWorlds.contains(world);
     }
@@ -102,7 +108,9 @@ public final class SettingsHandler {
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
 
-        if (!player.hasPermission(Permissions.USE_PERMISSION) || objective == null || !objective.getName().startsWith(Other.PLUGIN_NAME)) {
+        if (!player.hasPermission(Permissions.USE_PERMISSION)
+                || objective == null
+                || !objective.getName().equals(Other.PLUGIN_NAME)) {
             return;
         }
 
@@ -114,7 +122,8 @@ public final class SettingsHandler {
 
     private static String checkLength(final String check) {
 
-        return (check.length() > Other.MINECRAFT_LIMIT) ? check.substring(0, Other.MINECRAFT_LIMIT) : check;
+        return (check.length() > Other.MINECRAFT_LIMIT) ?
+                    check.substring(0, Other.MINECRAFT_LIMIT) : check;
     }
 
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {

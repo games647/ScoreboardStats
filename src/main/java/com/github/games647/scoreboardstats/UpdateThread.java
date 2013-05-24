@@ -1,7 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.variables.Other;
-
 final class UpdateThread implements Runnable {
 
     @Override
@@ -11,7 +9,7 @@ final class UpdateThread implements Runnable {
 
             if (objective == null) {
                 com.github.games647.scoreboardstats.scoreboard.SbManager.createScoreboard(player);
-            } else if (objective.getName().equals(Other.PLUGIN_NAME)) {
+            } else {
                 ScoreboardStats.getSettings().sendUpdate(player, false);
             }
         }

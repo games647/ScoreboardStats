@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
+import com.github.games647.variables.PluginNames;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -31,21 +32,21 @@ public final class PluginListener {
     public static void init() {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
-        mcmmo = pluginm.getPlugin("mcMMO") != null;
+        mcmmo = pluginm.getPlugin(PluginNames.MCMMO) != null;
 
-        if (pluginm.getPlugin("SimpleClans") != null) {
-            simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin("SimpleClans")).getClanPlayerManager();
+        if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
+            simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();
         }
 
-        if (pluginm.getPlugin("Essentials") != null) {
-            essentials = ((com.earth2me.essentials.Essentials) pluginm.getPlugin("Essentials")).getTimer();
+        if (pluginm.getPlugin(PluginNames.ESSENTIALS) != null) {
+            essentials = ((com.earth2me.essentials.Essentials) pluginm.getPlugin(PluginNames.ESSENTIALS)).getTimer();
         }
 
-        if (pluginm.getPlugin("InSigns") != null) {
-            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pluginm.getPlugin("InSigns"));
+        if (pluginm.getPlugin(PluginNames.INSIGNS) != null) {
+            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pluginm.getPlugin(PluginNames.INSIGNS));
         }
 
-        if (pluginm.getPlugin("Vault") != null) {
+        if (pluginm.getPlugin(PluginNames.VAULT) != null) {
             final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 
             if (economyProvider != null) {
