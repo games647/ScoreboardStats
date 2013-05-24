@@ -29,7 +29,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         saveDefaultConfig();
         settings = new SettingsHandler();
         setupDatabase();
-        SbManager.regAll();
+        SbManager.regAll(true);
         com.github.games647.scoreboardstats.listener.PluginListener.init();
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         getServer().getScheduler()
@@ -46,10 +46,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     public static void onReload() {
-        SbManager.unregisterAll();
-        saveAll();
         settings.loadConfig();
-        SbManager.regAll();
+        SbManager.unregisterAll();
+        SbManager.regAll(false);
     }
 
     @Override

@@ -84,7 +84,7 @@ public final class SbManager {
         return (check.length() > Other.MINECRAFT_LIMIT - 2) ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
 
-    public static void regAll() {
+    public static void regAll(final boolean load) {
         final boolean ispvpstats = getSettings().isPvpStats();
 
         for (final Player player : Bukkit.getOnlinePlayers()) {
@@ -92,7 +92,7 @@ public final class SbManager {
                 continue;
             }
 
-            if (ispvpstats) {
+            if (load && ispvpstats) {
                 Database.loadAccount(player.getName());
             }
 
