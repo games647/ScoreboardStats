@@ -26,7 +26,7 @@ public final class SbManager {
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
+        final Objective objective   = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTitle()));
 
         if (player.isOnline()) {
@@ -58,8 +58,8 @@ public final class SbManager {
 
         if (player.isOnline()) {
             player.setScoreboard(scoreboard);
-            final java.util.Map<String, Integer> top = Database.getTop();
-            final String color = getSettings().getTempColor();
+            final java.util.Map<String, Integer> top    = Database.getTop();
+            final String color                          = getSettings().getTempColor();
             Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -72,7 +72,8 @@ public final class SbManager {
     public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
         final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
 
-        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise
+        if (complete
+                && value == 0) { //Have to use this because the score wouldn't send otherwise
             score.setScore(-1);
         }
 
@@ -92,7 +93,8 @@ public final class SbManager {
                 continue;
             }
 
-            if (load && ispvpstats) {
+            if (load
+                    && ispvpstats) {
                 Database.loadAccount(player.getName());
             }
 
