@@ -1,8 +1,10 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
 import java.util.Map;
+import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
@@ -36,7 +38,8 @@ public final class SettingsHandler {
         title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
         disabledWorlds = config.getStringList("Disabled-worlds");
         intervall = config.getInt("Scoreboard.Update-delay");
-        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
+        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled")
+                && pvpStats;
         tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
         topitems = config.getInt("Temp-Scoreboard.Items");
         tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
@@ -121,9 +124,13 @@ public final class SettingsHandler {
     }
 
     private static String checkLength(final String check) {
+        if (check.length() > Other.MINECRAFT_LIMIT) {
+            final String logmessage = Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, check);
+            Bukkit.getLogger().warning(logmessage);
+            return check.substring(0, Other.MINECRAFT_LIMIT);
+        }
 
-        return (check.length() > Other.MINECRAFT_LIMIT) ?
-                    check.substring(0, Other.MINECRAFT_LIMIT) : check;
+        return check;
     }
 
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {

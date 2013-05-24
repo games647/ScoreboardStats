@@ -1,17 +1,16 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
+import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.Date;
-
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 
 public final class VariableReplacer {
 
@@ -41,7 +40,12 @@ public final class VariableReplacer {
 
         if (PluginListener.getEssentials() != null
                 && VariableList.TICKS.equals(key)) {
-            return (int) PluginListener.getEssentials().getAverageTPS();
+            try {
+                return (int) PluginListener.getEssentials().getAverageTPS();
+            } catch (Exception ex) {
+                Bukkit.getLogger().warning(Message.WRONG_ESSENTIALS);
+                return -1;
+            }
         }
 
         if (PluginListener.getSimpleclans() != null) {
@@ -257,7 +261,11 @@ public final class VariableReplacer {
         }
 
         if (VariableList.PING.equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
+            try {
+               return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
+            } catch (Exception ex) {
+                Bukkit.getLogger().warning(Message.LOG_NAME + Message.WRONG_CRAFTBUKKIT);
+            }
         }
 
         return -1;
