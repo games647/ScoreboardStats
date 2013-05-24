@@ -1,15 +1,15 @@
 #This is the default config
 
-enable-pvpstats: true
+Enable-pvpstats: true
 
-disabled-worlds:
+Disabled-worlds:
   - world_nether
   - city
 
 #This will not count vanished players in the online value
-hide-vanished: false
+Hide-vanished: false
 
-enable-sound: false
+Enable-sound: false
 
 Scoreboard:
   Title: '&a&lStats'

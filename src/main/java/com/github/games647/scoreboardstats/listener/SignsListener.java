@@ -17,7 +17,8 @@ final class SignsListener {
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
-                return playercache == null ? "" : String.valueOf(playercache.getKills());
+                return playercache == null ?
+                        "" : String.valueOf(playercache.getKills());
             }
         });
 
@@ -26,7 +27,8 @@ final class SignsListener {
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
-                return playercache == null ? "" : String.valueOf(playercache.getDeaths());
+                return playercache == null ?
+                        "" : String.valueOf(playercache.getDeaths());
             }
         });
 
@@ -35,14 +37,16 @@ final class SignsListener {
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
-                return playercache == null ? "" : String.valueOf(playercache.getMob());
+                return playercache == null ?
+                        "" : String.valueOf(playercache.getMob());
             }
         });
 
         instance.addChanger(new Changer(VariableList.SIGN_KDR, Permissions.SIGN_PERMISSION) {
             @Override
             public String getValue(final Player player, final Location lctn) {
-                return Database.getCache(player.getName()) == null ? "" : String.valueOf(Database.getKdr(player.getName()));
+                return Database.getCache(player.getName()) == null ?
+                        "" : String.valueOf(Database.getKdr(player.getName()));
             }
         });
 
@@ -51,7 +55,8 @@ final class SignsListener {
             public String getValue(final Player player, final Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
-                return playercache == null ? "" : String.valueOf(playercache.getStreak());
+                return playercache == null ?
+                        "" : String.valueOf(playercache.getStreak());
             }
         });
     }
