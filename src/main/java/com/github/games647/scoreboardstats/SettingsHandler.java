@@ -1,8 +1,10 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.variables.ConfigurationPaths;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
+import com.github.games647.variables.SpecialCharacter;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
@@ -13,7 +15,6 @@ public final class SettingsHandler {
     private boolean             tempScoreboard;
     private boolean             hideVanished;
     private boolean             sound;
-    private boolean             displayname;
 
     private String              title;
     private String              tempTitle;
@@ -33,23 +34,27 @@ public final class SettingsHandler {
     }
 
     public void loadConfig() {
-        final org.bukkit.configuration.file.FileConfiguration config = ScoreboardStats.getInstance().getConfig(); //Will not save a other version in the Bukkit Server
-        pvpStats = config.getBoolean("Enable-pvpstats");
-        title = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Scoreboard.Title"))));
-        disabledWorlds = config.getStringList("Disabled-worlds");
-        intervall = config.getInt("Scoreboard.Update-delay");
-        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled")
-                && pvpStats;
-        tempTitle = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString("Temp-Scoreboard.Title"))));
-        topitems = config.getInt("Temp-Scoreboard.Items");
-        tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
-        tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
-        tempColor = translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
-        topType = config.getString("Temp-Scoreboard.Type");
-        hideVanished = config.getBoolean("Hide-vanished");
-        sound = config.getBoolean("Enable-sound");
-        displayname = config.getBoolean("Display-displayname");
-        loaditems(config.getConfigurationSection("Scoreboard.Items"));
+        final org.bukkit.configuration.file.FileConfiguration config = ScoreboardStats.getInstance().getConfig();
+
+        hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
+        sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
+        disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
+        pvpStats        = config.getBoolean(ConfigurationPaths.PVPSTATS);
+
+        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
+        title           = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
+
+        if (config.getBoolean(ConfigurationPaths.TEMP)
+                && pvpStats) {
+            tempScoreboard  = true;
+            tempTitle       = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
+            topitems        = config.getInt(ConfigurationPaths.TEMP_ITEMS);
+            tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
+            tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
+            tempColor       = translateAlternateColorCodes('&', config.getString(ConfigurationPaths.TEMP_COLOR));
+            topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
+        }
     }
 
     public boolean isPvpStats() {
@@ -100,10 +105,6 @@ public final class SettingsHandler {
         return sound;
     }
 
-    public boolean isDisplayname() {
-        return displayname;
-    }
-
     public boolean checkWorld(final String world) {
         return disabledWorlds.contains(world);
     }
@@ -146,11 +147,29 @@ public final class SettingsHandler {
     }
 
     private static String replaceSpecialCharacters(final String input) {
-        return input.replace("[<3]", "❤").replace("[check]", "✔").replace("[<]", "◄").replace("[>]", "►")
-                    .replace("[star]", "★").replace("[grid]", "▓").replace("[round_star]", "✪")
-                    .replace("[stars]", "⁂").replace("[crown]", "♛").replace("[chess]", "♜").replace("[top]", "▀")
-                    .replace("[button]", "▄").replace("[side]", "▌").replace("[mid]", "▬").replace("[1]", "▂").replace("[2]", "▃")
-                    .replace("[3]", "▄").replace("[4]", "▅").replace("[5]", "▆").replace("[6]", "▇").replace("[7]", "█")
-                    .replace("[8]", "▓").replace("[9]", "▒").replace("[10]", "░");
+        return input
+                .replace(SpecialCharacter.VAR_HEART, SpecialCharacter.HEART)
+                .replace(SpecialCharacter.VAR_CHECK, SpecialCharacter.CHECK)
+                .replace(SpecialCharacter.VAR_LESS, SpecialCharacter.LESS)
+                .replace(SpecialCharacter.VAR_BIGGER, SpecialCharacter.BIGGER)
+                .replace(SpecialCharacter.VAR_STAR, SpecialCharacter.STAR)
+                .replace(SpecialCharacter.VAR_ROUND_STAR, SpecialCharacter.ROUND_STAR)
+                .replace(SpecialCharacter.VAR_STARS, SpecialCharacter.STARS)
+                .replace(SpecialCharacter.VAR_CROWN, SpecialCharacter.CROWN)
+                .replace(SpecialCharacter.VAR_CHESS, SpecialCharacter.CHESS)
+                .replace(SpecialCharacter.VAR_TOP, SpecialCharacter.TOP)
+                .replace(SpecialCharacter.VAR_BUTTON, SpecialCharacter.BUTTON)
+                .replace(SpecialCharacter.VAR_SIDE, SpecialCharacter.SIDE)
+                .replace(SpecialCharacter.VAR_MID, SpecialCharacter.MID)
+                .replace(SpecialCharacter.VAR_ONE, SpecialCharacter.ONE)
+                .replace(SpecialCharacter.VAR_TWO, SpecialCharacter.TWO)
+                .replace(SpecialCharacter.VAR_THREE, SpecialCharacter.THREE)
+                .replace(SpecialCharacter.VAR_FOUR, SpecialCharacter.FOUR)
+                .replace(SpecialCharacter.VAR_FIVE, SpecialCharacter.FIVE)
+                .replace(SpecialCharacter.VAR_SIX, SpecialCharacter.SIX)
+                .replace(SpecialCharacter.VAR_SEVEN, SpecialCharacter.SEVEN)
+                .replace(SpecialCharacter.VAR_EIGHT, SpecialCharacter.EIGHT)
+                .replace(SpecialCharacter.VAR_NINE, SpecialCharacter.NINE)
+                .replace(SpecialCharacter.VAR_TEN, SpecialCharacter.TEN);
     }
 }

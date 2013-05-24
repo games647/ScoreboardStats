@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.variables.Data;
 import com.github.games647.variables.VariableList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +25,7 @@ public final class Database {
     }
 
     public static void loadAccount(final String name) {
-        final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
+        final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
         cache.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
@@ -51,7 +52,7 @@ public final class Database {
             return;
         }
 
-        PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
+        PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
         if (stats == null) {
             stats = new PlayerStats();
@@ -78,15 +79,15 @@ public final class Database {
         final Map<String, Integer> top = new ConcurrentHashMap<String, Integer>(getSettings().getTopitems());
 
         if (VariableList.KILLSTREAK.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILLSTREAK).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
         } else if (VariableList.MOB.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_MOB).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
         } else {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILL).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKills());
             }
         }

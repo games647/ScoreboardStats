@@ -47,7 +47,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     public static void onReload() {
         settings.loadConfig();
-        SbManager.unregisterAll();
         SbManager.regAll(false);
     }
 
