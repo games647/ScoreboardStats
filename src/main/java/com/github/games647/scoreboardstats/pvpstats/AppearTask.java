@@ -2,11 +2,11 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import org.bukkit.entity.Player;
 
-public final class TempScoreShow implements Runnable {
+public final class AppearTask implements Runnable {
 
     private final Player player;
 
-    public TempScoreShow(final Player paramplayer) {
+    public AppearTask(final Player paramplayer) {
         player = paramplayer;
     }
 

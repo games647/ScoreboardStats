@@ -28,13 +28,18 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         settings = new SettingsHandler();
+
         setupDatabase();
-        SbManager.regAll(true);
         com.github.games647.scoreboardstats.listener.PluginListener.init();
+
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
+
+        SbManager.regAll();
+        
         getServer().getScheduler()
                 .scheduleSyncRepeatingTask(this
-                        , new com.github.games647.scoreboardstats.UpdateThread(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
+                        , new com.github.games647.scoreboardstats.UpdateTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
     }
 
     @Override
@@ -47,7 +52,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     public static void onReload() {
         settings.loadConfig();
-        SbManager.regAll(false);
+        instance.setupDatabase();
+        SbManager.regAll();
     }
 
     @Override
@@ -69,7 +75,6 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             }
 
             com.github.games647.scoreboardstats.pvpstats.Database.setDatabase(database);
-            getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
         }
     }
 }
