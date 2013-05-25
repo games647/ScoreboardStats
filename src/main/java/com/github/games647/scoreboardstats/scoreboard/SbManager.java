@@ -26,16 +26,16 @@ public final class SbManager {
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective   = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
+        final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTitle()));
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
             player.setScoreboard(scoreboard);
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             getSettings().sendUpdate(player, true);
 
             if (getSettings().isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreShow(player), getSettings().getTempShow() * Other.TICKS_PER_SECOND);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.AppearTask(player), getSettings().getTempShow() * Other.TICKS_PER_SECOND);
             }
         }
     }
@@ -55,17 +55,18 @@ public final class SbManager {
 
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTempTitle()));
+        final java.util.Map<String, Integer> top = Database.getTop();
+        final String color = getSettings().getTempColor();
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
             player.setScoreboard(scoreboard);
-            final java.util.Map<String, Integer> top    = Database.getTop();
-            final String color                          = getSettings().getTempColor();
-            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.TempScoreDisapper(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
             for (final Map.Entry<String, Integer> entry : top.entrySet()) {
                 sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), true);
             }
+
+            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.DisapperTask(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
         }
     }
 
@@ -85,21 +86,25 @@ public final class SbManager {
         return (check.length() > Other.MINECRAFT_LIMIT - 2) ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
 
-    public static void regAll(final boolean load) {
-        final boolean ispvpstats = getSettings().isPvpStats();
+    public static void regAll() {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                final boolean ispvpstats = getSettings().isPvpStats();
 
-        for (final Player player : Bukkit.getOnlinePlayers()) {
-            if (!player.isOnline()) {
-                continue;
+                for (final Player player : Bukkit.getOnlinePlayers()) {
+                    if (!player.isOnline()) {
+                        continue;
+                    }
+
+                    if (ispvpstats) {
+                        Database.loadAccount(player.getName());
+                    }
+
+                    createScoreboard(player);
+                }
             }
-
-            if (load
-                    && ispvpstats) {
-                Database.loadAccount(player.getName());
-            }
-
-            createScoreboard(player);
-        }
+        }, Other.DELAYED_CREATE);
     }
 
     public static void unregisterAll() {

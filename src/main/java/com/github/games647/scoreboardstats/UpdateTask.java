@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats;
 
-final class UpdateThread implements Runnable {
+final class UpdateTask implements Runnable {
 
     @Override
     public void run() {

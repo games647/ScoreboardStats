@@ -21,10 +21,13 @@ public final class Database {
     }
 
     public static void clearTable() {
-
     }
 
     public static void loadAccount(final String name) {
+        if (cache.get(name) != null) {
+            return;
+        }
+
         final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
         cache.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
@@ -33,11 +36,15 @@ public final class Database {
     public static int getKdr(final String name) {
         final PlayerCache stats = getCache(name);
 
-        return (stats == null) ? 0 : stats.getDeaths() == 0
-                ? stats.getKills() : stats.getKills() / stats.getDeaths();
+        return (stats == null) ? 0
+                : stats.getDeaths() == 0 ? stats.getKills() : stats.getKills() / stats.getDeaths();
     }
 
     public static void saveAccount(final String name, final boolean remove) {
+        if (!getSettings().isPvpStats()) {
+            return;
+        }
+
         final PlayerCache playercache = cache.get(name);
 
         if (playercache == null) {
@@ -67,6 +74,10 @@ public final class Database {
     }
 
     public static void saveAll() {
+        if (!getSettings().isPvpStats()) {
+            return;
+        }
+        
         for (final String playername : cache.keySet()) {
             saveAccount(playername, false);
         }

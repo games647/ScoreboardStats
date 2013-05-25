@@ -56,4 +56,9 @@ public final class PlayerCache {
         laststreak = 0;
         deaths++;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerCache{" + "kills=" + kills + ", mob=" + mob + ", deaths=" + deaths + ", streak=" + streak + ", laststreak=" + laststreak + '}';
+    }
 }

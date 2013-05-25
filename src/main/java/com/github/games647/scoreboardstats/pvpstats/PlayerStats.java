@@ -6,6 +6,7 @@ public class PlayerStats {
 
     @javax.persistence.Id
     @com.avaje.ebean.validation.NotEmpty
+    @com.avaje.ebean.validation.NotNull
     private String playername;
 
     private int kills;

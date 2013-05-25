@@ -172,4 +172,12 @@ public final class SettingsHandler {
                 .replace(SpecialCharacter.VAR_NINE, SpecialCharacter.NINE)
                 .replace(SpecialCharacter.VAR_TEN, SpecialCharacter.TEN);
     }
+
+    @Override
+    public String toString() {
+        return "SettingsHandler{" + "pvpStats=" + pvpStats + ", tempScoreboard=" + tempScoreboard + ", hideVanished=" + hideVanished
+                + ", sound=" + sound + ", title=" + title + ", tempTitle=" + tempTitle + ", tempColor=" + tempColor
+                + ", topType=" + topType + ", intervall=" + intervall + ", topitems=" + topitems + ", tempShow=" + tempShow
+                + ", tempDisapper=" + tempDisapper + ", items=" + items + ", disabledWorlds=" + disabledWorlds + '}';
+    }
 }
