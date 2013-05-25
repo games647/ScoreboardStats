@@ -66,6 +66,13 @@ public final class Database {
             stats.setPlayername(name);
         }
 
+        if (stats.getDeaths() == playercache.getDeaths()
+                && stats.getKills() == playercache.getKills()
+                && stats.getMobkills() == playercache.getMob()
+                && stats.getKillstreak() == playercache.getStreak()) {
+            return; //No dates have been changed so there is no need to save the dates.
+        }
+
         stats.setDeaths(playercache.getDeaths());
         stats.setKills(playercache.getKills());
         stats.setMobkills(playercache.getMob());
@@ -77,7 +84,7 @@ public final class Database {
         if (!getSettings().isPvpStats()) {
             return;
         }
-        
+
         for (final String playername : cache.keySet()) {
             saveAccount(playername, false);
         }
