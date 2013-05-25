@@ -150,17 +150,22 @@ public final class SettingsHandler {
         return input
                 .replace(SpecialCharacter.VAR_HEART, SpecialCharacter.HEART)
                 .replace(SpecialCharacter.VAR_CHECK, SpecialCharacter.CHECK)
+
                 .replace(SpecialCharacter.VAR_LESS, SpecialCharacter.LESS)
                 .replace(SpecialCharacter.VAR_BIGGER, SpecialCharacter.BIGGER)
+
                 .replace(SpecialCharacter.VAR_STAR, SpecialCharacter.STAR)
                 .replace(SpecialCharacter.VAR_ROUND_STAR, SpecialCharacter.ROUND_STAR)
                 .replace(SpecialCharacter.VAR_STARS, SpecialCharacter.STARS)
+
                 .replace(SpecialCharacter.VAR_CROWN, SpecialCharacter.CROWN)
                 .replace(SpecialCharacter.VAR_CHESS, SpecialCharacter.CHESS)
+
                 .replace(SpecialCharacter.VAR_TOP, SpecialCharacter.TOP)
                 .replace(SpecialCharacter.VAR_BUTTON, SpecialCharacter.BUTTON)
                 .replace(SpecialCharacter.VAR_SIDE, SpecialCharacter.SIDE)
                 .replace(SpecialCharacter.VAR_MID, SpecialCharacter.MID)
+
                 .replace(SpecialCharacter.VAR_ONE, SpecialCharacter.ONE)
                 .replace(SpecialCharacter.VAR_TWO, SpecialCharacter.TWO)
                 .replace(SpecialCharacter.VAR_THREE, SpecialCharacter.THREE)
@@ -170,7 +175,35 @@ public final class SettingsHandler {
                 .replace(SpecialCharacter.VAR_SEVEN, SpecialCharacter.SEVEN)
                 .replace(SpecialCharacter.VAR_EIGHT, SpecialCharacter.EIGHT)
                 .replace(SpecialCharacter.VAR_NINE, SpecialCharacter.NINE)
-                .replace(SpecialCharacter.VAR_TEN, SpecialCharacter.TEN);
+                .replace(SpecialCharacter.VAR_TEN, SpecialCharacter.TEN)
+
+                .replace(SpecialCharacter.VAR_RIGHT_UP, SpecialCharacter.RIGHT_UP)
+                .replace(SpecialCharacter.VAR_LEFT_UP, SpecialCharacter.LEFT_UP)
+                .replace(SpecialCharacter.VAR_PHONE, SpecialCharacter.PHONE)
+                .replace(SpecialCharacter.VAR_PLANE, SpecialCharacter.VAR_PLANE)
+                .replace(SpecialCharacter.VAR_MAIL, SpecialCharacter.MAIL)
+                .replace(SpecialCharacter.VAR_HAND, SpecialCharacter.HAND)
+                .replace(SpecialCharacter.VAR_WRITE, SpecialCharacter.WRITE)
+                .replace(SpecialCharacter.VAR_PENCIL, SpecialCharacter.PENCIL)
+                .replace(SpecialCharacter.VAR_X, SpecialCharacter.X)
+                .replace(SpecialCharacter.VAR_T_STAR, SpecialCharacter.T_STAR)
+
+                .replace(SpecialCharacter.VAR_ARROW, SpecialCharacter.ARROW)
+                .replace(SpecialCharacter.VAR_ARROW1, SpecialCharacter.ARROW1)
+                .replace(SpecialCharacter.VAR_ARROW2, SpecialCharacter.ARROW2)
+                .replace(SpecialCharacter.VAR_ARROW3, SpecialCharacter.ARROW3)
+                .replace(SpecialCharacter.VAR_ARROW4, SpecialCharacter.ARROW4)
+
+                .replace(SpecialCharacter.VAR_ONE1, SpecialCharacter.ONE1)
+                .replace(SpecialCharacter.VAR_TWO1, SpecialCharacter.TWO1)
+                .replace(SpecialCharacter.VAR_THREE1, SpecialCharacter.THREE1)
+                .replace(SpecialCharacter.VAR_FOUR1, SpecialCharacter.FIVE1)
+                .replace(SpecialCharacter.VAR_FIVE1, SpecialCharacter.FIVE1)
+                .replace(SpecialCharacter.VAR_SIX1, SpecialCharacter.SIX1)
+                .replace(SpecialCharacter.VAR_SEVEN1, SpecialCharacter.SEVEN1)
+                .replace(SpecialCharacter.VAR_EIGHT1, SpecialCharacter.EIGHT1)
+                .replace(SpecialCharacter.VAR_NINE1, SpecialCharacter.NINE1)
+                .replace(SpecialCharacter.VAR_TEN1, SpecialCharacter.TEN1);
     }
 
     @Override
