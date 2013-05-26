@@ -21,4 +21,6 @@ public final class Other  {
         //Sound
     public static final float   VOLUME              = 50F;
     public static final float   PITCH               = 1F;
+
+    public static final char    TRANSLATED_CHAR     = '§';
 }
