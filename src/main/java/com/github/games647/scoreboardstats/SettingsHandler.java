@@ -12,6 +12,8 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
 
+    private final ScoreboardStats plugin;
+
     private boolean             pvpStats;
     private boolean             tempScoreboard;
     private boolean             hideVanished;
@@ -31,12 +33,13 @@ public final class SettingsHandler {
     private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(14);
     private java.util.List<String> disabledWorlds;
 
-    public SettingsHandler() {
+    public SettingsHandler(ScoreboardStats instance) {
+        plugin = instance;
         loadConfig();
     }
 
     public void loadConfig() {
-        final org.bukkit.configuration.file.FileConfiguration config = ScoreboardStats.getInstance().getConfig();
+        final org.bukkit.configuration.file.FileConfiguration config = plugin.getConfig();
 
         hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
         sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
@@ -124,7 +127,8 @@ public final class SettingsHandler {
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || objective == null
-                || !objective.getName().equals(Other.PLUGIN_NAME)) {
+                || !objective.getName().equals(Other.PLUGIN_NAME)
+                || plugin.hidelist.contains(player.getName())) {
             return;
         }
 
