@@ -18,7 +18,8 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class SbManager {
 
     public static void createScoreboard(final Player player) {
-        if (!player.hasPermission(Permissions.USE_PERMISSION)) {
+        if (!player.hasPermission(Permissions.USE_PERMISSION)
+                || getInstance().hidelist.contains(player.getName())) {
             return;
         }
 
@@ -52,7 +53,8 @@ public final class SbManager {
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null
-                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)) {
+                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)
+                || getInstance().hidelist.contains(player.getName())) {
             return;
         }
 
