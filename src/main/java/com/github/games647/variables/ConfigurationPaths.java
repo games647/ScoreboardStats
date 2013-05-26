@@ -7,6 +7,7 @@ public final class ConfigurationPaths  {
     public static final String SOUNDS           = "Enable-sound";
     public static final String DISABLED_WORLDS  = "Disabled-worlds";
     public static final String PVPSTATS         = "Enable-pvpstats";
+    public static final String UPDATE_INFO      = "Enable-update-info";
 
     //Main Scoreboard
     public static final String ITEMS            = "Scoreboard.Items";

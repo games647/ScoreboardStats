@@ -7,6 +7,7 @@ import com.github.games647.variables.Permissions;
 import com.github.games647.variables.SpecialCharacter;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public final class SettingsHandler {
@@ -15,6 +16,7 @@ public final class SettingsHandler {
     private boolean             tempScoreboard;
     private boolean             hideVanished;
     private boolean             sound;
+    private boolean             updateInfo;
 
     private String              title;
     private String              tempTitle;
@@ -26,7 +28,7 @@ public final class SettingsHandler {
     private int                 tempShow;
     private int                 tempDisapper;
 
-    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(10);
+    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(14);
     private java.util.List<String> disabledWorlds;
 
     public SettingsHandler() {
@@ -38,22 +40,26 @@ public final class SettingsHandler {
 
         hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
         sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
-        disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         pvpStats        = config.getBoolean(ConfigurationPaths.PVPSTATS);
+        updateInfo      = config.getBoolean(ConfigurationPaths.UPDATE_INFO);
 
-        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
-        title           = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
+        title           = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
                 && pvpStats) {
             tempScoreboard  = true;
-            tempTitle       = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
-            topitems        = config.getInt(ConfigurationPaths.TEMP_ITEMS);
+
+            topitems        = checkItems(config.getInt(ConfigurationPaths.TEMP_ITEMS));
             tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
             tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
-            tempColor       = translateAlternateColorCodes('&', config.getString(ConfigurationPaths.TEMP_COLOR));
+
             topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
+
+            tempColor       = translateAlternateColorCodes('&', config.getString(ConfigurationPaths.TEMP_COLOR));
+            tempTitle       = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
         }
     }
 
@@ -105,6 +111,10 @@ public final class SettingsHandler {
         return sound;
     }
 
+    public boolean isUpdateInfo() {
+        return updateInfo;
+    }
+
     public boolean checkWorld(final String world) {
         return disabledWorlds.contains(world);
     }
@@ -134,6 +144,15 @@ public final class SettingsHandler {
         return check;
     }
 
+    private static int checkItems(int input) {
+        if (input >= Other.MINECRAFT_LIMIT) {
+            Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
+            return Other.MINECRAFT_LIMIT - 1;
+        }
+
+        return input;
+    }
+
     private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
         final java.util.Set<String> keys = config.getKeys(false);
 
@@ -142,7 +161,11 @@ public final class SettingsHandler {
         }
 
         for (final String key : keys) {
-            items.put(translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(key))), config.getString(key));
+            if (items.size() >= Other.MINECRAFT_LIMIT) {
+                Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
+            }
+
+            items.put(translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key))), config.getString(key));
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats;
 
-final class UpdateTask implements Runnable {
+final class RefreshTask implements Runnable {
 
     @Override
     public void run() {

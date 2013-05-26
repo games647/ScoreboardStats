@@ -2,6 +2,8 @@
 
 Enable-pvpstats: true
 
+Enable-update-info: true
+
 Disabled-worlds:
   - world_nether
   - city

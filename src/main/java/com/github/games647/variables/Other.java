@@ -6,6 +6,7 @@ public final class Other  {
     public static final String  TOPLIST             = "ScoreboardStatsT";
     public static final String  CONFIG_NAME         = "config.yml";
     public static final String  EMPTY_CRITERA       = "dummy";
+    public static final String  UPDATE_LINK         = "http://dev.bukkit.org/server-mods/scoreboardstats/files.rss";
 
     public static final long    STARTUP_DELAY       = 60L;
     public static final long    TICKS_PER_SECOND    = 20L;
@@ -20,6 +21,4 @@ public final class Other  {
         //Sound
     public static final float   VOLUME              = 50F;
     public static final float   PITCH               = 1F;
-
-    public static final char    CHATCOLOR_CHAR      = '&';
 }

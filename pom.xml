@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <version>0.6</version>
+    <version>0.5.5</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
     <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
