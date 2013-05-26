@@ -7,6 +7,8 @@ import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
 import java.util.Date;
 import org.bukkit.Bukkit;
@@ -55,27 +57,27 @@ public final class VariableReplacer {
             }
         }
 
+        if (PluginListener.isFactions()) {
+            final int value = getFactionsValue(key, player);
+            if (value != -1) {
+                return value;
+            }
+        }
+
         return getBukkitValues(key, player);
     }
 
     private static int getPvpValue(final String key, final String name) {
-        com.github.games647.scoreboardstats.pvpstats.PlayerCache cache = Database.getCache(name);
-
-        if (cache == null) {
-            Database.loadAccount(name);
-            cache = Database.getCache(name);
-        }
-
         if (VariableList.KILLS.equals(key)) {
-            return cache.getKills();
+            return Database.getCache(name).getKills();
         }
 
         if (VariableList.DEATHS.equals(key)) {
-            return cache.getDeaths();
+            return Database.getCache(name).getDeaths();
         }
 
         if (VariableList.MOB.equals(key)) {
-            return cache.getMob();
+            return Database.getCache(name).getMob();
         }
 
         if (VariableList.KDR.equals(key)) {
@@ -83,11 +85,11 @@ public final class VariableReplacer {
         }
 
         if (VariableList.KILLSTREAK.equals(key)) {
-            return cache.getStreak();
+            return Database.getCache(name).getStreak();
         }
 
         if (VariableList.CURRENTSTREAK.equals(key)) {
-            return cache.getLastStreak();
+            return Database.getCache(name).getLastStreak();
         }
 
         return -1;
@@ -283,5 +285,27 @@ public final class VariableReplacer {
         } else {
             return Bukkit.getOnlinePlayers().length;
         }
+    }
+
+    private static int getFactionsValue(final String key, final Player player) {
+        final FPlayer fplayer = (FPlayer)FPlayers.i.get(player);
+
+        if (VariableList.POWER.equals(key)) {
+            return fplayer.getPowerRounded();
+        }
+
+        if (VariableList.F_POWER.equals(key)) {
+            return fplayer.getFaction().getPowerRounded();
+        }
+
+        if (VariableList.MEMBERS.equals(key)) {
+            return fplayer.getFaction().getFPlayers().size();
+        }
+
+        if (VariableList.MEMBERS_ONLINE.equals(key)) {
+            return fplayer.getFaction().getOnlinePlayers().size();
+        }
+
+        return -1;
     }
 }

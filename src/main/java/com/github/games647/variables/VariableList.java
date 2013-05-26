@@ -33,9 +33,6 @@ public final class VariableList  {
     public static final String KILLSTREAK       = "%killstreak%";
     public static final String CURRENTSTREAK    = "%current_streak%";
 
-    //Faction
-    public static final String POWER_MAX        = "";
-
     //Economy
     public static final String ECONOMY          = "%econ%";
 
@@ -75,4 +72,10 @@ public final class VariableList  {
     public static final String ALLIES           = "%allies%";
     public static final String RIVAL            = "%rivals%";
     public static final String CLAN_MONEY       = "%clan_money%";
+
+    //Factions
+    public static final String POWER            = "%power%";
+    public static final String F_POWER          = "%f_power%";
+    public static final String MEMBERS          = "%members%";
+    public static final String MEMBERS_ONLINE   = "%members_online%";
 }

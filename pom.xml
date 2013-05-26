@@ -84,6 +84,15 @@
 
         <dependency>
             <groupId>.</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.8.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
             <artifactId>Jobs</artifactId>
             <version>1.0.2</version>
             <scope>system</scope>
