@@ -7,12 +7,28 @@ website: ${project.url}
 database: true
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs]
 commands:
-  sbs:
-    usage: /sbs
 permissions:
-  scoreboardstats.use:
+  scoreboardstats.admin:
+    default: op
+    children:
+      scoreboardstats.update: true
+      scoreboardstats.reload: true
+      scoreboardstats.sign: true
+      scoreboardstats.use: true
+      scoreboardstats.hide: true
+  scoreboardstats.member:
     default: true
+    children:
+      scoreboardstats.use: true
+      scoreboardstats.sign: true
+      scoreboardstats.hide: true
+  scoreboardstats.use:
+    description: ''
   scoreboardstats.sign:
-    default: op
+    description: ''
   scoreboardstats.update:
-    default: op
+    description: ''
+  scoreboardstats.reload:
+    description: ''
+  scoreboardstats.hide:
+    description: ''
