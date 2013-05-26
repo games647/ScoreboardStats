@@ -29,6 +29,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         saveDefaultConfig();
         settings = new SettingsHandler();
 
+        if (settings.isUpdateInfo()) UpdateCheck.checkUpdate(getDescription().getVersion(), Other.UPDATE_LINK);
+
         setupDatabase();
         com.github.games647.scoreboardstats.listener.PluginListener.init();
 
@@ -36,10 +38,10 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
 
         SbManager.regAll();
-        
+
         getServer().getScheduler()
                 .scheduleSyncRepeatingTask(this
-                        , new com.github.games647.scoreboardstats.UpdateTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
+                        , new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
     }
 
     @Override

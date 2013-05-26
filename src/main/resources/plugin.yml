@@ -12,3 +12,7 @@ commands:
 permissions:
   scoreboardstats.use:
     default: true
+  scoreboardstats.sign:
+    default: op
+  scoreboardstats.update:
+    default: op

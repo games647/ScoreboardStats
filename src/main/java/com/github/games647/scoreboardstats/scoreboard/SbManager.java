@@ -3,10 +3,12 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -27,11 +29,16 @@ public final class SbManager {
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTitle()));
+        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
-            player.setScoreboard(scoreboard);
+            try {
+                player.setScoreboard(scoreboard);
+            } catch (IllegalStateException ex) {
+                Bukkit.getLogger().info(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+            }
+
             getSettings().sendUpdate(player, true);
 
             if (getSettings().isTempScoreboard()) {
@@ -54,16 +61,20 @@ public final class SbManager {
         }
 
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, getSettings().getTempTitle()));
+        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTempTitle()));
         final java.util.Map<String, Integer> top = Database.getTop();
         final String color = getSettings().getTempColor();
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
-            player.setScoreboard(scoreboard);
+            try {
+                player.setScoreboard(scoreboard);
+            } catch (IllegalStateException ex) {
+                Bukkit.getLogger().info(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+            }
 
             for (final Map.Entry<String, Integer> entry : top.entrySet()) {
-                sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), true);
+                sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
             }
 
             Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.DisapperTask(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
