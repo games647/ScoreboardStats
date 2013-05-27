@@ -7,6 +7,10 @@ website: ${project.url}
 database: true
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs]
 commands:
+  sb:reload:
+    aliases: []
+  sb:toggle:
+    aliases: []
 permissions:
   scoreboardstats.admin:
     default: op

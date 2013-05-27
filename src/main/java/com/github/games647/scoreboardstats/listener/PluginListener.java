@@ -5,15 +5,11 @@ import com.github.games647.variables.PluginNames;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 
 public final class PluginListener implements org.bukkit.event.Listener {
 
-    public PluginListener() {
-        init();
-    }
-
     private static Economy economy;
+    private static boolean factions;
     private static boolean mcmmo;
     private static EssentialsTimer essentials;
     private static CraftClanPlayerManager simpleclans;
@@ -34,10 +30,15 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return essentials;
     }
 
+    public static boolean isFactions() {
+        return factions;
+    }
+
     public static void init() {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
         mcmmo = pluginm.getPlugin(PluginNames.MCMMO) != null;
+        factions = pluginm.getPlugin(PluginNames.FACTIONS) != null;
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
             simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();
@@ -57,20 +58,6 @@ public final class PluginListener implements org.bukkit.event.Listener {
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
             }
-        }
-    }
-
-    @EventHandler
-    public void onDisable(final org.bukkit.event.server.PluginDisableEvent disable) {
-        if (disable.getPlugin().getName().equals(PluginNames.MCMMO)) {
-            mcmmo = false;
-        }
-    }
-
-    @EventHandler
-    public void onEnable(final org.bukkit.event.server.PluginEnableEvent enable) {
-        if (enable.getPlugin().getName().equals(PluginNames.MCMMO)) {
-            mcmmo = true;
         }
     }
 }

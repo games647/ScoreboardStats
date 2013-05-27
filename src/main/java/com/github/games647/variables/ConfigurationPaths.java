@@ -3,11 +3,11 @@ package com.github.games647.variables;
 public final class ConfigurationPaths  {
 
     //Generall
-    public static final String HIDE_VANISHED    = "Hide-vanished";
-    public static final String SOUNDS           = "Enable-sound";
-    public static final String DISABLED_WORLDS  = "Disabled-worlds";
-    public static final String PVPSTATS         = "Enable-pvpstats";
-    public static final String UPDATE_INFO      = "Enable-update-info";
+    public static final String HIDE_VANISHED    = "hide-vanished";
+    public static final String SOUNDS           = "enable-sound";
+    public static final String DISABLED_WORLDS  = "disabled-worlds";
+    public static final String PVPSTATS         = "enable-pvpstats";
+    public static final String UPDATE_INFO      = "enable-auto-update";
 
     //Main Scoreboard
     public static final String ITEMS            = "Scoreboard.Items";

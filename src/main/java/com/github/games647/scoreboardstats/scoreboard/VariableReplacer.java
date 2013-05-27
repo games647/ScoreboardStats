@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
@@ -68,16 +69,22 @@ public final class VariableReplacer {
     }
 
     private static int getPvpValue(final String key, final String name) {
+        final PlayerCache cache = Database.getCache(name);
+
+        if (cache == null) {
+            return -1;
+        }
+
         if (VariableList.KILLS.equals(key)) {
-            return Database.getCache(name).getKills();
+            return cache.getKills();
         }
 
         if (VariableList.DEATHS.equals(key)) {
-            return Database.getCache(name).getDeaths();
+            return cache.getDeaths();
         }
 
         if (VariableList.MOB.equals(key)) {
-            return Database.getCache(name).getMob();
+            return cache.getMob();
         }
 
         if (VariableList.KDR.equals(key)) {
@@ -85,11 +92,11 @@ public final class VariableReplacer {
         }
 
         if (VariableList.KILLSTREAK.equals(key)) {
-            return Database.getCache(name).getStreak();
+            return cache.getStreak();
         }
 
         if (VariableList.CURRENTSTREAK.equals(key)) {
-            return Database.getCache(name).getLastStreak();
+            return cache.getLastStreak();
         }
 
         return -1;
