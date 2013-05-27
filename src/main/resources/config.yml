@@ -1,20 +1,20 @@
 #This is the default config
 
-Enable-pvpstats: true
+enable-pvpstats: true
 
-Enable-update-info: true
-
-Disabled-worlds:
+disabled-worlds:
   - world_nether
   - city
 
 #This will not count vanished players in the online value
-Hide-vanished: false
+hide-vanished: false
 
-Enable-sound: false
+enable-sound: false
+
+enable-auto-update: true
 
 Scoreboard:
-  Title: '&4[<3] &a&lStats &f&4[<3]'
+  Title: '&a&lStats'
   #seconds
   # For instant updates you can or 1 and it will update every second
   Update-delay: 1

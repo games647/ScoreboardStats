@@ -7,4 +7,5 @@ public final class PluginNames  {
     public static final String ESSENTIALS   = "Essentials";
     public static final String INSIGNS      = "InSigns";
     public static final String VAULT        = "Vault";
+    public static String       FACTIONS     = "Factions";
 }
