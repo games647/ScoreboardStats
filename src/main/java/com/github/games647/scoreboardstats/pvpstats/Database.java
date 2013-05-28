@@ -4,33 +4,30 @@ import com.avaje.ebean.EbeanServer;
 import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.variables.Data;
 import com.github.games647.variables.VariableList;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class Database {
 
     private static EbeanServer databaseInstance;
-    private static final Map<String, PlayerCache> cache = new ConcurrentHashMap<String, PlayerCache>(10);
+    private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
 
     public static void setDatabase(final EbeanServer base) {
         databaseInstance = base;
     }
 
     public static PlayerCache getCache(final String name) {
-        return cache.get(name);
-    }
-
-    public static void clearTable() {
+        return CACHE.get(name);
     }
 
     public static void loadAccount(final String name) {
-        if (cache.get(name) != null) {
+        if (CACHE.get(name) != null) {
             return;
         }
 
         final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
-        cache.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        CACHE.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
 
     public static int getKdr(final String name) {
@@ -45,12 +42,12 @@ public final class Database {
             return;
         }
 
-        final PlayerCache playercache = cache.get(name);
+        final PlayerCache playercache = CACHE.get(name);
 
         if (playercache == null) {
             return;
         } else if (remove) {
-            cache.remove(name);
+            CACHE.remove(name);
         }
 
         if (playercache.getKills() == 0
@@ -85,16 +82,16 @@ public final class Database {
             return;
         }
 
-        for (final String playername : cache.keySet()) {
+        for (final String playername : CACHE.keySet()) {
             saveAccount(playername, false);
         }
 
-        cache.clear();
+        CACHE.clear();
     }
 
     public static Map<String, Integer> getTop() {
         final String type = getSettings().getTopType();
-        final Map<String, Integer> top = new ConcurrentHashMap<String, Integer>(getSettings().getTopitems());
+        final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
 
         if (VariableList.KILLSTREAK.equals(type)) {
             for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILLSTREAK).setMaxRows(getSettings().getTopitems()).findList()) {

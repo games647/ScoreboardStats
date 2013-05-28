@@ -19,7 +19,6 @@ public final class Message  {
     public static final String TOO_LONG_LIST         = "One Scoreboard can't have more than 15 items";
 
     //Player-Messages
-    public static final String UPDATE_INFO           = BLUE + "➤ A new update for ScoreboardStats is available ✪";
     public static final String RELOAD_SUCCESS        = GREEN + "✔ The configuration was successfully reloaded ✔";
     public static final String PERMISSION_DENIED     = DARK_RED + "✖ You don't have enough permissions to do that ✖";
 
