@@ -66,8 +66,8 @@ public final class SbManager {
 
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTempTitle()));
-        final java.util.Map<String, Integer> top = Database.getTop();
-        final String color = getSettings().getTempColor();
+        final Map<String, Integer> top  = Database.getTop();
+        final String color              = getSettings().getTempColor();
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
