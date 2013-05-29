@@ -28,7 +28,7 @@ public final class VariableList  {
     //PvP
     public static final String KILLS            = "%kills%";
     public static final String DEATHS           = "%deaths%";
-    public static final String MOB              = "%mobkills%";
+    public static final String MOB              = "%mob%";
     public static final String KDR              = "%kdr%";
     public static final String KILLSTREAK       = "%killstreak%";
     public static final String CURRENTSTREAK    = "%current_streak%";

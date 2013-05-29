@@ -315,4 +315,8 @@ public final class VariableReplacer {
 
         return -1;
     }
+
+    private static int isNumber(String key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

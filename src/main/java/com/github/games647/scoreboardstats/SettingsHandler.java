@@ -40,7 +40,7 @@ public final class SettingsHandler {
 
     public void loadConfig() {
         plugin.reloadConfig();
-        
+
         final org.bukkit.configuration.file.FileConfiguration config = plugin.getConfig();
 
         hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
@@ -122,6 +122,10 @@ public final class SettingsHandler {
 
     public boolean checkWorld(final String world) {
         return disabledWorlds.contains(world);
+    }
+
+    public int getItemsLength() {
+        return items.size();
     }
 
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {

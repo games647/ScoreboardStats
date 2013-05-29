@@ -67,6 +67,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     public void onReload() {
         final int intervall = settings.getIntervall();
         final boolean pvpstats = settings.isPvpStats();
+        final int length = settings.getItemsLength();
 
         settings.loadConfig();
 
@@ -79,6 +80,19 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         if (pvpstats != settings.isPvpStats()) {
             instance.setupDatabase();
             SbManager.regAll();
+        }
+
+        if (length != settings.getItemsLength()) {
+            for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
+                final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
+
+                if (objective == null
+                        || !objective.getName().equals(Other.PLUGIN_NAME)) {
+                    continue;
+                }
+
+                player.getScoreboard().clearSlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
+            }
         }
     }
 

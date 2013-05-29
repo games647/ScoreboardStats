@@ -10,7 +10,6 @@ public final class Other  {
 
     public static final long    STARTUP_DELAY       = 60L;
     public static final long    TICKS_PER_SECOND    = 20L;
-    public static final long    DELAYED_CREATE      = TICKS_PER_SECOND * 2;
     public static final long    DELAYED_SAVE        = TICKS_PER_SECOND * 15;
 
     public static final int     MINECRAFT_LIMIT     = 16;
