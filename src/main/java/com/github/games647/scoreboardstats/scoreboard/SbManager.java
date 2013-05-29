@@ -102,7 +102,7 @@ public final class SbManager {
     }
 
     public static void regAll() {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskAsynchronously(getInstance(), new Runnable() {
             @Override
             public void run() {
                 final boolean ispvpstats = getSettings().isPvpStats();
@@ -115,11 +115,9 @@ public final class SbManager {
                     if (ispvpstats) {
                         Database.loadAccount(player.getName());
                     }
-
-                    createScoreboard(player);
                 }
             }
-        }, Other.DELAYED_CREATE);
+        });
     }
 
     public static void unregisterAll() {
