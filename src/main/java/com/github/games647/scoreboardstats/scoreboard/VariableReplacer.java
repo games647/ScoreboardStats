@@ -31,7 +31,7 @@ public final class VariableReplacer {
 
         if (PluginListener.getEconomy() != null
                 && VariableList.ECONOMY.equals(key)) {
-            return (int) PluginListener.getEconomy().getBalance(player.getName());
+            return (int) Math.round(PluginListener.getEconomy().getBalance(player.getName()));
         }
 
         if (PluginListener.isMcmmo()) {
@@ -43,12 +43,7 @@ public final class VariableReplacer {
 
         if (PluginListener.getEssentials() != null
                 && VariableList.TICKS.equals(key)) {
-            try {
-                return (int) PluginListener.getEssentials().getAverageTPS();
-            } catch (Exception ex) {
-                Bukkit.getLogger().warning(Message.WRONG_ESSENTIALS);
-                return -1;
-            }
+            return (int) PluginListener.getEssentials().getAverageTPS();
         }
 
         if (PluginListener.getSimpleclans() != null) {
@@ -238,7 +233,11 @@ public final class VariableReplacer {
         }
 
         if (VariableList.USED_RAM.equals(key)) {
-            return (int) Runtime.getRuntime().totalMemory() / Other.INTO_NEXT_SIZE / Other.INTO_NEXT_SIZE;
+            return (int) (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) / Other.INTO_NEXT_SIZE / Other.INTO_NEXT_SIZE;
+        }
+
+        if (VariableList.USED_RAM_PERCENT.equals(key)) {
+            return (int) (Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().maxMemory());
         }
 
         if (VariableList.DATE.equals(key)) {
@@ -271,7 +270,7 @@ public final class VariableReplacer {
 
         if (VariableList.PING.equals(key)) {
             try {
-               return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
+                return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
             } catch (Exception ex) {
                 Bukkit.getLogger().warning(Message.LOG_NAME + Message.WRONG_CRAFTBUKKIT);
             }
@@ -295,7 +294,7 @@ public final class VariableReplacer {
     }
 
     private static int getFactionsValue(final String key, final Player player) {
-        final FPlayer fplayer = (FPlayer)FPlayers.i.get(player);
+        final FPlayer fplayer = FPlayers.i.get(player);
 
         if (VariableList.POWER.equals(key)) {
             return fplayer.getPowerRounded();
@@ -314,9 +313,5 @@ public final class VariableReplacer {
         }
 
         return -1;
-    }
-
-    private static int isNumber(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
