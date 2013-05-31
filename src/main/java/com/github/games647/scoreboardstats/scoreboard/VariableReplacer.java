@@ -237,7 +237,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.USED_RAM_PERCENT.equals(key)) {
-            return (int) (Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().maxMemory());
+            return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) * 100 / Runtime.getRuntime().maxMemory());
         }
 
         if (VariableList.DATE.equals(key)) {
