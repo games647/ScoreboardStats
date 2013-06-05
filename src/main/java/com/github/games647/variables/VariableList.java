@@ -58,8 +58,8 @@ public final class VariableList  {
 //    public static final String DEATHS           = "%deaths%";
 //    public static final String KDR              = "%kdr%";
     public static final String MEMBER           = "%member%";
-//    public static final String CLAN_KDR         = "%clan_kdr%";
-//    public static final String CLAN_KILLS       = "%clan_kills%";
+    public static final String CLAN_KDR         = "%clan_kdr%";
+    public static final String CLAN_KILLS       = "%clan_kills%";
 //    public static final String CLAN_DEATHS      = "%clan_deaths%";
 //    public static final String CLAN_NEUTRAL     = "%clan_neutral%";
 //    public static final String CLAN_RIVAL       = "%clan_rival%";
