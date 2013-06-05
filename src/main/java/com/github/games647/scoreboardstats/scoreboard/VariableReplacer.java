@@ -254,7 +254,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.EXP.equals(key)) {
-            return player.getTotalExperience();
+            return getTotalExperience(player);
         }
 
         if (VariableList.NODAMAGE.equals(key)) {
@@ -322,5 +322,35 @@ public final class VariableReplacer {
 
     private static int isNumber(String key) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    // Code taken from Essentials (ementalo)
+    // https://github.com/essentials/Essentials/blob/master/Essentials/src/net/ess3/craftbukkit/SetExpFix.java
+    // as a fix to Bukkit's bad getTotalExperience
+    public static int getExpAtLevel(final int level)
+    {
+        if (level > 29)
+        {
+            return 62 + (level - 30) * 7;
+        }
+        if (level > 15)
+        {
+            return 17 + (level - 15) * 3;
+        }
+        return 17;
+    }
+
+    //This method is required because the bukkit player.getTotalExperience() method, shows exp that has been 'spent'.
+    //Without this people would be able to use exp and then still sell it.
+    public static int getTotalExperience(final Player player)
+    {
+        int exp = Math.round(getExpAtLevel(player.getLevel()) * player.getExp());
+        int currentLevel = player.getLevel();
+
+        while (currentLevel > 0)
+        {
+            currentLevel--;
+            exp += getExpAtLevel(currentLevel);
+        }
+        return exp;
     }
 }
