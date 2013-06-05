@@ -1,33 +1,37 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.variables.Data;
 import com.github.games647.variables.VariableList;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+
 public final class Database {
 
-    private static EbeanServer databaseInstance;
     private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
+    private static EbeanServer databaseInstance;
 
     public static void setDatabase(final EbeanServer base) {
         databaseInstance = base;
     }
 
     public static PlayerCache getCache(final String name) {
+        if (!CACHE.containsKey(name))
+            loadAccount(name);
         return CACHE.get(name);
     }
 
     public static void loadAccount(final String name) {
-        if (CACHE.get(name) != null) {
+        if (CACHE.containsKey(name)) {
             return;
         }
 
         final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
-        CACHE.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        CACHE.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak(), getRank(stats)));
     }
 
     public static int getKdr(final String name) {
@@ -92,21 +96,30 @@ public final class Database {
     public static Map<String, Integer> getTop() {
         final String type = getSettings().getTopType();
         final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
+        for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(getRowName(type) + " desc").setMaxRows(getSettings().getTopitems()).findList()) {
+            top.put(stats.getPlayername(), stats.get(getRowName(type)));
 
-        if (VariableList.KILLSTREAK.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILLSTREAK).setMaxRows(getSettings().getTopitems()).findList()) {
-                top.put(stats.getPlayername(), stats.getKillstreak());
-            }
-        } else if (VariableList.MOB.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_MOB).setMaxRows(getSettings().getTopitems()).findList()) {
-                top.put(stats.getPlayername(), stats.getMobkills());
-            }
-        } else {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILL).setMaxRows(getSettings().getTopitems()).findList()) {
-                top.put(stats.getPlayername(), stats.getKills());
-            }
         }
-
         return top;
+    }
+
+    private static String getRowName(String type) {
+        if (VariableList.KILLSTREAK.equals(type))
+            return Data.COL_KILLSTREAK;
+        else if (VariableList.MOB.equals(type))
+            return Data.COL_MOB;
+        else
+            return Data.COL_KILL;
+    }
+
+    private static Integer getRank(PlayerStats PS) {
+        final String type = getSettings().getTopType();
+        if (VariableList.KILLSTREAK.equals(type)) {
+            return 1 + databaseInstance.find(PlayerStats.class).where().gt(Data.COL_KILLSTREAK, PS.getKillstreak()).findRowCount();
+        } else if (VariableList.MOB.equals(type)) {
+            return 1 + databaseInstance.find(PlayerStats.class).where().gt(Data.COL_MOB, PS.getMobkills()).findRowCount();
+        } else {
+            return 1 + databaseInstance.find(PlayerStats.class).where().gt(Data.COL_KILL, PS.getKills()).findRowCount();
+        }
     }
 }
