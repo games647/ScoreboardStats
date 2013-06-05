@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.github.games647.variables.Data;
+
 @javax.persistence.Entity
 @javax.persistence.Table(name = "PlayerStats")
 public class PlayerStats {
@@ -53,4 +55,11 @@ public class PlayerStats {
     public void setKillstreak(final int paramkillstreak) {
         killstreak = paramkillstreak;
     }
+
+	public Integer get(String table) {
+		if(table.equals(Data.COL_KILL)) return kills;
+		if(table.equals(Data.COL_MOB)) return mobkills;
+		if (table.equals(Data.COL_KILLSTREAK)) return killstreak;
+		return -1;
+	}
 }
