@@ -23,7 +23,8 @@ public final class VariableList  {
     public static final String LASTDAMAGE       = "%last_damage%";
     public static final String MAXPLAYER        = "%max_player%";
     public static final String PING             = "%ping%";
-    public static final String HEALTH           = "%health%";
+	public static final String HEALTH           = "%health%";
+	public static final String RANK             = "%rank%";
 
     //PvP
     public static final String KILLS            = "%kills%";

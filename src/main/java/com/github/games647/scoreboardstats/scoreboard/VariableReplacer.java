@@ -75,6 +75,10 @@ public final class VariableReplacer {
             return -1;
         }
 
+	    if (VariableList.RANK.equals(key)) {
+		    return cache.getRank();
+	    }
+
         if (VariableList.KILLS.equals(key)) {
             return cache.getKills();
         }
@@ -295,7 +299,7 @@ public final class VariableReplacer {
     }
 
     private static int getFactionsValue(final String key, final Player player) {
-        final FPlayer fplayer = (FPlayer)FPlayers.i.get(player);
+        final FPlayer fplayer = FPlayers.i.get(player);
 
         if (VariableList.POWER.equals(key)) {
             return fplayer.getPowerRounded();

@@ -6,13 +6,15 @@ public final class PlayerCache {
     private int mob;
     private int deaths;
     private int streak;
-    private int laststreak;
+	private int laststreak;
+	private int rank;
 
-    public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
+    public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak, final int paramRank) {
         kills = paramkills;
         mob = parammob;
         deaths = paramdeaths;
         streak = paramstreak;
+	    rank = paramRank;
     }
 
     public PlayerCache() {
@@ -44,9 +46,13 @@ public final class PlayerCache {
         mob++;
     }
 
-    public int getLastStreak() {
-        return laststreak;
-    }
+	public int getLastStreak() {
+		return laststreak;
+	}
+
+	public int getRank() {
+		return rank;
+	}
 
     public void onDeath() {
         if (laststreak > streak) {
