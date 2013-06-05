@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 public final class SScoreboard {
 
-    private static void sendPacket(final Player player, final Packet packet) {
-        final PlayerConnection con = ((CraftPlayer) player).getHandle().playerConnection;
+	private static void sendPacket(final Player player, final Packet packet) {
+		final PlayerConnection con = ((CraftPlayer) player).getHandle().playerConnection;
 
-        if (con != null && !con.disconnected) {
-            con.sendPacket(packet);
-        }
-    }
+		if (con != null && !con.disconnected) {
+			con.sendPacket(packet);
+		}
+	}
 }
