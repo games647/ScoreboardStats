@@ -57,7 +57,7 @@ public class PlayerStats {
     }
 
 	public Integer get(String table) {
-		if(table.equals(Data.COL_KILL)) return kills;
+        if(table.equals(Data.COL_KILL)) return kills;
 		if(table.equals(Data.COL_MOB)) return mobkills;
 		if (table.equals(Data.COL_KILLSTREAK)) return killstreak;
 		return -1;
