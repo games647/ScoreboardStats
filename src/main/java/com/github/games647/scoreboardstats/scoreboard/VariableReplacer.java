@@ -4,7 +4,6 @@ import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
-import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
@@ -269,11 +268,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.PING.equals(key)) {
-            try {
-                return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
-            } catch (Exception ex) {
-                Bukkit.getLogger().warning(Message.LOG_NAME + Message.WRONG_CRAFTBUKKIT);
-            }
+            return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
         }
 
         return -1;
@@ -282,6 +277,7 @@ public final class VariableReplacer {
     private static int getOnlinePlayers(final Player player) {
         if (getSettings().isHideVanished()) {
             int online = 0;
+
             for (final Player other : Bukkit.getOnlinePlayers()) {
                 if (player.canSee(other)) {
                     online++;

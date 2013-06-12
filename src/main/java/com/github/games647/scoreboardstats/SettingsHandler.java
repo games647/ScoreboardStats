@@ -9,6 +9,7 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public final class SettingsHandler {
 
@@ -41,7 +42,7 @@ public final class SettingsHandler {
     public void loadConfig() {
         plugin.reloadConfig();
 
-        final org.bukkit.configuration.file.FileConfiguration config = plugin.getConfig();
+        final FileConfiguration config = plugin.getConfig();
 
         hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
         sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
@@ -58,6 +59,7 @@ public final class SettingsHandler {
             tempScoreboard  = true;
 
             topitems        = checkItems(config.getInt(ConfigurationPaths.TEMP_ITEMS));
+
             tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
             tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
 
@@ -241,9 +243,22 @@ public final class SettingsHandler {
 
     @Override
     public String toString() {
-        return "SettingsHandler{" + "pvpStats=" + pvpStats + ", tempScoreboard=" + tempScoreboard + ", hideVanished=" + hideVanished
-                + ", sound=" + sound + ", title=" + title + ", tempTitle=" + tempTitle + ", tempColor=" + tempColor
-                + ", topType=" + topType + ", intervall=" + intervall + ", topitems=" + topitems + ", tempShow=" + tempShow
-                + ", tempDisapper=" + tempDisapper + ", items=" + items + ", disabledWorlds=" + disabledWorlds + '}';
+        return new StringBuilder(29)
+                .append("SettingsHandler{pvpStats=").append(pvpStats)
+                .append(", tempScoreboard=").append(tempScoreboard)
+                .append(", hideVanished=").append(hideVanished)
+                .append(", sound=").append(sound)
+                .append(", title=").append(title)
+                .append(", tempTitle=").append(tempTitle)
+                .append(", tempColor=").append(tempColor)
+                .append(", topType=").append(topType)
+                .append(", intervall=").append(intervall)
+                .append(", topitems=").append(topitems)
+                .append(", tempShow=").append(tempShow)
+                .append(", tempDisapper=").append(tempDisapper)
+                .append(", items=").append(items)
+                .append(", disabledWorlds=").append(disabledWorlds)
+
+                .append('}').toString();
     }
 }

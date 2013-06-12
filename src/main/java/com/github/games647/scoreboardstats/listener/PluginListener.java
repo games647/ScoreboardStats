@@ -8,9 +8,9 @@ import org.bukkit.Bukkit;
 
 public final class PluginListener implements org.bukkit.event.Listener {
 
-    private static Economy economy;
     private static boolean factions;
     private static boolean mcmmo;
+    private static Economy economy;
     private static EssentialsTimer essentials;
     private static CraftClanPlayerManager simpleclans;
 
@@ -37,8 +37,8 @@ public final class PluginListener implements org.bukkit.event.Listener {
     public static void init() {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
-        mcmmo = pluginm.getPlugin(PluginNames.MCMMO) != null;
-        factions = pluginm.getPlugin(PluginNames.FACTIONS) != null;
+        mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
+        factions    = pluginm.getPlugin(PluginNames.FACTIONS)   != null;
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
             simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();

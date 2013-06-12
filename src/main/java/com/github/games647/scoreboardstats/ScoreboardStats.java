@@ -11,12 +11,12 @@ import net.h31ix.updater.Updater;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
+    public final java.util.Set<String> hidelist = new java.util.HashSet<String>();
+
     private static SettingsHandler settings;
     private static ScoreboardStats instance;
 
     private int taskid;
-
-    public final java.util.Set<String> hidelist = new java.util.HashSet<String>();
 
     public static SettingsHandler getSettings() {
         return settings;
@@ -47,13 +47,13 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
 
-        getCommand(Commands.RELOAD_COMMAND).setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand(this));
-        getCommand(Commands.HIDE_COMMAND).setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand(this));
+        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand(this));
+        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand(this));
 
         SbManager.regAll();
 
         taskid = getServer().getScheduler()
-                .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
+                .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
     }
 
     @Override
@@ -65,21 +65,16 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     public void onReload() {
-        final int intervall = settings.getIntervall();
-        final boolean pvpstats = settings.isPvpStats();
-        final int length = settings.getItemsLength();
+        final int     intervall     = settings.getIntervall();
+        final int     length        = settings.getItemsLength();
+        final boolean pvpstats      = settings.isPvpStats();
 
         settings.loadConfig();
 
         if (intervall != settings.getIntervall()) {
             getServer().getScheduler().cancelTask(taskid);
             getServer().getScheduler()
-                    .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND);
-        }
-
-        if (pvpstats != settings.isPvpStats()) {
-            instance.setupDatabase();
-            SbManager.regAll();
+                    .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
         }
 
         if (length != settings.getItemsLength()) {
@@ -93,6 +88,11 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
                 player.getScoreboard().clearSlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
             }
+        }
+
+        if (pvpstats != settings.isPvpStats()) {
+            instance.setupDatabase();
+            SbManager.regAll();
         }
     }
 

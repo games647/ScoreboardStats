@@ -17,11 +17,15 @@ public final class Database {
     }
 
     public static PlayerCache getCache(final String name) {
+        if (!CACHE.containsKey(name)) {
+            loadAccount(name);
+        }
+        
         return CACHE.get(name);
     }
 
     public static void loadAccount(final String name) {
-        if (CACHE.get(name) != null) {
+        if (CACHE.containsKey(name)) {
             return;
         }
 
@@ -50,9 +54,9 @@ public final class Database {
             CACHE.remove(name);
         }
 
-        if (playercache.getKills() == 0
-                && playercache.getDeaths() == 0
-                && playercache.getMob() == 0) { //There are no need to save these data
+        if (playercache.getKills()          == 0
+                && playercache.getDeaths()  == 0
+                && playercache.getMob()     == 0) { //There are no need to save these data
             return;
         }
 
@@ -63,10 +67,10 @@ public final class Database {
             stats.setPlayername(name);
         }
 
-        if (stats.getDeaths() == playercache.getDeaths()
-                && stats.getKills() == playercache.getKills()
-                && stats.getMobkills() == playercache.getMob()
-                && stats.getKillstreak() == playercache.getStreak()) {
+        if (stats.getDeaths()               == playercache.getDeaths()
+                && stats.getKills()         == playercache.getKills()
+                && stats.getMobkills()      == playercache.getMob()
+                && stats.getKillstreak()    == playercache.getStreak()) {
             return; //No dates have been changed so there is no need to save the dates.
         }
 
@@ -94,15 +98,15 @@ public final class Database {
         final Map<String, Integer> top = new HashMap<String, Integer>(getSettings().getTopitems());
 
         if (VariableList.KILLSTREAK.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILLSTREAK).setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_KILLSTREAK).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
         } else if (VariableList.MOB.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_MOB).setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_MOB).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
         } else {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ODER_KILL).setMaxRows(getSettings().getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_KILL).setMaxRows(getSettings().getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKills());
             }
         }

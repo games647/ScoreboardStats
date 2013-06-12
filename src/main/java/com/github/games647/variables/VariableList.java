@@ -1,7 +1,7 @@
 package com.github.games647.variables;
 
 @SuppressWarnings("HardCodedStringLiteral")
-public final class VariableList  {
+public final class VariableList {
 
     //Signs
     public static final String SIGN_KILL        = "[Kill]";
@@ -24,6 +24,7 @@ public final class VariableList  {
     public static final String MAXPLAYER        = "%max_player%";
     public static final String PING             = "%ping%";
     public static final String HEALTH           = "%health%";
+    public static final String USED_RAM_PERCENT = "%used%ram%";
 
     //PvP
     public static final String KILLS            = "%kills%";
@@ -65,9 +66,6 @@ public final class VariableList  {
     public static final String MEMBER           = "%member%";
     public static final String CLAN_KDR         = "%clan_kdr%";
     public static final String CLAN_KILLS       = "%clan_kills%";
-    public static final String CLAN_DEATHS      = "clan_deaths%";
-    public static final String CLAN_NEUTRAL     = "clan_neutral%";
-    public static final String CLAN_RIVAL       = "clan_rival%";
     public static final String ALLIES_TOTAL     = "allies_total%";
     public static final String ALLIES           = "%allies%";
     public static final String RIVAL            = "%rivals%";
