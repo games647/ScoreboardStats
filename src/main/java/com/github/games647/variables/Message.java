@@ -12,7 +12,6 @@ public final class Message  {
     public static final String NON_EXISTING_DATABASE = "Can't find an existing Database, so creating a new one";
     public static final String LONGER_THAN_LIMIT     = "%s is longer than the limit of 16 characters. This Plugin will cut automatically to the right size.";
     public static final String WRONG_CRAFTBUKKIT     = "The ping feature isn't compatible with your current Craftbukkit version";
-    public static final String WRONG_ESSENTIALS      = "Your Essentials version is not compatible with ScoreboardStats please remove the ticks feature";
     public static final String NEW_VERSION           = "A new version is on BukkitDev available";
     public static final String VERSION_CHECK_FAILED  = "The version check has failed";
     public static final String SET_SCOREBOARD_FAIL   = "Cannot set the Scoreboard because the player has disconnected";

@@ -21,7 +21,7 @@ public final class SpecialCharacter  {
     public static final String ROUND_STAR       = "✪";
 
     public static final String VAR_STARS        = "[stars]";
-    public static final String STARS            = "⁂";
+    public static final String STARS            = "⁂"; //☻
 
     public static final String VAR_CROWN        = "[crown]";
     public static final String CROWN            = "♛";

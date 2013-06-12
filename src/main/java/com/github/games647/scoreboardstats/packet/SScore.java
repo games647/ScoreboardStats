@@ -3,20 +3,22 @@ package com.github.games647.scoreboardstats.packet;
 
 public final class SScore {
 
-    private String displayname;
-    private String objectivename;
-    private int score;
+    private String  displayname;
+    private String  scorename;
 
-    public SScore(final String displayname, final String objectivename, final int score) {
-        this.displayname = displayname;
-        this.objectivename = objectivename;
-        this.score = score;
+    private int     score;
+    private boolean disabled;
+
+    public SScore(final String displayname, final String scorename, final int score) {
+        this.displayname    = displayname;
+        this.scorename      = scorename;
+        this.score          = score;
     }
 
     public SScore(final String displayname, final int score) {
-        this.displayname = displayname;
-        this.objectivename = displayname;
-        this.score = score;
+        this.displayname    = displayname;
+        this.scorename      = displayname;
+        this.score          = score;
     }
 
     public String getDisplayname() {
@@ -27,12 +29,12 @@ public final class SScore {
         this.displayname = displayname;
     }
 
-    public String getObjectivename() {
-        return objectivename;
+    public String getScorename() {
+        return scorename;
     }
 
-    public void setObjectivename(final String objectivename) {
-        this.objectivename = objectivename;
+    public void setScorename(final String scorename) {
+        this.scorename = scorename;
     }
 
     public int getScore() {

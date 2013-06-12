@@ -7,7 +7,7 @@ public final class EntityListener implements org.bukkit.event.Listener {
     @org.bukkit.event.EventHandler
     public static void onMobDeath(final org.bukkit.event.entity.EntityDeathEvent event) {
         final org.bukkit.entity.LivingEntity entity = event.getEntity();
-        final org.bukkit.entity.Player killer       = entity.getKiller();
+        final org.bukkit.entity.Player killer = entity.getKiller();
 
         if (!getSettings().isPvpStats()
                 || getSettings().checkWorld(entity.getWorld().getName())

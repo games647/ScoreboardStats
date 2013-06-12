@@ -9,14 +9,14 @@ public final class PlayerCache {
     private int laststreak;
 
     public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
-        kills = paramkills;
-        mob = parammob;
-        deaths = paramdeaths;
-        streak = paramstreak;
+        kills   = paramkills;
+        mob     = parammob;
+        deaths  = paramdeaths;
+        streak  = paramstreak;
     }
 
     public PlayerCache() {
-       //Do nothing, because all variables are automatically init as 0
+        //Do nothing, because all variables are automatically init as 0
     }
 
     public int getKills() {
@@ -59,6 +59,11 @@ public final class PlayerCache {
 
     @Override
     public String toString() {
-        return "PlayerCache{" + "kills=" + kills + ", mob=" + mob + ", deaths=" + deaths + ", streak=" + streak + ", laststreak=" + laststreak + '}';
+        return "PlayerCache{"
+                + "kills=" + kills
+                + ", mob=" + mob
+                + ", deaths=" + deaths
+                + ", streak=" + streak
+                + ", laststreak=" + laststreak + '}';
     }
 }

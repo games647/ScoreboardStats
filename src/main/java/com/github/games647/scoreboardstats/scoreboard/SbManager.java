@@ -18,7 +18,6 @@ import org.bukkit.scoreboard.Scoreboard;
 public final class SbManager {
 
     public static void createScoreboard(final Player player) {
-
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || getInstance().hidelist.contains(player.getName())
                 || getSettings().checkWorld(player.getWorld().getName())) {
@@ -31,6 +30,7 @@ public final class SbManager {
         }
 
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+
         final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -54,8 +54,8 @@ public final class SbManager {
         final Scoreboard scoreboard = player.getScoreboard();
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
-                || scoreboard.getObjective(DisplaySlot.SIDEBAR) == null
-                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)
+                || scoreboard   .getObjective(DisplaySlot.SIDEBAR) == null
+                || !scoreboard  .getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)
                 || getInstance().hidelist.contains(player.getName())) {
             return;
         }
@@ -64,10 +64,11 @@ public final class SbManager {
             scoreboard.getObjective(Other.TOPLIST).unregister();  //to remove the old scores
         }
 
+        final Map<String, Integer> top = Database.getTop();
+        final String color = getSettings().getTempColor();
+
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
         objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTempTitle()));
-        final Map<String, Integer> top  = Database.getTop();
-        final String color              = getSettings().getTempColor();
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
