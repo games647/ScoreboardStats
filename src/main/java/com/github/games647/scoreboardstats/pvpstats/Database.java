@@ -20,7 +20,7 @@ public final class Database {
         if (!CACHE.containsKey(name)) {
             loadAccount(name);
         }
-        
+
         return CACHE.get(name);
     }
 
@@ -31,13 +31,14 @@ public final class Database {
 
         final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
 
-        CACHE.put(name, (stats == null) ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        CACHE.put(name, stats == null
+                ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
 
     public static int getKdr(final String name) {
         final PlayerCache stats = getCache(name);
 
-        return (stats == null) ? 0
+        return stats == null ? 0
                 : stats.getDeaths() == 0 ? stats.getKills() : stats.getKills() / stats.getDeaths();
     }
 

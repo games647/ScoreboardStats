@@ -51,7 +51,7 @@ public final class SettingsHandler {
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
-        title           = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        title           = translateAlternateColorCodes(Other.TRANSLATED_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
         loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
@@ -65,8 +65,8 @@ public final class SettingsHandler {
 
             topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
 
-            tempColor       = translateAlternateColorCodes('&', config.getString(ConfigurationPaths.TEMP_COLOR));
-            tempTitle       = translateAlternateColorCodes('&', checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
+            tempColor       = translateAlternateColorCodes(Other.TRANSLATED_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
+            tempTitle       = translateAlternateColorCodes(Other.TRANSLATED_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
         }
     }
 
@@ -156,7 +156,7 @@ public final class SettingsHandler {
         return check;
     }
 
-    private static int checkItems(int input) {
+    private static int checkItems(final int input) {
         if (input >= Other.MINECRAFT_LIMIT) {
             Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
             return Other.MINECRAFT_LIMIT - 1;
@@ -216,7 +216,8 @@ public final class SettingsHandler {
                 .replace(SpecialCharacter.VAR_RIGHT_UP, SpecialCharacter.RIGHT_UP)
                 .replace(SpecialCharacter.VAR_LEFT_UP, SpecialCharacter.LEFT_UP)
                 .replace(SpecialCharacter.VAR_PHONE, SpecialCharacter.PHONE)
-                .replace(SpecialCharacter.VAR_PLANE, SpecialCharacter.VAR_PLANE)
+                .replace(SpecialCharacter.VAR_PLANE, SpecialCharacter.PLANE)
+                .replace(SpecialCharacter.VAR_FLOWER, SpecialCharacter.FLOWER)
                 .replace(SpecialCharacter.VAR_MAIL, SpecialCharacter.MAIL)
                 .replace(SpecialCharacter.VAR_HAND, SpecialCharacter.HAND)
                 .replace(SpecialCharacter.VAR_WRITE, SpecialCharacter.WRITE)
@@ -233,7 +234,7 @@ public final class SettingsHandler {
                 .replace(SpecialCharacter.VAR_ONE1, SpecialCharacter.ONE1)
                 .replace(SpecialCharacter.VAR_TWO1, SpecialCharacter.TWO1)
                 .replace(SpecialCharacter.VAR_THREE1, SpecialCharacter.THREE1)
-                .replace(SpecialCharacter.VAR_FOUR1, SpecialCharacter.FIVE1)
+                .replace(SpecialCharacter.VAR_FOUR1, SpecialCharacter.FOUR1)
                 .replace(SpecialCharacter.VAR_FIVE1, SpecialCharacter.FIVE1)
                 .replace(SpecialCharacter.VAR_SIX1, SpecialCharacter.SIX1)
                 .replace(SpecialCharacter.VAR_SEVEN1, SpecialCharacter.SEVEN1)
@@ -244,22 +245,22 @@ public final class SettingsHandler {
 
     @Override
     public String toString() {
-        return new StringBuilder(29)
-                .append("SettingsHandler{pvpStats=").append(pvpStats)
-                .append(", tempScoreboard=").append(tempScoreboard)
-                .append(", hideVanished=").append(hideVanished)
-                .append(", sound=").append(sound)
-                .append(", title=").append(title)
-                .append(", tempTitle=").append(tempTitle)
-                .append(", tempColor=").append(tempColor)
-                .append(", topType=").append(topType)
-                .append(", intervall=").append(intervall)
-                .append(", topitems=").append(topitems)
-                .append(", tempShow=").append(tempShow)
-                .append(", tempDisapper=").append(tempDisapper)
-                .append(", items=").append(items)
-                .append(", disabledWorlds=").append(disabledWorlds)
+        return "SettingsHandler{pvpStats="  + pvpStats
 
-                .append('}').toString();
+                + ", tempScoreboard="       + tempScoreboard
+                + ", hideVanished="         + hideVanished
+                + ", sound="                + sound
+                + ", title="                + title
+                + ", tempTitle="            + tempTitle
+                + ", tempColor="            + tempColor
+                + ", topType="              + topType
+                + ", intervall="            + intervall
+                + ", topitems="             + topitems
+                + ", tempShow="             + tempShow
+                + ", tempDisapper="         + tempDisapper
+                + ", items="                + items
+                + ", disabledWorlds="       + disabledWorlds
+
+                + '}';
     }
 }

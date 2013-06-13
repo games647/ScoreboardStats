@@ -9,12 +9,12 @@ public final class DisableCommand implements org.bukkit.command.CommandExecutor 
 
     private final ScoreboardStats plugin;
 
-    public DisableCommand(ScoreboardStats instance) {
+    public DisableCommand(final ScoreboardStats instance) {
         plugin = instance;
     }
 
     @Override
-    public boolean onCommand(org.bukkit.command.CommandSender cs, org.bukkit.command.Command cmd, String label, String[] args) {
+    public boolean onCommand(final org.bukkit.command.CommandSender cs, final org.bukkit.command.Command cmd, final String label, final String[] args) {
         if (!cs.hasPermission(Permissions.HIDE_PERMISSION)) {
             cs.sendMessage(Message.PERMISSION_DENIED);
             return true;
