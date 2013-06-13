@@ -13,13 +13,13 @@ public final class SObjective {
     private String      displayname; //Can me under 32 characters long
 
     private int disabled; // 0 to create the scoreboard. 1 to remove the scoreboard. 2 to update the display text. TODO: Check these values
-    private Map<String, SScore> scores = new ConcurrentHashMap<String, SScore>(10); // Never should be more than 15
+    private final Map<String, SScore> scores = new ConcurrentHashMap<String, SScore>(10); // Never should be more than 15
 
     public SObjective(final DisplaySlot displayslot, final String objectivename, final String displayname) {
         Validate.notNull(displayslot, "Display slot can't be null");
         Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
         Validate.isTrue(displayname.length() > 32, "The display name can't be longer than 32 characters.");
-        
+
         this.displayslot    = displayslot;
         this.objectivename  = objectivename;
         this.displayname    = displayname;

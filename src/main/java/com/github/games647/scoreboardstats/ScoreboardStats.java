@@ -7,11 +7,11 @@ import com.github.games647.variables.Commands;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import java.util.List;
-import net.h31ix.updater.Updater;
+import net.h31ix.Updater;
 
 public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
-    public final java.util.Set<String> hidelist = new java.util.HashSet<String>();
+    public final java.util.Set<String> hidelist = new java.util.HashSet<String>(10);
 
     private static SettingsHandler settings;
     private static ScoreboardStats instance;
@@ -37,7 +37,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         settings = new SettingsHandler(this);
 
         if (settings.isUpdateInfo()) {
-            new Updater(this, "scoreboardstats", this.getFile(), Updater.UpdateType.DEFAULT, true);
+            new Updater(this, "scoreboardstats", getFile(), Updater.UpdateType.DEFAULT, true);
         }
 
         setupDatabase();

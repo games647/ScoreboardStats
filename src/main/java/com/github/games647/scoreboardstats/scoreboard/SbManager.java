@@ -87,7 +87,7 @@ public final class SbManager {
     }
 
     public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
-        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes('&', title)));
+        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.TRANSLATED_CHAR, title)));
 
         if (complete
                 && value == 0) { //Have to use this because the score wouldn't send otherwise
@@ -99,7 +99,7 @@ public final class SbManager {
 
     private static String checkLength(final String check) {
 
-        return (check.length() > Other.MINECRAFT_LIMIT - 2) ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
+        return check.length() > Other.MINECRAFT_LIMIT - 2 ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
 
     public static void regAll() {

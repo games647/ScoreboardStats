@@ -4,7 +4,7 @@
  * This class provides the means to safetly and easily update a plugin, or check to see if it is updated using dev.bukkit.org
  */
 
-package net.h31ix.updater;
+package net.h31ix;
 
 import java.io.*;
 import java.lang.Runnable;
@@ -280,7 +280,7 @@ public class Updater
             Enumeration<? extends ZipEntry> e = zipFile.entries();
             while(e.hasMoreElements())
             {
-                ZipEntry entry = (ZipEntry)e.nextElement();
+                ZipEntry entry = e.nextElement();
                 File destinationFilePath = new File(zipPath,entry.getName());
                 destinationFilePath.getParentFile().mkdirs();
                 if(entry.isDirectory())
