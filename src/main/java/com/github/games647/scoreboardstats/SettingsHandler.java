@@ -175,6 +175,7 @@ public final class SettingsHandler {
         for (final String key : keys) {
             if (items.size() >= Other.MINECRAFT_LIMIT) {
                 Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
+                break;
             }
 
             items.put(translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key))), config.getString(key));

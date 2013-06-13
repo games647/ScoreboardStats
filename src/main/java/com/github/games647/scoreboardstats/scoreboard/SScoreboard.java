@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.packet;
+package com.github.games647.scoreboardstats.scoreboard;
 
 import net.minecraft.server.v1_5_R3.Packet;
 import net.minecraft.server.v1_5_R3.PlayerConnection;

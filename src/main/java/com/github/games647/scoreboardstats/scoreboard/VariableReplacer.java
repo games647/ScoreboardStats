@@ -102,55 +102,55 @@ public final class VariableReplacer {
         }
 
         if (VariableList.WOODCUTTING.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.WOODCUTTING);
+            return ExperienceAPI.getLevel(player, "WOODCUTTING");
         }
 
         if (VariableList.ACROBATICS.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.ACROBATICS);
+            return ExperienceAPI.getLevel(player, "ACROBATICS");
         }
 
         if (VariableList.ARCHERY.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.ARCHERY);
+            return ExperienceAPI.getLevel(player, "ARCHERY");
         }
 
         if (VariableList.AXES.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.AXES);
+            return ExperienceAPI.getLevel(player, "AXES");
         }
 
         if (VariableList.EXCAVATION.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.EXCAVATION);
+            return ExperienceAPI.getLevel(player, "EXCAVATION");
         }
 
         if (VariableList.FISHING.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.FISHING);
+            return ExperienceAPI.getLevel(player, "FISHING");
         }
 
         if (VariableList.HERBALISM.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.HERBALISM);
+            return ExperienceAPI.getLevel(player, "HERBALISM");
         }
 
         if (VariableList.MINING.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.MINING);
+            return ExperienceAPI.getLevel(player, "MINING");
         }
 
         if (VariableList.REPAIR.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.REPAIR);
+            return ExperienceAPI.getLevel(player, "REPAIR");
         }
 
         if (VariableList.SMELTING.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.SMELTING);
+            return ExperienceAPI.getLevel(player, "SMELTING");
         }
 
         if (VariableList.SWORDS.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.SWORDS);
+            return ExperienceAPI.getLevel(player, "SWORDS");
         }
 
         if (VariableList.TAMING.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.TAMING);
+            return ExperienceAPI.getLevel(player, "TAMING");
         }
 
         if (VariableList.UNARMED.equals(key)) {
-            return ExperienceAPI.getLevel(player, VariableList.UNARMED);
+            return ExperienceAPI.getLevel(player, "UNARMED");
         }
 
         return -1;

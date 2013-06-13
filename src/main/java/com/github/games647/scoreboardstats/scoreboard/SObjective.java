@@ -1,28 +1,33 @@
-package com.github.games647.scoreboardstats.packet;
+package com.github.games647.scoreboardstats.scoreboard;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.server.v1_5_R3.Packet207SetScoreboardScore;
-import org.bukkit.entity.Player;
+import org.apache.commons.lang.Validate;
 import org.bukkit.scoreboard.DisplaySlot;
 
 public final class SObjective {
 
     private DisplaySlot displayslot;
 
-    private String      objectivename;
-    private String      displayname;
+    private String      objectivename; //Should be only under 16 characters
+    private String      displayname; //Can me under 32 characters long
 
     private int disabled; // 0 to create the scoreboard. 1 to remove the scoreboard. 2 to update the display text. TODO: Check these values
     private Map<String, SScore> scores = new ConcurrentHashMap<String, SScore>(10); // Never should be more than 15
 
     public SObjective(final DisplaySlot displayslot, final String objectivename, final String displayname) {
+        Validate.notNull(displayslot, "Display slot can't be null");
+        Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
+        Validate.isTrue(displayname.length() > 32, "The display name can't be longer than 32 characters.");
+        
         this.displayslot    = displayslot;
         this.objectivename  = objectivename;
         this.displayname    = displayname;
     }
 
     public SObjective(final String displayname) {
+        Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
+
         this.displayname    = displayname;
         this.objectivename  = displayname;
     }
@@ -32,6 +37,7 @@ public final class SObjective {
     }
 
     public void setDisplayslot(final DisplaySlot displayslot) {
+        Validate.notNull(displayslot, "Display slot can't be null");
         this.displayslot = displayslot;
     }
 
@@ -40,6 +46,7 @@ public final class SObjective {
     }
 
     public void setObjectivename(final String objectivename) {
+        Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
         this.objectivename = objectivename;
     }
 
@@ -48,22 +55,7 @@ public final class SObjective {
     }
 
     public void setDisplayname(final String displayname) {
+        Validate.isTrue(displayname.length() > 32, "The display name can't be longer than 32 characters.");
         this.displayname = displayname;
-    }
-
-    public void sendDisabledScore(final Player player, final String scorename) {
-        final SScore score = scores.get(scorename);
-
-        if (score != null) {
-            scores.remove(scorename);
-
-            final Packet207SetScoreboardScore packet = new Packet207SetScoreboardScore();
-
-            packet.a = score.getScorename();
-            packet.b = score.getDisplayname();
-            packet.c = 1;
-
-            SScoreboard.sendPacket(player, packet);
-        }
     }
 }
