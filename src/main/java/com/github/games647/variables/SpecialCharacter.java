@@ -148,4 +148,5 @@ public final class SpecialCharacter  {
 
     public static final String VAR_TEN1         = "[TEN]";
     public static final String TEN1             = "❿";
+    //ஜ۩۞۩ஜ
 }
