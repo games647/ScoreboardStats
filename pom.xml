@@ -133,6 +133,16 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/variables/</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>
