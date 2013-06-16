@@ -87,7 +87,7 @@ public final class SbManager {
     }
 
     public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
-        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.TRANSLATED_CHAR, title)));
+        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
 
         if (complete
                 && value == 0) { //Have to use this because the score wouldn't send otherwise

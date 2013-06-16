@@ -51,7 +51,7 @@ public final class SettingsHandler {
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
-        title           = translateAlternateColorCodes(Other.TRANSLATED_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        title           = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
         loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
@@ -65,8 +65,8 @@ public final class SettingsHandler {
 
             topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
 
-            tempColor       = translateAlternateColorCodes(Other.TRANSLATED_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
-            tempTitle       = translateAlternateColorCodes(Other.TRANSLATED_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
+            tempColor       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
+            tempTitle       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
         }
     }
 

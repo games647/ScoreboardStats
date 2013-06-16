@@ -21,4 +21,5 @@ public final class Other  {
     public static final float   PITCH               = 1.0F;
 
     public static final char    TRANSLATED_CHAR     = '§';
+    public static final char    CHATCOLOR_CHAR      = '&';
 }
