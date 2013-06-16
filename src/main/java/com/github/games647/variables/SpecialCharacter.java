@@ -120,7 +120,7 @@ public final class SpecialCharacter  {
     public static final String ARROW4           = "➨";
 
     public static final String VAR_ONE1         = "[ONE]";
-    public static final String ONE1              = "❶";
+    public static final String ONE1             = "❶";
 
     public static final String VAR_TWO1         = "[TWO]";
     public static final String TWO1             = "❷";
