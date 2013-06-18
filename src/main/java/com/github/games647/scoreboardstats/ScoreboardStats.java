@@ -78,16 +78,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         }
 
         if (length != settings.getItemsLength()) {
-            for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
-                final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
-
-                if (objective == null
-                        || !objective.getName().equals(Other.PLUGIN_NAME)) {
-                    continue;
-                }
-
-                player.getScoreboard().clearSlot(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
-            }
+            SbManager.unregisterAll();
         }
 
         if (pvpstats != settings.isPvpStats()) {

@@ -6,6 +6,8 @@ disabled-worlds:
   - world_nether
   - city
 
+use-packet-system: false
+
 #This will not count vanished players in the online value
 hide-vanished: false
 
