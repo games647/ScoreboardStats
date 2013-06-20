@@ -12,7 +12,7 @@ public final class SScore {
     private boolean disabled;
 
     public SScore(final String displayname, final String scorename, final int score) {
-        Validate.isTrue(displayname.length() < 16, "The display name for the score can't be longer than 16 characters");
+        Validate.isTrue(displayname.length() > 16, "The display name for the score can't be longer than 16 characters");
         Validate.isTrue(scorename.length() > 16, "The score name can't be longer than 16 characters");
 
         this.displayname    = displayname;
@@ -21,7 +21,7 @@ public final class SScore {
     }
 
     public SScore(final String displayname, final int score) {
-        Validate.isTrue(displayname.length() < 16, "The display name for the score can't be longer than 16 characters");
+        Validate.isTrue(displayname.length() > 16, "The display name for the score can't be longer than 16 characters");
 
         this.displayname    = displayname;
         this.scorename      = displayname;
@@ -33,7 +33,7 @@ public final class SScore {
     }
 
     public void setDisplayname(final String displayname) {
-        Validate.isTrue(displayname.length() < 16, "The display name for the score can't be longer than 16 characters");
+        Validate.isTrue(displayname.length() > 16, "The display name for the score can't be longer than 16 characters");
         this.displayname = displayname;
     }
 
