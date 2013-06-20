@@ -44,6 +44,8 @@ public final class SettingsHandler {
 
         final FileConfiguration config = plugin.getConfig();
 
+        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
+
         hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
         sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
         pvpStats        = config.getBoolean(ConfigurationPaths.PVPSTATS);
@@ -52,7 +54,6 @@ public final class SettingsHandler {
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
         title           = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
-        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
                 && pvpStats) {

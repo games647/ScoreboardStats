@@ -38,8 +38,9 @@ public final class Database {
     public static int getKdr(final String name) {
         final PlayerCache stats = getCache(name);
 
-        return stats == null ? 0
-                : stats.getDeaths() == 0 ? stats.getKills() : stats.getKills() / stats.getDeaths();
+        return stats == null
+                ? 0 : stats.getDeaths() == 0
+                ? stats.getKills() : Math.round((float) stats.getKills() / (float) stats.getDeaths());
     }
 
     public static void saveAccount(final String name, final boolean remove) {

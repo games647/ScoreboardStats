@@ -9,8 +9,8 @@ public final class SObjective {
 
     private DisplaySlot displayslot;
 
-    private String      objectivename; //Should be only under 16 characters
-    private String      displayname; //Can me under 32 characters long
+    private final   String      objectivename; //Should be only under 16 characters
+    private         String      displayname; //Can me under 32 characters long
 
     private int disabled; // 0 to create the scoreboard. 1 to remove the scoreboard. 2 to update the display text. TODO: Check these values
     private final Map<String, SScore> scores = new ConcurrentHashMap<String, SScore>(10); // Never should be more than 15
@@ -25,13 +25,6 @@ public final class SObjective {
         this.displayname    = displayname;
     }
 
-    public SObjective(final String displayname) {
-        Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
-
-        this.displayname    = displayname;
-        this.objectivename  = displayname;
-    }
-
     public DisplaySlot getDisplayslot() {
         return displayslot;
     }
@@ -43,11 +36,6 @@ public final class SObjective {
 
     public String getObjectivename() {
         return objectivename;
-    }
-
-    public void setObjectivename(final String objectivename) {
-        Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
-        this.objectivename = objectivename;
     }
 
     public String getDisplayname() {
