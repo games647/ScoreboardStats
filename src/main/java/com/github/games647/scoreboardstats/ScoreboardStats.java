@@ -47,8 +47,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
 
-        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand(this));
-        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand(this));
+        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand     (this));
+        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand    (this));
 
         SbManager.regAll();
 
