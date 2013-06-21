@@ -53,7 +53,7 @@ public final class SettingsHandler {
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
-        title           = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE))));
+        title           = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
                 && pvpStats) {
@@ -67,7 +67,7 @@ public final class SettingsHandler {
             topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
 
             tempColor       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
-            tempTitle       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE))));
+            tempTitle       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
         }
     }
 
@@ -147,9 +147,9 @@ public final class SettingsHandler {
         }
     }
 
-    private static String checkLength(final String check) {
+    private static String checkLength(final String check, int limit) {
         if (check.length() > Other.MINECRAFT_LIMIT) {
-            final String logmessage = Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, check);
+            final String logmessage = Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, check, limit);
             Bukkit.getLogger().warning(logmessage);
             return check.substring(0, Other.MINECRAFT_LIMIT);
         }
@@ -179,7 +179,7 @@ public final class SettingsHandler {
                 break;
             }
 
-            items.put(translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key))), config.getString(key));
+            items.put(translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
         }
     }
 
