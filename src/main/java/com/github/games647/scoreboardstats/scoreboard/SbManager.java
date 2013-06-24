@@ -39,7 +39,7 @@ public final class SbManager {
             try {
                 player.setScoreboard(scoreboard);
             } catch (IllegalStateException ex) {
-                Bukkit.getLogger().info(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
             }
 
             getSettings().sendUpdate(player, true);
@@ -75,7 +75,7 @@ public final class SbManager {
             try {
                 player.setScoreboard(scoreboard);
             } catch (IllegalStateException ex) {
-                Bukkit.getLogger().info(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
             }
 
             for (final Map.Entry<String, Integer> entry : top.entrySet()) {
