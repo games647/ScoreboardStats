@@ -59,6 +59,13 @@ public final class VariableReplacer {
             }
         }
 
+        if (PluginListener.getHeroes() != null) {
+            final int value = getHeroesValue(key, player);
+            if (value != -1) {
+                return value;
+            }
+        }
+
         return getBukkitValues(key, player);
     }
 
@@ -179,7 +186,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.KDR.equals(key)) {
-            return (int) PluginListener.getSimpleclans().getClanPlayer(player).getKDR();
+            return Math.round(PluginListener.getSimpleclans().getClanPlayer(player).getKDR());
         }
 
         if (VariableList.MEMBER.equals(key)) {
@@ -306,6 +313,26 @@ public final class VariableReplacer {
 
         if (VariableList.MEMBERS_ONLINE.equals(key)) {
             return fplayer.getFaction().getOnlinePlayers().size();
+        }
+
+        return -1;
+    }
+
+    private static int getHeroesValue(String key, Player player) {
+        if (VariableList.MANA.equals(key)) {
+            return PluginListener.getHeroes().getHero(player).getMana();
+        }
+
+        if (VariableList.LEVEL.equals(key)) {
+            return PluginListener.getHeroes().getHero(player).getLevel();
+        }
+
+        if (VariableList.MAX_MANA.equals(key)) {
+            return PluginListener.getHeroes().getHero(player).getMaxMana();
+        }
+
+        if (VariableList.MANA_REGEN.equals(key)) {
+            return PluginListener.getHeroes().getHero(player).getManaRegen();
         }
 
         return -1;
