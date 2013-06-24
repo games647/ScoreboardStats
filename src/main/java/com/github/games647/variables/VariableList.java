@@ -76,4 +76,10 @@ public final class VariableList {
     public static final String F_POWER          = "%f_power%";
     public static final String MEMBERS          = "%members%";
     public static final String MEMBERS_ONLINE   = "%members_online%";
+
+    //Heroes
+    public static final String MANA             = "%mana%";
+    public static final String MAX_MANA         = "%max_mana%";
+    public static final String LEVEL            = "%level%";
+    public static final String MANA_REGEN       = "%mana_regen%";
 }

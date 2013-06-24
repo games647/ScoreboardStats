@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.EssentialsTimer;
 import com.github.games647.variables.PluginNames;
+import com.herocraftonline.heroes.characters.CharacterManager;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -10,6 +11,8 @@ public final class PluginListener implements org.bukkit.event.Listener {
 
     private static boolean factions;
     private static boolean mcmmo;
+
+    private static CharacterManager heroes;
     private static Economy economy;
     private static EssentialsTimer essentials;
     private static CraftClanPlayerManager simpleclans;
@@ -30,6 +33,10 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return essentials;
     }
 
+    public static CharacterManager getHeroes() {
+        return heroes;
+    }
+
     public static boolean isFactions() {
         return factions;
     }
@@ -39,6 +46,10 @@ public final class PluginListener implements org.bukkit.event.Listener {
 
         mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
         factions    = pluginm.getPlugin(PluginNames.FACTIONS)   != null;
+
+        if (pluginm.getPlugin(PluginNames.HEROES) != null) {
+            heroes = ((com.herocraftonline.heroes.Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();
+        }
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
             simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();

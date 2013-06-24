@@ -8,4 +8,6 @@ public final class PluginNames  {
     public static final String INSIGNS      = "InSigns";
     public static final String VAULT        = "Vault";
     public static final String FACTIONS     = "Factions";
+    public static final String JOBS         = "Jobs";
+    public static final String HEROES       = "Heroes";
 }
