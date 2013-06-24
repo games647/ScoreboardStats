@@ -20,6 +20,7 @@ public final class SettingsHandler {
     private boolean             hideVanished;
     private boolean             sound;
     private boolean             updateInfo;
+    private boolean             packetsystem;
 
     private String              title;
     private String              tempTitle;
@@ -50,6 +51,7 @@ public final class SettingsHandler {
         sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
         pvpStats        = config.getBoolean(ConfigurationPaths.PVPSTATS);
         updateInfo      = config.getBoolean(ConfigurationPaths.UPDATE_INFO);
+        packetsystem    = config.getBoolean(ConfigurationPaths.PACKET_SYSTEM);
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
@@ -131,6 +133,10 @@ public final class SettingsHandler {
         return items.size();
     }
 
+    public boolean isPacketsystem() {
+        return packetsystem;
+    }
+
     public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
 
@@ -149,9 +155,9 @@ public final class SettingsHandler {
 
     private static String checkLength(final String check, int limit) {
         if (check.length() > Other.MINECRAFT_LIMIT) {
-            final String logmessage = Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, check, limit);
-            Bukkit.getLogger().warning(logmessage);
-            return check.substring(0, Other.MINECRAFT_LIMIT);
+            final String cut = check.substring(0, Other.MINECRAFT_LIMIT);
+            Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, cut, limit));
+            return cut;
         }
 
         return check;
@@ -159,7 +165,7 @@ public final class SettingsHandler {
 
     private static int checkItems(final int input) {
         if (input >= Other.MINECRAFT_LIMIT) {
-            Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
+            Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.TOO_LONG_LIST);
             return Other.MINECRAFT_LIMIT - 1;
         }
 
@@ -175,7 +181,7 @@ public final class SettingsHandler {
 
         for (final String key : keys) {
             if (items.size() >= Other.MINECRAFT_LIMIT) {
-                Bukkit.getLogger().info(Message.LOG_NAME + Message.TOO_LONG_LIST);
+                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.TOO_LONG_LIST);
                 break;
             }
 

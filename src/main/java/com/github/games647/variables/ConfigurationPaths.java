@@ -8,6 +8,7 @@ public final class ConfigurationPaths  {
     public static final String DISABLED_WORLDS  = "disabled-worlds";
     public static final String PVPSTATS         = "enable-pvpstats";
     public static final String UPDATE_INFO      = "enable-auto-update";
+    public static final String PACKET_SYSTEM    = "use-packet-system";
 
     //Main Scoreboard
     public static final String ITEMS            = "Scoreboard.Items";

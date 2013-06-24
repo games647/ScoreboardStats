@@ -102,7 +102,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
             try {
                 database.find(PlayerStats.class).findRowCount();
             } catch (javax.persistence.PersistenceException ex) {
-                getLogger().info(Message.NON_EXISTING_DATABASE);
+                getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.NON_EXISTING_DATABASE);
                 installDDL();
             }
 
