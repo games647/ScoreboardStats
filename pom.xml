@@ -101,6 +101,15 @@
         </dependency>
 
         <dependency>
+            <groupId>.</groupId>
+            <artifactId>Heroes</artifactId>
+            <version>1.5.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Heroes.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -150,8 +159,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>plugin.yml</include>
-                    <include>config.yml</include>
+                    <include>**</include>
                 </includes>
             </resource>
         </resources>
