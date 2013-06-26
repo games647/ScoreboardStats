@@ -28,7 +28,7 @@ Temp-Scoreboard-enabled: true
 
 Temp-Scoreboard:
   Title: '&a&lTop Kills'
-  #%mobkills% | %kills% | %killstreak%
+  #%mob% | %kills% | %killstreak%
   Type: '%kills%'
   Color: '&9'
   #How many Players would be displayed

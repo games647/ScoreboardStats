@@ -9,10 +9,10 @@ public final class PlayerCache {
     private int laststreak;
 
     public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
-        kills = paramkills;
-        mob = parammob;
-        deaths = paramdeaths;
-        streak = paramstreak;
+        kills   = paramkills;
+        mob     = parammob;
+        deaths  = paramdeaths;
+        streak  = paramstreak;
     }
 
     public PlayerCache() {

@@ -12,7 +12,7 @@ commands:
   sb:toggle:
     aliases: []
   sidebar:
-    aliases: [scoreboardstats]
+    aliases: [scoreboardstats, side]
 permissions:
   scoreboardstats.admin:
     default: op
