@@ -10,7 +10,6 @@ import com.gmail.nossr50.api.ExperienceAPI;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.entity.UPlayer;
-import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
 import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -54,7 +53,7 @@ public final class VariableReplacer {
             }
         }
 
-        if (!PluginListener.getFactions().equals("0")) {
+        if (!PluginListener.getFactions().equals("")) {
             final int value = getFactionsValue(key, player);
             if (value != -1) {
                 return value;
@@ -179,7 +178,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.KILLS_TOTAL.equals(key)) {
-            final ClanPlayer clanPlayer = PluginListener.getSimpleclans().getClanPlayer(player);
+            final com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer clanPlayer = PluginListener.getSimpleclans().getClanPlayer(player);
             return clanPlayer.getCivilianKills() + clanPlayer.getNeutralKills() + clanPlayer.getRivalKills();
         }
 
@@ -327,7 +326,7 @@ public final class VariableReplacer {
     }
 
     private static int getFactionsValue(final String key, final Player player) {
-        if (PluginListener.getFactions().equals("1")) {
+        if (PluginListener.getFactions().startsWith("1")) {
             final FPlayer fplayer = FPlayers.i.get(player);
 
             if (VariableList.POWER.equals(key)) {

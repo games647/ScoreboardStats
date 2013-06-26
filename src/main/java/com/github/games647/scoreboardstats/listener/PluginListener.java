@@ -5,6 +5,7 @@ import com.github.games647.variables.PluginNames;
 import com.herocraftonline.heroes.characters.CharacterManager;
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
+import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
 
 public final class PluginListener {
@@ -13,10 +14,11 @@ public final class PluginListener {
 
     private static boolean  mcmmo;
 
-    private static CharacterManager heroes;
-    private static Economy economy;
-    private static EssentialsTimer essentials;
-    private static CraftClanPlayerManager simpleclans;
+    private static CharacterManager         heroes;
+    private static Economy                  economy;
+    private static EssentialsTimer          essentials;
+    private static CraftClanPlayerManager   simpleclans;
+    private static ClanManager              simpleclans2;
 
     public static Economy getEconomy() {
         return economy;
@@ -42,13 +44,17 @@ public final class PluginListener {
         return factions;
     }
 
+    public static ClanManager getSimpleclans2() {
+        return simpleclans2;
+    }
+
     public static void init() {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
         mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
 
         if (pluginm.getPlugin(PluginNames.FACTIONS) != null) {
-            factions = pluginm.getPlugin(PluginNames.FACTIONS).getDescription().getVersion().split(".")[0];
+            factions = pluginm.getPlugin(PluginNames.FACTIONS).getDescription().getVersion();
         }
 
         if (pluginm.getPlugin(PluginNames.HEROES) != null) {
@@ -56,7 +62,12 @@ public final class PluginListener {
         }
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
-            simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();
+            final String version = pluginm.getPlugin(PluginNames.SIMPLECLANS).getDescription().getDescription();
+            if (version.charAt(0) == '1') {
+                simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();
+            } else {
+                simpleclans2 = ((net.sacredlabyrinth.phaed.simpleclans.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanManager();
+            }
         }
 
         if (pluginm.getPlugin(PluginNames.ESSENTIALS) != null) {
