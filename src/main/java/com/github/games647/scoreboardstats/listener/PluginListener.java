@@ -7,10 +7,11 @@ import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 
-public final class PluginListener implements org.bukkit.event.Listener {
+public final class PluginListener {
 
-    private static boolean factions;
-    private static boolean mcmmo;
+    private static String   factions;
+
+    private static boolean  mcmmo;
 
     private static CharacterManager heroes;
     private static Economy economy;
@@ -37,7 +38,7 @@ public final class PluginListener implements org.bukkit.event.Listener {
         return heroes;
     }
 
-    public static boolean isFactions() {
+    public static String getFactions() {
         return factions;
     }
 
@@ -45,7 +46,10 @@ public final class PluginListener implements org.bukkit.event.Listener {
         final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
         mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
-        factions    = pluginm.getPlugin(PluginNames.FACTIONS)   != null;
+
+        if (pluginm.getPlugin(PluginNames.FACTIONS) != null) {
+            factions = pluginm.getPlugin(PluginNames.FACTIONS).getDescription().getVersion().split(".")[0];
+        }
 
         if (pluginm.getPlugin(PluginNames.HEROES) != null) {
             heroes = ((com.herocraftonline.heroes.Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();

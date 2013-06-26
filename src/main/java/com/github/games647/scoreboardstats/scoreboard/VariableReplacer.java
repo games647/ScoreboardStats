@@ -9,6 +9,7 @@ import com.github.games647.variables.VariableList;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.entity.UPlayer;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
 import java.util.Date;
 import org.bukkit.Bukkit;
@@ -52,7 +53,7 @@ public final class VariableReplacer {
             }
         }
 
-        if (PluginListener.isFactions()) {
+        if (!PluginListener.getFactions().equals("0")) {
             final int value = getFactionsValue(key, player);
             if (value != -1) {
                 return value;
@@ -297,22 +298,42 @@ public final class VariableReplacer {
     }
 
     private static int getFactionsValue(final String key, final Player player) {
-        final FPlayer fplayer = FPlayers.i.get(player);
+        if (PluginListener.getFactions().equals("1")) {
+            final FPlayer fplayer = FPlayers.i.get(player);
 
-        if (VariableList.POWER.equals(key)) {
-            return fplayer.getPowerRounded();
-        }
+            if (VariableList.POWER.equals(key)) {
+                return fplayer.getPowerRounded();
+            }
 
-        if (VariableList.F_POWER.equals(key)) {
-            return fplayer.getFaction().getPowerRounded();
-        }
+            if (VariableList.F_POWER.equals(key)) {
+                return fplayer.getFaction().getPowerRounded();
+            }
 
-        if (VariableList.MEMBERS.equals(key)) {
-            return fplayer.getFaction().getFPlayers().size();
-        }
+            if (VariableList.MEMBERS.equals(key)) {
+                return fplayer.getFaction().getFPlayers().size();
+            }
 
-        if (VariableList.MEMBERS_ONLINE.equals(key)) {
-            return fplayer.getFaction().getOnlinePlayers().size();
+            if (VariableList.MEMBERS_ONLINE.equals(key)) {
+                return fplayer.getFaction().getOnlinePlayers().size();
+            }
+        } else {
+            final UPlayer uplayer = UPlayer.get(player);
+
+            if (VariableList.POWER.equals(key)) {
+                return uplayer.getPowerRounded();
+            }
+
+            if (VariableList.F_POWER.equals(key)) {
+                return uplayer.getFaction().getPowerRounded();
+            }
+
+            if (VariableList.MEMBERS.equals(key)) {
+                return uplayer.getFaction().getUPlayers().size();
+            }
+
+            if (VariableList.MEMBERS_ONLINE.equals(key)) {
+                return uplayer.getFaction().getOnlinePlayers().size();
+            }
         }
 
         return -1;

@@ -1,8 +1,3 @@
-* Round the ticks
-* Add used ram in percent
-* Fix one variable
-* Round the kdr
-* The title can now be longer than 16 characters. You can now make title that have up to 32 characters
-* Faster updates
-* Adding alias for sb:toggle (sidebar hide) and sb:reload (sidebar reload)
-* Add Heroes support
+* Add console colour support
+* Fix round the tps
+* Fix factions compatiblity
