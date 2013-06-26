@@ -61,7 +61,7 @@ public final class VariableReplacer {
             }
         }
 
-        if (!PluginListener.getFactions().equals("")) {
+        if (PluginListener.getFactions() != null) {
             final int value = getFactionsValue(key, player);
             if (value != -1) {
                 return value;
@@ -283,17 +283,18 @@ public final class VariableReplacer {
             if (VariableList.POWER.equals(key)) {
                 return fplayer.getPowerRounded();
             }
+            if (fplayer.getFaction() != null) {
+                if (VariableList.F_POWER.equals(key)) {
+                    return fplayer.getFaction().getPowerRounded();
+                }
 
-            if (VariableList.F_POWER.equals(key)) {
-                return fplayer.getFaction().getPowerRounded();
-            }
+                if (VariableList.MEMBERS.equals(key)) {
+                    return fplayer.getFaction().getFPlayers().size();
+                }
 
-            if (VariableList.MEMBERS.equals(key)) {
-                return fplayer.getFaction().getFPlayers().size();
-            }
-
-            if (VariableList.MEMBERS_ONLINE.equals(key)) {
-                return fplayer.getFaction().getOnlinePlayers().size();
+                if (VariableList.MEMBERS_ONLINE.equals(key)) {
+                    return fplayer.getFaction().getOnlinePlayers().size();
+                }
             }
         } else {
             final UPlayer uplayer = UPlayer.get(player);
@@ -302,16 +303,18 @@ public final class VariableReplacer {
                 return uplayer.getPowerRounded();
             }
 
-            if (VariableList.F_POWER.equals(key)) {
-                return uplayer.getFaction().getPowerRounded();
-            }
+            if (uplayer.getFaction() != null) {
+                if (VariableList.F_POWER.equals(key)) {
+                    return uplayer.getFaction().getPowerRounded();
+                }
 
-            if (VariableList.MEMBERS.equals(key)) {
-                return uplayer.getFaction().getUPlayers().size();
-            }
+                if (VariableList.MEMBERS.equals(key)) {
+                    return uplayer.getFaction().getUPlayers().size();
+                }
 
-            if (VariableList.MEMBERS_ONLINE.equals(key)) {
-                return uplayer.getFaction().getOnlinePlayers().size();
+                if (VariableList.MEMBERS_ONLINE.equals(key)) {
+                    return uplayer.getFaction().getOnlinePlayers().size();
+                }
             }
         }
 
