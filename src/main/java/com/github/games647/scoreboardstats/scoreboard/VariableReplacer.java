@@ -42,7 +42,7 @@ public final class VariableReplacer {
 
         if (PluginListener.getEssentials() != null
                 && VariableList.TICKS.equals(key)) {
-            return (int) PluginListener.getEssentials().getAverageTPS();
+            return (int) Math.round(PluginListener.getEssentials().getAverageTPS());
         }
 
         if (PluginListener.getSimpleclans() != null) {
