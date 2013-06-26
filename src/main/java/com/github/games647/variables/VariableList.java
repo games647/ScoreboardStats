@@ -82,4 +82,10 @@ public final class VariableList {
     public static final String MAX_MANA         = "%max_mana%";
     public static final String LEVEL            = "%level%";
     public static final String MANA_REGEN       = "%mana_regen%";
+
+    //Amour
+    public static final String LEGGINGS         = "%leggings%";
+    public static final String HELMET           = "%helmet%";
+    public static final String CHESTPLATE       = "%chestplate%";
+    public static final String BOOTS            = "%boots%";
 }

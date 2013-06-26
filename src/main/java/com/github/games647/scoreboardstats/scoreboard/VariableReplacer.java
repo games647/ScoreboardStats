@@ -14,6 +14,7 @@ import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer;
 import java.util.Date;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public final class VariableReplacer {
 
@@ -277,6 +278,34 @@ public final class VariableReplacer {
 
         if (VariableList.PING.equals(key)) {
             return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
+        }
+
+        if (VariableList.HELMET.equals(key)) {
+            final ItemStack helmet = player.getInventory().getHelmet();
+            if (helmet != null) {
+                return helmet.getDurability() * 100 / helmet.getType().getMaxDurability();
+            }
+        }
+
+        if (VariableList.BOOTS.equals(key)) {
+            final ItemStack boots = player.getInventory().getBoots();
+            if (boots != null) {
+                return boots.getDurability() * 100 / boots.getType().getMaxDurability();
+            }
+        }
+
+        if (VariableList.LEGGINGS.equals(key)) {
+            final ItemStack leggings = player.getInventory().getLeggings();
+            if (leggings != null) {
+                return leggings.getDurability() * 100 / leggings.getType().getMaxDurability();
+            }
+        }
+
+        if (VariableList.CHESTPLATE.equals(key)) {
+            final ItemStack chestplate = player.getInventory().getChestplate();
+            if (chestplate != null) {
+                return chestplate.getDurability() * 100 / chestplate.getType().getMaxDurability();
+            }
         }
 
         return -1;
