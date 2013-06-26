@@ -62,7 +62,7 @@ public final class PluginListener {
         }
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
-            final String version = pluginm.getPlugin(PluginNames.SIMPLECLANS).getDescription().getDescription();
+            final String version = pluginm.getPlugin(PluginNames.SIMPLECLANS).getDescription().getVersion();
             if (version.charAt(0) == '1') {
                 simpleclans = ((com.p000ison.dev.simpleclans2.SimpleClans) pluginm.getPlugin(PluginNames.SIMPLECLANS)).getClanPlayerManager();
             } else {
