@@ -154,8 +154,8 @@ public final class SettingsHandler {
     }
 
     private static String checkLength(final String check, int limit) {
-        if (check.length() > Other.MINECRAFT_LIMIT) {
-            final String cut = check.substring(0, Other.MINECRAFT_LIMIT);
+        if (check.length() > limit) {
+            final String cut = check.substring(0, limit);
             Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, cut, limit));
             return cut;
         }
