@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <version>0.5.6</version>
+    <version>0.5.7</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
     <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
@@ -107,6 +107,15 @@
             <version>2.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions2.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>MCore</artifactId>
+            <version>2.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
             <type>jar</type>
         </dependency>
 
