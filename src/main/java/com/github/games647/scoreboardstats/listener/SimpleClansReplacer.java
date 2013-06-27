@@ -34,18 +34,18 @@ public final class SimpleClansReplacer {
         if (VariableList.KDR.equals(key)) {
             return Math.round(clanPlayer.getKDR());
         }
-        
+
         if (clanPlayer.getClan() != null) {
             if (VariableList.MEMBER.equals(key)) {
                 return clanPlayer.getClan().getMembers().size();
             }
 
             if (VariableList.CLAN_KDR.equals(key)) {
-                return (int) clanPlayer.getClan().getKDR();
+                return Math.round(clanPlayer.getClan().getKDR());
             }
 
             if (VariableList.CLAN_MONEY.equals(key)) {
-                return (int) clanPlayer.getClan().getBalance();
+                return (int) Math.round(clanPlayer.getClan().getBalance());
             }
 
             if (VariableList.RIVAL.equals(key)) {
@@ -104,11 +104,11 @@ public final class SimpleClansReplacer {
             }
 
             if (VariableList.CLAN_KDR.equals(key)) {
-                return (int) clanPlayer.getClan().getTotalKDR();
+                return Math.round(clanPlayer.getClan().getTotalKDR());
             }
 
             if (VariableList.CLAN_MONEY.equals(key)) {
-                return (int) clanPlayer.getClan().getBalance();
+                return (int) Math.round(clanPlayer.getClan().getBalance());
             }
 
             if (VariableList.RIVAL.equals(key)) {
