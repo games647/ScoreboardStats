@@ -1,12 +1,18 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-@javax.persistence.Entity
-@javax.persistence.Table(name = "PlayerStats")
+import com.avaje.ebean.validation.NotEmpty;
+import com.avaje.ebean.validation.NotNull;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "PlayerStats")
 public class PlayerStats {
 
-    @javax.persistence.Id
-    @com.avaje.ebean.validation.NotEmpty
-    @com.avaje.ebean.validation.NotNull
+    @Id
+    @NotEmpty
+    @NotNull
     private String playername;
 
     private int kills;

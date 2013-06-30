@@ -5,12 +5,13 @@ import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
 import com.github.games647.variables.Permissions;
 import com.github.games647.variables.VariableList;
 import de.blablubbabc.insigns.Changer;
+import de.blablubbabc.insigns.InSigns;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 final class SignsListener {
 
-    public static void registerSigns(final de.blablubbabc.insigns.InSigns instance) {
+    public static void registerSigns(final InSigns instance) {
 
         instance.addChanger(new Changer(VariableList.SIGN_KILL, Permissions.SIGN_PERMISSION) {
             @Override

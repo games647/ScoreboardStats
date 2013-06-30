@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import org.bukkit.entity.Player;
 
 public final class DisapperTask implements Runnable {
@@ -12,6 +13,6 @@ public final class DisapperTask implements Runnable {
 
     @Override
     public void run() {
-        com.github.games647.scoreboardstats.scoreboard.SbManager.createScoreboard(player);
+        SbManager.createScoreboard(player);
     }
 }

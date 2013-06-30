@@ -2,7 +2,9 @@ package com.github.games647.scoreboardstats.scoreboard;
 
 import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
 import com.github.games647.scoreboardstats.Settings;
+import com.github.games647.scoreboardstats.pvpstats.AppearTask;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvpstats.DisapperTask;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
@@ -13,6 +15,7 @@ import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
 public final class SbManager {
@@ -45,7 +48,7 @@ public final class SbManager {
             Settings.sendUpdate(player, true);
 
             if (Settings.isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
             }
         }
     }
@@ -82,12 +85,12 @@ public final class SbManager {
                 sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
             }
 
-            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.DisapperTask(player), Settings.getTempDisapper() * Other.TICKS_PER_SECOND);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new DisapperTask(player), Settings.getTempDisapper() * Other.TICKS_PER_SECOND);
         }
     }
 
     public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
-        final org.bukkit.scoreboard.Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
+        final Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
 
         if (complete
                 && value == 0) { //Have to use this because the score wouldn't send otherwise

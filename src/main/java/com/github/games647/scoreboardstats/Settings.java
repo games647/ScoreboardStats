@@ -1,15 +1,20 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.ConfigurationPaths;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
 import com.github.games647.variables.SpecialCharacter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
 
 public final class Settings {
 
@@ -32,8 +37,8 @@ public final class Settings {
     private static int                 tempShow;
     private static int                 tempDisapper;
 
-    private static final java.util.Map<String, String> items = new java.util.HashMap<String, String>(14);
-    private static java.util.List<String> disabledWorlds;
+    private static final Map<String, String> items = new HashMap<String, String>(14);
+    private static List<String> disabledWorlds;
 
     public static void loadConfig() {
         plugin.reloadConfig();
@@ -69,7 +74,7 @@ public final class Settings {
     }
 
     public static void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
-        final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
+        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || objective == null
@@ -79,7 +84,7 @@ public final class Settings {
         }
 
         for (final Map.Entry<String, String> entry : items.entrySet()) {
-            com.github.games647.scoreboardstats.scoreboard.SbManager.sendScore(
+            SbManager.sendScore(
                     objective, entry.getKey(), com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
         }
     }

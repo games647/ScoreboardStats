@@ -1,12 +1,17 @@
 package com.github.games647.scoreboardstats.listener;
 
+import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.EssentialsTimer;
 import com.github.games647.variables.PluginNames;
+import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
 import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayerManager;
+import de.blablubbabc.insigns.InSigns;
 import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class PluginListener {
 
@@ -49,7 +54,7 @@ public final class PluginListener {
     }
 
     public static void init() {
-        final org.bukkit.plugin.PluginManager pluginm = Bukkit.getServer().getPluginManager();
+        final PluginManager pluginm = Bukkit.getServer().getPluginManager();
 
         mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
 
@@ -58,7 +63,7 @@ public final class PluginListener {
         }
 
         if (pluginm.getPlugin(PluginNames.HEROES) != null) {
-            heroes = ((com.herocraftonline.heroes.Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();
+            heroes = ((Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();
         }
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
@@ -71,15 +76,15 @@ public final class PluginListener {
         }
 
         if (pluginm.getPlugin(PluginNames.ESSENTIALS) != null) {
-            essentials = ((com.earth2me.essentials.Essentials) pluginm.getPlugin(PluginNames.ESSENTIALS)).getTimer();
+            essentials = ((Essentials) pluginm.getPlugin(PluginNames.ESSENTIALS)).getTimer();
         }
 
         if (pluginm.getPlugin(PluginNames.INSIGNS) != null) {
-            SignsListener.registerSigns((de.blablubbabc.insigns.InSigns) pluginm.getPlugin(PluginNames.INSIGNS));
+            SignsListener.registerSigns((InSigns) pluginm.getPlugin(PluginNames.INSIGNS));
         }
 
         if (pluginm.getPlugin(PluginNames.VAULT) != null) {
-            final org.bukkit.plugin.RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+            final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
 
             if (economyProvider != null) {
                 economy = economyProvider.getProvider();
