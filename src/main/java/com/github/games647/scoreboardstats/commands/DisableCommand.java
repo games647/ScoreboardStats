@@ -7,11 +7,7 @@ import org.bukkit.entity.Player;
 
 public final class DisableCommand implements org.bukkit.command.CommandExecutor {
 
-    private final ScoreboardStats plugin;
-
-    public DisableCommand(final ScoreboardStats instance) {
-        plugin = instance;
-    }
+    private final ScoreboardStats plugin = ScoreboardStats.getInstance();
 
     @Override
     public boolean onCommand(final org.bukkit.command.CommandSender cs, final org.bukkit.command.Command cmd, final String label, final String[] args) {

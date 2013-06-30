@@ -11,36 +11,31 @@ import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public final class SettingsHandler {
+public final class Settings {
 
-    private final ScoreboardStats plugin;
+    private static final ScoreboardStats plugin = ScoreboardStats.getInstance();
 
-    private boolean             pvpStats;
-    private boolean             tempScoreboard;
-    private boolean             hideVanished;
-    private boolean             sound;
-    private boolean             updateInfo;
-    private boolean             packetsystem;
+    private static boolean             pvpStats;
+    private static boolean             tempScoreboard;
+    private static boolean             hideVanished;
+    private static boolean             sound;
+    private static boolean             updateInfo;
+    private static boolean             packetsystem;
 
-    private String              title;
-    private String              tempTitle;
-    private String              tempColor;
-    private String              topType;
+    private static String              title;
+    private static String              tempTitle;
+    private static String              tempColor;
+    private static String              topType;
 
-    private int                 intervall;
-    private int                 topitems;
-    private int                 tempShow;
-    private int                 tempDisapper;
+    private static int                 intervall;
+    private static int                 topitems;
+    private static int                 tempShow;
+    private static int                 tempDisapper;
 
-    private final java.util.Map<String, String> items = new java.util.HashMap<String, String>(14);
-    private java.util.List<String> disabledWorlds;
+    private static final java.util.Map<String, String> items = new java.util.HashMap<String, String>(14);
+    private static java.util.List<String> disabledWorlds;
 
-    public SettingsHandler(ScoreboardStats instance) {
-        plugin = instance;
-        loadConfig();
-    }
-
-    public void loadConfig() {
+    public static void loadConfig() {
         plugin.reloadConfig();
 
         final FileConfiguration config = plugin.getConfig();
@@ -73,71 +68,7 @@ public final class SettingsHandler {
         }
     }
 
-    public boolean isPvpStats() {
-        return pvpStats;
-    }
-
-    public boolean isTempScoreboard() {
-        return tempScoreboard;
-    }
-
-    public boolean isHideVanished() {
-        return hideVanished;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getTempTitle() {
-        return tempTitle;
-    }
-
-    public String getTempColor() {
-        return tempColor;
-    }
-
-    public String getTopType() {
-        return topType;
-    }
-
-    public int getIntervall() {
-        return intervall;
-    }
-
-    public int getTopitems() {
-        return topitems;
-    }
-
-    public int getTempShow() {
-        return tempShow;
-    }
-
-    public int getTempDisapper() {
-        return tempDisapper;
-    }
-
-    public boolean isSound() {
-        return sound;
-    }
-
-    public boolean isUpdateInfo() {
-        return updateInfo;
-    }
-
-    public boolean checkWorld(final String world) {
-        return disabledWorlds.contains(world);
-    }
-
-    public int getItemsLength() {
-        return items.size();
-    }
-
-    public boolean isPacketsystem() {
-        return packetsystem;
-    }
-
-    public void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
+    public static void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
         final org.bukkit.scoreboard.Objective objective = player.getScoreboard().getObjective(org.bukkit.scoreboard.DisplaySlot.SIDEBAR);
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
@@ -172,7 +103,7 @@ public final class SettingsHandler {
         return input;
     }
 
-    private void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
+    private static void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
         final java.util.Set<String> keys = config.getKeys(false);
 
         if (!items.isEmpty()) {
@@ -248,6 +179,70 @@ public final class SettingsHandler {
                 .replace(SpecialCharacter.VAR_EIGHT1    , SpecialCharacter.EIGHT1)
                 .replace(SpecialCharacter.VAR_NINE1     , SpecialCharacter.NINE1)
                 .replace(SpecialCharacter.VAR_TEN1      , SpecialCharacter.TEN1);
+    }
+
+    public static boolean isPvpStats() {
+        return pvpStats;
+    }
+
+    public static boolean isTempScoreboard() {
+        return tempScoreboard;
+    }
+
+    public static boolean isHideVanished() {
+        return hideVanished;
+    }
+
+    public static boolean isSound() {
+        return sound;
+    }
+
+    public static boolean isUpdateInfo() {
+        return updateInfo;
+    }
+
+    public static boolean isPacketsystem() {
+        return packetsystem;
+    }
+
+    public static String getTitle() {
+        return title;
+    }
+
+    public static String getTempTitle() {
+        return tempTitle;
+    }
+
+    public static String getTempColor() {
+        return tempColor;
+    }
+
+    public static String getTopType() {
+        return topType;
+    }
+
+    public static int getIntervall() {
+        return intervall;
+    }
+
+    public static int getTopitems() {
+        return topitems;
+    }
+
+    public static int getTempShow() {
+        return tempShow;
+    }
+
+    public static int getTempDisapper() {
+        return tempDisapper;
+    }
+
+    public static int getItemsLenght() {
+        return items.size();
+    }
+
+    public static boolean isDisabledWorld(String name) {
+        return disabledWorlds.contains(name);
     }
 
     @Override

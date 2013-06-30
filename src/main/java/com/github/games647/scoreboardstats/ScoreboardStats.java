@@ -13,14 +13,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
     public final java.util.Set<String> hidelist = new java.util.HashSet<String>(10);
 
-    private static SettingsHandler settings;
     private static ScoreboardStats instance;
 
     private int taskid;
-
-    public static SettingsHandler getSettings() {
-        return settings;
-    }
 
     public static ScoreboardStats getInstance() {
         return instance;
@@ -34,9 +29,8 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        settings = new SettingsHandler(this);
 
-        if (settings.isUpdateInfo()) {
+        if (Settings.isUpdateInfo()) {
             new Updater(this, "scoreboardstats", getFile(), Updater.UpdateType.DEFAULT, true);
         }
 
@@ -47,14 +41,14 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
 
-        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand     (this));
-        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand    (this));
-        getCommand(Commands.SIDEBAR)        .setExecutor(new com.github.games647.scoreboardstats.commands.SidebarCommand    ());
+        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand());
+        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand());
+        getCommand(Commands.SIDEBAR)        .setExecutor(new com.github.games647.scoreboardstats.commands.SidebarCommand());
 
         SbManager.regAll();
 
         taskid = getServer().getScheduler()
-                .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+                .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
     }
 
     @Override
@@ -66,23 +60,23 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     public void onReload() {
-        final int     intervall     = settings.getIntervall();
-        final int     length        = settings.getItemsLength();
-        final boolean pvpstats      = settings.isPvpStats();
+        final int     intervall     = Settings.getIntervall();
+        final int     length        = Settings.getItemsLenght();
+        final boolean pvpstats      = Settings.isPvpStats();
 
-        settings.loadConfig();
+        Settings.loadConfig();
 
-        if (intervall != settings.getIntervall()) {
+        if (intervall != Settings.getIntervall()) {
             getServer().getScheduler().cancelTask(taskid);
             getServer().getScheduler()
-                    .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+                    .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
         }
 
-        if (length != settings.getItemsLength()) {
+        if (length != Settings.getItemsLenght()) {
             SbManager.unregisterAll();
         }
 
-        if (pvpstats != settings.isPvpStats()) {
+        if (pvpstats != Settings.isPvpStats()) {
             instance.setupDatabase();
             SbManager.regAll();
         }
@@ -96,7 +90,7 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
     }
 
     private void setupDatabase() {
-        if (settings.isPvpStats()) {
+        if (Settings.isPvpStats()) {
             final com.avaje.ebean.EbeanServer database = getDatabase();
 
             try {

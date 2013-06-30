@@ -1,8 +1,7 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.listener.PluginListener;
-import com.github.games647.scoreboardstats.listener.SimpleClansReplacer;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
 import com.github.games647.variables.Other;
@@ -23,7 +22,7 @@ public final class VariableReplacer {
             return -1;
         }
 
-        if (getSettings().isPvpStats()) {
+        if (Settings.isPvpStats()) {
             final int value = getPvpValue(key, player.getName());
             if (value != -1) {
                 return value;
@@ -262,7 +261,7 @@ public final class VariableReplacer {
     }
 
     private static int getOnlinePlayers(final Player player) {
-        if (getSettings().isHideVanished()) {
+        if (Settings.isHideVanished()) {
             int online = 0;
 
             for (final Player other : Bukkit.getOnlinePlayers()) {

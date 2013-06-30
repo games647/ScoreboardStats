@@ -10,7 +10,7 @@ final class RefreshTask implements Runnable {
             if (objective == null) {
                 com.github.games647.scoreboardstats.scoreboard.SbManager.createScoreboard(player);
             } else {
-                ScoreboardStats.getSettings().sendUpdate(player, false);
+                Settings.sendUpdate(player, false);
             }
         }
     }
