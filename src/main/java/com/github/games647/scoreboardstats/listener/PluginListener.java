@@ -5,7 +5,7 @@ import com.earth2me.essentials.EssentialsTimer;
 import com.github.games647.variables.PluginNames;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
-import com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayerManager;
+import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 import de.blablubbabc.insigns.InSigns;
 import net.milkbowl.vault.economy.Economy;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
@@ -22,7 +22,7 @@ public final class PluginListener {
     private static CharacterManager         heroes;
     private static Economy                  economy;
     private static EssentialsTimer          essentials;
-    private static ClanPlayerManager        simpleclans;
+    private static CraftClanPlayerManager   simpleclans;
     private static ClanManager              simpleclans2;
 
     public static Economy getEconomy() {
@@ -33,7 +33,7 @@ public final class PluginListener {
         return mcmmo;
     }
 
-    public static ClanPlayerManager getSimpleclans() {
+    public static CraftClanPlayerManager getSimpleclans() {
         return simpleclans;
     }
 
