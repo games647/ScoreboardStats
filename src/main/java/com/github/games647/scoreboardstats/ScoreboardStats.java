@@ -18,11 +18,11 @@ import com.github.games647.variables.Commands;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.h31ix.Updater;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -149,21 +149,33 @@ public final class ScoreboardStats extends JavaPlugin {
 
     private DataSourceConfig getSqlConfig(DataSourceConfig config) {
         final File file = new File(getDataFolder(), "sql.yml");
-        if (!file.exists()) {
+        if (file.exists()) {
+            final FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file);
+            config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
+            config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
+            config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
+            config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
+            config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
+            config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
+            config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
+            config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
+            config.setHeartbeatSql(sqlConfig.getString("SQL-Settings.HeartbeatSQL"));
+        } else {
             saveResource("sql.yml", false);
+            final FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file);
+            sqlConfig.set("SQL-Settings.Username", config.getUsername());
+            sqlConfig.set("SQL-Settings.Password", config.getPassword());
+            sqlConfig.set("SQL-Settings.Isolation", TransactionIsolation.getLevelDescription(config.getIsolationLevel()));
+            sqlConfig.set("SQL-Settings.Driver", config.getDriver());
+            sqlConfig.set("SQL-Settings.Url", config.getUrl());
+            sqlConfig.set("SQL-Settings.Password", config.getPassword());
+            try {
+                sqlConfig.save(file);
+            } catch (IOException ex) {
+                getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.FILE_EXCEPTION);
+                ex.printStackTrace();
+            }
         }
-
-        final FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file);
-
-        config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
-        config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
-        config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
-        config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
-        config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
-        config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
-        config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
-        config.setWaitTimeoutMillis(sqlConfig.getInt("TSQL-Settings.imeout"));
-        config.setHeartbeatSql(sqlConfig.getString("SQL-Settings.HeartbeatSQL"));
 
         return config;
     }

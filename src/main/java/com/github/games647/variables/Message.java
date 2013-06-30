@@ -15,6 +15,7 @@ public final class Message  {
     public static final String LONGER_THAN_LIMIT     = RED      + "%s was longer than the limit of %s characters. This Plugin will cut automatically to the right size.";
     public static final String SET_SCOREBOARD_FAIL   = YELLOW   + "Cannot set the Scoreboard because the player has disconnected";
     public static final String TOO_LONG_LIST         = RED      + "One Scoreboard can't have more than 15 items";
+    public static final String FILE_EXCEPTION        = RED      + "Error while trying to save the sql.yml";
 
     //Player-Messages
     public static final String RELOAD_SUCCESS        = GREEN    + "✔ The configuration was successfully reloaded ✔";
