@@ -1,0 +1,10 @@
+SQL-Settings:
+  Username: bukkit
+  Password: walrus
+  Isolation: SERIALIZABLE
+  Driver: org.sqlite.JDBC
+  Url: jdbc:sqlite:{DIR}{NAME}.db
+  MinConnections: 2
+  MaxConnections: 250
+  Timeout: 1000
+  HeartbeatSQL: 'Select * FROM `playerstats`;'

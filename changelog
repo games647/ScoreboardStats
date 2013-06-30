@@ -1,9 +1,6 @@
 Current changelog. This will be updated after every big change
 
-* Add console colour support
-* Fix round the tps
-* Fix factions compatiblity
-* Add amour variables
-* Fix SimpleClans 2 issue
-* FIx length issue
-* Rounding the stuff from other plugins
+* Fix NPE on death
+* Adding ebean.properties
+* Adding SQL-Configuration
+* Increasing maxConnections

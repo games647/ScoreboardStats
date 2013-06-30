@@ -4,7 +4,6 @@ author: games647
 version: ${project.version}
 description: ${project.description}
 website: ${project.url}
-database: true
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs, Heroes]
 commands:
   sb:reload:

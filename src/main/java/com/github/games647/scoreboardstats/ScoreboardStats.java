@@ -1,21 +1,30 @@
 package com.github.games647.scoreboardstats;
 
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebean.config.DataSourceConfig;
+import com.avaje.ebean.config.ServerConfig;
+import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.commands.DisableCommand;
 import com.github.games647.scoreboardstats.commands.ReloadCommand;
 import com.github.games647.scoreboardstats.commands.SidebarCommand;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
+import com.github.games647.scoreboardstats.pvpstats.Database;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Commands;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import net.h31ix.Updater;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ScoreboardStats extends JavaPlugin {
@@ -38,6 +47,7 @@ public final class ScoreboardStats extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        Settings.loadConfig();
 
         if (Settings.isUpdateInfo()) {
             new Updater(this, "scoreboardstats", getFile(), Updater.UpdateType.DEFAULT, true);
@@ -103,7 +113,22 @@ public final class ScoreboardStats extends JavaPlugin {
 
     private void setupDatabase() {
         if (Settings.isPvpStats()) {
-            final com.avaje.ebean.EbeanServer database = getDatabase();
+            final ServerConfig db = new ServerConfig();
+
+            db.setDefaultServer(false);
+            db.setRegister(false);
+            db.setClasses(getDatabaseClasses());
+            db.setName(getDescription().getName());
+            getServer().configureDbConfig(db);
+
+            final DataSourceConfig ds = getSqlConfig(db.getDataSourceConfig());
+            ds.setUrl(replaceDatabaseString(ds.getUrl()));
+
+            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+
+            Thread.currentThread().setContextClassLoader(this.getClassLoader());
+            final EbeanServer database = EbeanServerFactory.create(db);
+            Thread.currentThread().setContextClassLoader(previous);
 
             try {
                 database.find(PlayerStats.class).findRowCount();
@@ -112,7 +137,34 @@ public final class ScoreboardStats extends JavaPlugin {
                 installDDL();
             }
 
-            com.github.games647.scoreboardstats.pvpstats.Database.setDatabase(database);
+            Database.setDatabase(database);
         }
+    }
+
+    private String replaceDatabaseString(String input) {
+        input = input.replaceAll("\\{DIR\\}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/");
+        input = input.replaceAll("\\{NAME\\}", getDescription().getName().replaceAll("[^\\w_-]", ""));
+        return input;
+    }
+
+    private DataSourceConfig getSqlConfig(DataSourceConfig config) {
+        final File file = new File(getDataFolder(), "sql.yml");
+        if (!file.exists()) {
+            saveResource("sql.yml", false);
+        }
+
+        final FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file);
+
+        config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
+        config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
+        config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
+        config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
+        config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
+        config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
+        config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
+        config.setWaitTimeoutMillis(sqlConfig.getInt("TSQL-Settings.imeout"));
+        config.setHeartbeatSql(sqlConfig.getString("SQL-Settings.HeartbeatSQL"));
+
+        return config;
     }
 }
