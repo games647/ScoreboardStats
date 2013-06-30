@@ -1,17 +1,26 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.commands.DisableCommand;
+import com.github.games647.scoreboardstats.commands.ReloadCommand;
+import com.github.games647.scoreboardstats.commands.SidebarCommand;
+import com.github.games647.scoreboardstats.listener.EntityListener;
+import com.github.games647.scoreboardstats.listener.PlayerListener;
 import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Commands;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.h31ix.Updater;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
+public final class ScoreboardStats extends JavaPlugin {
 
-    public final java.util.Set<String> hidelist = new java.util.HashSet<String>(10);
+    public final Set<String> hidelist = new HashSet<String>(10);
 
     private static ScoreboardStats instance;
 
@@ -38,22 +47,24 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
         com.github.games647.scoreboardstats.listener.PluginListener.init();
 
-        getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new com.github.games647.scoreboardstats.listener.EntityListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(), this);
 
-        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new com.github.games647.scoreboardstats.commands.ReloadCommand());
-        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new com.github.games647.scoreboardstats.commands.DisableCommand());
-        getCommand(Commands.SIDEBAR)        .setExecutor(new com.github.games647.scoreboardstats.commands.SidebarCommand());
+        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new ReloadCommand());
+        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new DisableCommand());
+        getCommand(Commands.SIDEBAR)        .setExecutor(new SidebarCommand());
 
         SbManager.regAll();
 
-        taskid = getServer().getScheduler()
-                .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+        taskid = getServer().getScheduler().scheduleSyncRepeatingTask(this,
+                new RefreshTask(),
+                Other.STARTUP_DELAY,
+                Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
     }
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final List<Class<?>> list = new java.util.ArrayList<Class<?>>(1);
+        final List<Class<?>> list = new ArrayList<Class<?>>(1);
         list.add(PlayerStats.class);
 
         return list;
@@ -68,8 +79,9 @@ public final class ScoreboardStats extends org.bukkit.plugin.java.JavaPlugin {
 
         if (intervall != Settings.getIntervall()) {
             getServer().getScheduler().cancelTask(taskid);
-            getServer().getScheduler()
-                    .scheduleSyncRepeatingTask(this, new com.github.games647.scoreboardstats.RefreshTask(), Other.STARTUP_DELAY, Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+            getServer().getScheduler().scheduleSyncRepeatingTask(this,
+                    new RefreshTask(), Other.STARTUP_DELAY,
+                    Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
         }
 
         if (length != Settings.getItemsLenght()) {
