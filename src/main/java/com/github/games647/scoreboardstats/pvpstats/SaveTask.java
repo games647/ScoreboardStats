@@ -6,8 +6,8 @@ public final class SaveTask implements Runnable {
 
     private final Player player;
 
-    public SaveTask(final Player paramPlayer) {
-        this.player = paramPlayer;
+    public SaveTask(final Player paramplayer) {
+        this.player = paramplayer;
     }
 
     @Override

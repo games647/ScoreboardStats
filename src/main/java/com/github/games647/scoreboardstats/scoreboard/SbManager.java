@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
 import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
@@ -20,7 +20,7 @@ public final class SbManager {
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || getInstance().hidelist.contains(player.getName())
-                || getSettings().checkWorld(player.getWorld().getName())) {
+                || Settings.isDisabledWorld(player.getWorld().getName())) {
             return;
         }
 
@@ -32,7 +32,7 @@ public final class SbManager {
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTitle()));
+        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
@@ -42,10 +42,10 @@ public final class SbManager {
                 Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
             }
 
-            getSettings().sendUpdate(player, true);
+            Settings.sendUpdate(player, true);
 
-            if (getSettings().isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.AppearTask(player), getSettings().getTempShow() * Other.TICKS_PER_SECOND);
+            if (Settings.isTempScoreboard()) {
+                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new com.github.games647.scoreboardstats.pvpstats.AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
             }
         }
     }
@@ -65,10 +65,10 @@ public final class SbManager {
         }
 
         final Map<String, Integer> top = Database.getTop();
-        final String color = getSettings().getTempColor();
+        final String color = Settings.getTempColor();
 
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, getSettings().getTempTitle()));
+        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTempTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
@@ -82,7 +82,7 @@ public final class SbManager {
                 sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
             }
 
-            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.DisapperTask(player), getSettings().getTempDisapper() * Other.TICKS_PER_SECOND);
+            Bukkit.getScheduler().runTaskLater(getInstance(), new com.github.games647.scoreboardstats.pvpstats.DisapperTask(player), Settings.getTempDisapper() * Other.TICKS_PER_SECOND);
         }
     }
 
@@ -106,7 +106,7 @@ public final class SbManager {
         Bukkit.getScheduler().runTaskAsynchronously(getInstance(), new Runnable() {
             @Override
             public void run() {
-                final boolean ispvpstats = getSettings().isPvpStats();
+                final boolean ispvpstats = Settings.isPvpStats();
 
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     if (!player.isOnline()) {

@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.listener;
 
-import static com.github.games647.scoreboardstats.ScoreboardStats.getSettings;
+import com.github.games647.scoreboardstats.Settings;
+
 
 public final class EntityListener implements org.bukkit.event.Listener {
 
@@ -9,8 +10,8 @@ public final class EntityListener implements org.bukkit.event.Listener {
         final org.bukkit.entity.LivingEntity entity = event.getEntity();
         final org.bukkit.entity.Player killer = entity.getKiller();
 
-        if (!getSettings().isPvpStats()
-                || getSettings().checkWorld(entity.getWorld().getName())
+        if (!Settings.isPvpStats()
+                || Settings.isDisabledWorld(entity.getWorld().getName())
                 || entity.getType() == org.bukkit.entity.EntityType.PLAYER
                 || killer == null
                 || !killer.isOnline()) {
