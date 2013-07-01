@@ -16,7 +16,6 @@ permissions:
   scoreboardstats.admin:
     default: op
     children:
-      scoreboardstats.update: true
       scoreboardstats.reload: true
       scoreboardstats.sign: true
       scoreboardstats.use: true
@@ -30,8 +29,6 @@ permissions:
   scoreboardstats.use:
     description: ''
   scoreboardstats.sign:
-    description: ''
-  scoreboardstats.update:
     description: ''
   scoreboardstats.reload:
     description: ''

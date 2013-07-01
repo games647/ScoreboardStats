@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.variables.VariableList;
+
 import org.bukkit.entity.Player;
 
 public final class SimpleClansReplacer {

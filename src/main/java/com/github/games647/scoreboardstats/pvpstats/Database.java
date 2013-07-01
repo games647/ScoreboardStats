@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.variables.Data;
 import com.github.games647.variables.VariableList;
+
 import java.util.HashMap;
 import java.util.Map;
 

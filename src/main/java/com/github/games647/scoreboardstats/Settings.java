@@ -6,9 +6,11 @@ import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
 import com.github.games647.variables.SpecialCharacter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import static org.bukkit.ChatColor.translateAlternateColorCodes;

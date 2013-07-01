@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
+
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 

@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.commands;
 
 import com.github.games647.variables.Commands;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

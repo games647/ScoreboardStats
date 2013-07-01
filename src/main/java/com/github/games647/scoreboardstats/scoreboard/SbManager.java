@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
-import static com.github.games647.scoreboardstats.ScoreboardStats.getInstance;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.AppearTask;
 import com.github.games647.scoreboardstats.pvpstats.Database;
@@ -8,10 +8,11 @@ import com.github.games647.scoreboardstats.pvpstats.DisapperTask;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
+
 import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -22,7 +23,7 @@ public final class SbManager {
 
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
-                || getInstance().hidelist.contains(player.getName())
+                || ScoreboardStats.getInstance().hidelist.contains(player.getName())
                 || Settings.isDisabledWorld(player.getWorld().getName())) {
             return;
         }
@@ -35,7 +36,7 @@ public final class SbManager {
         final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         final Objective objective = scoreboard.registerNewObjective(Other.PLUGIN_NAME, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTitle()));
+        objective.setDisplayName(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
@@ -48,7 +49,7 @@ public final class SbManager {
             Settings.sendUpdate(player, true);
 
             if (Settings.isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(getInstance(), new AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(ScoreboardStats.getInstance(), new AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
             }
         }
     }
@@ -59,7 +60,7 @@ public final class SbManager {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || scoreboard   .getObjective(DisplaySlot.SIDEBAR) == null
                 || !scoreboard  .getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)
-                || getInstance().hidelist.contains(player.getName())) {
+                || ScoreboardStats.getInstance().hidelist.contains(player.getName())) {
             return;
         }
 
@@ -71,7 +72,7 @@ public final class SbManager {
         final String color = Settings.getTempColor();
 
         final Objective objective = scoreboard.registerNewObjective(Other.TOPLIST, Other.EMPTY_CRITERA);
-        objective.setDisplayName(translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTempTitle()));
+        objective.setDisplayName(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTempTitle()));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         if (player.isOnline()) {
@@ -85,12 +86,12 @@ public final class SbManager {
                 sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
             }
 
-            Bukkit.getScheduler().runTaskLater(getInstance(), new DisapperTask(player), Settings.getTempDisapper() * Other.TICKS_PER_SECOND);
+            Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new DisapperTask(player), Settings.getTempDisapper() * Other.TICKS_PER_SECOND);
         }
     }
 
     public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
-        final Score score = objective.getScore(Bukkit.getOfflinePlayer(translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
+        final Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
 
         if (complete
                 && value == 0) { //Have to use this because the score wouldn't send otherwise
@@ -106,7 +107,7 @@ public final class SbManager {
     }
 
     public static void regAll() {
-        Bukkit.getScheduler().runTaskAsynchronously(getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskAsynchronously(ScoreboardStats.getInstance(), new Runnable() {
             @Override
             public void run() {
                 final boolean ispvpstats = Settings.isPvpStats();
