@@ -3,7 +3,9 @@ package com.github.games647.scoreboardstats.commands;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Permissions;
+
 import java.util.Set;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
