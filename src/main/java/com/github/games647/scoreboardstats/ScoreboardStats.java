@@ -4,6 +4,8 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
+import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 
 import com.github.games647.scoreboardstats.commands.DisableCommand;
@@ -137,7 +139,8 @@ public final class ScoreboardStats extends JavaPlugin {
                 database.find(PlayerStats.class).findRowCount();
             } catch (javax.persistence.PersistenceException ex) {
                 getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.NON_EXISTING_DATABASE);
-                installDDL();
+                final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+                gen.runScript(false, gen.generateCreateDdl());
             }
 
             Database.setDatabase(database);
@@ -153,6 +156,7 @@ public final class ScoreboardStats extends JavaPlugin {
     private DataSourceConfig getSqlConfig(DataSourceConfig config) {
         final File file = new File(getDataFolder(), "sql.yml");
         final FileConfiguration sqlConfig;
+
         if (file.exists()) {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
@@ -180,7 +184,7 @@ public final class ScoreboardStats extends JavaPlugin {
         config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
         config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
         config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
-        config.setHeartbeatSql(sqlConfig.getString("SQL-Settings.HeartbeatSQL"));
+
         return config;
     }
 }

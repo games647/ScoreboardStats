@@ -25,7 +25,6 @@ public final class EntityListener implements Listener {
         }
 
         final PlayerCache killercache = Database.getCache(killer.getName());
-
         if (killercache != null) {
             killercache.increaseMob();
         }
