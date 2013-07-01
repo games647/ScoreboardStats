@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
+import com.github.games647.scoreboardstats.scoreboard.VariableReplacer;
 import com.github.games647.variables.ConfigurationPaths;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
@@ -13,7 +14,6 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import static org.bukkit.ChatColor.translateAlternateColorCodes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -57,7 +57,8 @@ public final class Settings {
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
-        title           = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
+        title           = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
+                checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
 
         if (config.getBoolean(ConfigurationPaths.TEMP)
                 && pvpStats) {
@@ -70,8 +71,9 @@ public final class Settings {
 
             topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
 
-            tempColor       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
-            tempTitle       = translateAlternateColorCodes(Other.CHATCOLOR_CHAR, checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
+            tempColor       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
+            tempTitle       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
+                    checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
         }
     }
 
@@ -87,7 +89,7 @@ public final class Settings {
 
         for (final Map.Entry<String, String> entry : items.entrySet()) {
             SbManager.sendScore(
-                    objective, entry.getKey(), com.github.games647.scoreboardstats.scoreboard.VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
+                    objective, entry.getKey(), VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
         }
     }
 
@@ -123,7 +125,7 @@ public final class Settings {
                 break;
             }
 
-            items.put(translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
+            items.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
         }
     }
 

@@ -7,4 +7,3 @@ SQL-Settings:
   MinConnections: 2
   MaxConnections: 250
   Timeout: 1000
-  HeartbeatSQL: 'SELECT `playername` FROM `playerstats` LIMIT 0,1;'
