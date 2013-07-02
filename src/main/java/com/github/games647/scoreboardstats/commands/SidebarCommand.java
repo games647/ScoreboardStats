@@ -12,7 +12,8 @@ public final class SidebarCommand implements org.bukkit.command.CommandExecutor 
     public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
         if (args.length == 0
                 || "hide"   .equalsIgnoreCase(args[0])
-                || "toggle" .equalsIgnoreCase(args[0])) {
+                || "toggle" .equalsIgnoreCase(args[0])
+                || "show"   .equalsIgnoreCase(args[0])) {
             ((Player) cs).performCommand(Commands.HIDE_COMMAND);
             return true;
         }

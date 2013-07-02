@@ -27,7 +27,7 @@ public final class DisableCommand implements org.bukkit.command.CommandExecutor 
             return true;
         }
 
-        final String                name = cs.getName();
+        final String      name = cs.getName();
         final Set<String> list = plugin.hidelist;
 
         if (list.contains(name)) {

@@ -178,7 +178,7 @@ public final class VariableReplacer {
     @SuppressWarnings("deprecation")
     private static int getBukkitValues(final String key, final Player player) {
         if (VariableList.HEALTH.equals(key)) {
-            return player.getHealth();
+            return (int) Math.round(player.getHealth());
         }
 
         if (VariableList.ONLINE.equals(key)) {
@@ -222,7 +222,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.LASTDAMAGE.equals(key)) {
-            return player.getLastDamage() / Other.TICKS_INT / Other.SECONDS;
+            return (int) player.getLastDamage() / Other.TICKS_INT / Other.SECONDS;
         }
 
         if (VariableList.MAXPLAYER.equals(key)) {
@@ -230,34 +230,46 @@ public final class VariableReplacer {
         }
 
         if (VariableList.PING.equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer) player).getHandle().ping;
+            return ((org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer) player).getHandle().ping;
         }
 
         if (VariableList.HELMET.equals(key)) {
             final ItemStack helmet = player.getInventory().getHelmet();
-            if (helmet != null) {
+            if (helmet != null
+                    && helmet.getType().getMaxDurability() != 0) {
                 return helmet.getDurability() * 100 / helmet.getType().getMaxDurability();
+            } else {
+                return -2;
             }
         }
 
         if (VariableList.BOOTS.equals(key)) {
             final ItemStack boots = player.getInventory().getBoots();
-            if (boots != null) {
+            if (boots != null
+                    && boots.getType().getMaxDurability() != 0) {
                 return boots.getDurability() * 100 / boots.getType().getMaxDurability();
+            } else {
+                return -2;
             }
         }
 
         if (VariableList.LEGGINGS.equals(key)) {
             final ItemStack leggings = player.getInventory().getLeggings();
-            if (leggings != null) {
+            if (leggings != null
+                    && leggings.getType().getMaxDurability() != 0) {
                 return leggings.getDurability() * 100 / leggings.getType().getMaxDurability();
+            } else {
+                return -2;
             }
         }
 
         if (VariableList.CHESTPLATE.equals(key)) {
             final ItemStack chestplate = player.getInventory().getChestplate();
-            if (chestplate != null) {
+            if (chestplate != null
+                    && chestplate.getType().getMaxDurability() != 0) {
                 return chestplate.getDurability() * 100 / chestplate.getType().getMaxDurability();
+            } else {
+                return -2;
             }
         }
 
