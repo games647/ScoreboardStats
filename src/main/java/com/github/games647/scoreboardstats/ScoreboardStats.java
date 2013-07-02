@@ -14,7 +14,6 @@ import com.github.games647.scoreboardstats.commands.SidebarCommand;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import static com.github.games647.scoreboardstats.pvpstats.Database.saveAll;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Commands;
@@ -30,6 +29,7 @@ import java.util.Set;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ScoreboardStats extends JavaPlugin {
@@ -112,22 +112,20 @@ public final class ScoreboardStats extends JavaPlugin {
     @Override
     public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
-        saveAll();
+        Database.saveAll();
         SbManager.unregisterAll();
+        HandlerList.unregisterAll(this);
     }
 
     private void setupDatabase() {
         if (Settings.isPvpStats()) {
             final ServerConfig db = new ServerConfig();
-
-            db.setDefaultServer(false);
             db.setRegister(false);
             db.setClasses(getDatabaseClasses());
             db.setName(getName());
-            getServer().configureDbConfig(db);
 
-            final DataSourceConfig ds = getSqlConfig(db.getDataSourceConfig());
-            ds.setUrl(replaceDatabaseString(ds.getUrl()));
+            final DataSourceConfig ds = getSqlConfig(db);
+            ds.setUrl(replaceUrlString(ds.getUrl()));
 
             final ClassLoader previous = Thread.currentThread().getContextClassLoader();
 
@@ -147,25 +145,33 @@ public final class ScoreboardStats extends JavaPlugin {
         }
     }
 
-    private String replaceDatabaseString(String input) {
+    private String replaceUrlString(String input) {
         return input
-                .replaceAll("\\{DIR\\}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/")
-                .replaceAll("\\{NAME\\}", getDescription().getName().replaceAll("[^\\w_-]", ""));
+                .replace("{DIR}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/")
+                .replace("{NAME}", getName());
     }
 
-    private DataSourceConfig getSqlConfig(DataSourceConfig config) {
+    private DataSourceConfig getSqlConfig(ServerConfig sconfig) {
         final File file = new File(getDataFolder(), "sql.yml");
         final FileConfiguration sqlConfig;
+        final DataSourceConfig config;
 
         if (file.exists()) {
-            sqlConfig = YamlConfiguration.loadConfiguration(file);
+            sqlConfig   = YamlConfiguration.loadConfiguration(file);
+            config      = new DataSourceConfig();
+
             config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
             config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
             config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
             config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
             config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
+
+            sconfig.setDataSourceConfig(config);
         } else {
             saveResource("sql.yml", false);
+
+            getServer().configureDbConfig(sconfig);
+            config = sconfig.getDataSourceConfig();
 
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             sqlConfig.set("SQL-Settings.Username", config.getUsername());

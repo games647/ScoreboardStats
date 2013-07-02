@@ -1,7 +1,9 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
+import com.avaje.ebean.validation.Range;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,11 +16,19 @@ public class PlayerStats {
     @Id
     @NotEmpty
     @NotNull
+    @Length(max = 16)
     private String playername;
 
+    @Range(min = 0)
     private int kills;
+
+    @Range(min = 0)
     private int deaths;
+
+    @Range(min = 0)
     private int mobkills;
+
+    @Range(min = 0)
     private int killstreak;
 
     public String getPlayername() {

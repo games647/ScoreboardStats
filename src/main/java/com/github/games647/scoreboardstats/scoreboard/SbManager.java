@@ -111,7 +111,7 @@ public final class SbManager {
             @Override
             public void run() {
                 final boolean ispvpstats = Settings.isPvpStats();
-                
+
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     if (!player.isOnline()) {
                         continue;
