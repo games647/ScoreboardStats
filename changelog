@@ -1,9 +1,2 @@
 Current changelog. This will be updated after every big change
 
-* Change: Update with the newest craftbukkit build
-* Change: Increasing maxConnections
-* Change: Unregister the listeners on disabling
-* Add: SQL-Configuration
-* Fix: NPE on death
-* Fix: ebean.properties not found
-* Fix: dived by zero exception
