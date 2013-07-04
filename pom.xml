@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <version>0.5.8</version>
+    <version>0.5.9</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
     <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
@@ -35,14 +35,18 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
+
+        <repository>
+            <id>mcMMO</id>
+            <url>http://repo.mcmmo.org/</url>
+        </repository>
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <version>LATEST</version>
             <scope>test</scope>
         </dependency>
 
@@ -84,15 +88,6 @@
 
         <dependency>
             <groupId>.</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.4.06 B2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
-            <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>.</groupId>
             <artifactId>Factions</artifactId>
             <version>1.8.2</version>
             <scope>system</scope>
@@ -104,7 +99,7 @@
         <dependency>
             <groupId>.</groupId>
             <artifactId>Factions2</artifactId>
-            <version>2.0</version>
+            <version>2.0.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions2.jar</systemPath>
             <type>jar</type>
@@ -113,7 +108,7 @@
         <dependency>
             <groupId>.</groupId>
             <artifactId>MCore</artifactId>
-            <version>2.0</version>
+            <version>6.4.2</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
             <type>jar</type>
@@ -147,14 +142,22 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.6.1-R0.1-Snapshot</version>
+            <version>LATEST</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.6.1-R0.1-Snapshot</version>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gmail.nossr50.mcMMO</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>LATEST</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
