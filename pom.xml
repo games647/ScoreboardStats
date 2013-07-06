@@ -62,7 +62,7 @@
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>.</groupId>
             <artifactId>Essentials</artifactId>
