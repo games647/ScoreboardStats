@@ -6,7 +6,7 @@
     <version>0.5.9</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
-    <url>http://dev.bukkit.org/server-mods/scoreboardstats</url>
+    <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
     <name>ScoreboardStats</name>
 
     <properties>
@@ -29,17 +29,30 @@
         <repository>
             <id>vault-repo</id>
             <url>http://ci.herocraftonline.com/plugin/repository/everything</url>
+            <releases>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
         </repository>
 
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
+            <releases>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
         </repository>
 
         <repository>
             <id>mcMMO</id>
             <url>http://repo.mcmmo.org/</url>
+            <releases>
+                <checksumPolicy>warn</checksumPolicy>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
         </repository>
+
     </repositories>
 
     <dependencies>
@@ -157,7 +170,6 @@
             <artifactId>mcMMO</artifactId>
             <version>LATEST</version>
             <type>jar</type>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
