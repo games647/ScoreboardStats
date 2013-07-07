@@ -4,6 +4,7 @@
  */
 package com.github.games647.scoreboardstats.scoreboard;
 
+import org.bukkit.scoreboard.DisplaySlot;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,6 +42,13 @@ public class SObjectiveTest {
      */
     @Test
     public void testGetDisplayslot() {
+        System.out.println("getDisplayslot");
+        SObjective instance = null;
+        DisplaySlot expResult = null;
+        DisplaySlot result = instance.getDisplayslot();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -48,6 +56,12 @@ public class SObjectiveTest {
      */
     @Test
     public void testSetDisplayslot() {
+        System.out.println("setDisplayslot");
+        DisplaySlot displayslot = null;
+        SObjective instance = null;
+        instance.setDisplayslot(displayslot);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,6 +69,13 @@ public class SObjectiveTest {
      */
     @Test
     public void testGetObjectivename() {
+        System.out.println("getObjectivename");
+        SObjective instance = null;
+        String expResult = "";
+        String result = instance.getObjectivename();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -62,6 +83,13 @@ public class SObjectiveTest {
      */
     @Test
     public void testGetDisplayname() {
+        System.out.println("getDisplayname");
+        SObjective instance = null;
+        String expResult = "";
+        String result = instance.getDisplayname();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,6 +97,13 @@ public class SObjectiveTest {
      */
     @Test
     public void testIsDisabled() {
+        System.out.println("isDisabled");
+        SObjective instance = null;
+        boolean expResult = false;
+        boolean result = instance.isDisabled();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -76,6 +111,12 @@ public class SObjectiveTest {
      */
     @Test
     public void testSetDisplayname() {
+        System.out.println("setDisplayname");
+        String displayname = "";
+        SObjective instance = null;
+        instance.setDisplayname(displayname);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,6 +124,11 @@ public class SObjectiveTest {
      */
     @Test
     public void testSetDisabled() {
+        System.out.println("setDisabled");
+        SObjective instance = null;
+        instance.setDisabled();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -90,6 +136,11 @@ public class SObjectiveTest {
      */
     @Test
     public void testSetEnabled() {
+        System.out.println("setEnabled");
+        SObjective instance = null;
+        instance.setEnabled();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -97,5 +148,10 @@ public class SObjectiveTest {
      */
     @Test
     public void testUpdate() {
+        System.out.println("update");
+        SObjective instance = null;
+        instance.update();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.github.games647.scoreboardstats.listener;
 
+import de.blablubbabc.insigns.InSigns;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,5 +42,10 @@ public class SignsListenerTest {
      */
     @Test
     public void testRegisterSigns() {
+        System.out.println("registerSigns");
+        InSigns instance_2 = null;
+        SignsListener.registerSigns(instance_2);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

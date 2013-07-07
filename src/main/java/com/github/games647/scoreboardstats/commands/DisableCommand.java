@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import org.fusesource.jansi.Ansi;
+
 public final class DisableCommand implements org.bukkit.command.CommandExecutor {
 
     private final ScoreboardStats plugin = ScoreboardStats.getInstance();
@@ -18,7 +20,7 @@ public final class DisableCommand implements org.bukkit.command.CommandExecutor 
     @Override
     public boolean onCommand(final CommandSender cs, final Command cmd, final String label, final String[] args) {
         if (!cs.hasPermission(Permissions.HIDE_PERMISSION)) {
-            cs.sendMessage(Message.PERMISSION_DENIED);
+            cs.sendMessage(Ansi.ansi().fg(Ansi.Color.YELLOW) + Message.PERMISSION_DENIED);
             return true;
         }
 

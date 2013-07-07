@@ -4,6 +4,7 @@
  */
 package com.github.games647.scoreboardstats;
 
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,6 +42,12 @@ public class ScoreboardStatsTest {
      */
     @Test
     public void testGetInstance() {
+        System.out.println("getInstance");
+        ScoreboardStats expResult = null;
+        ScoreboardStats result = ScoreboardStats.getInstance();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -48,6 +55,11 @@ public class ScoreboardStatsTest {
      */
     @Test
     public void testOnEnable() {
+        System.out.println("onEnable");
+        ScoreboardStats instance = new ScoreboardStats();
+        instance.onEnable();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,6 +67,13 @@ public class ScoreboardStatsTest {
      */
     @Test
     public void testGetDatabaseClasses() {
+        System.out.println("getDatabaseClasses");
+        ScoreboardStats instance = new ScoreboardStats();
+        List expResult = null;
+        List result = instance.getDatabaseClasses();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -62,6 +81,11 @@ public class ScoreboardStatsTest {
      */
     @Test
     public void testOnReload() {
+        System.out.println("onReload");
+        ScoreboardStats instance = new ScoreboardStats();
+        instance.onReload();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,5 +93,10 @@ public class ScoreboardStatsTest {
      */
     @Test
     public void testOnDisable() {
+        System.out.println("onDisable");
+        ScoreboardStats instance = new ScoreboardStats();
+        instance.onDisable();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

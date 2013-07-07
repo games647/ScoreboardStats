@@ -11,12 +11,15 @@ import com.github.games647.variables.SpecialCharacter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+
+import org.fusesource.jansi.Ansi;
 
 public final class Settings {
 
@@ -96,7 +99,7 @@ public final class Settings {
     private static String checkLength(final String check, int limit) {
         if (check.length() > limit) {
             final String cut = check.substring(0, limit);
-            Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + String.format(Message.LONGER_THAN_LIMIT, cut, limit));
+            Bukkit.getLogger().log(Level.WARNING, Ansi.ansi().fg(Ansi.Color.RED) + Message.LOG_NAME + "{0}" + Ansi.ansi().fg(Ansi.Color.DEFAULT), String.format(Message.LONGER_THAN_LIMIT, cut, limit));
             return cut;
         }
 
@@ -105,7 +108,7 @@ public final class Settings {
 
     private static int checkItems(final int input) {
         if (input >= Other.MINECRAFT_LIMIT) {
-            Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.TOO_LONG_LIST);
+            Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
             return Other.MINECRAFT_LIMIT - 1;
         }
 
@@ -121,7 +124,7 @@ public final class Settings {
 
         for (final String key : keys) {
             if (items.size() >= Other.MINECRAFT_LIMIT) {
-                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.TOO_LONG_LIST);
+                Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 break;
             }
 
