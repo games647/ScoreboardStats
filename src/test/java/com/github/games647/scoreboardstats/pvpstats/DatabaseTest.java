@@ -4,6 +4,8 @@
  */
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.avaje.ebean.EbeanServer;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,6 +43,11 @@ public class DatabaseTest {
      */
     @Test
     public void testSetDatabase() {
+        System.out.println("setDatabase");
+        EbeanServer base = null;
+        Database.setDatabase(base);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -48,6 +55,13 @@ public class DatabaseTest {
      */
     @Test
     public void testGetCache() {
+        System.out.println("getCache");
+        String name = "";
+        PlayerCache expResult = null;
+        PlayerCache result = Database.getCache(name);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,6 +69,11 @@ public class DatabaseTest {
      */
     @Test
     public void testLoadAccount() {
+        System.out.println("loadAccount");
+        String name = "";
+        Database.loadAccount(name);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -62,6 +81,13 @@ public class DatabaseTest {
      */
     @Test
     public void testGetKdr() {
+        System.out.println("getKdr");
+        String name = "";
+        int expResult = 0;
+        int result = Database.getKdr(name);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,6 +95,12 @@ public class DatabaseTest {
      */
     @Test
     public void testSaveAccount() {
+        System.out.println("saveAccount");
+        String name = "";
+        boolean remove = false;
+        Database.saveAccount(name, remove);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -76,6 +108,10 @@ public class DatabaseTest {
      */
     @Test
     public void testSaveAll() {
+        System.out.println("saveAll");
+        Database.saveAll();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,5 +119,11 @@ public class DatabaseTest {
      */
     @Test
     public void testGetTop() {
+        System.out.println("getTop");
+        Map expResult = null;
+        Map result = Database.getTop();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

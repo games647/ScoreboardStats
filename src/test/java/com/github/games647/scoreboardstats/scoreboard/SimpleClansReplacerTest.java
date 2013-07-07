@@ -4,6 +4,7 @@
  */
 package com.github.games647.scoreboardstats.scoreboard;
 
+import org.bukkit.entity.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,6 +42,14 @@ public class SimpleClansReplacerTest {
      */
     @Test
     public void testGetSimpleClans1Value() {
+        System.out.println("getSimpleClans1Value");
+        String key = "";
+        Player player = null;
+        int expResult = 0;
+        int result = SimpleClansReplacer.getSimpleClans1Value(key, player);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -48,5 +57,13 @@ public class SimpleClansReplacerTest {
      */
     @Test
     public void testGetSimpleClans2Value() {
+        System.out.println("getSimpleClans2Value");
+        String key = "";
+        Player player = null;
+        int expResult = 0;
+        int result = SimpleClansReplacer.getSimpleClans2Value(key, player);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

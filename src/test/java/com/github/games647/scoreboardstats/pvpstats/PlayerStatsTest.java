@@ -41,6 +41,13 @@ public class PlayerStatsTest {
      */
     @Test
     public void testGetPlayername() {
+        System.out.println("getPlayername");
+        PlayerStats instance = new PlayerStats();
+        String expResult = "";
+        String result = instance.getPlayername();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -48,6 +55,12 @@ public class PlayerStatsTest {
      */
     @Test
     public void testSetPlayername() {
+        System.out.println("setPlayername");
+        String paramplayername = "";
+        PlayerStats instance = new PlayerStats();
+        instance.setPlayername(paramplayername);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,6 +68,13 @@ public class PlayerStatsTest {
      */
     @Test
     public void testGetKills() {
+        System.out.println("getKills");
+        PlayerStats instance = new PlayerStats();
+        int expResult = 0;
+        int result = instance.getKills();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -62,6 +82,12 @@ public class PlayerStatsTest {
      */
     @Test
     public void testSetKills() {
+        System.out.println("setKills");
+        int paramkills = 0;
+        PlayerStats instance = new PlayerStats();
+        instance.setKills(paramkills);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,6 +95,13 @@ public class PlayerStatsTest {
      */
     @Test
     public void testGetDeaths() {
+        System.out.println("getDeaths");
+        PlayerStats instance = new PlayerStats();
+        int expResult = 0;
+        int result = instance.getDeaths();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -76,6 +109,12 @@ public class PlayerStatsTest {
      */
     @Test
     public void testSetDeaths() {
+        System.out.println("setDeaths");
+        int paramdeaths = 0;
+        PlayerStats instance = new PlayerStats();
+        instance.setDeaths(paramdeaths);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,6 +122,13 @@ public class PlayerStatsTest {
      */
     @Test
     public void testGetMobkills() {
+        System.out.println("getMobkills");
+        PlayerStats instance = new PlayerStats();
+        int expResult = 0;
+        int result = instance.getMobkills();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -90,6 +136,12 @@ public class PlayerStatsTest {
      */
     @Test
     public void testSetMobkills() {
+        System.out.println("setMobkills");
+        int parammobkills = 0;
+        PlayerStats instance = new PlayerStats();
+        instance.setMobkills(parammobkills);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -97,6 +149,13 @@ public class PlayerStatsTest {
      */
     @Test
     public void testGetKillstreak() {
+        System.out.println("getKillstreak");
+        PlayerStats instance = new PlayerStats();
+        int expResult = 0;
+        int result = instance.getKillstreak();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -104,5 +163,11 @@ public class PlayerStatsTest {
      */
     @Test
     public void testSetKillstreak() {
+        System.out.println("setKillstreak");
+        int paramkillstreak = 0;
+        PlayerStats instance = new PlayerStats();
+        instance.setKillstreak(paramkillstreak);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }

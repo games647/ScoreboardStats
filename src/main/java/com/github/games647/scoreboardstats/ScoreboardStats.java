@@ -26,11 +26,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import org.fusesource.jansi.Ansi;
 
 public final class ScoreboardStats extends JavaPlugin {
 
@@ -136,7 +139,7 @@ public final class ScoreboardStats extends JavaPlugin {
             try {
                 database.find(PlayerStats.class).findRowCount();
             } catch (javax.persistence.PersistenceException ex) {
-                getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.NON_EXISTING_DATABASE);
+                getLogger().log(Level.INFO, "{0}" + Message.NON_EXISTING_DATABASE + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.YELLOW));
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                 gen.runScript(false, gen.generateCreateDdl());
             }
@@ -182,7 +185,7 @@ public final class ScoreboardStats extends JavaPlugin {
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {
-                getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.FILE_EXCEPTION);
+                getLogger().log(Level.WARNING, "{0}" + Message.FILE_EXCEPTION + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 getLogger().throwing(this.getClass().getName(), "getSqlConfig", ex);
             }
         }

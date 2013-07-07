@@ -10,6 +10,7 @@ import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +19,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+
+import org.fusesource.jansi.Ansi;
 
 public final class SbManager {
 
@@ -43,7 +46,7 @@ public final class SbManager {
             try {
                 player.setScoreboard(scoreboard);
             } catch (IllegalStateException ex) {
-                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+                Bukkit.getLogger().log(Level.FINE, "{0}" + Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
             }
 
             Settings.sendUpdate(player, true);
@@ -79,7 +82,7 @@ public final class SbManager {
             try {
                 player.setScoreboard(scoreboard);
             } catch (IllegalStateException ex) {
-                Bukkit.getServer().getConsoleSender().sendMessage(Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL);
+                Bukkit.getLogger().log(Level.FINE, "{0}" + Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
             }
 
             for (final Map.Entry<String, Integer> entry : top.entrySet()) {
