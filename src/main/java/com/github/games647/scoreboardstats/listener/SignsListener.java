@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 
 final class SignsListener {
 
+    private SignsListener() {}
+
     public static void registerSigns(final InSigns instance) {
 
         instance.addChanger(new Changer(VariableList.SIGN_KILL, Permissions.SIGN_PERMISSION) {

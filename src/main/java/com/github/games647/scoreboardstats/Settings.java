@@ -23,7 +23,7 @@ import org.fusesource.jansi.Ansi;
 
 public final class Settings {
 
-    private static final ScoreboardStats plugin = ScoreboardStats.getInstance();
+    private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
 
     private static boolean             pvpStats;
     private static boolean             tempScoreboard;
@@ -42,13 +42,13 @@ public final class Settings {
     private static int                 tempShow;
     private static int                 tempDisapper;
 
-    private static final Map<String, String> items = new HashMap<String, String>(14);
+    private static final Map<String, String> ITEMS = new HashMap<String, String>(14);
     private static List<String> disabledWorlds;
 
     public static void loadConfig() {
-        plugin.reloadConfig();
+        PLUGIN.reloadConfig();
 
-        final FileConfiguration config = plugin.getConfig();
+        final FileConfiguration config = PLUGIN.getConfig();
 
         loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
 
@@ -86,11 +86,11 @@ public final class Settings {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || objective == null
                 || !objective.getName().equals(Other.PLUGIN_NAME)
-                || plugin.hidelist.contains(player.getName())) {
+                || PLUGIN.hidelist.contains(player.getName())) {
             return;
         }
 
-        for (final Map.Entry<String, String> entry : items.entrySet()) {
+        for (final Map.Entry<String, String> entry : ITEMS.entrySet()) {
             SbManager.sendScore(
                     objective, entry.getKey(), VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
         }
@@ -118,17 +118,17 @@ public final class Settings {
     private static void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
         final java.util.Set<String> keys = config.getKeys(false);
 
-        if (!items.isEmpty()) {
-            items.clear();
+        if (!ITEMS.isEmpty()) {
+            ITEMS.clear();
         }
 
         for (final String key : keys) {
-            if (items.size() >= Other.MINECRAFT_LIMIT) {
+            if (ITEMS.size() >= Other.MINECRAFT_LIMIT) {
                 Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 break;
             }
 
-            items.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
+            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
         }
     }
 
@@ -250,7 +250,7 @@ public final class Settings {
     }
 
     public static int getItemsLenght() {
-        return items.size();
+        return ITEMS.size();
     }
 
     public static boolean isDisabledWorld(String name) {
@@ -272,7 +272,7 @@ public final class Settings {
                 + ", topitems="             + topitems
                 + ", tempShow="             + tempShow
                 + ", tempDisapper="         + tempDisapper
-                + ", items="                + items
+                + ", items="                + ITEMS
                 + ", disabledWorlds="       + disabledWorlds
 
                 + '}';

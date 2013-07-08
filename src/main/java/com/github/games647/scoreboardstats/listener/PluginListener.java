@@ -18,6 +18,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class PluginListener {
 
+    public PluginListener() {}
+
     private static String   factions;
 
     private static boolean  mcmmo;

@@ -55,7 +55,7 @@ public final class SpecialCharacter  {
 
     public static final String VAR_FIVE         = "[5]";
     public static final String FIVE             = "▆";
-
+    
     public static final String VAR_SIX          = "[6]";
     public static final String SIX              = "▇";
 

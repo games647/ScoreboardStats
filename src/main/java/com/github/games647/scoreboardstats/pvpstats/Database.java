@@ -10,6 +10,8 @@ import java.util.Map;
 
 public final class Database {
 
+    private Database() {}
+
     private static EbeanServer databaseInstance;
     private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
 
@@ -77,10 +79,10 @@ public final class Database {
             return; //No dates have been changed so there is no need to save the dates.
         }
 
-        stats.setDeaths     (playercache.getDeaths());
-        stats.setKills      (playercache.getKills() );
-        stats.setMobkills   (playercache.getMob()   );
-        stats.setKillstreak (playercache.getStreak());
+        stats.setDeaths(playercache.getDeaths());
+        stats.setKills(playercache.getKills());
+        stats.setMobkills(playercache.getMob());
+        stats.setKillstreak(playercache.getStreak());
         databaseInstance.save(stats);
     }
 

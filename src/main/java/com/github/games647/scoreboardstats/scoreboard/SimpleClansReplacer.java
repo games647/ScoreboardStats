@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 public final class SimpleClansReplacer {
 
+    private SimpleClansReplacer() {}
+
     public static int getSimpleClans1Value(String key, Player player) {
         final com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer clanPlayer = PluginListener.getSimpleclans().getClanPlayer(player);
         if (clanPlayer == null) {

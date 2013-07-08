@@ -11,7 +11,7 @@ final class RefreshTask implements Runnable {
     public void run() {
         for (final org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
             final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-            
+
             if (objective == null) {
                 SbManager.createScoreboard(player);
             } else {

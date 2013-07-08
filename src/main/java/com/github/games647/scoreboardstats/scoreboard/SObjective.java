@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.server.v1_6_R1.Packet206SetScoreboardObjective;
+import net.minecraft.server.v1_6_R2.Packet206SetScoreboardObjective;
 
 import org.apache.commons.lang.Validate;
 
