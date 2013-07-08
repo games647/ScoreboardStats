@@ -24,6 +24,8 @@ import org.fusesource.jansi.Ansi;
 
 public final class SbManager {
 
+    private SbManager() {}
+
     public static void createScoreboard(final Player player) {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || ScoreboardStats.getInstance().hidelist.contains(player.getName())

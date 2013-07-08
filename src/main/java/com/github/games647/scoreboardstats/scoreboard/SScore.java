@@ -1,9 +1,8 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
-import net.minecraft.server.v1_6_R1.Packet207SetScoreboardScore;
+import net.minecraft.server.v1_6_R2.Packet207SetScoreboardScore;
 
 import org.apache.commons.lang.Validate;
-
 
 public final class SScore {
 

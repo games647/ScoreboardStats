@@ -16,7 +16,7 @@ public class PlayerStats {
     @Id
     @NotEmpty
     @NotNull
-    @Length(max = 16)
+    @Length(max = 16) //A minecraft name cannot be longer than 16
     private String playername;
 
     @Range(min = 0)

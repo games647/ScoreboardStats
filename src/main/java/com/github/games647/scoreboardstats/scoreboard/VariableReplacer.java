@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 
 public final class VariableReplacer {
 
+    private VariableReplacer() {}
+
     public static int getReplacedInt(final String key, final Player player) {
         if (!player.isOnline()) {
             return -1;
@@ -230,7 +232,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.PING.equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer) player).getHandle().ping;
+            return ((org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer) player).getHandle().ping;
         }
 
         if (VariableList.HELMET.equals(key)) {
