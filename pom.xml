@@ -62,7 +62,7 @@
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>.</groupId>
             <artifactId>Essentials</artifactId>
@@ -154,15 +154,16 @@
 
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
+            <artifactId>bukkit</artifactId>
             <version>LATEST</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
+            <artifactId>craftbukkit</artifactId>
             <version>LATEST</version>
+            <type>jar</type>
         </dependency>
 
         <dependency>
@@ -196,6 +197,9 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
                     <excludes>
                         <exclude>**/variables/</exclude>
                     </excludes>
