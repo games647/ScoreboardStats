@@ -41,13 +41,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testGetKills() {
-        System.out.println("getKills");
-        PlayerCache instance = new PlayerCache();
-        int expResult = 0;
-        int result = instance.getKills();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,13 +48,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testGetMob() {
-        System.out.println("getMob");
-        PlayerCache instance = new PlayerCache();
-        int expResult = 0;
-        int result = instance.getMob();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,13 +55,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testGetDeaths() {
-        System.out.println("getDeaths");
-        PlayerCache instance = new PlayerCache();
-        int expResult = 0;
-        int result = instance.getDeaths();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,13 +62,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testGetStreak() {
-        System.out.println("getStreak");
-        PlayerCache instance = new PlayerCache();
-        int expResult = 0;
-        int result = instance.getStreak();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -97,11 +69,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testOnKill() {
-        System.out.println("onKill");
-        PlayerCache instance = new PlayerCache();
-        instance.onKill();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -109,11 +76,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testIncreaseMob() {
-        System.out.println("increaseMob");
-        PlayerCache instance = new PlayerCache();
-        instance.increaseMob();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -121,13 +83,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testGetLastStreak() {
-        System.out.println("getLastStreak");
-        PlayerCache instance = new PlayerCache();
-        int expResult = 0;
-        int result = instance.getLastStreak();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -135,11 +90,6 @@ public class PlayerCacheTest {
      */
     @Test
     public void testOnDeath() {
-        System.out.println("onDeath");
-        PlayerCache instance = new PlayerCache();
-        instance.onDeath();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -147,12 +97,5 @@ public class PlayerCacheTest {
      */
     @Test
     public void testToString() {
-        System.out.println("toString");
-        PlayerCache instance = new PlayerCache();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }

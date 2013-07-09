@@ -4,11 +4,6 @@
  */
 package com.github.games647.scoreboardstats.listener;
 
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,11 +41,6 @@ public class PlayerListenerTest {
      */
     @Test
     public void testOnDeath() {
-        System.out.println("onDeath");
-        PlayerDeathEvent death = null;
-        PlayerListener.onDeath(death);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -58,11 +48,6 @@ public class PlayerListenerTest {
      */
     @Test
     public void testOnJoin() {
-        System.out.println("onJoin");
-        PlayerJoinEvent join = null;
-        PlayerListener.onJoin(join);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -70,11 +55,6 @@ public class PlayerListenerTest {
      */
     @Test
     public void testOnChange() {
-        System.out.println("onChange");
-        PlayerChangedWorldEvent teleport = null;
-        PlayerListener.onChange(teleport);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -82,11 +62,6 @@ public class PlayerListenerTest {
      */
     @Test
     public void testOnKick() {
-        System.out.println("onKick");
-        PlayerKickEvent kick = null;
-        PlayerListener.onKick(kick);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -94,10 +69,5 @@ public class PlayerListenerTest {
      */
     @Test
     public void testOnQuit() {
-        System.out.println("onQuit");
-        PlayerQuitEvent quit = null;
-        PlayerListener.onQuit(quit);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }
