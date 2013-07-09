@@ -4,7 +4,6 @@
  */
 package com.github.games647.scoreboardstats.scoreboard;
 
-import org.bukkit.entity.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,13 +41,5 @@ public class VariableReplacerTest {
      */
     @Test
     public void testGetReplacedInt() {
-        System.out.println("getReplacedInt");
-        String key = "";
-        Player player = null;
-        int expResult = 0;
-        int result = VariableReplacer.getReplacedInt(key, player);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }

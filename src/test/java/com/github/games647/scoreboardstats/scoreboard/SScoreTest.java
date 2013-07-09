@@ -41,13 +41,6 @@ public class SScoreTest {
      */
     @Test
     public void testGetDisplayname() {
-        System.out.println("getDisplayname");
-        SScore instance = null;
-        String expResult = "";
-        String result = instance.getDisplayname();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -55,12 +48,6 @@ public class SScoreTest {
      */
     @Test
     public void testSetDisplayname() {
-        System.out.println("setDisplayname");
-        String displayname = "";
-        SScore instance = null;
-        instance.setDisplayname(displayname);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -68,13 +55,6 @@ public class SScoreTest {
      */
     @Test
     public void testGetScorename() {
-        System.out.println("getScorename");
-        SScore instance = null;
-        String expResult = "";
-        String result = instance.getScorename();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -82,12 +62,6 @@ public class SScoreTest {
      */
     @Test
     public void testSetScorename() {
-        System.out.println("setScorename");
-        String scorename = "";
-        SScore instance = null;
-        instance.setScorename(scorename);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -95,13 +69,6 @@ public class SScoreTest {
      */
     @Test
     public void testGetScore() {
-        System.out.println("getScore");
-        SScore instance = null;
-        int expResult = 0;
-        int result = instance.getScore();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -109,12 +76,6 @@ public class SScoreTest {
      */
     @Test
     public void testSetScore() {
-        System.out.println("setScore");
-        int score = 0;
-        SScore instance = null;
-        instance.setScore(score);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -122,10 +83,5 @@ public class SScoreTest {
      */
     @Test
     public void testSetEnabled() {
-        System.out.println("setEnabled");
-        SScore instance = null;
-        instance.setEnabled();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }

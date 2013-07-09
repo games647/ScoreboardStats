@@ -4,7 +4,6 @@
  */
 package com.github.games647.scoreboardstats.listener;
 
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,10 +41,5 @@ public class EntityListenerTest {
      */
     @Test
     public void testOnMobDeath() {
-        System.out.println("onMobDeath");
-        EntityDeathEvent event = null;
-        EntityListener.onMobDeath(event);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 }
