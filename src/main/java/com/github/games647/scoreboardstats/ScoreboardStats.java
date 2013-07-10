@@ -16,6 +16,7 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.scoreboard.ReflectionUtil;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Commands;
 import com.github.games647.variables.Message;
@@ -96,6 +97,13 @@ public final class ScoreboardStats extends JavaPlugin {
         list.add(PlayerStats.class);
 
         return list;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        ReflectionUtil.init();
     }
 
     public void onReload() {
