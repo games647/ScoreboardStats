@@ -8,7 +8,7 @@ public final class PlayerCache {
     private int streak;
     private int laststreak;
 
-    public PlayerCache(final int paramkills, final int parammob, final int paramdeaths, final int paramstreak) {
+    public PlayerCache(int paramkills, int parammob, int paramdeaths, int paramstreak) {
         kills   = paramkills;
         mob     = parammob;
         deaths  = paramdeaths;

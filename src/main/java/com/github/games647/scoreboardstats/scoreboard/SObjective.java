@@ -20,7 +20,7 @@ public final class SObjective {
 
     private final   Map<String, SScore> scores = new ConcurrentHashMap<String, SScore>(10); // Never should be more than 15
 
-    public SObjective(final DisplaySlot displayslot, final String objectivename, final String displayname) {
+    public SObjective(DisplaySlot displayslot, String objectivename, String displayname) {
         Validate.notNull(displayslot, "Display slot can't be null");
         Validate.isTrue(objectivename.length() > 16, "The objective name can't be longer than 16 characters.");
         Validate.isTrue(displayname.length() > 32, "The display name can't be longer than 32 characters.");
@@ -34,7 +34,7 @@ public final class SObjective {
         return displayslot;
     }
 
-    public void setDisplayslot(final DisplaySlot displayslot) {
+    public void setDisplayslot(DisplaySlot displayslot) {
         Validate.notNull(displayslot, "Display slot can't be null");
         this.displayslot = displayslot;
     }
@@ -51,7 +51,7 @@ public final class SObjective {
         return disabled;
     }
 
-    public void setDisplayname(final String displayname) {
+    public void setDisplayname(String displayname) {
         Validate.isTrue(displayname.length() > 32, "The display name can't be longer than 32 characters.");
         this.displayname = displayname;
     }

@@ -23,7 +23,7 @@ public final class VariableReplacer {
 
     private VariableReplacer() {}
 
-    public static int getReplacedInt(final String key, final Player player) {
+    public static int getReplacedInt(String key, Player player) {
         if (!player.isOnline()) {
             return -1;
         }
@@ -83,7 +83,7 @@ public final class VariableReplacer {
         return getBukkitValues(key, player);
     }
 
-    private static int getPvpValue(final String key, final String name) {
+    private static int getPvpValue(String key, String name) {
         final PlayerCache cache = Database.getCache(name);
 
         if (cache == null) {
@@ -117,7 +117,7 @@ public final class VariableReplacer {
         return -1;
     }
 
-    private static int getMcmmoValue(final String key, final Player player) {
+    private static int getMcmmoValue(String key, Player player) {
         if (VariableList.POWLVL.equals(key)) {
             return ExperienceAPI.getPowerLevel(player);
         }
@@ -178,7 +178,7 @@ public final class VariableReplacer {
     }
 
     @SuppressWarnings("deprecation")
-    private static int getBukkitValues(final String key, final Player player) {
+    private static int getBukkitValues(String key, Player player) {
         if (VariableList.HEALTH.equals(key)) {
             return (int) Math.round(player.getHealth());
         }
@@ -278,11 +278,11 @@ public final class VariableReplacer {
         return -1;
     }
 
-    private static int getOnlinePlayers(final Player player) {
+    private static int getOnlinePlayers(Player player) {
         if (Settings.isHideVanished()) {
             int online = 0;
 
-            for (final Player other : Bukkit.getOnlinePlayers()) {
+            for (Player other : Bukkit.getOnlinePlayers()) {
                 if (player.canSee(other)) {
                     online++;
                 }
@@ -293,7 +293,7 @@ public final class VariableReplacer {
         }
     }
 
-    private static int getFactionsValue(final String key, final Player player) {
+    private static int getFactionsValue(String key, Player player) {
         if (PluginListener.getFactions().startsWith("1")) {
             final FPlayer fplayer = FPlayers.i.get(player);
 

@@ -8,7 +8,7 @@ public final class DisapperTask implements Runnable {
 
     private final Player player;
 
-    public DisapperTask(final Player paramplayer) {
+    public DisapperTask(Player paramplayer) {
         player = paramplayer;
     }
 

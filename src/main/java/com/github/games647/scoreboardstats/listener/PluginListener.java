@@ -2,14 +2,18 @@ package com.github.games647.scoreboardstats.listener;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.EssentialsTimer;
+
 import com.github.games647.variables.PluginNames;
+
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.characters.CharacterManager;
+
 import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 
 import de.blablubbabc.insigns.InSigns;
 
 import net.milkbowl.vault.economy.Economy;
+
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
 import org.bukkit.Bukkit;
@@ -18,7 +22,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public final class PluginListener {
 
-    public PluginListener() {}
+    private PluginListener() {}
 
     private static String   factions;
 

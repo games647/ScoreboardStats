@@ -8,7 +8,7 @@ public final class AppearTask implements Runnable {
 
     private final Player player;
 
-    public AppearTask(final Player paramplayer) {
+    public AppearTask(Player paramplayer) {
         player = paramplayer;
     }
 

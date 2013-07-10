@@ -12,7 +12,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public final class EntityListener implements Listener {
 
     @org.bukkit.event.EventHandler
-    public static void onMobDeath(final EntityDeathEvent event) {
+    public static void onMobDeath(EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
         final Player killer = entity.getKiller();
 

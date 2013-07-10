@@ -13,6 +13,7 @@ import com.github.games647.scoreboardstats.commands.ReloadCommand;
 import com.github.games647.scoreboardstats.commands.SidebarCommand;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
+import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
@@ -63,7 +64,7 @@ public final class ScoreboardStats extends JavaPlugin {
 
         setupDatabase();
 
-        com.github.games647.scoreboardstats.listener.PluginListener.init();
+        PluginListener.init();
 
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
@@ -132,7 +133,7 @@ public final class ScoreboardStats extends JavaPlugin {
 
             final ClassLoader previous = Thread.currentThread().getContextClassLoader();
 
-            Thread.currentThread().setContextClassLoader(this.getClassLoader());
+            Thread.currentThread().setContextClassLoader(getClassLoader());
             final EbeanServer database = EbeanServerFactory.create(db);
             Thread.currentThread().setContextClassLoader(previous);
 
@@ -186,7 +187,7 @@ public final class ScoreboardStats extends JavaPlugin {
                 sqlConfig.save(file);
             } catch (IOException ex) {
                 getLogger().log(Level.WARNING, "{0}" + Message.FILE_EXCEPTION + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
-                getLogger().throwing(this.getClass().getName(), "getSqlConfig", ex);
+                getLogger().throwing(getClass().getName(), "getSqlConfig", ex);
             }
         }
 
