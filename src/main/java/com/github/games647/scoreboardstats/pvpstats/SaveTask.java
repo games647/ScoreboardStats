@@ -6,7 +6,7 @@ public final class SaveTask implements Runnable {
 
     private final Player player;
 
-    public SaveTask(final Player paramplayer) {
+    public SaveTask(Player paramplayer) {
         this.player = paramplayer;
     }
 

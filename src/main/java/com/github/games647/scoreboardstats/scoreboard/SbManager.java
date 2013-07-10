@@ -26,7 +26,7 @@ public final class SbManager {
 
     private SbManager() {}
 
-    public static void createScoreboard(final Player player) {
+    public static void createScoreboard(Player player) {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || ScoreboardStats.getInstance().hidelist.contains(player.getName())
                 || Settings.isDisabledWorld(player.getWorld().getName())) {
@@ -59,7 +59,7 @@ public final class SbManager {
         }
     }
 
-    public static void createTopListScoreboard(final Player player) {
+    public static void createTopListScoreboard(Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
@@ -87,7 +87,7 @@ public final class SbManager {
                 Bukkit.getLogger().log(Level.FINE, "{0}" + Message.LOG_NAME + Message.SET_SCOREBOARD_FAIL + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
             }
 
-            for (final Map.Entry<String, Integer> entry : top.entrySet()) {
+            for (Map.Entry<String, Integer> entry : top.entrySet()) {
                 sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
             }
 
@@ -95,7 +95,7 @@ public final class SbManager {
         }
     }
 
-    public static void sendScore(final Objective objective, final String title, final int value, final boolean complete) {
+    public static void sendScore(Objective objective, String title, int value, boolean complete) {
         final Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, title)));
 
         if (complete
@@ -106,7 +106,7 @@ public final class SbManager {
         score.setScore(value);
     }
 
-    private static String checkLength(final String check) {
+    private static String checkLength(String check) {
 
         return check.length() > Other.MINECRAFT_LIMIT - 2 ? check.substring(0, Other.MINECRAFT_LIMIT - 2) : check; //Because adding the color
     }
@@ -117,7 +117,7 @@ public final class SbManager {
             public void run() {
                 final boolean ispvpstats = Settings.isPvpStats();
 
-                for (final Player player : Bukkit.getOnlinePlayers()) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     if (!player.isOnline()) {
                         continue;
                     }
@@ -131,7 +131,7 @@ public final class SbManager {
     }
 
     public static void unregisterAll() {
-        for (final Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.isOnline()) {
                 continue;
             }

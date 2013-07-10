@@ -15,11 +15,11 @@ public final class Database {
     private static EbeanServer databaseInstance;
     private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
 
-    public static void setDatabase(final EbeanServer base) {
+    public static void setDatabase(EbeanServer base) {
         databaseInstance = base;
     }
 
-    public static PlayerCache getCache(final String name) {
+    public static PlayerCache getCache(String name) {
         if (!CACHE.containsKey(name)) {
             loadAccount(name);
         }
@@ -27,7 +27,7 @@ public final class Database {
         return CACHE.get(name);
     }
 
-    public static void loadAccount(final String name) {
+    public static void loadAccount(String name) {
         if (CACHE.containsKey(name)) {
             return;
         }
@@ -38,7 +38,7 @@ public final class Database {
                 ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
     }
 
-    public static int getKdr(final String name) {
+    public static int getKdr(String name) {
         final PlayerCache stats = getCache(name);
 
         return stats == null
@@ -46,7 +46,7 @@ public final class Database {
                 ? stats.getKills() : Math.round((float) stats.getKills() / (float) stats.getDeaths());
     }
 
-    public static void saveAccount(final String name, final boolean remove) {
+    public static void saveAccount(String name, boolean remove) {
         if (!Settings.isPvpStats()) {
             return;
         }
@@ -91,7 +91,7 @@ public final class Database {
             return;
         }
 
-        for (final String playername : CACHE.keySet()) {
+        for (String playername : CACHE.keySet()) {
             saveAccount(playername, false);
         }
 

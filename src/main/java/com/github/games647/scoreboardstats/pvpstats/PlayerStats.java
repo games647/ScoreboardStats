@@ -35,7 +35,7 @@ public class PlayerStats {
         return playername;
     }
 
-    public void setPlayername(final String paramplayername) {
+    public void setPlayername(String paramplayername) {
         playername = paramplayername;
     }
 
@@ -43,7 +43,7 @@ public class PlayerStats {
         return kills;
     }
 
-    public void setKills(final int paramkills) {
+    public void setKills(int paramkills) {
         kills = paramkills;
     }
 
@@ -51,7 +51,7 @@ public class PlayerStats {
         return deaths;
     }
 
-    public void setDeaths(final int paramdeaths) {
+    public void setDeaths(int paramdeaths) {
         deaths = paramdeaths;
     }
 
@@ -59,7 +59,7 @@ public class PlayerStats {
         return mobkills;
     }
 
-    public void setMobkills(final int parammobkills) {
+    public void setMobkills(int parammobkills) {
         mobkills = parammobkills;
     }
 
@@ -67,7 +67,7 @@ public class PlayerStats {
         return killstreak;
     }
 
-    public void setKillstreak(final int paramkillstreak) {
+    public void setKillstreak(int paramkillstreak) {
         killstreak = paramkillstreak;
     }
 }

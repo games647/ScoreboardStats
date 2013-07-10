@@ -15,7 +15,9 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
@@ -80,7 +82,7 @@ public final class Settings {
         }
     }
 
-    public static void sendUpdate(final org.bukkit.entity.Player player, final boolean complete) {
+    public static void sendUpdate(Player player, boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 
         if (!player.hasPermission(Permissions.USE_PERMISSION)
@@ -96,7 +98,7 @@ public final class Settings {
         }
     }
 
-    private static String checkLength(final String check, int limit) {
+    private static String checkLength(String check, int limit) {
         if (check.length() > limit) {
             final String cut = check.substring(0, limit);
             Bukkit.getLogger().log(Level.WARNING, Ansi.ansi().fg(Ansi.Color.RED) + Message.LOG_NAME + "{0}" + Ansi.ansi().fg(Ansi.Color.DEFAULT), String.format(Message.LONGER_THAN_LIMIT, cut, limit));
@@ -106,7 +108,7 @@ public final class Settings {
         return check;
     }
 
-    private static int checkItems(final int input) {
+    private static int checkItems(int input) {
         if (input >= Other.MINECRAFT_LIMIT) {
             Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
             return Other.MINECRAFT_LIMIT - 1;
@@ -115,7 +117,7 @@ public final class Settings {
         return input;
     }
 
-    private static void loaditems(final org.bukkit.configuration.ConfigurationSection config) {
+    private static void loaditems(ConfigurationSection config) {
         final java.util.Set<String> keys = config.getKeys(false);
 
         if (!ITEMS.isEmpty()) {
@@ -132,7 +134,7 @@ public final class Settings {
         }
     }
 
-    private static String replaceSpecialCharacters(final String input) {
+    private static String replaceSpecialCharacters(String input) {
         return input
                 .replace(SpecialCharacter.VAR_HEART     , SpecialCharacter.HEART)
                 .replace(SpecialCharacter.VAR_CHECK     , SpecialCharacter.CHECK)

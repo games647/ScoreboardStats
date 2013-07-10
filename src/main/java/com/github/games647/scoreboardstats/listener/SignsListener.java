@@ -15,11 +15,11 @@ final class SignsListener {
 
     private SignsListener() {}
 
-    public static void registerSigns(final InSigns instance) {
+    public static void registerSigns(InSigns instance) {
 
         instance.addChanger(new Changer(VariableList.SIGN_KILL, Permissions.SIGN_PERMISSION) {
             @Override
-            public String getValue(final Player player, final Location lctn) {
+            public String getValue(Player player, Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
                 return playercache == null
@@ -29,7 +29,7 @@ final class SignsListener {
 
         instance.addChanger(new Changer(VariableList.SIGN_DEATH, Permissions.SIGN_PERMISSION) {
             @Override
-            public String getValue(final Player player, final Location lctn) {
+            public String getValue(Player player, Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
                 return playercache == null
@@ -39,7 +39,7 @@ final class SignsListener {
 
         instance.addChanger(new Changer(VariableList.SIGN_MOB, Permissions.SIGN_PERMISSION) {
             @Override
-            public String getValue(final Player player, final Location lctn) {
+            public String getValue(Player player, Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
                 return playercache == null
@@ -49,7 +49,7 @@ final class SignsListener {
 
         instance.addChanger(new Changer(VariableList.SIGN_KDR, Permissions.SIGN_PERMISSION) {
             @Override
-            public String getValue(final Player player, final Location lctn) {
+            public String getValue(Player player, Location lctn) {
                 return Database.getCache(player.getName()) == null
                         ? "" : String.valueOf(Database.getKdr(player.getName()));
             }
@@ -57,7 +57,7 @@ final class SignsListener {
 
         instance.addChanger(new Changer(VariableList.SIGN_STREAK, Permissions.SIGN_PERMISSION) {
             @Override
-            public String getValue(final Player player, final Location lctn) {
+            public String getValue(Player player, Location lctn) {
                 final PlayerCache playercache = Database.getCache(player.getName());
 
                 return playercache == null
