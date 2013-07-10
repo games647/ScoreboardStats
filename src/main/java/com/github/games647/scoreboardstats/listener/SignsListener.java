@@ -15,7 +15,7 @@ final class SignsListener {
 
     private SignsListener() {}
 
-    public static void registerSigns(InSigns instance) {
+    protected static void registerSigns(InSigns instance) {
 
         instance.addChanger(new Changer(VariableList.SIGN_KILL, Permissions.SIGN_PERMISSION) {
             @Override
