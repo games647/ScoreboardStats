@@ -162,7 +162,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>LATEST</version>
+            <version>1.6.1-R0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
 
@@ -175,7 +175,7 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>clean install -DskipTests=true</defaultGoal>
         <finalName>${project.name}</finalName>
         <plugins>
             <plugin>

@@ -31,7 +31,7 @@ public final class DisableCommand implements CommandExecutor {
         }
 
         final String      name = cs.getName();
-        final Set<String> list = plugin.hidelist;
+        final Set<String> list = plugin.getHidelist();
 
         if (list.contains(name)) {
             list.remove(name);

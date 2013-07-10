@@ -1,3 +1,5 @@
 Current changelog. This will be updated after every big change
 
+* Fix: Updated for the newest craftbukkit version
 * Change: better code for the console colors
+* Add: Now using reflections. This would make the plugin automatically compatible with newer craftbukkit builds

@@ -28,7 +28,7 @@ public final class SbManager {
 
     public static void createScoreboard(Player player) {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
-                || ScoreboardStats.getInstance().hidelist.contains(player.getName())
+                || ScoreboardStats.getInstance().getHidelist().contains(player.getName())
                 || Settings.isDisabledWorld(player.getWorld().getName())) {
             return;
         }
@@ -65,7 +65,7 @@ public final class SbManager {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || scoreboard   .getObjective(DisplaySlot.SIDEBAR) == null
                 || !scoreboard  .getObjective(DisplaySlot.SIDEBAR).getName().startsWith(Other.PLUGIN_NAME)
-                || ScoreboardStats.getInstance().hidelist.contains(player.getName())) {
+                || ScoreboardStats.getInstance().getHidelist().contains(player.getName())) {
             return;
         }
 
