@@ -9,7 +9,7 @@ final class SimpleClansReplacer {
 
     private SimpleClansReplacer() {}
 
-    public static int getSimpleClans1Value(String key, Player player) {
+    protected static int getSimpleClans1Value(String key, Player player) {
         final com.p000ison.dev.simpleclans2.api.clanplayer.ClanPlayer clanPlayer = PluginListener.getSimpleclans().getClanPlayer(player);
         if (clanPlayer == null) {
             return -1;
@@ -72,7 +72,7 @@ final class SimpleClansReplacer {
         return -1;
     }
 
-    public static int getSimpleClans2Value(String key, Player player) {
+    protected static int getSimpleClans2Value(String key, Player player) {
         final net.sacredlabyrinth.phaed.simpleclans.ClanPlayer clanPlayer = PluginListener.getSimpleclans2().getClanPlayer(player);
         if (clanPlayer == null) {
             return -1;

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <version>0.6</version>
+    <version>0.5.9</version>
     <packaging>jar</packaging>
     <description>Show the Scoreboard with custom variables</description>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
@@ -163,6 +163,42 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>LATEST</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>Craftbukkit16R1</artifactId>
+            <version>1.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit16R1.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>Craftbukkit15R1</artifactId>
+            <version>1.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit15R1.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>Craftbukkit15R2</artifactId>
+            <version>1.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit15R2.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>.</groupId>
+            <artifactId>Craftbukkit15R3</artifactId>
+            <version>1.6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/craftbukkit15R3.jar</systemPath>
             <type>jar</type>
         </dependency>
 

@@ -103,7 +103,7 @@ public final class ScoreboardStats extends JavaPlugin {
     public void onLoad() {
         super.onLoad();
 
-        ReflectionUtil.init();
+        ReflectionUtil.initReflections();
     }
 
     public void onReload() {
