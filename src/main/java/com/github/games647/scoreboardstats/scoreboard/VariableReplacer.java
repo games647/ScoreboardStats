@@ -232,7 +232,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.PING.equals(key)) {
-            return ((org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer) player).getHandle().ping;
+            return ReflectionUtil.getPlayerPing(player);
         }
 
         if (VariableList.HELMET.equals(key)) {

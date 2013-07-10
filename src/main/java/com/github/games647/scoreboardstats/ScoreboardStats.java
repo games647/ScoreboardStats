@@ -28,6 +28,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+
+import javax.persistence.PersistenceException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,7 +41,7 @@ import org.fusesource.jansi.Ansi;
 
 public final class ScoreboardStats extends JavaPlugin {
 
-    public final Set<String> hidelist = new HashSet<String>(10);
+    private final Set<String> hidelist = new HashSet<String>(10);
 
     private static ScoreboardStats instance;
 
@@ -53,8 +56,14 @@ public final class ScoreboardStats extends JavaPlugin {
         instance = this;
     }
 
+    public Set<String> getHidelist() {
+        return hidelist;
+    }
+
     @Override
     public void onEnable() {
+        super.onEnable();
+
         saveDefaultConfig();
         Settings.loadConfig();
 
@@ -115,6 +124,8 @@ public final class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        super.onDisable();
+
         getServer().getScheduler().cancelTasks(this);
         Database.saveAll();
         SbManager.unregisterAll();
@@ -139,7 +150,7 @@ public final class ScoreboardStats extends JavaPlugin {
 
             try {
                 database.find(PlayerStats.class).findRowCount();
-            } catch (javax.persistence.PersistenceException ex) {
+            } catch (PersistenceException ex) {
                 getLogger().log(Level.INFO, "{0}" + Message.NON_EXISTING_DATABASE + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.YELLOW));
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                 gen.runScript(false, gen.generateCreateDdl());
@@ -150,8 +161,9 @@ public final class ScoreboardStats extends JavaPlugin {
     }
 
     private String replaceUrlString(String input) {
+        final Pattern pat = Pattern.compile("\\\\");
         return input
-                .replace("{DIR}", getDataFolder().getPath().replaceAll("\\\\", "/") + "/")
+                .replace("{DIR}", pat.matcher(getDataFolder().getPath()).replaceAll("/") + '/')
                 .replace("{NAME}", getName());
     }
 

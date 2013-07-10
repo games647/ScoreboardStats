@@ -11,6 +11,7 @@ import com.github.games647.variables.SpecialCharacter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -88,7 +89,7 @@ public final class Settings {
         if (!player.hasPermission(Permissions.USE_PERMISSION)
                 || objective == null
                 || !objective.getName().equals(Other.PLUGIN_NAME)
-                || PLUGIN.hidelist.contains(player.getName())) {
+                || PLUGIN.getHidelist().contains(player.getName())) {
             return;
         }
 
@@ -118,7 +119,7 @@ public final class Settings {
     }
 
     private static void loaditems(ConfigurationSection config) {
-        final java.util.Set<String> keys = config.getKeys(false);
+        final Set<String> keys = config.getKeys(false);
 
         if (!ITEMS.isEmpty()) {
             ITEMS.clear();

@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.listener;
 
-import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.EssentialsTimer;
+import com.earth2me.essentials.IEssentials;
 
 import com.github.games647.variables.PluginNames;
 
@@ -85,7 +85,7 @@ public final class PluginListener {
         }
 
         if (pluginm.getPlugin(PluginNames.ESSENTIALS) != null) {
-            essentials = ((Essentials) pluginm.getPlugin(PluginNames.ESSENTIALS)).getTimer();
+            essentials = ((IEssentials) pluginm.getPlugin(PluginNames.ESSENTIALS)).getTimer();
         }
 
         if (pluginm.getPlugin(PluginNames.INSIGNS) != null) {
