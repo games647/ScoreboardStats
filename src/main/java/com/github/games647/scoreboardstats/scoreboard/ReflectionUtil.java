@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -11,19 +12,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-final class ReflectionUtil  {
-
-    private ReflectionUtil() {}
+public final class ReflectionUtil  {
 
     private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
-    private static String bukkitVersion;
+
     private static boolean skip;
     private static boolean disabled;
 
-    static {
-       final String packageName    = Bukkit.getServer().getClass().getPackage().getName();
-       bukkitVersion  = packageName.substring(packageName.lastIndexOf('.') + 1);
-    }
+    private static Class<?> classCraft;
+    private static Method   getHandle;
+    private static Field    ping;
 
     protected static int getPlayerPing(Player player) {
         if (disabled) {
@@ -48,28 +46,12 @@ final class ReflectionUtil  {
 
     private static int getReflectionPing(Player player) {
         try {
-            PLUGIN.getLogger().log(Level.FINE, bukkitVersion);
+            final Object localPing = ping.get(getHandle.invoke(classCraft.cast(player)));
 
-            final Class<?> classCraft   = Class.forName("org.bukkit.craftbukkit." + bukkitVersion + ".entity.CraftPlayer");
-            final Object craftPlayer    = classCraft.cast(player);
-            final Method method         = craftPlayer.getClass().getDeclaredMethod("getHandle");
-
-            final Object result         = method.invoke(craftPlayer);
-            PLUGIN.getLogger().log(Level.FINE, "The result is:    {0}", result);
-
-            final Object ping = result.getClass().getDeclaredField("ping").get(result);
-            PLUGIN.getLogger().log(Level.FINE, "The Ping is:      {0}", ping);
-
-            if (ping instanceof Integer) {
-                return (Integer) ping;
+            if (localPing instanceof Integer) {
+                return (Integer) localPing;
             }
 
-        } catch (ClassNotFoundException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
-        } catch (NoSuchFieldException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
-        } catch (NoSuchMethodException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
         } catch (IllegalArgumentException ex) {
             PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
         } catch (SecurityException ex) {
@@ -82,5 +64,30 @@ final class ReflectionUtil  {
 
         disabled = true;
         return -1;
+    }
+
+    public static void init() {
+        final String packageName = Bukkit.getServer().getClass().getPackage().getName();
+        final String bukkitVersion  = packageName.substring(packageName.lastIndexOf('.') + 1);
+
+        try {
+            classCraft  = Class.forName("org.bukkit.craftbukkit." + bukkitVersion + ".entity.CraftPlayer");
+
+            getHandle   = classCraft.getDeclaredMethod("getHandle");
+
+            ping        = Class.forName("net.minecraft.server." + bukkitVersion + ".EntityPlayer").getDeclaredField("ping");
+
+            return;
+        } catch (ClassNotFoundException ex) {
+            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
+        } catch (NoSuchMethodException ex) {
+            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
+        } catch (NoSuchFieldException ex) {
+            PLUGIN.getLogger().log(Level.SEVERE, "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error", ex);
+        } catch (SecurityException ex) {
+            PLUGIN.getLogger().log(Level.SEVERE, "Your vm doesn't allow this plugin to access to the craftbukkit code. This shouldn't happend normaly", ex);
+        }
+
+        disabled = true;
     }
 }
