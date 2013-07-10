@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 final class ReflectionUtil  {
@@ -24,7 +24,7 @@ final class ReflectionUtil  {
        final String packageName    = Bukkit.getServer().getClass().getPackage().getName();
        bukkitVersion  = packageName.substring(packageName.lastIndexOf('.') + 1);
     }
-    
+
     protected static int getPlayerPing(Player player) {
         if (disabled) {
             return -1;
@@ -35,7 +35,7 @@ final class ReflectionUtil  {
         }
 
         try {
-            final Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit.v1_6_R1.entity.CraftPlayer");
+            final Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer");
 
             return ((CraftPlayer) player).getHandle().ping;
         } catch (ClassNotFoundException ex) {
