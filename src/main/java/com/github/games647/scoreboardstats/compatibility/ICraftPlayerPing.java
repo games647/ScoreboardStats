@@ -4,5 +4,5 @@ import org.bukkit.entity.Player;
 
 public interface ICraftPlayerPing {
 
-    public int getPlayerPing(Player player);
+    int getPlayerPing(Player player);
 }

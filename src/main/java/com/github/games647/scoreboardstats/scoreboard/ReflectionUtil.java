@@ -37,6 +37,7 @@ public final class ReflectionUtil  {
     private static void setupClass() {
         try {
             compabilityClass = (ICraftPlayerPing) Class.forName("com.github.games647.scoreboardstats.compatibility.Craft" + bukkitVersion).newInstance();
+            
             return;
         } catch (ClassNotFoundException ex) {
             PLUGIN.getLogger().log(Level.FINE, "The class couldn't be found", ex);
