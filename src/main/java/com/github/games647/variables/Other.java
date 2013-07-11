@@ -21,6 +21,6 @@ public final class Other  {
     public static final float   VOLUME              = 50.0F;
     public static final float   PITCH               = 1.0F;
 
-    public static final char    TRANSLATED_CHAR     = 'ง';
+    public static final char    TRANSLATED_CHAR     = 'ยง';
     public static final char    CHATCOLOR_CHAR      = '&';
 }
