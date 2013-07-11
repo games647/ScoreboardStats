@@ -1,5 +1,5 @@
 name: ${project.name}
-main: ${project.groupId}.${project.artifactId}.${project.name}
+main: ${project.groupId}.${parent.artifactId}.${project.name}
 author: games647
 version: ${project.version}
 description: ${project.description}
