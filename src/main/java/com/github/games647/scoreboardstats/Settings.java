@@ -66,21 +66,19 @@ public final class Settings {
         title           = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
                 checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
 
-        if (config.getBoolean(ConfigurationPaths.TEMP)
-                && pvpStats) {
-            tempScoreboard  = true;
+        tempScoreboard  = config.getBoolean(ConfigurationPaths.TEMP) && pvpStats;
 
-            topitems        = checkItems(config.getInt(ConfigurationPaths.TEMP_ITEMS));
+        topitems        = checkItems(config.getInt(ConfigurationPaths.TEMP_ITEMS));
 
-            tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
-            tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
+        tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
+        tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
 
-            topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
+        topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
 
-            tempColor       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
-            tempTitle       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
+        tempColor       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
+        tempTitle       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
                     checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
-        }
+
     }
 
     public static void sendUpdate(Player player, boolean complete) {
@@ -126,7 +124,7 @@ public final class Settings {
         }
 
         for (final String key : keys) {
-            if (ITEMS.size() >= Other.MINECRAFT_LIMIT) {
+            if (ITEMS.size() == Other.MINECRAFT_LIMIT - 1) {
                 Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 break;
             }
