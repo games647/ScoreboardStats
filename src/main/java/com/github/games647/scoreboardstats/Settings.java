@@ -6,7 +6,6 @@ import com.github.games647.variables.ConfigurationPaths;
 import com.github.games647.variables.Message;
 import com.github.games647.variables.Other;
 import com.github.games647.variables.Permissions;
-import com.github.games647.variables.SpecialCharacter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +48,7 @@ public final class Settings {
     private static List<String> disabledWorlds;
 
     public static void loadConfig() {
+        PLUGIN.saveDefaultConfig();
         PLUGIN.reloadConfig();
 
         final FileConfiguration config = PLUGIN.getConfig();
@@ -64,7 +64,7 @@ public final class Settings {
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
         title           = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
-                checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
+                checkLength(replaceUtf8Characters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
 
         tempScoreboard  = config.getBoolean(ConfigurationPaths.TEMP) && pvpStats;
 
@@ -77,7 +77,7 @@ public final class Settings {
 
         tempColor       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
         tempTitle       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
-                    checkLength(replaceSpecialCharacters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
+                    checkLength(replaceUtf8Characters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
 
     }
 
@@ -129,69 +129,75 @@ public final class Settings {
                 break;
             }
 
-            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceSpecialCharacters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
+            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceUtf8Characters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
         }
     }
 
-    private static String replaceSpecialCharacters(String input) {
-        return input
-                .replace(SpecialCharacter.VAR_HEART     , SpecialCharacter.HEART)
-                .replace(SpecialCharacter.VAR_CHECK     , SpecialCharacter.CHECK)
+    private static String replaceUtf8Characters(String input) {
+        final String[][] utf8 = {
+            {"[<3]"     , "❤"},
+            {"[check]"  , "✔"},
 
-                .replace(SpecialCharacter.VAR_LESS      , SpecialCharacter.LESS)
-                .replace(SpecialCharacter.VAR_BIGGER    , SpecialCharacter.BIGGER)
+            {"[<]" , "◄"},
+            {"[>]" , "►"},
 
-                .replace(SpecialCharacter.VAR_STAR      , SpecialCharacter.STAR)
-                .replace(SpecialCharacter.VAR_ROUND_STAR, SpecialCharacter.ROUND_STAR)
-                .replace(SpecialCharacter.VAR_STARS     , SpecialCharacter.STARS)
+            {"[star]"       , "★"},
+            {"[round_star]" , "✪"},
+            {"[stars]"      , "⁂"},
+            {"[T_STAR]"     , "✰"},
 
-                .replace(SpecialCharacter.VAR_CROWN     , SpecialCharacter.CROWN)
-                .replace(SpecialCharacter.VAR_CHESS     , SpecialCharacter.CHESS)
+            {"[crown]", "♛"},
+            {"[chess]", "♜"},
 
-                .replace(SpecialCharacter.VAR_TOP       , SpecialCharacter.TOP)
-                .replace(SpecialCharacter.VAR_BUTTON    , SpecialCharacter.BUTTON)
-                .replace(SpecialCharacter.VAR_SIDE      , SpecialCharacter.SIDE)
-                .replace(SpecialCharacter.VAR_MID       , SpecialCharacter.MID)
+            {"[top]"    , "▀"},
+            {"[button]" , "▄"},
+            {"[side]"   , "▌"},
+            {"[mid]"    , "▬"},
 
-                .replace(SpecialCharacter.VAR_ONE       , SpecialCharacter.ONE)
-                .replace(SpecialCharacter.VAR_TWO       , SpecialCharacter.TWO)
-                .replace(SpecialCharacter.VAR_THREE     , SpecialCharacter.THREE)
-                .replace(SpecialCharacter.VAR_FOUR      , SpecialCharacter.FOUR)
-                .replace(SpecialCharacter.VAR_FIVE      , SpecialCharacter.FIVE)
-                .replace(SpecialCharacter.VAR_SIX       , SpecialCharacter.SIX)
-                .replace(SpecialCharacter.VAR_SEVEN     , SpecialCharacter.SEVEN)
-                .replace(SpecialCharacter.VAR_EIGHT     , SpecialCharacter.EIGHT)
-                .replace(SpecialCharacter.VAR_NINE      , SpecialCharacter.NINE)
-                .replace(SpecialCharacter.VAR_TEN       , SpecialCharacter.TEN)
+            {"[1]"  , "▂"},
+            {"[2]"  , "▃"},
+            {"[3]"  , "▄"},
+            {"[4]"  , "▅"},
+            {"[5]"  , "▆"},
+            {"[6]"  , "▇"},
+            {"[7]"  , "█"},
+            {"[8]"  , "▓"},
+            {"[9]"  , "▒"},
+            {"[10]" , "░"},
 
-                .replace(SpecialCharacter.VAR_RIGHT_UP  , SpecialCharacter.RIGHT_UP)
-                .replace(SpecialCharacter.VAR_LEFT_UP   , SpecialCharacter.LEFT_UP)
-                .replace(SpecialCharacter.VAR_PHONE     , SpecialCharacter.PHONE)
-                .replace(SpecialCharacter.VAR_PLANE     , SpecialCharacter.PLANE)
-                .replace(SpecialCharacter.VAR_FLOWER    , SpecialCharacter.FLOWER)
-                .replace(SpecialCharacter.VAR_MAIL      , SpecialCharacter.MAIL)
-                .replace(SpecialCharacter.VAR_HAND      , SpecialCharacter.HAND)
-                .replace(SpecialCharacter.VAR_WRITE     , SpecialCharacter.WRITE)
-                .replace(SpecialCharacter.VAR_PENCIL    , SpecialCharacter.PENCIL)
-                .replace(SpecialCharacter.VAR_X         , SpecialCharacter.X)
-                .replace(SpecialCharacter.VAR_T_STAR    , SpecialCharacter.T_STAR)
+            {"[right_up]"   , "⋰"},
+            {"[left_up]"    , "⋱"},
 
-                .replace(SpecialCharacter.VAR_ARROW     , SpecialCharacter.ARROW)
-                .replace(SpecialCharacter.VAR_ARROW1    , SpecialCharacter.ARROW1)
-                .replace(SpecialCharacter.VAR_ARROW2    , SpecialCharacter.ARROW2)
-                .replace(SpecialCharacter.VAR_ARROW3    , SpecialCharacter.ARROW3)
-                .replace(SpecialCharacter.VAR_ARROW4    , SpecialCharacter.ARROW4)
+            {"[PHONE]"  , "✆"},
+            {"[MAIL]"   , "✉"},
+            {"[PLANE]"  , "✈"},
+            {"[PENCIL]" , "✎"},
+            {"[X]", "✖"},
+            {"[FLOWER]" , "✿"},
 
-                .replace(SpecialCharacter.VAR_ONE1      , SpecialCharacter.ONE1)
-                .replace(SpecialCharacter.VAR_TWO1      , SpecialCharacter.TWO1)
-                .replace(SpecialCharacter.VAR_THREE1    , SpecialCharacter.THREE1)
-                .replace(SpecialCharacter.VAR_FOUR1     , SpecialCharacter.FOUR1)
-                .replace(SpecialCharacter.VAR_FIVE1     , SpecialCharacter.FIVE1)
-                .replace(SpecialCharacter.VAR_SIX1      , SpecialCharacter.SIX1)
-                .replace(SpecialCharacter.VAR_SEVEN1    , SpecialCharacter.SEVEN1)
-                .replace(SpecialCharacter.VAR_EIGHT1    , SpecialCharacter.EIGHT1)
-                .replace(SpecialCharacter.VAR_NINE1     , SpecialCharacter.NINE1)
-                .replace(SpecialCharacter.VAR_TEN1      , SpecialCharacter.TEN1);
+            {"[ARROW]"  , "➽"},
+            {"[ARROW1]" , "➨"},
+            {"[ARROW2]" , "➤"},
+            {"[ARROW3]" , "➜"},
+            {"[ARROW4]" , "➨"},
+
+            {"[ONE]"    , "❶"},
+            {"[TWO]"    , "❷"},
+            {"[THREE]"  , "❸"},
+            {"[FOUR]"   , "❹"},
+            {"[FIVE]"   , "❺"},
+            {"[SIX]"    , "❻"},
+            {"[SEVEN]"  , "❼"},
+            {"[EIGHT]"  , "❽"},
+            {"[NINE]"   , "❾"},
+            {"[TEN]"    , "❿"},
+        };
+
+        for (String[] temp : utf8) {
+            input = input.replace(temp[0], temp[1]);
+        }
+
+        return input;
     }
 
     public static boolean isPvpStats() {

@@ -24,9 +24,9 @@ public final class PluginListener {
 
     private PluginListener() {}
 
-    private static String   factions;
+    private static String                   factions;
 
-    private static boolean  mcmmo;
+    private static boolean                  mcmmo;
 
     private static CharacterManager         heroes;
     private static Economy                  economy;
@@ -68,11 +68,11 @@ public final class PluginListener {
         mcmmo       = pluginm.getPlugin(PluginNames.MCMMO)      != null;
 
         if (pluginm.getPlugin(PluginNames.FACTIONS) != null) {
-            factions = pluginm.getPlugin(PluginNames.FACTIONS).getDescription().getVersion();
+            factions    = pluginm.getPlugin(PluginNames.FACTIONS).getDescription().getVersion();
         }
 
         if (pluginm.getPlugin(PluginNames.HEROES) != null) {
-            heroes = ((Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();
+            heroes      = ((Heroes) pluginm.getPlugin(PluginNames.HEROES)).getCharacterManager();
         }
 
         if (pluginm.getPlugin(PluginNames.SIMPLECLANS) != null) {
