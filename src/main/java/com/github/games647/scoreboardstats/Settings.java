@@ -172,7 +172,7 @@ public final class Settings {
             {"[MAIL]"   , "✉"},
             {"[PLANE]"  , "✈"},
             {"[PENCIL]" , "✎"},
-            {"[X]", "✖"},
+            {"[X]"      , "✖"},
             {"[FLOWER]" , "✿"},
 
             {"[ARROW]"  , "➽"},
