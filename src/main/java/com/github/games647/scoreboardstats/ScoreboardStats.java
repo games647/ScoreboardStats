@@ -42,11 +42,11 @@ import org.fusesource.jansi.Ansi;
 
 public final class ScoreboardStats extends JavaPlugin {
 
-    private final Set<String> hidelist = new HashSet<String>(10);
+    private final   Set<String>     hidelist = new HashSet<String>(10);
 
-    private static ScoreboardStats instance;
+    private static  ScoreboardStats instance;
 
-    private int taskid;
+    private         int             taskid;
 
     public static ScoreboardStats getInstance() {
         return instance;
@@ -65,7 +65,6 @@ public final class ScoreboardStats extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
 
-        saveDefaultConfig();
         Settings.loadConfig();
 
         if (Settings.isUpdateInfo()) {
