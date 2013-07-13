@@ -8,16 +8,15 @@ import com.github.games647.variables.VariableList;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Setter;
+
 public final class Database {
 
     private Database() {}
 
+    @Setter
     private static EbeanServer databaseInstance;
     private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
-
-    public static void setDatabase(EbeanServer base) {
-        databaseInstance = base;
-    }
 
     public static PlayerCache getCache(String name) {
         if (!CACHE.containsKey(name)) {

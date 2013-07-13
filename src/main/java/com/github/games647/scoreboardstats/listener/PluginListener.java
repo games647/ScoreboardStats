@@ -12,6 +12,8 @@ import com.p000ison.dev.simpleclans2.clanplayer.CraftClanPlayerManager;
 
 import de.blablubbabc.insigns.InSigns;
 
+import lombok.Getter;
+
 import net.milkbowl.vault.economy.Economy;
 
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
@@ -24,43 +26,15 @@ public final class PluginListener {
 
     private PluginListener() {}
 
-    private static String                   factions;
+    @Getter private static String                   factions;
 
-    private static boolean                  mcmmo;
+    @Getter private static boolean                  mcmmo;
 
-    private static CharacterManager         heroes;
-    private static Economy                  economy;
-    private static EssentialsTimer          essentials;
-    private static CraftClanPlayerManager   simpleclans;
-    private static ClanManager              simpleclans2;
-
-    public static Economy getEconomy() {
-        return economy;
-    }
-
-    public static boolean isMcmmo() {
-        return mcmmo;
-    }
-
-    public static CraftClanPlayerManager getSimpleclans() {
-        return simpleclans;
-    }
-
-    public static EssentialsTimer getEssentials() {
-        return essentials;
-    }
-
-    public static CharacterManager getHeroes() {
-        return heroes;
-    }
-
-    public static String getFactions() {
-        return factions;
-    }
-
-    public static ClanManager getSimpleclans2() {
-        return simpleclans2;
-    }
+    @Getter private static CharacterManager         heroes;
+    @Getter private static Economy                  economy;
+    @Getter private static EssentialsTimer          essentials;
+    @Getter private static CraftClanPlayerManager   simpleclans;
+    @Getter private static ClanManager              simpleclans2;
 
     public static void init() {
         final PluginManager pluginm = Bukkit.getServer().getPluginManager();
