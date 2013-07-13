@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
+import lombok.Getter;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -42,23 +44,15 @@ import org.fusesource.jansi.Ansi;
 
 public final class ScoreboardStats extends JavaPlugin {
 
-    private final   Set<String>     hidelist = new HashSet<String>(10);
+    @Getter private static  ScoreboardStats instance;
 
-    private static  ScoreboardStats instance;
+    @Getter private final   Set<String>     hidelist = new HashSet<String>(10);
 
     private         int             taskid;
-
-    public static ScoreboardStats getInstance() {
-        return instance;
-    }
 
     public ScoreboardStats() {
         super();
         instance = this;
-    }
-
-    public Set<String> getHidelist() {
-        return hidelist;
     }
 
     @Override
@@ -163,7 +157,7 @@ public final class ScoreboardStats extends JavaPlugin {
                 gen.runScript(false, gen.generateCreateDdl());
             }
 
-            Database.setDatabase(database);
+            Database.setDatabaseInstance(database);
         }
     }
 

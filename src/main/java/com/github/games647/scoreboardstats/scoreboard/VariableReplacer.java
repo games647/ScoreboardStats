@@ -111,7 +111,7 @@ public final class VariableReplacer {
         }
 
         if (VariableList.CURRENTSTREAK.equals(key)) {
-            return cache.getLastStreak();
+            return cache.getLaststreak();
         }
 
         return -1;

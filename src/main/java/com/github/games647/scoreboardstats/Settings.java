@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import lombok.Getter;
+import lombok.ToString;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,28 +26,29 @@ import org.bukkit.scoreboard.Objective;
 
 import org.fusesource.jansi.Ansi;
 
+@ToString(includeFieldNames = true)
 public final class Settings {
 
     private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
 
-    private static boolean             pvpStats;
-    private static boolean             tempScoreboard;
-    private static boolean             hideVanished;
-    private static boolean             sound;
-    private static boolean             updateInfo;
-    private static boolean             packetsystem;
+    @Getter private static boolean             pvpStats;
+    @Getter private static boolean             tempScoreboard;
+    @Getter private static boolean             hideVanished;
+    @Getter private static boolean             sound;
+    @Getter private static boolean             updateInfo;
+    @Getter private static boolean             packetsystem;
 
-    private static String              title;
-    private static String              tempTitle;
-    private static String              tempColor;
-    private static String              topType;
+    @Getter private static String              title;
+    @Getter private static String              tempTitle;
+    @Getter private static String              tempColor;
+    @Getter private static String              topType;
 
-    private static int                 intervall;
-    private static int                 topitems;
-    private static int                 tempShow;
-    private static int                 tempDisapper;
+    @Getter private static int                 intervall;
+    @Getter private static int                 topitems;
+    @Getter private static int                 tempShow;
+    @Getter private static int                 tempDisapper;
 
-    private static final Map<String, String> ITEMS = new HashMap<String, String>(14);
+    private static final Map<String, String> ITEMS = new HashMap<String, String>(15);
     private static List<String> disabledWorlds;
 
     public static void loadConfig() {
@@ -134,7 +138,7 @@ public final class Settings {
     }
 
     private static String replaceUtf8Characters(String input) {
-        final String[][] utf8 = {
+        final String[][] utf8 = new String[][] {
             {"[<3]"     , "❤"},
             {"[check]"  , "✔"},
 
@@ -200,88 +204,11 @@ public final class Settings {
         return input;
     }
 
-    public static boolean isPvpStats() {
-        return pvpStats;
-    }
-
-    public static boolean isTempScoreboard() {
-        return tempScoreboard;
-    }
-
-    public static boolean isHideVanished() {
-        return hideVanished;
-    }
-
-    public static boolean isSound() {
-        return sound;
-    }
-
-    public static boolean isUpdateInfo() {
-        return updateInfo;
-    }
-
-    public static boolean isPacketsystem() {
-        return packetsystem;
-    }
-
-    public static String getTitle() {
-        return title;
-    }
-
-    public static String getTempTitle() {
-        return tempTitle;
-    }
-
-    public static String getTempColor() {
-        return tempColor;
-    }
-
-    public static String getTopType() {
-        return topType;
-    }
-
-    public static int getIntervall() {
-        return intervall;
-    }
-
-    public static int getTopitems() {
-        return topitems;
-    }
-
-    public static int getTempShow() {
-        return tempShow;
-    }
-
-    public static int getTempDisapper() {
-        return tempDisapper;
-    }
-
     public static int getItemsLenght() {
         return ITEMS.size();
     }
 
     public static boolean isDisabledWorld(String name) {
         return disabledWorlds.contains(name);
-    }
-
-    @Override
-    public String toString() {
-        return "SettingsHandler{pvpStats="  + pvpStats
-
-                + ", tempScoreboard="       + tempScoreboard
-                + ", hideVanished="         + hideVanished
-                + ", sound="                + sound
-                + ", title="                + title
-                + ", tempTitle="            + tempTitle
-                + ", tempColor="            + tempColor
-                + ", topType="              + topType
-                + ", intervall="            + intervall
-                + ", topitems="             + topitems
-                + ", tempShow="             + tempShow
-                + ", tempDisapper="         + tempDisapper
-                + ", items="                + ITEMS
-                + ", disabledWorlds="       + disabledWorlds
-
-                + '}';
     }
 }
