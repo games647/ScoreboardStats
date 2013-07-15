@@ -44,6 +44,7 @@ public final class Settings {
     @Getter private static String              topType;
 
     @Getter private static int                 intervall;
+    @Getter private static int                 saveIntervall;
     @Getter private static int                 topitems;
     @Getter private static int                 tempShow;
     @Getter private static int                 tempDisapper;
@@ -67,6 +68,7 @@ public final class Settings {
 
         disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
         intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
+        saveIntervall   = config.getInt(ConfigurationPaths.SAVE_INTERVALL);
         title           = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
                 checkLength(replaceUtf8Characters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
 

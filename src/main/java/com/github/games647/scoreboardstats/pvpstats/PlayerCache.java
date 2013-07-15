@@ -13,6 +13,8 @@ public final class PlayerCache {
     @Getter private int streak;
     @Getter private int laststreak;
 
+    @Getter private boolean remove;
+
     public PlayerCache(int paramkills, int parammob, int paramdeaths, int paramstreak) {
         kills   = paramkills;
         mob     = parammob;
@@ -40,5 +42,9 @@ public final class PlayerCache {
 
         laststreak = 0;
         deaths++;
+    }
+
+    public void setRemove(boolean remove) {
+        this.remove = remove;
     }
 }

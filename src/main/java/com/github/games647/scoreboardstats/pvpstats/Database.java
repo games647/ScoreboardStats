@@ -85,16 +85,18 @@ public final class Database {
         databaseInstance.save(stats);
     }
 
-    public static void saveAll() {
+    public static void saveAll(boolean clear) {
         if (!Settings.isPvpStats()) {
             return;
         }
 
-        for (String playername : CACHE.keySet()) {
-            saveAccount(playername, false);
+        for (Map.Entry<String, PlayerCache> playername : CACHE.entrySet()) {
+            saveAccount(playername.getKey(), false);
         }
 
-        CACHE.clear();
+        if (clear) {
+            CACHE.clear();
+        }
     }
 
     public static Map<String, Integer> getTop() {

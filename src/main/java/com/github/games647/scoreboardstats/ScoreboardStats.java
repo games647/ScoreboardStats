@@ -16,6 +16,7 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.pvpstats.SaveTask;
 import com.github.games647.scoreboardstats.scoreboard.ReflectionUtil;
 import com.github.games647.scoreboardstats.scoreboard.SbManager;
 import com.github.games647.variables.Commands;
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
 import javax.persistence.PersistenceException;
 
 import lombok.Getter;
+import org.bukkit.Server;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,7 +50,8 @@ public final class ScoreboardStats extends JavaPlugin {
 
     @Getter private final   Set<String>     hidelist = new HashSet<String>(10);
 
-    private         int             taskid;
+    private         int             refreshTask;
+    private         int             saveTask;
 
     public ScoreboardStats() {
         super();
@@ -69,8 +72,10 @@ public final class ScoreboardStats extends JavaPlugin {
 
         PluginListener.init();
 
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new EntityListener(), this);
+        final Server server = getServer();
+
+        server.getPluginManager().registerEvents(new PlayerListener(), this);
+        server.getPluginManager().registerEvents(new EntityListener(), this);
 
         getCommand(Commands.RELOAD_COMMAND) .setExecutor(new ReloadCommand());
         getCommand(Commands.HIDE_COMMAND)   .setExecutor(new DisableCommand());
@@ -78,10 +83,16 @@ public final class ScoreboardStats extends JavaPlugin {
 
         SbManager.regAll();
 
-        taskid = getServer().getScheduler().scheduleSyncRepeatingTask(this,
+        refreshTask = server.getScheduler().scheduleSyncRepeatingTask(this,
                 new RefreshTask(),
                 Other.STARTUP_DELAY,
-                Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+                Settings.getIntervall() * Other.TICKS_PER_SECOND);
+        if (Settings.isPvpStats()) {
+            saveTask = server.getScheduler().scheduleAsyncRepeatingTask(this
+                , new SaveTask()
+                , Other.STARTUP_DELAY
+                , Settings.getSaveIntervall() * Other.TICKS_PER_SECOND * 60);
+        }
     }
 
     @Override
@@ -107,10 +118,10 @@ public final class ScoreboardStats extends JavaPlugin {
         Settings.loadConfig();
 
         if (intervall != Settings.getIntervall()) {
-            getServer().getScheduler().cancelTask(taskid);
+            getServer().getScheduler().cancelTask(refreshTask);
             getServer().getScheduler().scheduleSyncRepeatingTask(this,
                     new RefreshTask(), Other.STARTUP_DELAY,
-                    Settings.getIntervall() * Other.TICKS_PER_SECOND - Other.HALF_SECOND_TICK);
+                    Settings.getIntervall() * Other.TICKS_PER_SECOND);
         }
 
         if (length != Settings.getItemsLenght()) {
@@ -128,7 +139,7 @@ public final class ScoreboardStats extends JavaPlugin {
         super.onDisable();
 
         getServer().getScheduler().cancelTasks(this);
-        Database.saveAll();
+        Database.saveAll(true);
         SbManager.unregisterAll();
         HandlerList.unregisterAll(this);
     }
@@ -140,13 +151,13 @@ public final class ScoreboardStats extends JavaPlugin {
             db.setClasses(getDatabaseClasses());
             db.setName(getName());
 
-            final DataSourceConfig ds = getSqlConfig(db);
+            final DataSourceConfig ds   = getSqlConfig(db);
             ds.setUrl(replaceUrlString(ds.getUrl()));
 
-            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+            final ClassLoader previous  = Thread.currentThread().getContextClassLoader();
 
             Thread.currentThread().setContextClassLoader(getClassLoader());
-            final EbeanServer database = EbeanServerFactory.create(db);
+            final EbeanServer database  = EbeanServerFactory.create(db);
             Thread.currentThread().setContextClassLoader(previous);
 
             try {

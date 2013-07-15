@@ -23,5 +23,6 @@ public final class ConfigurationPaths  {
     public static final String TEMP_DISAPPER    = "Temp-Scoreboard.Intervall-disappear";
     public static final String TEMP_COLOR       = "Temp-Scoreboard.Color";
     public static final String TEMP_TYPE        = "Temp-Scoreboard.Type";
+    public static final String SAVE_INTERVALL   = "PvPStats-SaveIntervall";
 
 }

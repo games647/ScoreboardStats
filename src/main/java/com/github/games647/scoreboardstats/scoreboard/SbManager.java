@@ -54,7 +54,7 @@ public final class SbManager {
             Settings.sendUpdate(player, true);
 
             if (Settings.isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLaterAsynchronously(ScoreboardStats.getInstance(), new AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
+                Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new AppearTask(player), Settings.getTempShow() * Other.TICKS_PER_SECOND);
             }
         }
     }
