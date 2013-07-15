@@ -5,6 +5,7 @@ version: ${project.version}
 description: ${project.description}
 website: ${project.url}
 softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs, Heroes]
+
 commands:
   sb:reload:
     aliases: []
@@ -12,6 +13,7 @@ commands:
     aliases: []
   sidebar:
     aliases: [scoreboardstats, side]
+    
 permissions:
   scoreboardstats.admin:
     default: op

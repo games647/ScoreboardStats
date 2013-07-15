@@ -15,7 +15,6 @@ public final class AppearTask implements Runnable {
     @Override
     public void run() {
         if (player.isOnline()) {
-            Database.saveAccount(player.getName(), false);
             SbManager.createTopListScoreboard(player);
         }
     }

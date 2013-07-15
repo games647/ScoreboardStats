@@ -2,6 +2,9 @@
 
 enable-pvpstats: true
 
+#In minutes
+PvPStats-SaveIntervall: 15
+
 disabled-worlds:
   - world_nether
   - city
