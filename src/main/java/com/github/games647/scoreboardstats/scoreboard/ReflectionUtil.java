@@ -48,7 +48,7 @@ public final class ReflectionUtil  {
         }
 
         skip = true;
-        PLUGIN.getLogger().log(Level.INFO, "{0}The Plugin isn''t compatible with your craftbukkit version. It will now try to use Reflections{1}"
+        PLUGIN.getLogger().log(Level.INFO, "{0}The Plugin isn't compatible with your craftbukkit version. It will now try to use Reflections{1}"
                 , new Object[] {Ansi.ansi().fg(Ansi.Color.YELLOW)
                         , Ansi.ansi().fg(Ansi.Color.DEFAULT)});
     }
@@ -102,24 +102,14 @@ public final class ReflectionUtil  {
 
             getHandle   = classCraft.getDeclaredMethod("getHandle");
 
-            ping        = Class.forName("net.minecraft.server." + bukkitVersion + ".EntityPlayer").getDeclaredField("ping");
+            ping        = getHandle.getReturnType().getDeclaredField("ping");
 
             return;
-        } catch (ClassNotFoundException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, Ansi.ansi().fg(Ansi.Color.RED)
-                    + "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error"
-                    + Ansi.ansi().fg(Ansi.Color.DEFAULT), ex);
-        } catch (NoSuchMethodException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, Ansi.ansi().fg(Ansi.Color.RED)
-                    + "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error"
-                    + Ansi.ansi().fg(Ansi.Color.DEFAULT), ex);
-        } catch (NoSuchFieldException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, Ansi.ansi().fg(Ansi.Color.RED)
-                    + "Your craftbukkit version isn't compatible with the plugin version. Please contact the developer with the following error"
-                    + Ansi.ansi().fg(Ansi.Color.DEFAULT), ex);
-        } catch (SecurityException ex) {
-            PLUGIN.getLogger().log(Level.SEVERE, Ansi.ansi().fg(Ansi.Color.RED)
-                    + "Your vm doesn't allow this plugin to access to the craftbukkit code. This shouldn't happend normaly"
+        } catch (Exception ex) {
+            PLUGIN.getLogger().log(Level.SEVERE, Ansi.ansi().fg(Ansi.Color.YELLOW)
+                    + "Please contact the developer with the following error. "
+                    + Ansi.ansi().fg(Ansi.Color.RED)
+                    + "This Plugin should work anyways"
                     + Ansi.ansi().fg(Ansi.Color.DEFAULT), ex);
         }
 
