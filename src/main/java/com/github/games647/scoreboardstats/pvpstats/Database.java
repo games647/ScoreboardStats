@@ -1,122 +1,113 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
-import com.github.games647.variables.Data;
-import com.github.games647.variables.VariableList;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.Setter;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 public final class Database {
 
-    private Database() {}
-
-    @Setter
     private static EbeanServer databaseInstance;
-    private static final Map<String, PlayerCache> CACHE = new HashMap<String, PlayerCache>(10);
 
-    public static PlayerCache getCache(String name) {
-        if (!CACHE.containsKey(name)) {
-            loadAccount(name);
+    private static final Cache<String, PlayerCache> CACHE = CacheBuilder.newBuilder()
+            .maximumSize(512)
+            .expireAfterAccess(15, TimeUnit.MINUTES)
+            .removalListener(RemoveListener.getNewInstace())
+            .build(new CacheLoader<String, PlayerCache>() {
+                @Override
+                public PlayerCache load(String playerName) {
+                    ScoreboardStats.getInstance().getLogger().warning("Sych loading of playerstats");
+
+                    final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", playerName).findUnique();
+                    if (stats == null) {
+                        return new PlayerCache();
+                    }
+
+                    final int kills = stats.getKills();
+                    final int deaths = stats.getDeaths();
+                    final int mobKills = stats.getMobkills();
+                    final int killstreak = stats.getKillstreak();
+                    return new PlayerCache(kills, mobKills, deaths, killstreak);
+                }
+            });
+
+    public static PlayerCache getCacheIfAbsent(String name) {
+        if (CACHE.asMap().containsKey(name)) {
+            return CACHE.getUnchecked(name);
         }
 
-        return CACHE.get(name);
+        return null;
     }
 
     public static void loadAccount(String name) {
-        if (CACHE.containsKey(name)) {
+        final ConcurrentMap<String, PlayerCache> cache = CACHE.asMap();
+        if (cache.containsKey(name)) {
             return;
         }
 
-        final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
-
-        CACHE.put(name, stats == null
-                ? new PlayerCache() : new PlayerCache(stats.getKills(), stats.getMobkills(), stats.getDeaths(), stats.getKillstreak()));
+        final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
+        if (stats == null) {
+            cache.put(name, new PlayerCache());
+        } else {
+            final int kills = stats.getKills();
+            final int deaths = stats.getDeaths();
+            final int mobKills = stats.getMobkills();
+            final int killstreak = stats.getKillstreak();
+            cache.put(name, new PlayerCache(kills, mobKills, deaths, killstreak));
+        }
     }
 
     public static int getKdr(String name) {
-        final PlayerCache stats = getCache(name);
-
-        return stats == null
-                ? 0 : stats.getDeaths() == 0
-                ? stats.getKills() : Math.round((float) stats.getKills() / (float) stats.getDeaths());
-    }
-
-    public static void saveAccount(String name, boolean remove) {
-        if (!Settings.isPvpStats()) {
-            return;
-        }
-
-        final PlayerCache playercache = CACHE.get(name);
-
-        if (playercache == null) {
-            return;
-        } else if (remove) {
-            CACHE.remove(name);
-        }
-
-        if (playercache.getKills()          == 0
-                && playercache.getDeaths()  == 0
-                && playercache.getMob()     == 0) { //There are no need to save these data
-            return;
-        }
-
-        PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq(Data.STATS_NAME, name).findUnique();
-
+        final PlayerCache stats = getCacheIfAbsent(name);
         if (stats == null) {
-            stats = new PlayerStats();
-            stats.setPlayername(name);
+            return 0;
+        } else if (stats.getDeaths() == 0) {
+            return stats.getKills();
+        } else {
+            return Math.round((float) stats.getKills() / (float) stats.getDeaths());
         }
-
-        if (stats.getDeaths()               == playercache.getDeaths()
-                && stats.getKills()         == playercache.getKills()
-                && stats.getMobkills()      == playercache.getMob()
-                && stats.getKillstreak()    == playercache.getStreak()) {
-            return; //No dates have been changed so there is no need to save the dates.
-        }
-
-        stats.setDeaths(playercache.getDeaths());
-        stats.setKills(playercache.getKills());
-        stats.setMobkills(playercache.getMob());
-        stats.setKillstreak(playercache.getStreak());
-        databaseInstance.save(stats);
     }
 
-    public static void saveAll(boolean clear) {
-        if (!Settings.isPvpStats()) {
-            return;
-        }
-
-        for (Map.Entry<String, PlayerCache> playername : CACHE.entrySet()) {
-            saveAccount(playername.getKey(), false);
-        }
-
-        if (clear) {
-            CACHE.clear();
+    public static void saveAll() {
+        if (Settings.isPvpStats()) {
+            CACHE.invalidateAll();
         }
     }
 
     public static Map<String, Integer> getTop() {
         final String type = Settings.getTopType();
         final Map<String, Integer> top = new HashMap<String, Integer>(Settings.getTopitems());
-
-        if (VariableList.KILLSTREAK.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_KILLSTREAK).setMaxRows(Settings.getTopitems()).findList()) {
+        if ("%killstreak%".equals(type)) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(Settings.getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
-        } else if (VariableList.MOB.equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_MOB).setMaxRows(Settings.getTopitems()).findList()) {
+        } else if ("%mob%".equals(type)) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(Settings.getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
         } else {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy(Data.ORDER_KILL).setMaxRows(Settings.getTopitems()).findList()) {
+            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(Settings.getTopitems()).findList()) {
                 top.put(stats.getPlayername(), stats.getKills());
             }
         }
 
         return top;
     }
+
+    public static void setDatabaseInstance(EbeanServer databaseInstance) {
+        Database.databaseInstance = databaseInstance;
+    }
+
+    /* package */ static EbeanServer getDatabaseInstance() {
+        return databaseInstance;
+    }
+
+    private Database() {}
 }

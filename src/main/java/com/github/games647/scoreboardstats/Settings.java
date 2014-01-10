@@ -1,55 +1,44 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.scoreboard.SbManager;
-import com.github.games647.scoreboardstats.scoreboard.VariableReplacer;
-import com.github.games647.variables.ConfigurationPaths;
-import com.github.games647.variables.Message;
-import com.github.games647.variables.Other;
-import com.github.games647.variables.Permissions;
+import com.google.common.collect.Maps;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import lombok.Getter;
-import lombok.ToString;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 
 import org.fusesource.jansi.Ansi;
 
-@ToString(includeFieldNames = true)
-public final class Settings {
+public class Settings {
+
+    private Settings() { //Singleton
+
+    }
 
     private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
 
-    @Getter private static boolean             pvpStats;
-    @Getter private static boolean             tempScoreboard;
-    @Getter private static boolean             hideVanished;
-    @Getter private static boolean             sound;
-    @Getter private static boolean             updateInfo;
-    @Getter private static boolean             packetsystem;
+    private static boolean             pvpStats;
+    private static boolean             tempScoreboard;
+    private static boolean             hideVanished;
 
-    @Getter private static String              title;
-    @Getter private static String              tempTitle;
-    @Getter private static String              tempColor;
-    @Getter private static String              topType;
+    private static String              title;
+    private static String              tempTitle;
+    private static String              tempColor;
+    private static String              topType;
 
-    @Getter private static int                 intervall;
-    @Getter private static int                 saveIntervall;
-    @Getter private static int                 topitems;
-    @Getter private static int                 tempShow;
-    @Getter private static int                 tempDisapper;
+    private static int                 intervall;
+    private static int                 saveIntervall;
+    private static int                 topitems;
+    private static int                 tempShow;
+    private static int                 tempDisapper;
 
-    private static final Map<String, String> ITEMS = new HashMap<String, String>(15);
+    private static final Map<String, String> ITEMS = Maps.newHashMap();
     private static List<String> disabledWorlds;
 
     public static void loadConfig() {
@@ -58,55 +47,38 @@ public final class Settings {
 
         final FileConfiguration config = PLUGIN.getConfig();
 
-        loaditems(config.getConfigurationSection(ConfigurationPaths.ITEMS));
+        loaditems(config.getConfigurationSection("Scoreboard.Items"));
 
-        hideVanished    = config.getBoolean(ConfigurationPaths.HIDE_VANISHED);
-        sound           = config.getBoolean(ConfigurationPaths.SOUNDS);
-        pvpStats        = config.getBoolean(ConfigurationPaths.PVPSTATS);
-        updateInfo      = config.getBoolean(ConfigurationPaths.UPDATE_INFO);
-        packetsystem    = config.getBoolean(ConfigurationPaths.PACKET_SYSTEM);
+        hideVanished    = config.getBoolean("hide-vanished");
+        pvpStats        = config.getBoolean("enable-pvpstats");
 
-        disabledWorlds  = config.getStringList(ConfigurationPaths.DISABLED_WORLDS);
-        intervall       = config.getInt(ConfigurationPaths.UPDATE_DELAY);
-        saveIntervall   = config.getInt(ConfigurationPaths.SAVE_INTERVALL);
-        title           = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
-                checkLength(replaceUtf8Characters(config.getString(ConfigurationPaths.TITLE)), Other.OBJECTIVE_LIMIT));
+        disabledWorlds  = config.getStringList("disabled-worlds");
+        intervall       = config.getInt("Scoreboard.Update-delay");
+        saveIntervall   = config.getInt("PvPStats-SaveIntervall");
+        title           = ChatColor.translateAlternateColorCodes('&',
+                checkLength(replaceUtf8Characters(config.getString("Scoreboard.Title")), 32));
 
-        tempScoreboard  = config.getBoolean(ConfigurationPaths.TEMP) && pvpStats;
+        tempScoreboard  = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
 
-        topitems        = checkItems(config.getInt(ConfigurationPaths.TEMP_ITEMS));
+        topitems        = checkItems(config.getInt("Temp-Scoreboard.Items"));
 
-        tempShow        = config.getInt(ConfigurationPaths.TEMP_SHOW);
-        tempDisapper    = config.getInt(ConfigurationPaths.TEMP_DISAPPER);
+        tempShow        = config.getInt("Temp-Scoreboard.Intervall-show");
+        tempDisapper    = config.getInt("Temp-Scoreboard.Intervall-disappear");
 
-        topType         = config.getString(ConfigurationPaths.TEMP_TYPE);
+        topType         = config.getString("Temp-Scoreboard.Type");
 
-        tempColor       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR, config.getString(ConfigurationPaths.TEMP_COLOR));
-        tempTitle       = ChatColor.translateAlternateColorCodes(Other.CHATCOLOR_CHAR,
-                    checkLength(replaceUtf8Characters(config.getString(ConfigurationPaths.TEMP_TITLE)), Other.OBJECTIVE_LIMIT));
+        tempColor       = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
+        tempTitle       = ChatColor.translateAlternateColorCodes('&',
+                    checkLength(replaceUtf8Characters(config.getString("Temp-Scoreboard.Title")), 32));
 
-    }
-
-    public static void sendUpdate(Player player, boolean complete) {
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-
-        if (!player.hasPermission(Permissions.USE_PERMISSION)
-                || objective == null
-                || !objective.getName().equals(Other.PLUGIN_NAME)
-                || PLUGIN.getHidelist().contains(player.getName())) {
-            return;
-        }
-
-        for (final Map.Entry<String, String> entry : ITEMS.entrySet()) {
-            SbManager.sendScore(
-                    objective, entry.getKey(), VariableReplacer.getReplacedInt(entry.getValue(), player), complete);
-        }
     }
 
     private static String checkLength(String check, int limit) {
         if (check.length() > limit) {
             final String cut = check.substring(0, limit);
-            Bukkit.getLogger().log(Level.WARNING, Ansi.ansi().fg(Ansi.Color.RED) + Message.LOG_NAME + "{0}" + Ansi.ansi().fg(Ansi.Color.DEFAULT), String.format(Message.LONGER_THAN_LIMIT, cut, limit));
+            Bukkit.getLogger().log(Level.WARNING
+                    , Ansi.ansi().fg(Ansi.Color.RED) + "[ScoreboardStats]" + "{0}" + Ansi.ansi().fg(Ansi.Color.DEFAULT)
+                    , String.format("%s was longer than the limit of %s characters. This Plugin will cut automatically to the right size.", cut, limit));
             return cut;
         }
 
@@ -114,9 +86,9 @@ public final class Settings {
     }
 
     private static int checkItems(int input) {
-        if (input >= Other.MINECRAFT_LIMIT) {
-            Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
-            return Other.MINECRAFT_LIMIT - 1;
+        if (input >= 16) {
+            Bukkit.getLogger().log(Level.WARNING, "{0}" + "[ScoreboardStats]" + "One Scoreboard can't have more than 15 items"+ Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
+            return 16 - 1;
         }
 
         return input;
@@ -124,18 +96,17 @@ public final class Settings {
 
     private static void loaditems(ConfigurationSection config) {
         final Set<String> keys = config.getKeys(false);
-
         if (!ITEMS.isEmpty()) {
             ITEMS.clear();
         }
 
         for (final String key : keys) {
-            if (ITEMS.size() == Other.MINECRAFT_LIMIT - 1) {
-                Bukkit.getLogger().log(Level.WARNING, "{0}" + Message.LOG_NAME + Message.TOO_LONG_LIST + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
+            if (ITEMS.size() == 16 - 1) {
+                Bukkit.getLogger().log(Level.WARNING, "{0}" + "[ScoreboardStats]" + "One Scoreboard can't have more than 15 items" + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 break;
             }
 
-            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceUtf8Characters(key), Other.MINECRAFT_LIMIT)), config.getString(key));
+            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceUtf8Characters(key), 16)), config.getString(key));
         }
     }
 
@@ -210,7 +181,59 @@ public final class Settings {
         return ITEMS.size();
     }
 
+    public static Iterator<Map.Entry<String, String>> getItems() {
+        return ITEMS.entrySet().iterator();
+    }
+
     public static boolean isDisabledWorld(String name) {
         return disabledWorlds.contains(name);
+    }
+
+    public static boolean isPvpStats() {
+        return pvpStats;
+    }
+
+    public static boolean isTempScoreboard() {
+        return tempScoreboard;
+    }
+
+    public static boolean isHideVanished() {
+        return hideVanished;
+    }
+
+    public static String getTitle() {
+        return title;
+    }
+
+    public static String getTempTitle() {
+        return tempTitle;
+    }
+
+    public static String getTempColor() {
+        return tempColor;
+    }
+
+    public static String getTopType() {
+        return topType;
+    }
+
+    public static int getIntervall() {
+        return intervall;
+    }
+
+    public static int getSaveIntervall() {
+        return saveIntervall;
+    }
+
+    public static int getTopitems() {
+        return topitems;
+    }
+
+    public static int getTempShow() {
+        return tempShow;
+    }
+
+    public static int getTempDisapper() {
+        return tempDisapper;
     }
 }

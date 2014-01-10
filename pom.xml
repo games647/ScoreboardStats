@@ -1,63 +1,131 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
-    <packaging>pom</packaging>
-    <version>0.6</version>
-    <description>Show the Scoreboard with custom variables</description>
-    <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
+    <packaging>jar</packaging>
+    <inceptionYear>2013</inceptionYear>
+
     <name>ScoreboardStats</name>
+    <description>Show the Scoreboard with custom variables</description>
+    <version>0.6</version>
+    <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bukkit.version>LATEST</bukkit.version>
     </properties>
 
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/games647/ScoreboardStats/issues</url>
-    </issueManagement>
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
 
-    <scm>
-        <url>https://github.com/games647/ScoreboardStats</url>
-        <tag>HEAD</tag>
-        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
-    </scm>
+        <!--Repository for vault and heroes-->
+        <repository>
+            <id>vault-repo</id>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+        </repository>
+
+        <!--Repo for Repository-->
+        <repository>
+            <id>simpleclans-repo</id>
+            <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
+        </repository>
+    </repositories>
+
 
     <dependencies>
+        <!--Testing-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>LATEST</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>0.11.8</version>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>${bukkit.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>${bukkit.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <!--API for economy, permissions and chat-->
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>LATEST</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.herocraftonline.heroes</groupId>
+            <artifactId>Heroes</artifactId>
+            <version>LATEST</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>LATEST</version>
+            <type>jar</type>
+        </dependency>
+        <!--dependencies in /lib-->
+
+        <!--Stats on Signs-->
+        <dependency>
+            <groupId>de.blablubbabc</groupId>
+            <artifactId>insigns</artifactId>
+            <version>1.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/IndividualSigns_v1.5.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <!--Maven repo for mcmmo is down-->
+        <dependency>
+            <groupId>com.gmail.nossr50</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>1.4.07</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>factions</artifactId>
+            <version>2.3.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+            <type>jar</type>
+        </dependency>
+        <!--MCore must be avaible for factions-->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>mcore</artifactId>
+            <version>7.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
             <type>jar</type>
         </dependency>
     </dependencies>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
-        <finalName>${project.name}</finalName>
-        <directory>../../target</directory>
-
-        <sourceDirectory>../../src/main/java</sourceDirectory>
-        <testSourceDirectory>../../src/test</testSourceDirectory>
-
-        <resources>
-            <resource>
-                <directory>../../src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**</include>
-                </includes>
-            </resource>
-        </resources>
+        <finalName>${project.name} v${project.version}</finalName>
 
         <plugins>
             <plugin>
@@ -67,31 +135,33 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <debug>false</debug>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <verbose>true</verbose>
                     <optimize>true</optimize>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
-                    <excludes>
-                        <exclude>**/variables/</exclude>
-                    </excludes>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
-    <modules>
-        <module>sub/main</module>
-    </modules>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/games647/ScoreboardStats/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/games647/ScoreboardStats</url>
+        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
+    </scm>
 </project>

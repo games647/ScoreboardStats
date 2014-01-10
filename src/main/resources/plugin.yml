@@ -1,10 +1,18 @@
 name: ${project.name}
-main: ${project.groupId}.${parent.artifactId}.${project.name}
+main: ${project.groupId}.${project.artifactId}.${project.name}
 author: games647
 version: ${project.version}
 description: ${project.description}
 website: ${project.url}
-softdepend: [mcMMO, Vault, SimpleClans, InSigns, Essentials, Factions, Jobs, Heroes]
+softdepend:
+  - mcMMO
+  - Vault
+  - SimpleClans
+  - InSigns
+  - Essentials
+  - Factions
+  - Jobs
+  - Heroes
 
 commands:
   sb:reload:
@@ -12,8 +20,8 @@ commands:
   sb:toggle:
     aliases: []
   sidebar:
-    aliases: [scoreboardstats, side]
-    
+    aliases: [scoreboardstats, side, ss]
+
 permissions:
   scoreboardstats.admin:
     default: op

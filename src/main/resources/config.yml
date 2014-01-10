@@ -1,4 +1,4 @@
-#This is the default config
+#Main configuration
 
 enable-pvpstats: true
 
@@ -12,15 +12,11 @@ disabled-worlds:
 #This will not count vanished players in the online value
 hide-vanished: false
 
-enable-sound: false
-
-enable-auto-update: true
-
 Scoreboard:
   Title: '&a&lStats'
   #seconds
   # For instant updates you can or 1 and it will update every second
-  Update-delay: 1
+  Update-delay: 2
   Items:
     #The Title must have under 16 characters
     #Title: Type

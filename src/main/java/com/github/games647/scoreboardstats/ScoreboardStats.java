@@ -7,26 +7,19 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
-
 import com.github.games647.scoreboardstats.commands.DisableCommand;
 import com.github.games647.scoreboardstats.commands.ReloadCommand;
 import com.github.games647.scoreboardstats.commands.SidebarCommand;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
-import com.github.games647.scoreboardstats.listener.PluginListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
-import com.github.games647.scoreboardstats.pvpstats.SaveTask;
-import com.github.games647.scoreboardstats.scoreboard.ReflectionUtil;
-import com.github.games647.scoreboardstats.scoreboard.SbManager;
-import com.github.games647.variables.Commands;
-import com.github.games647.variables.Message;
-import com.github.games647.variables.Other;
+import com.google.common.collect.Sets;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -34,65 +27,63 @@ import java.util.regex.Pattern;
 
 import javax.persistence.PersistenceException;
 
-import lombok.Getter;
-import org.bukkit.Server;
-
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import org.fusesource.jansi.Ansi;
 
-public final class ScoreboardStats extends JavaPlugin {
+public class ScoreboardStats extends JavaPlugin {
 
-    @Getter private static  ScoreboardStats instance;
+    private static ScoreboardStats instance;
 
-    @Getter private final   Set<String>     hidelist = new HashSet<String>(10);
+    public static ScoreboardStats getInstance() {
+        return instance;
+    }
 
-    private         int             refreshTask;
-    private         int             saveTask;
+    private final Set<String> hidelist = Sets.newHashSet();
+    private SbManager scoreboardManager;
+
+    private int refreshTask;
 
     public ScoreboardStats() {
         super();
+
         instance = this;
+    }
+
+    public SbManager getScoreboardManager() {
+        return scoreboardManager;
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
 
-        Settings.loadConfig();
-
-        if (Settings.isUpdateInfo()) {
-            new Updater(this, "scoreboardstats", getFile(), Updater.UpdateType.DEFAULT, true);
+        final Updater updater = new Updater(this, 55148, getFile(), Updater.UpdateType.DEFAULT, false);
+        if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+            getLogger().info("A new update is avaible and will be install after a reload or restart");
+            getLogger().info("Thanks to Gravity for his great work");
         }
 
+        Settings.loadConfig();
         setupDatabase();
 
-        PluginListener.init();
+        //Register all events
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(), this);
 
-        final Server server = getServer();
+        getCommand("sb:reload").setExecutor(new ReloadCommand());
+        getCommand("sb:toggle").setExecutor(new DisableCommand());
+        getCommand("sidebar").setExecutor(new SidebarCommand());
 
-        server.getPluginManager().registerEvents(new PlayerListener(), this);
-        server.getPluginManager().registerEvents(new EntityListener(), this);
+        scoreboardManager = new SbManager();
+        scoreboardManager.regAll();
 
-        getCommand(Commands.RELOAD_COMMAND) .setExecutor(new ReloadCommand());
-        getCommand(Commands.HIDE_COMMAND)   .setExecutor(new DisableCommand());
-        getCommand(Commands.SIDEBAR)        .setExecutor(new SidebarCommand());
-
-        SbManager.regAll();
-
-        refreshTask = server.getScheduler().scheduleSyncRepeatingTask(this,
-                new RefreshTask(),
-                Other.STARTUP_DELAY,
-                Settings.getIntervall() * Other.TICKS_PER_SECOND);
-        if (Settings.isPvpStats()) {
-            saveTask = server.getScheduler().scheduleAsyncRepeatingTask(this
-                , new SaveTask()
-                , Other.STARTUP_DELAY
-                , Settings.getSaveIntervall() * Other.TICKS_PER_SECOND * 60);
-        }
+        refreshTask = getServer().getScheduler().scheduleSyncRepeatingTask(this,
+                new RefreshTask(this),
+                60L,
+                Settings.getIntervall() * 20L);
     }
 
     @Override
@@ -107,30 +98,29 @@ public final class ScoreboardStats extends JavaPlugin {
     public void onLoad() {
         super.onLoad();
 
-        ReflectionUtil.initReflections();
+        isScoreboardCompatible(); //Check if server can display scoreboards
     }
 
     public void onReload() {
-        final int     intervall     = Settings.getIntervall();
-        final int     length        = Settings.getItemsLenght();
-        final boolean pvpstats      = Settings.isPvpStats();
+        final int intervall = Settings.getIntervall();
+        final int length = Settings.getItemsLenght();
+        final boolean pvpstats = Settings.isPvpStats();
 
         Settings.loadConfig();
-
         if (intervall != Settings.getIntervall()) {
             getServer().getScheduler().cancelTask(refreshTask);
             getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                    new RefreshTask(), Other.STARTUP_DELAY,
-                    Settings.getIntervall() * Other.TICKS_PER_SECOND);
+                    new RefreshTask(this), 60L,
+                    Settings.getIntervall() * 20L);
         }
 
         if (length != Settings.getItemsLenght()) {
-            SbManager.unregisterAll();
+            scoreboardManager.unregisterAll();
         }
 
         if (pvpstats != Settings.isPvpStats()) {
             instance.setupDatabase();
-            SbManager.regAll();
+            scoreboardManager.regAll();
         }
     }
 
@@ -138,32 +128,37 @@ public final class ScoreboardStats extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
 
-        getServer().getScheduler().cancelTasks(this);
-        Database.saveAll(true);
-        SbManager.unregisterAll();
-        HandlerList.unregisterAll(this);
+        getServer().getScheduler().cancelTasks(this); //Remove all running tasks
+        HandlerList.unregisterAll(this); //Remove all listeners
+        Database.saveAll();
+        scoreboardManager.unregisterAll(); //Clear all scoreboards
+    }
+
+    public Set<String> getHidelist() {
+        return hidelist;
     }
 
     private void setupDatabase() {
         if (Settings.isPvpStats()) {
-            final ServerConfig db = new ServerConfig();
-            db.setRegister(false);
-            db.setClasses(getDatabaseClasses());
-            db.setName(getName());
+            final ServerConfig databaseConfig = new ServerConfig();
+            databaseConfig.setRegister(false);
+            databaseConfig.setClasses(getDatabaseClasses());
+            databaseConfig.setName(getName());
 
-            final DataSourceConfig ds   = getSqlConfig(db);
+            final DataSourceConfig ds = getSqlConfig(databaseConfig);
             ds.setUrl(replaceUrlString(ds.getUrl()));
 
-            final ClassLoader previous  = Thread.currentThread().getContextClassLoader();
+            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
 
             Thread.currentThread().setContextClassLoader(getClassLoader());
-            final EbeanServer database  = EbeanServerFactory.create(db);
+            final EbeanServer database = EbeanServerFactory.create(databaseConfig);
             Thread.currentThread().setContextClassLoader(previous);
 
             try {
                 database.find(PlayerStats.class).findRowCount();
             } catch (PersistenceException ex) {
-                getLogger().log(Level.INFO, "{0}" + Message.NON_EXISTING_DATABASE + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.YELLOW));
+                getLogger().log(Level.INFO, "{0}" + "Can't find an existing Database, so creating a new one" + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.YELLOW));
+
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                 gen.runScript(false, gen.generateCreateDdl());
             }
@@ -179,14 +174,13 @@ public final class ScoreboardStats extends JavaPlugin {
                 .replace("{NAME}", getName());
     }
 
-    private DataSourceConfig getSqlConfig(ServerConfig sconfig) {
+    private DataSourceConfig getSqlConfig(ServerConfig serverConfig) {
         final File file = new File(getDataFolder(), "sql.yml");
         final FileConfiguration sqlConfig;
         final DataSourceConfig config;
-
         if (file.exists()) {
-            sqlConfig   = YamlConfiguration.loadConfiguration(file);
-            config      = new DataSourceConfig();
+            sqlConfig = YamlConfiguration.loadConfiguration(file);
+            config = new DataSourceConfig();
 
             config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
             config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
@@ -194,12 +188,12 @@ public final class ScoreboardStats extends JavaPlugin {
             config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
             config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
 
-            sconfig.setDataSourceConfig(config);
+            serverConfig.setDataSourceConfig(config);
         } else {
             saveResource("sql.yml", false);
 
-            getServer().configureDbConfig(sconfig);
-            config = sconfig.getDataSourceConfig();
+            getServer().configureDbConfig(serverConfig);
+            config = serverConfig.getDataSourceConfig();
 
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             sqlConfig.set("SQL-Settings.Username", config.getUsername());
@@ -210,7 +204,7 @@ public final class ScoreboardStats extends JavaPlugin {
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {
-                getLogger().log(Level.WARNING, "{0}" + Message.FILE_EXCEPTION + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
+                getLogger().log(Level.WARNING, "{0}" + "Error while trying to save the sql.yml" + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
                 getLogger().throwing(getClass().getName(), "getSqlConfig", ex);
             }
         }
@@ -220,5 +214,17 @@ public final class ScoreboardStats extends JavaPlugin {
         config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
 
         return config;
+    }
+
+    private boolean isScoreboardCompatible() throws NumberFormatException { //ToDo cath exception
+        final String bukkitVersion = getServer().getBukkitVersion();
+        final int version = Integer.parseInt(bukkitVersion.split("\\-")[0].replace(".", ""));
+        if (version >= 150) {
+            return true;
+        }
+
+        getLogger().warning("Scoreboards are only supported in 1.5 or above");
+        getPluginLoader().disablePlugin(this);
+        return false;
     }
 }
