@@ -1,19 +1,13 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import lombok.Getter;
-import lombok.ToString;
+public class PlayerCache {
 
-@ToString(includeFieldNames = true)
-public final class PlayerCache {
+    private int kills;
+    private int mob;
+    private int deaths;
 
-    @Getter private int kills;
-    @Getter private int mob;
-    @Getter private int deaths;
-
-    @Getter private int streak;
-    @Getter private int laststreak;
-
-    @Getter private boolean remove;
+    private int streak;
+    private int laststreak;
 
     public PlayerCache(int paramkills, int parammob, int paramdeaths, int paramstreak) {
         kills   = paramkills;
@@ -31,7 +25,7 @@ public final class PlayerCache {
         laststreak++;
     }
 
-    public void increaseMob() {
+    public void increaseMobKills() {
         mob++;
     }
 
@@ -44,7 +38,23 @@ public final class PlayerCache {
         deaths++;
     }
 
-    public void setRemove(boolean remove) {
-        this.remove = remove;
+    public int getKills() {
+        return kills;
+    }
+
+    public int getMob() {
+        return mob;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public int getLaststreak() {
+        return laststreak;
     }
 }

@@ -11,24 +11,25 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-public final class EntityListener implements Listener {
+public class EntityListener implements Listener {
 
     @EventHandler
-    public static void onMobDeath(EntityDeathEvent event) {
+    public void onMobDeath(EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
         final Player killer = entity.getKiller();
+        final String worldName = entity.getWorld().getName();
 
         if (!Settings.isPvpStats()
-                || Settings.isDisabledWorld(entity.getWorld().getName())
+                || Settings.isDisabledWorld(worldName)
                 || entity.getType() == EntityType.PLAYER
                 || killer == null
                 || !killer.isOnline()) {
             return;
         }
 
-        final PlayerCache killercache = Database.getCache(killer.getName());
+        final PlayerCache killercache = Database.getCacheIfAbsent(killer.getName());
         if (killercache != null) {
-            killercache.increaseMob();
+            killercache.increaseMobKills();
         }
     }
 }
