@@ -49,7 +49,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%used%ram%".equals(variable)) {
-            return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) * 100 / Runtime.getRuntime().maxMemory());
+            return (int) (((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) * 100) / Runtime.getRuntime().maxMemory());
         }
 
         if ("%date%".equals(variable)) {
@@ -82,37 +82,37 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%helmet%".equals(variable)) {
             final ItemStack helmet = player.getInventory().getHelmet();
-            if (helmet == null || helmet.getType().getMaxDurability() == 0) {
+            if ((helmet == null) || (helmet.getType().getMaxDurability() == 0)) {
                 return -2;
             } else {
-                return helmet.getDurability() * 100 / helmet.getType().getMaxDurability();
+                return (helmet.getDurability() * 100) / helmet.getType().getMaxDurability();
             }
         }
 
         if ("%boots%".equals(variable)) {
             final ItemStack boots = player.getInventory().getBoots();
-            if (boots == null || boots.getType().getMaxDurability() == 0) {
+            if ((boots == null) || (boots.getType().getMaxDurability() == 0)) {
                 return -2;
             } else {
-                return boots.getDurability() * 100 / boots.getType().getMaxDurability();
+                return (boots.getDurability() * 100) / boots.getType().getMaxDurability();
             }
         }
 
         if ("%leggings%".equals(variable)) {
             final ItemStack leggings = player.getInventory().getLeggings();
-            if (leggings == null || leggings.getType().getMaxDurability() == 0) {
+            if ((leggings == null) || (leggings.getType().getMaxDurability() == 0)) {
                 return -2;
             } else {
-                return leggings.getDurability() * 100 / leggings.getType().getMaxDurability();
+                return (leggings.getDurability() * 100) / leggings.getType().getMaxDurability();
             }
         }
 
         if ("%chestplate%".equals(variable)) {
             final ItemStack chestplate = player.getInventory().getChestplate();
-            if (chestplate == null || chestplate.getType().getMaxDurability() == 0) {
+            if ((chestplate == null) || (chestplate.getType().getMaxDurability() == 0)) {
                 return -2;
             } else {
-                return chestplate.getDurability() * 100 / chestplate.getType().getMaxDurability();
+                return (chestplate.getDurability() * 100) / chestplate.getType().getMaxDurability();
             }
         }
 

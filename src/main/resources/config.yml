@@ -1,6 +1,6 @@
 #Main configuration
 
-enable-pvpstats: true
+enable-pvpstats: false
 
 #In minutes
 PvPStats-SaveIntervall: 15
@@ -21,9 +21,9 @@ Scoreboard:
     #The Title must have under 16 characters
     #Title: Type
     '&9Online': '%online%'
-    '&9Money': '%econ%'
+    '&9Money': '%money%'
 
-Temp-Scoreboard-enabled: true
+Temp-Scoreboard-enabled: false
 
 Temp-Scoreboard:
   Title: '&a&lTop Kills'

@@ -8,7 +8,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class VaultVariables implements ReplaceManager.Replaceable {
 
-    private Economy economy = null;
+    private Economy economy;
 
     public VaultVariables() {
         setupEconomy();
@@ -30,6 +30,6 @@ public class VaultVariables implements ReplaceManager.Replaceable {
             economy = economyProvider.getProvider();
         }
 
-        return (economy != null);
+        return economy != null;
     }
 }
