@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -18,7 +19,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.plugin.Plugin;
 
-public class ReplaceManager implements Listener {
+public final class ReplaceManager implements Listener {
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();
     private final Map<Class<? extends Replaceable>, String> defaults;
@@ -53,12 +54,12 @@ public class ReplaceManager implements Listener {
      * @throws IllegalStateException if replacer is already registered
      */
     public void register(Replaceable replacer, String pluginName)
-            throws NullPointerException, IllegalArgumentException, IllegalStateException{
+            throws NullPointerException, IllegalArgumentException, IllegalStateException {
         Preconditions.checkNotNull(replacer, "replacer cannot be null");
         Preconditions.checkNotNull(pluginName, "pluginName cannot be null");
 
         Preconditions.checkArgument(!pluginName.isEmpty(), "the pluginName cannot be empty");
-        Preconditions.checkArgument(isPluginAvaible(pluginName), "this plugin isn't available or activated");
+        Preconditions.checkArgument(isPluginAvailble(pluginName), "this plugin isn't available or activated");
 
         Preconditions.checkState(!replacers.containsKey(replacer), "this replacer is already registered");
 
@@ -66,7 +67,8 @@ public class ReplaceManager implements Listener {
     }
 
     public void unregister(Replaceable replacer) {
-        if (replacers.containsKey(replacer)) { //fail safe
+        //fail safe
+        if (replacers.containsKey(replacer)) {
             replacers.remove(replacer);
         }
     }
@@ -85,9 +87,7 @@ public class ReplaceManager implements Listener {
                 iter.remove();
 
                 final Logger logger = ScoreboardStats.getInstance().getLogger();
-                logger.log(Level.WARNING
-                        , String.format("In Replacer: %s occured an error. So it will be removed to prevent future errors", replacer)
-                        , e);
+                logger.log(Level.WARNING, Language.get("replacerException", replacer), e);
             }
         }
 
@@ -97,7 +97,7 @@ public class ReplaceManager implements Listener {
     public final void addDefaultReplacer() {
         for (Map.Entry<Class<? extends Replaceable>, String> entry: defaults.entrySet()) {
             final String pluginName = entry.getValue();
-            if (isPluginAvaible(pluginName)) {
+            if (isPluginAvailble(pluginName)) {
                 registerDefault(entry.getKey(), pluginName);
             }
         }
@@ -106,12 +106,10 @@ public class ReplaceManager implements Listener {
     @EventHandler
     public void onPluginEnable(PluginEnableEvent enableEvent) {
         final String enablePluginName = enableEvent.getPlugin().getName();
-        if (!"ScoreboardStats".equals(enablePluginName)) {
-            for (Map.Entry<Class<? extends Replaceable>, String> entry: defaults.entrySet()) {
-                final String pluginName = entry.getValue();
-                if (enablePluginName.equalsIgnoreCase(entry.getValue())) {
-                    registerDefault(entry.getKey(), pluginName);
-                }
+        for (Map.Entry<Class<? extends Replaceable>, String> entry: defaults.entrySet()) {
+            final String pluginName = entry.getValue();
+            if (enablePluginName.equalsIgnoreCase(entry.getValue())) {
+                registerDefault(entry.getKey(), pluginName);
             }
         }
     }
@@ -129,17 +127,19 @@ public class ReplaceManager implements Listener {
         }
     }
 
-    private boolean isPluginAvaible(String pluginName) {
-        final Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(pluginName);
-        return plugin != null && plugin.isEnabled();
+    private boolean isPluginAvailble(String pluginName) {
+        return Bukkit.getServer().getPluginManager().isPluginEnabled(pluginName);
     }
 
     private void registerDefault(Class<? extends Replaceable> replacerClass, String pluginName) {
         try {
-            register(replacerClass.newInstance(), pluginName);
+            final Replaceable instance = replacerClass.newInstance();
+            if (!replacers.containsKey(instance)) {
+                register(instance, pluginName);
+            }
         } catch (Exception ex) {
             ScoreboardStats.getInstance().getLogger()
-                    .log(Level.WARNING, "Couldn't register listeners", ex);
+                    .log(Level.WARNING, Language.get("noRegister"), ex);
         }
     }
 

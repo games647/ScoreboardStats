@@ -28,7 +28,7 @@ public class StatsVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%kdr%".equals(variable)) {
-            return Database.getKdr(playerName);
+            return (int) cache.getKdr();
         }
 
         if ("%killstreak%".equals(variable)) {

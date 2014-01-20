@@ -2,26 +2,23 @@ package com.github.games647.scoreboardstats;
 
 import com.google.common.collect.Maps;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import org.fusesource.jansi.Ansi;
-
 public class Settings {
 
-    private Settings() { //Singleton
-
-    }
-
     private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
+    private static final ResourceBundle SPECIAL_CHARACTERS = ResourceBundle.getBundle("characters");
 
     private static boolean             pvpStats;
     private static boolean             tempScoreboard;
@@ -73,110 +70,6 @@ public class Settings {
 
     }
 
-    private static String checkLength(String check, int limit) {
-        if (check.length() > limit) {
-            final String cut = check.substring(0, limit);
-            Bukkit.getLogger().log(Level.WARNING
-                    , Ansi.ansi().fg(Ansi.Color.RED) + "[ScoreboardStats]" + "{0}" + Ansi.ansi().fg(Ansi.Color.DEFAULT)
-                    , String.format("%s was longer than the limit of %s characters. This Plugin will cut automatically to the right size.", cut, limit));
-            return cut;
-        }
-
-        return check;
-    }
-
-    private static int checkItems(int input) {
-        if (input >= 16) {
-            Bukkit.getLogger().log(Level.WARNING, "{0}" + "[ScoreboardStats]" + "One Scoreboard can't have more than 15 items"+ Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
-            return 16 - 1;
-        }
-
-        return input;
-    }
-
-    private static void loaditems(ConfigurationSection config) {
-        final Set<String> keys = config.getKeys(false);
-        if (!ITEMS.isEmpty()) {
-            ITEMS.clear();
-        }
-
-        for (final String key : keys) {
-            if (ITEMS.size() == 16 - 1) {
-                Bukkit.getLogger().log(Level.WARNING, "{0}" + "[ScoreboardStats]" + "One Scoreboard can't have more than 15 items" + Ansi.ansi().fg(Ansi.Color.DEFAULT), Ansi.ansi().fg(Ansi.Color.RED));
-                break;
-            }
-
-            ITEMS.put(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, checkLength(replaceUtf8Characters(key), 16)), config.getString(key));
-        }
-    }
-
-    private static String replaceUtf8Characters(String input) {
-        final String[][] utf8 = new String[][] {
-            {"[<3]"     , "❤"},
-            {"[check]"  , "✔"},
-
-            {"[<]" , "◄"},
-            {"[>]" , "►"},
-
-            {"[star]"       , "★"},
-            {"[round_star]" , "✪"},
-            {"[stars]"      , "⁂"},
-            {"[T_STAR]"     , "✰"},
-
-            {"[crown]", "♛"},
-            {"[chess]", "♜"},
-
-            {"[top]"    , "▀"},
-            {"[button]" , "▄"},
-            {"[side]"   , "▌"},
-            {"[mid]"    , "▬"},
-
-            {"[1]"  , "▂"},
-            {"[2]"  , "▃"},
-            {"[3]"  , "▄"},
-            {"[4]"  , "▅"},
-            {"[5]"  , "▆"},
-            {"[6]"  , "▇"},
-            {"[7]"  , "█"},
-            {"[8]"  , "▓"},
-            {"[9]"  , "▒"},
-            {"[10]" , "░"},
-
-            {"[right_up]"   , "⋰"},
-            {"[left_up]"    , "⋱"},
-
-            {"[PHONE]"  , "✆"},
-            {"[MAIL]"   , "✉"},
-            {"[PLANE]"  , "✈"},
-            {"[PENCIL]" , "✎"},
-            {"[X]"      , "✖"},
-            {"[FLOWER]" , "✿"},
-
-            {"[ARROW]"  , "➽"},
-            {"[ARROW1]" , "➨"},
-            {"[ARROW2]" , "➤"},
-            {"[ARROW3]" , "➜"},
-            {"[ARROW4]" , "➨"},
-
-            {"[ONE]"    , "❶"},
-            {"[TWO]"    , "❷"},
-            {"[THREE]"  , "❸"},
-            {"[FOUR]"   , "❹"},
-            {"[FIVE]"   , "❺"},
-            {"[SIX]"    , "❻"},
-            {"[SEVEN]"  , "❼"},
-            {"[EIGHT]"  , "❽"},
-            {"[NINE]"   , "❾"},
-            {"[TEN]"    , "❿"},
-        };
-
-        for (String[] temp : utf8) {
-            input = input.replace(temp[0], temp[1]);
-        }
-
-        return input;
-    }
-
     public static int getItemsLenght() {
         return ITEMS.size();
     }
@@ -185,8 +78,8 @@ public class Settings {
         return ITEMS.entrySet().iterator();
     }
 
-    public static boolean isDisabledWorld(String name) {
-        return disabledWorlds.contains(name);
+    public static boolean isDisabledWorld(World world) {
+        return disabledWorlds.contains(world.getName());
     }
 
     public static boolean isPvpStats() {
@@ -235,5 +128,57 @@ public class Settings {
 
     public static int getTempDisapper() {
         return tempDisapper;
+    }
+
+    private Settings() {
+        //Singleton
+    }
+
+    private static String checkLength(String check, int limit) {
+        if (check.length() > limit) {
+            final String cut = check.substring(0, limit);
+            Bukkit.getLogger().warning(Language.get("toLongName", cut, limit));
+
+            return cut;
+        }
+
+        return check;
+    }
+
+    private static int checkItems(int input) {
+        if (input >= 16) {
+            Bukkit.getLogger().warning(Language.get("toManyItems"));
+            return 16 - 1;
+        }
+
+        return input;
+    }
+
+    private static void loaditems(ConfigurationSection config) {
+        final Set<String> keys = config.getKeys(false);
+        if (!ITEMS.isEmpty()) {
+            ITEMS.clear();
+        }
+
+        for (final String key : keys) {
+            if (ITEMS.size() == (16 - 1)) {
+                Bukkit.getLogger().warning(Language.get("toManyItems"));
+                break;
+            }
+
+            ITEMS.put(ChatColor.translateAlternateColorCodes('&', checkLength(replaceUtf8Characters(key), 16)), config.getString(key));
+        }
+    }
+
+    private static String replaceUtf8Characters(String input) {
+        String replacedInput = input;
+        final Enumeration<String> characters = SPECIAL_CHARACTERS.getKeys();
+        for (Enumeration<String> e = characters; e.hasMoreElements();) {
+            final String character = e.nextElement();
+            final String value = SPECIAL_CHARACTERS.getString(character);
+            replacedInput = replacedInput.replace(character, value);
+        }
+
+        return replacedInput;
     }
 }
