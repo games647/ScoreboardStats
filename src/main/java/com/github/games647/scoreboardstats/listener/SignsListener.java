@@ -3,62 +3,50 @@ package com.github.games647.scoreboardstats.listener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
 
-import de.blablubbabc.insigns.Changer;
-import de.blablubbabc.insigns.InSigns;
+import de.blablubbabc.insigns.SignSendEvent;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public final class SignsListener {
+public final class SignsListener implements Listener {
 
     private static final String PERMISSION = "scoreboardstats.sign";
 
-    private SignsListener() {}
-
-    public static void registerSigns(InSigns instance) {
-
-        instance.addChanger(new Changer("[Kill]", PERMISSION) {
-            @Override
-            public String getValue(Player player, Location lctn) {
-                final PlayerCache playercache = Database.getCacheIfAbsent(player.getName());
-                return playercache == null
-                        ? "" : String.valueOf(playercache.getKills());
+    @EventHandler
+    public void onSignSendEvent(SignSendEvent signSendEvent) {
+        final Player player = signSendEvent.getPlayer();
+        if (player.hasPermission(PERMISSION)) {
+            for (int lineNumber = 0; lineNumber < 4; lineNumber++) {
+                final String line = signSendEvent.getLine(lineNumber);
+                getValue(signSendEvent, player, line, lineNumber);
             }
-        });
+        }
+    }
 
-        instance.addChanger(new Changer("[Death]", PERMISSION) {
-            @Override
-            public String getValue(Player player, Location lctn) {
-                final PlayerCache playercache = Database.getCacheIfAbsent(player.getName());
-                return playercache == null
-                        ? "" : String.valueOf(playercache.getDeaths());
-            }
-        });
+    private void getValue(SignSendEvent signSendEvent, Player player, String line, int lineNumber) {
+        final PlayerCache playerCache = Database.getCacheIfAbsent(player.getName());
+        if (playerCache == null) {
+            return;
+        }
 
-        instance.addChanger(new Changer("[Mob]", PERMISSION) {
-            @Override
-            public String getValue(Player player, Location lctn) {
-                final PlayerCache playercache = Database.getCacheIfAbsent(player.getName());
-                return playercache == null
-                        ? "" : String.valueOf(playercache.getMob());
-            }
-        });
+        String replacedString = null;
+        if (line.contains("[Kill]")) {
+            final String kills = String.valueOf(playerCache.getKills());
+            replacedString = line.replace("[Kill]", kills);
+        } else if (line.contains("[Death]")) {
+            final String deaths = String.valueOf(playerCache.getDeaths());
+            replacedString = line.replace("[Death]", deaths);
+        } else if (line.contains("[KDR]")) {
+            final String kdr = String.valueOf(playerCache.getKdr());
+            replacedString = line.replace("[KDR]", kdr);
+        } else if (line.contains("[Streak]")) {
+            final String streak = String.valueOf(playerCache.getStreak());
+            replacedString = line.replace("[Streak]", streak);
+        }
 
-        instance.addChanger(new Changer("[KDR]", PERMISSION) {
-            @Override
-            public String getValue(Player player, Location lctn) {
-                return Database.getCacheIfAbsent(player.getName()) == null
-                        ? "" : String.valueOf(Database.getKdr(player.getName()));
-            }
-        });
-
-        instance.addChanger(new Changer("[Streak]", PERMISSION) {
-            @Override
-            public String getValue(Player player, Location lctn) {
-                final PlayerCache playercache = Database.getCacheIfAbsent(player.getName());
-                return playercache == null
-                        ? "" : String.valueOf(playercache.getStreak());
-            }
-        });
+        if (replacedString != null) {
+            signSendEvent.setLine(lineNumber, replacedString);
+        }
     }
 }

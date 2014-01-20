@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -26,8 +25,8 @@ public class SbManager {
             return;
         }
 
-        if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null
-                && !player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().equals("ScoreboardStatsT")) {
+        if ((player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null)
+                && !"ScoreboardStatsT".equals(player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName())) {
             return;
         }
 
@@ -61,13 +60,14 @@ public class SbManager {
     public void createTopListScoreboard(final Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
         if (!checkState(player)
-                || scoreboard   .getObjective(DisplaySlot.SIDEBAR) == null
-                || !scoreboard  .getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+                || (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
+                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
             return;
         }
 
         if (scoreboard.getObjective("ScoreboardStatsT") != null) {
-            scoreboard.getObjective("ScoreboardStatsT").unregister();  //to remove the old scores
+            //to remove the old scores
+            scoreboard.getObjective("ScoreboardStatsT").unregister();
         }
 
         final Map<String, Integer> top = Database.getTop();
@@ -109,7 +109,7 @@ public class SbManager {
     public void sendUpdate(Player player, boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (player.hasPermission("scoreboardstats.use")
-                && objective.getName().equals("ScoreboardStats")
+                && "ScoreboardStats".equals(objective.getName())
                 && !ScoreboardStats.getInstance().getHidelist().contains(player.getName())) {
             final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
             while (iter.hasNext()) {
@@ -123,7 +123,7 @@ public class SbManager {
                     iter.remove();
 
                     final Logger logger = ScoreboardStats.getInstance().getLogger();
-                    logger.log(Level.INFO, "Couldn't replace variable with name: " + variable + "Maybe you misspelled it or the replacer isn't available yet");
+                    logger.info(Language.get("unknownVariable", variable));
                 }
             }
         }
@@ -131,7 +131,8 @@ public class SbManager {
 
     public void sendScore(Objective objective, String title, int value, boolean complete) {
         final Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.translateAlternateColorCodes('&', title)));
-        if (complete && value == 0) { //Have to use this because the score wouldn't send otherwise
+        //Have to use this because the score wouldn't send otherwise
+        if (complete && (value == 0)) {
             score.setScore(-1);
         }
 
@@ -167,10 +168,15 @@ public class SbManager {
     private boolean checkState(Player player) {
         return player.hasPermission("scoreboardstats.use")
                 && !ScoreboardStats.getInstance().getHidelist().contains(player.getName())
-                && !Settings.isDisabledWorld(player.getWorld().getName());
+                && !Settings.isDisabledWorld(player.getWorld());
     }
 
     private String checkLength(String check) {
-        return check.length() > 16- 2 ? check.substring(0, 16 - 2) : check; //Because adding the color
+        //Because adding the color
+        if (check.length() > (16 - 2)) {
+            return check.substring(0, 16 - 2);
+        } else {
+            return check;
+        }
     }
 }

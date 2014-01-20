@@ -57,4 +57,12 @@ public class PlayerCache {
     public int getLaststreak() {
         return laststreak;
     }
+
+    public double getKdr() {
+        if (deaths == 0) {
+            return kills;
+        } else {
+            return Math.round((double) kills / (double) deaths);
+        }
+    }
 }
