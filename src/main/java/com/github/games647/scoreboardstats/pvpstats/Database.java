@@ -1,6 +1,10 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.EbeanServerFactory;
+import com.avaje.ebeaninternal.api.SpiEbeanServer;
+import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
+import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.google.common.cache.Cache;
@@ -9,12 +13,14 @@ import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+
+import javax.persistence.PersistenceException;
 
 public final class Database {
 
     private static EbeanServer databaseInstance;
+    private static DatabaseConfiguration dbConfiguration;
 
     private static final Cache<String, PlayerCache> CACHE = CacheBuilder.newBuilder()
             .maximumSize(512)
@@ -23,8 +29,7 @@ public final class Database {
             .build(new CacheLoader<String, PlayerCache>() {
                 @Override
                 public PlayerCache load(String playerName) {
-                    ScoreboardStats.getInstance().getLogger().warning("Sych loading of playerstats");
-
+                    ScoreboardStats.getInstance().getLogger().warning(Language.get("synchLoading"));
                     final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", playerName).findUnique();
                     if (stats == null) {
                         return new PlayerCache();
@@ -47,7 +52,7 @@ public final class Database {
     }
 
     public static void loadAccount(String name) {
-        final ConcurrentMap<String, PlayerCache> cache = CACHE.asMap();
+        final Map<String, PlayerCache> cache = CACHE.asMap();
         if (cache.containsKey(name)) {
             return;
         }
@@ -61,17 +66,6 @@ public final class Database {
             final int mobKills = stats.getMobkills();
             final int killstreak = stats.getKillstreak();
             cache.put(name, new PlayerCache(kills, mobKills, deaths, killstreak));
-        }
-    }
-
-    public static int getKdr(String name) {
-        final PlayerCache stats = getCacheIfAbsent(name);
-        if (stats == null) {
-            return 0;
-        } else if (stats.getDeaths() == 0) {
-            return stats.getKills();
-        } else {
-            return Math.round((float) stats.getKills() / (float) stats.getDeaths());
         }
     }
 
@@ -101,13 +95,34 @@ public final class Database {
         return top;
     }
 
-    public static void setDatabaseInstance(EbeanServer databaseInstance) {
-        Database.databaseInstance = databaseInstance;
+    public static void setupDatabase(ScoreboardStats pluginInstance) {
+        if (Settings.isPvpStats()) {
+            dbConfiguration = new DatabaseConfiguration(pluginInstance);
+            dbConfiguration.loadConfiguration();
+
+            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+
+            Thread.currentThread().setContextClassLoader(pluginInstance.getClassLoaderBypass());
+            final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
+            Thread.currentThread().setContextClassLoader(previous);
+
+            try {
+                database.find(PlayerStats.class).findRowCount();
+            } catch (PersistenceException ex) {
+                pluginInstance.getLogger().info(Language.get("newDatabase"));
+                final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+                gen.runScript(false, gen.generateCreateDdl());
+            }
+
+            databaseInstance = database;
+        }
     }
 
-    /* package */ static EbeanServer getDatabaseInstance() {
+    protected static EbeanServer getDatabaseInstance() {
         return databaseInstance;
     }
 
-    private Database() {}
+    private Database() {
+        //Singleton
+    }
 }

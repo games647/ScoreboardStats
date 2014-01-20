@@ -17,12 +17,11 @@ public class EntityListener implements Listener {
     public void onMobDeath(EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
         final Player killer = entity.getKiller();
-        final String worldName = entity.getWorld().getName();
 
         if (!Settings.isPvpStats()
-                || Settings.isDisabledWorld(worldName)
-                || entity.getType() == EntityType.PLAYER
-                || killer == null
+                || Settings.isDisabledWorld(entity.getWorld())
+                || (entity.getType() == EntityType.PLAYER)
+                || (killer == null)
                 || !killer.isOnline()) {
             return;
         }

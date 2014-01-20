@@ -25,9 +25,10 @@ public class RemoveListener implements RemovalListener<String, PlayerCache> {
         final PlayerCache playerCache = notification.getValue();
 
         //There are no need to query the database
-        if (playerCache.getKills() == 0
-                && playerCache.getDeaths() == 0
-                && playerCache.getMob() == 0) {
+        if ((playerCache == null)
+                || (playerCache.getKills() == 0)
+                && (playerCache.getDeaths() == 0)
+                && (playerCache.getMob() == 0)) {
             return;
         }
 
@@ -37,10 +38,10 @@ public class RemoveListener implements RemovalListener<String, PlayerCache> {
             stats.setPlayername(playerName);
         }
 
-        if (stats.getDeaths() == playerCache.getDeaths()
-                && stats.getKills() == playerCache.getKills()
-                && stats.getMobkills() == playerCache.getMob()
-                && stats.getKillstreak() == playerCache.getStreak()) {
+        if ((stats.getDeaths() == playerCache.getDeaths())
+                && (stats.getKills() == playerCache.getKills())
+                && (stats.getMobkills() == playerCache.getMob())
+                && (stats.getKillstreak() == playerCache.getStreak())) {
             return; //No dates have been changed so there is no need to save the dates.
         }
 
