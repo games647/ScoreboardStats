@@ -13,22 +13,26 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 public class DisableCommand implements CommandExecutor {
 
-    private final ScoreboardStats plugin = ScoreboardStats.getInstance();
+    private final ScoreboardStats plugin;
+
+    public DisableCommand(ScoreboardStats plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
-    public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
-        if (!cs.hasPermission("scoreboardstats.hide")) {
-            cs.sendMessage(Language.get("noPermission"));
+    public boolean onCommand(CommandSender commandSender, Command cmd, String label, String[] args) {
+        if (!commandSender.hasPermission("scoreboardstats.hide")) {
+            commandSender.sendMessage(Language.get("noPermission"));
             return true;
         }
 
-        if (!(cs instanceof Player)) {
-            cs.sendMessage(Language.get("noConsole"));
+        if (!(commandSender instanceof Player)) {
+            commandSender.sendMessage(Language.get("noConsole"));
             return true;
         }
 
-        final String name = cs.getName();
-        final Player player = (Player) cs;
+        final String name = commandSender.getName();
+        final Player player = (Player) commandSender;
         final Set<String> list = plugin.getHidelist();
         if (list.contains(name)) {
             list.remove(name);
@@ -38,7 +42,7 @@ public class DisableCommand implements CommandExecutor {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
 
-        cs.sendMessage(Language.get("onToggle"));
+        commandSender.sendMessage(Language.get("onToggle"));
         return true;
     }
 }

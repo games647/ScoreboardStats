@@ -9,17 +9,21 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.ToString;
 
 @Entity
 @Table(name = "PlayerStats")
+@ToString(includeFieldNames=true)
 public class PlayerStats {
 
     @Id
     @NotEmpty
     @NotNull
-    @Length(max = 16) //A minecraft name cannot be longer than 16
+    @Length(max = 16)
+    //A minecraft name cannot be longer than 16
     private String playername;
 
+    //You can't have negative stats
     @Range(min = 0)
     private int kills;
 

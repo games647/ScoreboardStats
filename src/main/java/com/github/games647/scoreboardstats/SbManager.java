@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,82 +17,41 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class SbManager {
 
+    protected final ScoreboardStats pluginInstance;
     private final ReplaceManager replaceManager = new ReplaceManager();
 
-    public void createScoreboard(final Player player) {
-        if (!checkState(player)) {
-            return;
-        }
-
-        if ((player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null)
-                && !"ScoreboardStatsT".equals(player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName())) {
-            return;
-        }
-
-        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
-        objective.setDisplayName(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTitle()));
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        if (player.isOnline()) {
-            try {
-                player.setScoreboard(scoreboard);
-            } catch (IllegalStateException ex) {
-                return; //Silent
-            }
-
-            sendUpdate(player, true);
-            if (Settings.isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (player.isOnline()) {
-                            createTopListScoreboard(player);
-                        }
-                    }
-                }, Settings.getTempShow() * 20L);
-            }
-        }
+    public SbManager(ScoreboardStats pluginInstance) {
+        this.pluginInstance = pluginInstance;
     }
 
-    public void createTopListScoreboard(final Player player) {
-        final Scoreboard scoreboard = player.getScoreboard();
+    public void createScoreboard(Player player) {
+        final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (!checkState(player)
-                || (scoreboard.getObjective(DisplaySlot.SIDEBAR) == null)
-                || !scoreboard.getObjective(DisplaySlot.SIDEBAR).getName().startsWith("ScoreboardStats")) {
+                //Check if another scoreboard is showing
+                || oldObjective != null
+                && !"ScoreboardStatsT".equals(oldObjective.getName())) {
             return;
         }
 
-        if (scoreboard.getObjective("ScoreboardStatsT") != null) {
-            //to remove the old scores
-            scoreboard.getObjective("ScoreboardStatsT").unregister();
-        }
-
-        final Map<String, Integer> top = Database.getTop();
-        final String color = Settings.getTempColor();
-
-        final Objective objective = scoreboard.registerNewObjective("ScoreboardStatsT", "dummy");
-        objective.setDisplayName(ChatColor.translateAlternateColorCodes(ChatColor.COLOR_CHAR, Settings.getTempTitle()));
+        //Creates a new scoreboard and a new objective
+        final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        final Objective objective = scoreboard.registerNewObjective("ScoreboardStats", "dummy");
+        objective.setDisplayName(Settings.getTitle());
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        if (player.isOnline()) {
-            try {
-                player.setScoreboard(scoreboard);
-            } catch (IllegalStateException ex) {
-                return; //Silent
-            }
+        try {
+            player.setScoreboard(scoreboard);
 
-            for (Map.Entry<String, Integer> entry : top.entrySet()) {
-                sendScore(objective, String.format("%s%s", color, checkLength(entry.getKey())), entry.getValue(), false);
+            sendUpdate(player, true);
+            //Schedule the next tempscoreboard show
+            if (Settings.isTempScoreboard()) {
+                Bukkit.getScheduler().runTaskLater(pluginInstance
+                        , new NextShowTask(player, true)
+                        , Settings.getTempShow() * 20L);
             }
-
-            Bukkit.getScheduler().runTaskLater(ScoreboardStats.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    createScoreboard(player);
-                }
-            }, Settings.getTempDisapper() * 20L);
+        } catch (IllegalStateException ex) {
+            //Silent fail if the player is disonnect while setting the scoreboard
+            pluginInstance.getLogger().fine(Language.get("disconnectPlayer", ex));
         }
     }
 
@@ -106,41 +64,8 @@ public class SbManager {
         }
     }
 
-    public void sendUpdate(Player player, boolean complete) {
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (player.hasPermission("scoreboardstats.use")
-                && "ScoreboardStats".equals(objective.getName())
-                && !ScoreboardStats.getInstance().getHidelist().contains(player.getName())) {
-            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
-            while (iter.hasNext()) {
-                final Map.Entry<String, String> entry = iter.next();
-                final String title = entry.getKey();
-                final String variable = entry.getValue();
-                try {
-                    final int score = replaceManager.getScore(player, variable);
-                    sendScore(objective, title, score, complete);
-                } catch (UnknownVariableException ex) {
-                    iter.remove();
-
-                    final Logger logger = ScoreboardStats.getInstance().getLogger();
-                    logger.info(Language.get("unknownVariable", variable));
-                }
-            }
-        }
-    }
-
-    public void sendScore(Objective objective, String title, int value, boolean complete) {
-        final Score score = objective.getScore(Bukkit.getOfflinePlayer(ChatColor.translateAlternateColorCodes('&', title)));
-        //Have to use this because the score wouldn't send otherwise
-        if (complete && (value == 0)) {
-            score.setScore(-1);
-        }
-
-        score.setScore(value);
-    }
-
     public void regAll() {
-        Bukkit.getScheduler().runTaskAsynchronously(ScoreboardStats.getInstance(), new Runnable() {
+        Bukkit.getScheduler().runTaskAsynchronously(pluginInstance, new Runnable() {
             @Override
             public void run() {
                 final boolean ispvpstats = Settings.isPvpStats();
@@ -151,6 +76,7 @@ public class SbManager {
                         }
 
                         createScoreboard(player);
+                        pluginInstance.getRefreshTask().addToQueue(player);
                     }
                 }
             }
@@ -165,9 +91,81 @@ public class SbManager {
         }
     }
 
+    protected void createTopListScoreboard(Player player) {
+        final Scoreboard scoreboard = player.getScoreboard();
+        final Objective oldObjective = scoreboard.getObjective(DisplaySlot.SIDEBAR);
+        if (!checkState(player) || oldObjective == null
+                || !oldObjective.getName().startsWith("ScoreboardStats")) {
+            //Check if another scoreboard is showing
+            return;
+        }
+
+        if ("ScoreboardStatsT".equals(oldObjective.getName())) {
+            //remove old scores
+            scoreboard.getObjective("ScoreboardStatsT").unregister();
+        }
+
+        final Objective objective = scoreboard.registerNewObjective("ScoreboardStatsT", "dummy");
+        objective.setDisplayName(Settings.getTempTitle());
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+        try {
+            player.setScoreboard(scoreboard);
+
+            final Map<String, Integer> top = Database.getTop();
+            //Colorize and send all elements
+            for (Map.Entry<String, Integer> entry: top.entrySet()) {
+                final String color = Settings.getTempColor();
+                final String scoreName = String.format("%s%s", color, checkLength(entry.getKey()));
+                sendScore(objective, scoreName, entry.getValue(), false);
+            }
+
+            //schedule the next normal scoreboard show
+            Bukkit.getScheduler().runTaskLater(pluginInstance
+                    , new NextShowTask(player, false)
+                    , Settings.getTempDisapper() * 20L);
+        } catch (IllegalStateException ex) {
+            //Silent fail if the player is disonnect while setting the scoreboard
+            pluginInstance.getLogger().fine(Language.get("disconnectPlayer", ex));
+        }
+    }
+
+    private void sendUpdate(Player player, boolean complete) {
+        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        if ("ScoreboardStats".equals(objective.getName())) {
+            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            while (iter.hasNext()) {
+                final Map.Entry<String, String> entry = iter.next();
+                final String title = entry.getKey();
+                final String variable = entry.getValue();
+                try {
+                    final int score = replaceManager.getScore(player, variable);
+                    sendScore(objective, title, score, complete);
+                } catch (UnknownVariableException ex) {
+                    //Remove the variable becaue we can't replace it
+                    iter.remove();
+
+                    pluginInstance.getLogger().fine(Language.get("unknownVariableException", ex));
+                    pluginInstance.getLogger().info(Language.get("unknownVariable", variable));
+                }
+            }
+        }
+    }
+
+    private void sendScore(Objective objective, String title, int value, boolean complete) {
+        final Score score = objective
+                .getScore(Bukkit.getOfflinePlayer(ChatColor.translateAlternateColorCodes('&', title)));
+        //Have to use this because the score wouldn't send otherwise
+        if (complete && value == 0) {
+            score.setScore(1337);
+        }
+
+        score.setScore(value);
+    }
+
     private boolean checkState(Player player) {
         return player.hasPermission("scoreboardstats.use")
-                && !ScoreboardStats.getInstance().getHidelist().contains(player.getName())
+                && !pluginInstance.getHidelist().contains(player.getName())
                 && !Settings.isDisabledWorld(player.getWorld());
     }
 
@@ -177,6 +175,26 @@ public class SbManager {
             return check.substring(0, 16 - 2);
         } else {
             return check;
+        }
+    }
+
+    private class NextShowTask implements Runnable {
+
+        private final Player player;
+        private final boolean action;
+
+        NextShowTask(Player player, boolean action) {
+            this.player = player;
+            this.action = action;
+        }
+
+        @Override
+        public void run() {
+            if (action) {
+                createTopListScoreboard(player);
+            } else {
+                createScoreboard(player);
+            }
         }
     }
 }

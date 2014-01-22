@@ -5,18 +5,16 @@ import java.util.ResourceBundle;
 
 public class Language {
 
-    private static final Language instance = new Language();
+    private static final Language INSTANCE = new Language();
 
+    //Static method wrapper
     public static String get(String key, Object... arguments) {
-       if (instance != null) {
-           return instance.getFormatted(key, arguments);
-       }
-
-       return "";
+        return INSTANCE.getFormatted(key, arguments);
     }
 
+     //Static method wrapper
     public static String get(String key) {
-        return get(key, new Object[0]);
+        return INSTANCE.getFormatted(key);
     }
 
     private final ResourceBundle messageBundle = ResourceBundle.getBundle("messages");
@@ -25,6 +23,7 @@ public class Language {
         if (messageBundle.containsKey(key)) {
             String result = messageBundle.getString(key);
             if (arguments.length > 0) {
+                //If there are arguments use messageformat to replace
                 result = MessageFormat.format(result, arguments);
             }
 

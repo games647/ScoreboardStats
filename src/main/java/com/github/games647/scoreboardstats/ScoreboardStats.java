@@ -25,9 +25,10 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     private final Set<String> hidelist = Sets.newHashSet();
-    private SbManager scoreboardManager;
 
-    private int refreshTask;
+    private RefreshTask refreshTask;
+    private SbManager scoreboardManager;
+    private Settings settings;
 
     public ScoreboardStats() {
         super();
@@ -45,31 +46,41 @@ public class ScoreboardStats extends JavaPlugin {
 
         final Updater updater = new Updater(this, 55148, getFile(), Updater.UpdateType.DEFAULT, false);
         if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+            //Check if a new update is available
             getLogger().info(Language.get("onUpdate"));
         }
 
-        Settings.loadConfig();
+        //Load the config and setting the database up
+        if (settings == null) {
+            settings = new Settings(this);
+        }
+
+        settings.loadConfig();
         Database.setupDatabase(this);
 
         //Register all events
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
-
         if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
+            //Register a this listerner if InSigns is availble
             getServer().getPluginManager().registerEvents(new SignsListener(), this);
         }
 
+        //register all commands
+        getCommand("sb:toggle").setExecutor(new DisableCommand(this));
         getCommand("sb:reload").setExecutor(new ReloadCommand());
-        getCommand("sb:toggle").setExecutor(new DisableCommand());
         getCommand("sidebar").setExecutor(new SidebarCommand());
 
-        scoreboardManager = new SbManager();
+        if (scoreboardManager == null) {
+            scoreboardManager = new SbManager(this);
+        }
+        
         scoreboardManager.regAll();
 
-        refreshTask = getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                new RefreshTask(this),
-                60L,
-                Settings.getIntervall() * 20L);
+        //Start the refresh task
+        refreshTask = new RefreshTask(this);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, refreshTask
+                , 60L, 1L);
     }
 
     @Override
@@ -81,16 +92,9 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     public void onReload() {
-        final int intervall = Settings.getIntervall();
         final boolean pvpstats = Settings.isPvpStats();
 
-        Settings.loadConfig();
-        if (intervall != Settings.getIntervall()) {
-            getServer().getScheduler().cancelTask(refreshTask);
-            getServer().getScheduler().scheduleSyncRepeatingTask(this,
-                    new RefreshTask(this), 60L,
-                    Settings.getIntervall() * 20L);
-        }
+        settings.loadConfig();
 
         if (pvpstats != Settings.isPvpStats()) {
             Database.setupDatabase(this);
@@ -118,18 +122,25 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     public ClassLoader getClassLoaderBypass() {
+        //make the access to the class loader public because we need it for setting the database up
         return super.getClassLoader();
     }
 
-    //todo cath exception
-    private boolean isScoreboardCompatible() throws NumberFormatException {
+    public RefreshTask getRefreshTask() {
+        return refreshTask;
+    }
+
+    private boolean isScoreboardCompatible() {
         final String bukkitVersion = getServer().getBukkitVersion();
+        //Convert the version string into and integer
         final int version = Integer.parseInt(bukkitVersion.split("\\-")[0].replace(".", ""));
+        //Only version above 1.5 supports the scoreboard feature
         if (version >= 150) {
             return true;
         }
 
         getLogger().warning(Language.get("noCompatibleVersion"));
+        //This plugin isn't compatible with the server version so we disabling it
         getPluginLoader().disablePlugin(this);
         return false;
     }

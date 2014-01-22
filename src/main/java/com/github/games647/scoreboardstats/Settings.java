@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -15,10 +16,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class Settings {
-
-    private static final ScoreboardStats PLUGIN = ScoreboardStats.getInstance();
-    private static final ResourceBundle SPECIAL_CHARACTERS = ResourceBundle.getBundle("characters");
+public final class Settings {
 
     private static boolean             pvpStats;
     private static boolean             tempScoreboard;
@@ -37,38 +35,6 @@ public class Settings {
 
     private static final Map<String, String> ITEMS = Maps.newHashMap();
     private static List<String> disabledWorlds;
-
-    public static void loadConfig() {
-        PLUGIN.saveDefaultConfig();
-        PLUGIN.reloadConfig();
-
-        final FileConfiguration config = PLUGIN.getConfig();
-
-        loaditems(config.getConfigurationSection("Scoreboard.Items"));
-
-        hideVanished    = config.getBoolean("hide-vanished");
-        pvpStats        = config.getBoolean("enable-pvpstats");
-
-        disabledWorlds  = config.getStringList("disabled-worlds");
-        intervall       = config.getInt("Scoreboard.Update-delay");
-        saveIntervall   = config.getInt("PvPStats-SaveIntervall");
-        title           = ChatColor.translateAlternateColorCodes('&',
-                checkLength(replaceUtf8Characters(config.getString("Scoreboard.Title")), 32));
-
-        tempScoreboard  = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
-
-        topitems        = checkItems(config.getInt("Temp-Scoreboard.Items"));
-
-        tempShow        = config.getInt("Temp-Scoreboard.Intervall-show");
-        tempDisapper    = config.getInt("Temp-Scoreboard.Intervall-disappear");
-
-        topType         = config.getString("Temp-Scoreboard.Type");
-
-        tempColor       = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
-        tempTitle       = ChatColor.translateAlternateColorCodes('&',
-                    checkLength(replaceUtf8Characters(config.getString("Temp-Scoreboard.Title")), 32));
-
-    }
 
     public static int getItemsLenght() {
         return ITEMS.size();
@@ -130,13 +96,52 @@ public class Settings {
         return tempDisapper;
     }
 
-    private Settings() {
-        //Singleton
+    private final ResourceBundle UTF_CHARACTERS = ResourceBundle.getBundle("characters");
+
+    private final ScoreboardStats pluginInstance;
+
+    public Settings(ScoreboardStats instance) {
+        this.pluginInstance = instance;
     }
 
-    private static String checkLength(String check, int limit) {
+    public void loadConfig() {
+        //Creates a default config and/or load it
+        pluginInstance.saveDefaultConfig();
+        pluginInstance.reloadConfig();
+
+        final FileConfiguration config = pluginInstance.getConfig();
+
+        loaditems(config.getConfigurationSection("Scoreboard.Items"));
+
+        hideVanished = config.getBoolean("hide-vanished");
+        pvpStats = config.getBoolean("enable-pvpstats");
+
+        disabledWorlds = config.getStringList("disabled-worlds");
+        intervall = config.getInt("Scoreboard.Update-delay");
+        saveIntervall = config.getInt("PvPStats-SaveIntervall");
+        title = ChatColor.translateAlternateColorCodes('&',
+                checkLength(replaceUtf8Characters(config.getString("Scoreboard.Title")), 32));
+
+        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
+
+        topitems = checkItems(config.getInt("Temp-Scoreboard.Items"));
+
+        tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
+        tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
+
+        topType = config.getString("Temp-Scoreboard.Type");
+
+        tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
+        tempTitle = ChatColor.translateAlternateColorCodes('&',
+                checkLength(replaceUtf8Characters(config.getString("Temp-Scoreboard.Title")), 32));
+
+    }
+
+    private String checkLength(String check, int limit) {
         if (check.length() > limit) {
-            final String cut = check.substring(0, limit);
+            //If the string check is longer cut it down
+            final String cut = check.substring(0, limit + 1);
+            //We are couting from 0 so plus 1
             Bukkit.getLogger().warning(Language.get("toLongName", cut, limit));
 
             return cut;
@@ -145,7 +150,7 @@ public class Settings {
         return check;
     }
 
-    private static int checkItems(int input) {
+    private int checkItems(int input) {
         if (input >= 16) {
             Bukkit.getLogger().warning(Language.get("toManyItems"));
             return 16 - 1;
@@ -154,28 +159,33 @@ public class Settings {
         return input;
     }
 
-    private static void loaditems(ConfigurationSection config) {
+    private void loaditems(ConfigurationSection config) {
         final Set<String> keys = config.getKeys(false);
         if (!ITEMS.isEmpty()) {
+            //clear all existing items
             ITEMS.clear();
         }
 
-        for (final String key : keys) {
-            if (ITEMS.size() == (16 - 1)) {
+        for (String key : keys) {
+            if (ITEMS.size() == 16 - 1) {
                 Bukkit.getLogger().warning(Language.get("toManyItems"));
                 break;
             }
 
-            ITEMS.put(ChatColor.translateAlternateColorCodes('&', checkLength(replaceUtf8Characters(key), 16)), config.getString(key));
+            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(replaceUtf8Characters(key), 16));
+            //Prevent case-sensitive mistakes
+            final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
+            ITEMS.put(name, variable);
         }
     }
 
-    private static String replaceUtf8Characters(String input) {
+    private String replaceUtf8Characters(String input) {
+        //Replace all utf-8 characters
         String replacedInput = input;
-        final Enumeration<String> characters = SPECIAL_CHARACTERS.getKeys();
-        for (Enumeration<String> e = characters; e.hasMoreElements();) {
+        final Enumeration<String> characters = UTF_CHARACTERS.getKeys();
+        for (final Enumeration<String> e = characters; e.hasMoreElements();) {
             final String character = e.nextElement();
-            final String value = SPECIAL_CHARACTERS.getString(character);
+            final String value = UTF_CHARACTERS.getString(character);
             replacedInput = replacedInput.replace(character, value);
         }
 

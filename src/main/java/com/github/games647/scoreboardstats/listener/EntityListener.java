@@ -20,15 +20,14 @@ public class EntityListener implements Listener {
 
         if (!Settings.isPvpStats()
                 || Settings.isDisabledWorld(entity.getWorld())
-                || (entity.getType() == EntityType.PLAYER)
-                || (killer == null)
-                || !killer.isOnline()) {
+                //Check if it's not player because we are already handling it
+                || entity.getType() == EntityType.PLAYER) {
             return;
         }
 
-        final PlayerCache killercache = Database.getCacheIfAbsent(killer.getName());
+        final PlayerCache killercache = Database.getCacheIfAbsent(killer);
         if (killercache != null) {
-            killercache.increaseMobKills();
+            killercache.onMobKill();
         }
     }
 }

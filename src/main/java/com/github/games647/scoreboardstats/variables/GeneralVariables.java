@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public class GeneralVariables implements ReplaceManager.Replaceable {
 
     private static int getOnlinePlayers(Player player) {
+        //If one player is vanish count all visible player
         if (Settings.isHideVanished()) {
             int online = 0;
             for (Player other: Bukkit.getOnlinePlayers()) {
@@ -49,14 +50,16 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%used%ram%".equals(variable)) {
-            return (int) (((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) * 100) / Runtime.getRuntime().maxMemory());
+            return (int) (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory() * 100 / Runtime.getRuntime().maxMemory());
         }
 
         if ("%date%".equals(variable)) {
+            //Get the current date
             return new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
         }
 
-        if ("%lifetime%".equals(variable)) { // --> Minutes
+        if ("%lifetime%".equals(variable)) {
+            // --> Minutes
             return player.getTicksLived() / 20 / 60;
         }
 
@@ -64,7 +67,8 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
             return player.getTotalExperience();
         }
 
-        if ("%no_damage_ticks%".equals(variable)) { // --> Minutes
+        if ("%no_damage_ticks%".equals(variable)) {
+            // --> Minutes
             return player.getNoDamageTicks() / 20 / 60;
         }
 
@@ -73,7 +77,8 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%last_damage%".equals(variable)) {
-            return (int) (player.getLastDamage() / 20 / 60); // --> Minutes
+            // --> Minutes
+            return (int) (player.getLastDamage() / 20 / 60);
         }
 
         if ("%max_player%".equals(variable)) {
@@ -82,7 +87,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%helmet%".equals(variable)) {
             final ItemStack helmet = player.getInventory().getHelmet();
-            if ((helmet == null) || (helmet.getType().getMaxDurability() == 0)) {
+            if (helmet == null || helmet.getType().getMaxDurability() == 0) {
                 return -2;
             } else {
                 return (helmet.getDurability() * 100) / helmet.getType().getMaxDurability();
@@ -91,7 +96,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%boots%".equals(variable)) {
             final ItemStack boots = player.getInventory().getBoots();
-            if ((boots == null) || (boots.getType().getMaxDurability() == 0)) {
+            if (boots == null || boots.getType().getMaxDurability() == 0) {
                 return -2;
             } else {
                 return (boots.getDurability() * 100) / boots.getType().getMaxDurability();
@@ -100,7 +105,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%leggings%".equals(variable)) {
             final ItemStack leggings = player.getInventory().getLeggings();
-            if ((leggings == null) || (leggings.getType().getMaxDurability() == 0)) {
+            if (leggings == null || leggings.getType().getMaxDurability() == 0) {
                 return -2;
             } else {
                 return (leggings.getDurability() * 100) / leggings.getType().getMaxDurability();
@@ -109,7 +114,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%chestplate%".equals(variable)) {
             final ItemStack chestplate = player.getInventory().getChestplate();
-            if ((chestplate == null) || (chestplate.getType().getMaxDurability() == 0)) {
+            if (chestplate == null || chestplate.getType().getMaxDurability() == 0) {
                 return -2;
             } else {
                 return (chestplate.getDurability() * 100) / chestplate.getType().getMaxDurability();

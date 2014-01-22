@@ -22,10 +22,11 @@ public class PlayerPingVariable implements ReplaceManager.Replaceable {
             final Object entityPlayer = getHandleMethod.invoke(player);
             final Field pingField = entityPlayer.getClass().getDeclaredField("ping");
 
+            //returns the found int value
             return pingField.getInt(entityPlayer);
         } catch (Exception ex) {
+            //Forward the exception to replaceManager
             throw new RuntimeException("Unable to get the ping for a player.", ex);
-            //Rethrow to handle it in ReplaceManager
         }
     }
 }
