@@ -5,9 +5,9 @@
     <groupId>com.github.games647</groupId>
     <artifactId>scoreboardstats</artifactId>
     <packaging>jar</packaging>
-    <inceptionYear>2013</inceptionYear>
 
     <name>ScoreboardStats</name>
+    <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
     <version>0.7-SNAPSHOT</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
@@ -48,6 +48,13 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

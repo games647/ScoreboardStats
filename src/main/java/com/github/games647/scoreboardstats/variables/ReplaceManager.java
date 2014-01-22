@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.plugin.Plugin;
 
 public final class ReplaceManager implements Listener {
 
@@ -32,11 +30,14 @@ public final class ReplaceManager implements Listener {
 //        tempMap.put(new TicksVariable(), "ScoreboardStats");
 
         tempMap.put(VaultVariables.class, "Vault");
-        tempMap.put(FactionsVariables.class, "Factions");
+
         tempMap.put(HeroesVariables.class, "Heroes");
         tempMap.put(McmmoVariables.class, "mcMMO");
-        tempMap.put(SimpleClansVariables.class, "SimpleClans");
 
+        tempMap.put(SimpleClansVariables.class, "SimpleClans");
+        tempMap.put(FactionsVariables.class, "Factions");
+
+        //Prevent futur modifications
         defaults = Collections.unmodifiableMap(tempMap);
 
         Bukkit.getServer().getPluginManager().registerEvents(this, ScoreboardStats.getInstance());
@@ -84,25 +85,20 @@ public final class ReplaceManager implements Listener {
                     return scoreValue;
                 }
             } catch (Exception e) {
+                //remove the replacer if it throws exceptions, to prevent future ones
                 iter.remove();
 
-                final Logger logger = ScoreboardStats.getInstance().getLogger();
-                logger.log(Level.WARNING, Language.get("replacerException", replacer), e);
+                ScoreboardStats.getInstance().getLogger()
+                        .log(Level.WARNING
+                                , Language.get("replacerException", replacer)
+                                , e);
             }
         }
 
         throw new UnknownVariableException();
     }
 
-    public final void addDefaultReplacer() {
-        for (Map.Entry<Class<? extends Replaceable>, String> entry: defaults.entrySet()) {
-            final String pluginName = entry.getValue();
-            if (isPluginAvailble(pluginName)) {
-                registerDefault(entry.getKey(), pluginName);
-            }
-        }
-    }
-
+    //Register the listener back again if the plugin is availble
     @EventHandler
     public void onPluginEnable(PluginEnableEvent enableEvent) {
         final String enablePluginName = enableEvent.getPlugin().getName();
@@ -114,6 +110,7 @@ public final class ReplaceManager implements Listener {
         }
     }
 
+    //Remove the listener if the associated plugin was disabled
     @EventHandler
     public void onPluginDisable(PluginDisableEvent disableEvent) {
         final String disablePluginName = disableEvent.getPlugin().getName();
@@ -127,6 +124,17 @@ public final class ReplaceManager implements Listener {
         }
     }
 
+    //add all replacers that are in the defaults map
+    protected void addDefaultReplacer() {
+        for (Map.Entry<Class<? extends Replaceable>, String> entry: defaults.entrySet()) {
+            final String pluginName = entry.getValue();
+            if (isPluginAvailble(pluginName)) {
+                registerDefault(entry.getKey(), pluginName);
+            }
+        }
+    }
+
+    //Check if specific plugin is availble and activated
     private boolean isPluginAvailble(String pluginName) {
         return Bukkit.getServer().getPluginManager().isPluginEnabled(pluginName);
     }
@@ -144,7 +152,9 @@ public final class ReplaceManager implements Listener {
     }
 
     public interface Replaceable {
-        int UNKOWN_VARIABLE = -1337; // ^^
+
+        //find another method to prevent conflicts
+        int UNKOWN_VARIABLE = -1337;
 
         int getScoreValue(Player player, String variable);
     }

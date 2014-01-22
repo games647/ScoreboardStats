@@ -33,37 +33,48 @@ import org.bukkit.configuration.file.YamlConfiguration;
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.setRegister(false);
         databaseConfig.setClasses(getDatabaseClasses());
+        //Give the database a specific name
         databaseConfig.setName(pluginInstance.getName());
 
-        final DataSourceConfig ds = getSqlConfig(databaseConfig);
-        ds.setUrl(replaceUrlString(ds.getUrl()));
+        final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
+        //set a correct path
+        sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
 
         serverConfig = databaseConfig;
     }
 
     private List<Class<?>> getDatabaseClasses() {
+        //list all types
         final List<Class<?>> classes = Lists.newArrayList();
         classes.add(PlayerStats.class);
+
         return classes;
     }
 
     private DataSourceConfig getSqlConfig(ServerConfig serverConfig) {
+        FileConfiguration sqlConfig;
+        DataSourceConfig config;
+
         final File file = new File(pluginInstance.getDataFolder(), "sql.yml");
-        final FileConfiguration sqlConfig;
-        final DataSourceConfig config;
+        //Check if the file exists. If so load the settings form there
         if (file.exists()) {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             config = new DataSourceConfig();
+
             config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
             config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
             config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
             config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
             config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
+
             serverConfig.setDataSourceConfig(config);
         } else {
+            //Create a new configuration based on the default settings form bukkit.yml
             pluginInstance.saveResource("sql.yml", false);
             pluginInstance.getServer().configureDbConfig(serverConfig);
+
             config = serverConfig.getDataSourceConfig();
+
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             sqlConfig.set("SQL-Settings.Username", config.getUsername());
             sqlConfig.set("SQL-Settings.Password", config.getPassword());
@@ -77,9 +88,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
                 pluginInstance.getLogger().throwing(pluginInstance.getClass().getName(), "getSqlConfig", ex);
             }
         }
+
         config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
         config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
         config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
+
         return config;
     }
 

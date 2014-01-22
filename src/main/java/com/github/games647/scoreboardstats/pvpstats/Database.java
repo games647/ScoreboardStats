@@ -12,25 +12,35 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.PersistenceException;
+
+import org.bukkit.entity.Player;
 
 public final class Database {
 
     private static EbeanServer databaseInstance;
     private static DatabaseConfiguration dbConfiguration;
+    //We are using a mysql databse so we can use only one thread for saving because of locks
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     private static final Cache<String, PlayerCache> CACHE = CacheBuilder.newBuilder()
             .maximumSize(512)
-            .expireAfterAccess(15, TimeUnit.MINUTES)
-            .removalListener(RemoveListener.getNewInstace())
+            .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
+            .removalListener(RemoveListener.getNewInstace(EXECUTOR))
             .build(new CacheLoader<String, PlayerCache>() {
                 @Override
                 public PlayerCache load(String playerName) {
+                    //This shouldn't be called because that can freeze the server
                     ScoreboardStats.getInstance().getLogger().warning(Language.get("synchLoading"));
-                    final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", playerName).findUnique();
+
+                    final PlayerStats stats = databaseInstance.find(PlayerStats.class)
+                            .where().eq("playername", playerName).findUnique();
                     if (stats == null) {
                         return new PlayerCache();
                     }
@@ -43,9 +53,12 @@ public final class Database {
                 }
             });
 
-    public static PlayerCache getCacheIfAbsent(String name) {
-        if (CACHE.asMap().containsKey(name)) {
-            return CACHE.getUnchecked(name);
+    public static PlayerCache getCacheIfAbsent(Player request) {
+        if (request != null && Settings.isPvpStats()) {
+            final String playerName = request.getName();
+            if (CACHE.asMap().containsKey(playerName)) {
+                return CACHE.getUnchecked(playerName);
+            }
         }
 
         return null;
@@ -53,41 +66,34 @@ public final class Database {
 
     public static void loadAccount(String name) {
         final Map<String, PlayerCache> cache = CACHE.asMap();
-        if (cache.containsKey(name)) {
+        if (!Settings.isPvpStats() || cache.containsKey(name)) {
             return;
         }
 
-        final PlayerStats stats = databaseInstance.find(PlayerStats.class).where().eq("playername", name).findUnique();
-        if (stats == null) {
-            cache.put(name, new PlayerCache());
-        } else {
-            final int kills = stats.getKills();
-            final int deaths = stats.getDeaths();
-            final int mobKills = stats.getMobkills();
-            final int killstreak = stats.getKillstreak();
-            cache.put(name, new PlayerCache(kills, mobKills, deaths, killstreak));
-        }
+        EXECUTOR.execute(new StatsLoader(name));
     }
 
     public static void saveAll() {
         if (Settings.isPvpStats()) {
+            //If pvpstats are enabled save all stats that are in the cache
             CACHE.invalidateAll();
         }
     }
 
     public static Map<String, Integer> getTop() {
+        //Get the top players for a specific type
         final String type = Settings.getTopType();
         final Map<String, Integer> top = new HashMap<String, Integer>(Settings.getTopitems());
         if ("%killstreak%".equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("killstreak desc").setMaxRows(Settings.getTopitems()).findList()) {
+            for (PlayerStats stats : getTopList("killstreak desc")) {
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
         } else if ("%mob%".equals(type)) {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("mobkills desc").setMaxRows(Settings.getTopitems()).findList()) {
+            for (PlayerStats stats : getTopList("mobkills desc")) {
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
         } else {
-            for (final PlayerStats stats : databaseInstance.find(PlayerStats.class).orderBy("kills desc").setMaxRows(Settings.getTopitems()).findList()) {
+            for (PlayerStats stats : getTopList("kills desc")) {
                 top.put(stats.getPlayername(), stats.getKills());
             }
         }
@@ -96,6 +102,7 @@ public final class Database {
     }
 
     public static void setupDatabase(ScoreboardStats pluginInstance) {
+        //Check if pvpstats should be enabled
         if (Settings.isPvpStats()) {
             dbConfiguration = new DatabaseConfiguration(pluginInstance);
             dbConfiguration.loadConfiguration();
@@ -107,8 +114,11 @@ public final class Database {
             Thread.currentThread().setContextClassLoader(previous);
 
             try {
+                //Check if a database is avaible with the requesting datas
                 database.find(PlayerStats.class).findRowCount();
             } catch (PersistenceException ex) {
+                //Create a new table
+                pluginInstance.getLogger().fine(Language.get("databaseFindException", ex));
                 pluginInstance.getLogger().info(Language.get("newDatabase"));
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                 gen.runScript(false, gen.generateCreateDdl());
@@ -120,6 +130,16 @@ public final class Database {
 
     protected static EbeanServer getDatabaseInstance() {
         return databaseInstance;
+    }
+
+    protected static void putIntoCache(String name, PlayerCache cacheObject) {
+        //delegate
+        CACHE.asMap().put(name, cacheObject);
+    }
+
+    private static List<PlayerStats> getTopList(String order) {
+        return databaseInstance.find(PlayerStats.class).orderBy(order)
+                .setMaxRows(Settings.getTopitems()).findList();
     }
 
     private Database() {

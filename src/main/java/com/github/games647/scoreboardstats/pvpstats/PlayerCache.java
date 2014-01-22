@@ -1,19 +1,26 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString(includeFieldNames=true)
 public class PlayerCache {
 
     private int kills;
     private int mob;
     private int deaths;
 
-    private int streak;
+    private int highestStreak;
     private int laststreak;
+
+    private boolean changed;
 
     public PlayerCache(int paramkills, int parammob, int paramdeaths, int paramstreak) {
         kills   = paramkills;
         mob     = parammob;
         deaths  = paramdeaths;
-        streak  = paramstreak;
+        highestStreak  = paramstreak;
     }
 
     public PlayerCache() {
@@ -21,18 +28,24 @@ public class PlayerCache {
     }
 
     public void onKill() {
+        onChange();
+
         kills++;
+
         laststreak++;
+        if (laststreak > highestStreak) {
+            highestStreak = laststreak;
+        }
     }
 
-    public void increaseMobKills() {
+    public void onMobKill() {
+        onChange();
+
         mob++;
     }
 
     public void onDeath() {
-        if (laststreak > streak) {
-            streak = laststreak;
-        }
+        onChange();
 
         laststreak = 0;
         deaths++;
@@ -50,19 +63,30 @@ public class PlayerCache {
         return deaths;
     }
 
-    public int getStreak() {
-        return streak;
+    public int getHighestStreak() {
+        return highestStreak;
     }
 
     public int getLaststreak() {
         return laststreak;
     }
 
-    public double getKdr() {
+    public int getKdr() {
         if (deaths == 0) {
+            //We can't divide by zero
             return kills;
         } else {
-            return Math.round((double) kills / (double) deaths);
+            return (int) Math.round((double) kills / (double) deaths);
         }
+    }
+
+    public boolean hasChanged() {
+        //Check if the stats was changed
+        return changed;
+    }
+
+    private void onChange() {
+        //Marks the stats as changed
+        changed = true;
     }
 }

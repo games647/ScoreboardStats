@@ -18,20 +18,22 @@ public final class SignsListener implements Listener {
         final Player player = signSendEvent.getPlayer();
         if (player.hasPermission(PERMISSION)) {
             for (int lineNumber = 0; lineNumber < 4; lineNumber++) {
-                final String line = signSendEvent.getLine(lineNumber);
-                getValue(signSendEvent, player, line, lineNumber);
+                replaceVariable(signSendEvent, player, lineNumber);
             }
         }
     }
 
-    private void getValue(SignSendEvent signSendEvent, Player player, String line, int lineNumber) {
-        final PlayerCache playerCache = Database.getCacheIfAbsent(player.getName());
+    private void replaceVariable(SignSendEvent signSendEvent, Player player, int lineNumber) {
+        final PlayerCache playerCache = Database.getCacheIfAbsent(player);
         if (playerCache == null) {
+            //The stats aren't loaded yet
             return;
         }
 
+        final String line = signSendEvent.getLine(lineNumber);
         String replacedString = null;
         if (line.contains("[Kill]")) {
+            //Convert it to a string
             final String kills = String.valueOf(playerCache.getKills());
             replacedString = line.replace("[Kill]", kills);
         } else if (line.contains("[Death]")) {
@@ -41,11 +43,12 @@ public final class SignsListener implements Listener {
             final String kdr = String.valueOf(playerCache.getKdr());
             replacedString = line.replace("[KDR]", kdr);
         } else if (line.contains("[Streak]")) {
-            final String streak = String.valueOf(playerCache.getStreak());
+            final String streak = String.valueOf(playerCache.getHighestStreak());
             replacedString = line.replace("[Streak]", streak);
         }
 
         if (replacedString != null) {
+            //If the variable was found the replace it
             signSendEvent.setLine(lineNumber, replacedString);
         }
     }

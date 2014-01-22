@@ -19,64 +19,53 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {
+        //If simpleclans doesn't track the player yet return -1
         final ClanPlayer clanPlayer = clanManager.getClanPlayer(player);
-        if (clanPlayer == null) {
-            return -1;
-        }
 
-        if ("%kills_civilian%".equals(variable)) {
-            return clanPlayer.getCivilianKills();
-        }
-
-        if ("%kills_neutral%".equals(variable)) {
-            return clanPlayer.getNeutralKills();
-        }
-
-        if ("%kills_rival%".equals(variable)) {
-            return clanPlayer.getRivalKills();
-        }
-
-        if ("%kills_total%".equals(variable)) {
-            return clanPlayer.getCivilianKills() + clanPlayer.getNeutralKills() + clanPlayer.getRivalKills();
+        if ("%kills%".equals(variable)) {
+            final int civilianKills = clanPlayer.getCivilianKills();
+            final int neutralKills = clanPlayer.getNeutralKills();
+            final int rivalKills = clanPlayer.getRivalKills();
+            //count all kill types
+            return civilianKills + neutralKills + rivalKills;
         }
 
         if ("deaths".equals(variable)) {
-            return clanPlayer.getDeaths();
+            return clanPlayer == null ? -1 : clanPlayer.getDeaths();
         }
 
         if ("%kdr%".equals(variable)) {
-            return Math.round(clanPlayer.getKDR());
+            return clanPlayer == null ? -1 : Math.round(clanPlayer.getKDR());
         }
 
-        if (clanPlayer.getClan() != null) {
-            if ("%member%".equals(variable)) {
-                return clanPlayer.getClan().getMembers().size();
-            }
+        //Check if the player has a clan
+        final Clan clan = clanPlayer == null ? null : clanPlayer.getClan();
+        if ("%member%".equals(variable)) {
+            return clan == null ? -1 : clan.getMembers().size();
+        }
 
-            if ("%clan_kdr%".equals(variable)) {
-                return Math.round(clanPlayer.getClan().getTotalKDR());
-            }
+        if ("%clan_kdr%".equals(variable)) {
+            return clan == null ? -1 : Math.round(clan.getTotalKDR());
+        }
 
-            if ("%clan_money%".equals(variable)) {
-                return (int) Math.round(clanPlayer.getClan().getBalance());
-            }
+        if ("%clan_money%".equals(variable)) {
+            return clan == null ? -1 : (int) Math.round(clan.getBalance());
+        }
 
-            if ("%rivals%".equals(variable)) {
-                return clanPlayer.getClan().getRivals().size();
-            }
+        if ("%rivals%".equals(variable)) {
+            return clan == null ? -1 : clan.getRivals().size();
+        }
 
-            if ("%allies%".equals(variable)) {
-                return clanPlayer.getClan().getAllies().size();
-            }
+        if ("%allies%".equals(variable)) {
+            return clan == null ? -1 : clan.getAllies().size();
+        }
 
-            if ("%allies_total%".equals(variable)) {
-                return clanPlayer.getClan().getAllAllyMembers().size();
-            }
+        if ("%allies_total%".equals(variable)) {
+            return clan == null ? -1 : clan.getAllAllyMembers().size();
+        }
 
-            if ("%clan_kills%".equals(variable)) {
-                final Clan clan = clanPlayer.getClan();
-                return clan.getTotalCivilian() + clan.getTotalNeutral() + clan.getTotalNeutral();
-            }
+        if ("%clan_kills%".equals(variable)) {
+            return clan == null ? -1 : clan.getTotalCivilian() + clan.getTotalNeutral() + clan.getTotalNeutral();
         }
 
         return UNKOWN_VARIABLE;

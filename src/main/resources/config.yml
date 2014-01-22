@@ -1,10 +1,5 @@
 #Main configuration
 
-enable-pvpstats: false
-
-#In minutes
-PvPStats-SaveIntervall: 15
-
 disabled-worlds:
   - world_nether
   - city
@@ -22,6 +17,11 @@ Scoreboard:
     #Title: Type
     '&9Online': '%online%'
     '&9Money': '%money%'
+
+enable-pvpstats: false
+
+#In minutes
+PvPStats-SaveIntervall: 15
 
 Temp-Scoreboard-enabled: false
 
