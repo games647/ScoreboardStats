@@ -77,7 +77,7 @@ public class ScoreboardStats extends JavaPlugin {
                 , 60L, 1L);
 
         if (Settings.isUpdateEnabled()) {
-            final Updater updater = new Updater(this, 55148, getFile(), Updater.UpdateType.DEFAULT, false);
+            final Updater updater = new UpdaterFix(this, 55148, getFile());
             if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                 //Check if a new update is available
                 getLogger().info(Language.get("onUpdate"));

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -148,7 +147,7 @@ public final class Settings {
             //If the string check is longer cut it down
             final String cut = check.substring(0, limit + 1);
             //We are couting from 0 so plus 1
-            Bukkit.getLogger().warning(Language.get("toLongName", cut, limit));
+            pluginInstance.getLogger().warning(Language.get("tooLongName", cut, limit));
 
             return cut;
         }
@@ -158,8 +157,11 @@ public final class Settings {
 
     private int checkItems(int input) {
         if (input >= 16) {
-            Bukkit.getLogger().warning(Language.get("toManyItems"));
+            pluginInstance.getLogger().warning(Language.get("tooManyItems"));
             return 16 - 1;
+        } else if (input <= 0) {
+            pluginInstance.getLogger().warning(Language.get("notEnoughItems"));
+            return 5;
         }
 
         return input;
@@ -174,7 +176,7 @@ public final class Settings {
 
         for (String key : keys) {
             if (ITEMS.size() == 16 - 1) {
-                Bukkit.getLogger().warning(Language.get("toManyItems"));
+                pluginInstance.getLogger().warning(Language.get("tooManyItems"));
                 break;
             }
 
