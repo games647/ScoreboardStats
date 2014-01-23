@@ -3,9 +3,16 @@ package com.github.games647.scoreboardstats.variables;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.UPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 
 public class FactionsVariables implements ReplaceManager.Replaceable {
+
+    public FactionsVariables() {
+        checkVersion();
+    }
 
     @Override
     public int getScoreValue(Player player, String variable) {
@@ -29,5 +36,16 @@ public class FactionsVariables implements ReplaceManager.Replaceable {
         }
 
         return UNKOWN_VARIABLE;
+    }
+
+    private void checkVersion() {
+        final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
+        final Plugin clansPlugin = pluginManager.getPlugin("Factions");
+        
+        final String versionString = clansPlugin.getDescription().getVersion().replace(".", "");
+        final int version = Integer.parseInt(versionString);
+        if (version < 200) {
+            throw new UnsupportedPluginException();
+        }
     }
 }

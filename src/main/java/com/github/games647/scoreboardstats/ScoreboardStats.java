@@ -44,12 +44,6 @@ public class ScoreboardStats extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
 
-        final Updater updater = new Updater(this, 55148, getFile(), Updater.UpdateType.DEFAULT, false);
-        if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-            //Check if a new update is available
-            getLogger().info(Language.get("onUpdate"));
-        }
-
         //Load the config and setting the database up
         if (settings == null) {
             settings = new Settings(this);
@@ -74,13 +68,21 @@ public class ScoreboardStats extends JavaPlugin {
         if (scoreboardManager == null) {
             scoreboardManager = new SbManager(this);
         }
-        
+
         scoreboardManager.regAll();
 
         //Start the refresh task
         refreshTask = new RefreshTask(this);
         getServer().getScheduler().scheduleSyncRepeatingTask(this, refreshTask
                 , 60L, 1L);
+
+        if (Settings.isUpdateEnabled()) {
+            final Updater updater = new Updater(this, 55148, getFile(), Updater.UpdateType.DEFAULT, false);
+            if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                //Check if a new update is available
+                getLogger().info(Language.get("onUpdate"));
+            }
+        }
     }
 
     @Override

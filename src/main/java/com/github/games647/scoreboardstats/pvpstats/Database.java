@@ -118,7 +118,7 @@ public final class Database {
                 database.find(PlayerStats.class).findRowCount();
             } catch (PersistenceException ex) {
                 //Create a new table
-                pluginInstance.getLogger().fine(Language.get("databaseFindException", ex));
+                pluginInstance.getLogger().fine(Language.get("debugException", ex));
                 pluginInstance.getLogger().info(Language.get("newDatabase"));
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                 gen.runScript(false, gen.generateCreateDdl());
