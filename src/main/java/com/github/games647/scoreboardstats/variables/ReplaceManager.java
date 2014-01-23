@@ -27,7 +27,7 @@ public final class ReplaceManager implements Listener {
         tempMap.put(GeneralVariables.class, "ScoreboardStats");
         tempMap.put(PlayerPingVariable.class, "ScoreboardStats");
         tempMap.put(StatsVariables.class, "ScoreboardStats");
-//        tempMap.put(new TicksVariable(), "ScoreboardStats");
+//        tempMap.put(TicksVariables.class, "ScoreboardStats");
 
         tempMap.put(VaultVariables.class, "Vault");
 

@@ -17,12 +17,12 @@ public class Language {
         return INSTANCE.getFormatted(key);
     }
 
-    private final ResourceBundle messageBundle = ResourceBundle.getBundle("messages");
+    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages");
 
     private String getFormatted(String key, Object... arguments) {
-        if (messageBundle.containsKey(key)) {
-            String result = messageBundle.getString(key);
-            if (arguments.length > 0) {
+        if (defaultMessages.containsKey(key)) {
+            String result = defaultMessages.getString(key);
+            if (arguments.length != 0) {
                 //If there are arguments use messageformat to replace
                 result = MessageFormat.format(result, arguments);
             }
