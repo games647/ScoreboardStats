@@ -51,7 +51,7 @@ public class SbManager {
             }
         } catch (IllegalStateException ex) {
             //Silent fail if the player is disonnect while setting the scoreboard
-            pluginInstance.getLogger().fine(Language.get("disconnectPlayer", ex));
+            pluginInstance.getLogger().fine(Language.get("debugException", ex));
         }
     }
 
@@ -126,7 +126,7 @@ public class SbManager {
                     , Settings.getTempDisapper() * 20L);
         } catch (IllegalStateException ex) {
             //Silent fail if the player is disonnect while setting the scoreboard
-            pluginInstance.getLogger().fine(Language.get("disconnectPlayer", ex));
+            pluginInstance.getLogger().fine(Language.get("debugException", ex));
         }
     }
 
@@ -145,7 +145,7 @@ public class SbManager {
                     //Remove the variable becaue we can't replace it
                     iter.remove();
 
-                    pluginInstance.getLogger().fine(Language.get("unknownVariableException", ex));
+                    pluginInstance.getLogger().fine(Language.get("debugException", ex));
                     pluginInstance.getLogger().info(Language.get("unknownVariable", variable));
                 }
             }

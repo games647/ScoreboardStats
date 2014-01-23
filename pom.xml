@@ -9,7 +9,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.7</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -150,7 +150,7 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
-                        <!--Add gravity's updater to scoreboardstats-->
+                        Add gravity's updater to scoreboardstats
                         <includes>
                             <include>net.gravitydevelopment.updater</include>
                         </includes>

@@ -7,6 +7,7 @@ import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 public class SimpleClansVariables implements ReplaceManager.Replaceable {
@@ -73,7 +74,13 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
 
     private void initialize() {
         final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        final SimpleClans clansPlugin = (SimpleClans) pluginManager.getPlugin("SimpleClans");
-        clanManager = clansPlugin.getClanManager();
+        final Plugin clansPlugin = pluginManager.getPlugin("SimpleClans");
+        final String version = clansPlugin.getDescription().getVersion();
+        if (!"Legacy".equalsIgnoreCase(version)) {
+            throw new UnsupportedPluginException();
+        }
+
+        final SimpleClans simpleClans = (SimpleClans) clansPlugin;
+        clanManager = simpleClans.getClanManager();
     }
 }

@@ -21,6 +21,7 @@ public final class Settings {
     private static boolean             pvpStats;
     private static boolean             tempScoreboard;
     private static boolean             hideVanished;
+    private static boolean             updateEnabled;
 
     private static String              title;
     private static String              tempTitle;
@@ -58,6 +59,10 @@ public final class Settings {
 
     public static boolean isHideVanished() {
         return hideVanished;
+    }
+
+    public static boolean isUpdateEnabled() {
+        return updateEnabled;
     }
 
     public static String getTitle() {
@@ -115,6 +120,7 @@ public final class Settings {
 
         hideVanished = config.getBoolean("hide-vanished");
         pvpStats = config.getBoolean("enable-pvpstats");
+        updateEnabled = config.getBoolean("pluginUpdate");
 
         disabledWorlds = config.getStringList("disabled-worlds");
         intervall = config.getInt("Scoreboard.Update-delay");

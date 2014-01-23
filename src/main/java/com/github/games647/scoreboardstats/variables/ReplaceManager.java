@@ -145,9 +145,14 @@ public final class ReplaceManager implements Listener {
             if (!replacers.containsKey(instance)) {
                 register(instance, pluginName);
             }
-        } catch (Exception ex) {
+        } catch (UnsupportedPluginException ex) {
             ScoreboardStats.getInstance().getLogger()
-                    .log(Level.WARNING, Language.get("noRegister"), ex);
+                    .fine(Language.get("debugException", ex));
+            ScoreboardStats.getInstance().getLogger().log(Level.WARNING
+                    , Language.get("unsupportedPluginVersion", replacerClass.getSimpleName()));
+        } catch (Exception ex) {
+            ScoreboardStats.getInstance().getLogger().log(Level.WARNING
+                    , Language.get("noRegister"), ex);
         }
     }
 
