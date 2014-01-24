@@ -14,7 +14,7 @@ public class UpdaterFix extends Updater {
 
     @Override
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        //Fix curse api issue it's only a temp fix
+        //Fix curse api issue due it's not updating so fast
         final String local = localVersion.replace(".", "");
         final String remote = remoteVersion.replace(".", "");
         return Integer.parseInt(remote) > Integer.parseInt(local);

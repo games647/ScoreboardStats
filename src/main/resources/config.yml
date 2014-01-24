@@ -18,6 +18,7 @@ Scoreboard:
     '&9Online': '%online%'
     '&9Money': '%money%'
 
+#Let ScoreboardStats track stats (kills, deaths, mobkills, killstreak) You need no plugin for this
 enable-pvpstats: false
 
 #In minutes

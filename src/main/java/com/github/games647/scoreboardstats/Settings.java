@@ -160,7 +160,7 @@ public final class Settings {
             pluginInstance.getLogger().warning(Language.get("tooManyItems"));
             return 16 - 1;
         } else if (input <= 0) {
-            pluginInstance.getLogger().warning(Language.get("notEnoughItems"));
+            pluginInstance.getLogger().warning(Language.get("notEnoughItems", "tempscoreboard"));
             return 5;
         }
 
@@ -184,6 +184,10 @@ public final class Settings {
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
             ITEMS.put(name, variable);
+        }
+
+        if (ITEMS.isEmpty()) {
+            pluginInstance.getLogger().info(Language.get("notEnoughItems", "scoreboard"));
         }
     }
 

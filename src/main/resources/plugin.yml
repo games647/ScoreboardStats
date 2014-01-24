@@ -5,14 +5,14 @@ version: ${project.version}
 description: ${project.description}
 website: ${project.url}
 softdepend:
-  - mcMMO
-  - Vault
-  - SimpleClans
-  - InSigns
-  - Essentials
-  - Factions
-  - Jobs
-  - Heroes
+    - mcMMO
+    - Vault
+    - SimpleClans
+    - InSigns
+    - Essentials
+    - Factions
+    - Jobs
+    - Heroes
 
 commands:
   sb:reload:
