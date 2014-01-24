@@ -5,16 +5,21 @@ import java.util.ResourceBundle;
 
 public class Language {
 
-    private static final Language INSTANCE = new Language();
+    private static Language instance;
 
     //Static method wrapper
     public static String get(String key, Object... arguments) {
-        return INSTANCE.getFormatted(key, arguments);
+        return getInstance().getFormatted(key, arguments);
     }
 
      //Static method wrapper
     public static String get(String key) {
-        return INSTANCE.getFormatted(key);
+        return getInstance().getFormatted(key);
+    }
+
+    public static void clearCache() {
+        //Forward
+        ResourceBundle.clearCache();
     }
 
     private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages");
@@ -31,5 +36,15 @@ public class Language {
         }
 
         return "";
+    }
+
+    private static Language getInstance() {
+        synchronized (instance) {
+            if (instance == null) {
+                instance = new Language();
+            }
+
+            return instance;
+        }
     }
 }

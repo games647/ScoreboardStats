@@ -63,6 +63,7 @@
             <version>LATEST</version>
         </dependency>
 
+        <!--Auto updater-->
         <dependency>
             <groupId>net.gravitydevelopment.updater</groupId>
             <artifactId>updater</artifactId>

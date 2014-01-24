@@ -89,6 +89,8 @@ public class ScoreboardStats extends JavaPlugin {
     public void onLoad() {
         super.onLoad();
 
+        Language.clearCache();
+
         //Check if server can display scoreboards
         isScoreboardCompatible();
     }
