@@ -24,11 +24,15 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
         final ClanPlayer clanPlayer = clanManager.getClanPlayer(player);
 
         if ("%kills%".equals(variable)) {
-            final int civilianKills = clanPlayer.getCivilianKills();
-            final int neutralKills = clanPlayer.getNeutralKills();
-            final int rivalKills = clanPlayer.getRivalKills();
-            //count all kill types
-            return civilianKills + neutralKills + rivalKills;
+            if (clanPlayer == null) {
+                return -1;
+            } else {
+                final int civilianKills = clanPlayer.getCivilianKills();
+                final int neutralKills = clanPlayer.getNeutralKills();
+                final int rivalKills = clanPlayer.getRivalKills();
+                //count all kill types
+                return civilianKills + neutralKills + rivalKills;
+            }
         }
 
         if ("deaths".equals(variable)) {

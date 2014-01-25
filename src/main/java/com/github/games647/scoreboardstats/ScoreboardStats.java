@@ -9,11 +9,11 @@ import com.github.games647.scoreboardstats.listener.SignsListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.google.common.collect.Sets;
 
+import java.io.File;
 import java.util.Set;
 
 import net.gravitydevelopment.updater.Updater;
 
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ScoreboardStats extends JavaPlugin {
@@ -42,8 +42,6 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        super.onEnable();
-
         //Load the config and setting the database up
         if (settings == null) {
             settings = new Settings(this);
@@ -77,7 +75,7 @@ public class ScoreboardStats extends JavaPlugin {
                 , 60L, 1L);
 
         if (Settings.isUpdateEnabled()) {
-            final Updater updater = new UpdaterFix(this, 55148, getFile());
+            final Updater updater = new UpdaterFix(this, getFile());
             if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                 //Check if a new update is available
                 getLogger().info(Language.get("onUpdate"));
@@ -87,12 +85,19 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        super.onLoad();
-
-        Language.clearCache();
-
         //Check if server can display scoreboards
         isScoreboardCompatible();
+    }
+
+
+    @Override
+    public void onDisable() {
+        //Clear all scoreboards and saveDefault them
+        if (scoreboardManager != null) {
+           scoreboardManager.unregisterAll();
+        }
+
+        Database.saveAll();
     }
 
     public void onReload() {
@@ -108,19 +113,6 @@ public class ScoreboardStats extends JavaPlugin {
         scoreboardManager.regAll();
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
-
-        //Remove all running tasks
-        getServer().getScheduler().cancelTasks(this);
-        //Remove all listeners
-        HandlerList.unregisterAll(this);
-        //Clear all scoreboards and save them
-        scoreboardManager.unregisterAll();
-        Database.saveAll();
-    }
-
     public Set<String> getHidelist() {
         return hidelist;
     }
@@ -130,14 +122,19 @@ public class ScoreboardStats extends JavaPlugin {
         return super.getClassLoader();
     }
 
+    @Override
+    public File getFile() {
+        return super.getFile();
+    }
+
     public RefreshTask getRefreshTask() {
         return refreshTask;
     }
 
     private boolean isScoreboardCompatible() {
-        final String bukkitVersion = getServer().getBukkitVersion();
-        //Convert the version string into and integer
-        final int version = Integer.parseInt(bukkitVersion.split("\\-")[0].replace(".", ""));
+        final String minecraftVersion = getServer().getVersion().split("MC: ")[1].split("\\)")[0];
+        //Convert the version string into an integer
+        final int version = Integer.parseInt(minecraftVersion.replace(".", ""));
         //Only version above 1.5 supports the scoreboard feature
         if (version >= 150) {
             return true;

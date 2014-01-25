@@ -2,12 +2,10 @@ package com.github.games647.scoreboardstats;
 
 import com.google.common.collect.Maps;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
@@ -100,8 +98,6 @@ public final class Settings {
         return tempDisapper;
     }
 
-    private final ResourceBundle UTF_CHARACTERS = ResourceBundle.getBundle("characters");
-
     private final ScoreboardStats pluginInstance;
 
     public Settings(ScoreboardStats instance) {
@@ -124,8 +120,8 @@ public final class Settings {
         disabledWorlds = config.getStringList("disabled-worlds");
         intervall = config.getInt("Scoreboard.Update-delay");
         saveIntervall = config.getInt("PvPStats-SaveIntervall");
-        title = ChatColor.translateAlternateColorCodes('&',
-                checkLength(replaceUtf8Characters(config.getString("Scoreboard.Title")), 32));
+        title = ChatColor.translateAlternateColorCodes('&'
+                , checkLength(Language.getReplaced(config.getString("Scoreboard.Title")), 32));
 
         tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
 
@@ -138,8 +134,7 @@ public final class Settings {
 
         tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         tempTitle = ChatColor.translateAlternateColorCodes('&',
-                checkLength(replaceUtf8Characters(config.getString("Temp-Scoreboard.Title")), 32));
-
+                checkLength(Language.getReplaced(config.getString("Temp-Scoreboard.Title")), 32));
     }
 
     private String checkLength(String check, int limit) {
@@ -180,7 +175,7 @@ public final class Settings {
                 break;
             }
 
-            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(replaceUtf8Characters(key), 16));
+            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Language.getReplaced(key), 16));
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
             ITEMS.put(name, variable);
@@ -189,18 +184,5 @@ public final class Settings {
         if (ITEMS.isEmpty()) {
             pluginInstance.getLogger().info(Language.get("notEnoughItems", "scoreboard"));
         }
-    }
-
-    private String replaceUtf8Characters(String input) {
-        //Replace all utf-8 characters
-        String replacedInput = input;
-        final Enumeration<String> characters = UTF_CHARACTERS.getKeys();
-        for (final Enumeration<String> e = characters; e.hasMoreElements();) {
-            final String character = e.nextElement();
-            final String value = UTF_CHARACTERS.getString(character);
-            replacedInput = replacedInput.replace(character, value);
-        }
-
-        return replacedInput;
     }
 }
