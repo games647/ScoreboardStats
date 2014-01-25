@@ -12,7 +12,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -137,7 +136,7 @@ public final class Database {
         CACHE.asMap().put(name, cacheObject);
     }
 
-    private static List<PlayerStats> getTopList(String order) {
+    private static Iterable<PlayerStats> getTopList(String order) {
         return databaseInstance.find(PlayerStats.class).orderBy(order)
                 .setMaxRows(Settings.getTopitems()).findList();
     }

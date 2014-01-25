@@ -1,28 +1,35 @@
 package com.github.games647.scoreboardstats;
 
+import java.io.File;
 import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Language {
 
-    private static Language instance;
+    private static final Language INSTANCE = new Language();
 
     //Static method wrapper
     public static String get(String key, Object... arguments) {
-        return getInstance().getFormatted(key, arguments);
+        return INSTANCE.getFormatted(key, arguments);
     }
 
-     //Static method wrapper
+    //Static method wrapper
     public static String get(String key) {
-        return getInstance().getFormatted(key);
+        return INSTANCE.getFormatted(key);
     }
 
-    public static void clearCache() {
-        //Forward
-        ResourceBundle.clearCache();
+    public static String getReplaced(String input) {
+        return INSTANCE.getReplacedString(input);
     }
 
-    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages");
+    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), new ReloadFixLoader());
+    private final ResourceBundle utf_characters = ResourceBundle.getBundle("characters", Locale.getDefault(), new ReloadFixLoader());
+
+    public void load(File file) {
+        throw new UnsupportedOperationException();
+    }
 
     private String getFormatted(String key, Object... arguments) {
         if (defaultMessages.containsKey(key)) {
@@ -38,13 +45,16 @@ public class Language {
         return "";
     }
 
-    private static Language getInstance() {
-        synchronized (instance) {
-            if (instance == null) {
-                instance = new Language();
-            }
-
-            return instance;
+    private String getReplacedString(String input) {
+        //Replace all utf-8 characters
+        String replacedInput = input;
+        final Enumeration<String> characters = utf_characters.getKeys();
+        for (final Enumeration<String> e = characters; e.hasMoreElements();) {
+            final String character = e.nextElement();
+            final String value = utf_characters.getString(character);
+            replacedInput = replacedInput.replace(character, value);
         }
+
+        return replacedInput;
     }
 }
