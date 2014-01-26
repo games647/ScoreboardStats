@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,10 +34,10 @@ public class ReloadFixLoader extends ClassLoader {
         return null;
     }
 
-    private void closeStreamSafely(Closeable closeable) {
-        if (closeable != null) {
+    private void closeStreamSafely(JarFile file) {
+        if (file != null) {
             try {
-                closeable.close();
+                file.close();
             } catch (IOException ex) {
                 Logger.getLogger(ReloadFixLoader.class.getName()).log(Level.SEVERE, null, ex);
             }
