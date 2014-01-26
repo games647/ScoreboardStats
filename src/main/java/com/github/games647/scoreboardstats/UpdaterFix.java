@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats;
 
 import java.io.File;
 
-import net.gravitydevelopment.updater.Updater;
 
 import org.bukkit.plugin.Plugin;
 

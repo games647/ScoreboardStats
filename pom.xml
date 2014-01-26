@@ -160,14 +160,14 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
-                        <!--Add gravity's updater to scoreboardstats-->
+                        Add gravity's updater to scoreboardstats
                         <includes>
                             <include>net.gravitydevelopment.updater</include>
                         </includes>
@@ -186,7 +186,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
 
         <resources>
@@ -199,53 +199,6 @@
             </resource>
         </resources>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.11</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.0.1</version>
-                <configuration>
-                    <minimumPriority>0</minimumPriority>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <tags>
-                        <tag>fixme</tag>
-                        <tag>FixMe</tag>
-                        <tag>FIXME</tag>
-                        <tag>todo</tag>
-                        <tag>TODO</tag>
-                    </tags>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
 
     <issueManagement>
         <system>GitHub</system>

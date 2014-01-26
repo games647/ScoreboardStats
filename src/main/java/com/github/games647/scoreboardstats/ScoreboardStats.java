@@ -12,7 +12,6 @@ import com.google.common.collect.Sets;
 import java.io.File;
 import java.util.Set;
 
-import net.gravitydevelopment.updater.Updater;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
