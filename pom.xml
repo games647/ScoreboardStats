@@ -64,13 +64,6 @@
         </dependency>
 
         <!--Auto updater-->
-        <dependency>
-            <groupId>net.gravitydevelopment.updater</groupId>
-            <artifactId>updater</artifactId>
-            <version>2.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/updater-2.1.jar</systemPath>
-        </dependency>
 
 <!--        This is only temporarily cause on gravity's repo is an outdated version-->
 <!--        <dependency>
