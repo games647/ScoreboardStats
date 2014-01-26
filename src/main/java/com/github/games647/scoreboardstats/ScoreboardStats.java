@@ -8,12 +8,10 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignsListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.google.common.collect.Sets;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Set;
-
-
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class ScoreboardStats extends JavaPlugin {
 
@@ -62,16 +60,16 @@ public class ScoreboardStats extends JavaPlugin {
         getCommand("sb:reload").setExecutor(new ReloadCommand());
         getCommand("sidebar").setExecutor(new SidebarCommand());
 
+        //Start the refresh task
+        refreshTask = new RefreshTask(this);
+        getServer().getScheduler().runTaskTimer(this, refreshTask
+                , 60L, 1L);
+
         if (scoreboardManager == null) {
             scoreboardManager = new SbManager(this);
         }
 
         scoreboardManager.regAll();
-
-        //Start the refresh task
-        refreshTask = new RefreshTask(this);
-        getServer().getScheduler().runTaskTimer(this, refreshTask
-                , 60L, 1L);
 
         if (Settings.isUpdateEnabled()) {
             final Updater updater = new UpdaterFix(this, getFile());
