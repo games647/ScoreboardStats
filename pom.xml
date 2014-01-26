@@ -151,7 +151,7 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
-                        Add gravity's updater to scoreboardstats
+                        <!--Add gravity's updater to scoreboardstats-->
                         <includes>
                             <include>net.gravitydevelopment.updater</include>
                         </includes>

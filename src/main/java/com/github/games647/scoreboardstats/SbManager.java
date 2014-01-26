@@ -65,22 +65,17 @@ public class SbManager {
     }
 
     public void regAll() {
-        Bukkit.getScheduler().runTaskAsynchronously(pluginInstance, new Runnable() {
-            @Override
-            public void run() {
-                final boolean ispvpstats = Settings.isPvpStats();
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (player.isOnline()) {
-                        if (ispvpstats) {
-                            Database.loadAccount(player.getName());
-                        }
-
-                        createScoreboard(player);
-                        pluginInstance.getRefreshTask().addToQueue(player);
-                    }
+        final boolean ispvpstats = Settings.isPvpStats();
+        for (Player player: Bukkit.getOnlinePlayers()) {
+            if (player.isOnline()) {
+                if (ispvpstats) {
+                    Database.loadAccount(player.getName());
                 }
+
+                createScoreboard(player);
+                pluginInstance.getRefreshTask().addToQueue(player);
             }
-        });
+        }
     }
 
     public void unregisterAll() {

@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,30 +16,32 @@ public class ReloadFixLoader extends ClassLoader {
 
     @Override
     public InputStream getResourceAsStream(String name) {
-        InputStream inputStream = null;
-        
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(pluginFile);
             for (final Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();) {
                 final JarEntry entry = e.nextElement();
                 if (entry.getName().equals(name)) {
-                    inputStream = jarFile.getInputStream(entry);
-                    break;
+                    return jarFile.getInputStream(entry);
                 }
             }
+
+            closeStreamSafely(jarFile);
         } catch (IOException ex) {
-            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (jarFile != null) {
-                try {
-                    jarFile.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+            //Can't use finally because the jarFile have to be openen when we return the stream
+            closeStreamSafely(jarFile);
         }
 
-        return inputStream;
+        return null;
+    }
+
+    private void closeStreamSafely(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ReloadFixLoader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
