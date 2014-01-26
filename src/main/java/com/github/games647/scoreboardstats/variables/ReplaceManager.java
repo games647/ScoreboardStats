@@ -4,18 +4,17 @@ import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
 
 public final class ReplaceManager implements Listener {
 
@@ -36,6 +35,7 @@ public final class ReplaceManager implements Listener {
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         tempMap.put(FactionsVariables.class, "Factions");
+        tempMap.put(SkyBlockVariables.class, "uSkyBlock");
 
         //Prevent futur modifications
         defaults = Collections.unmodifiableMap(tempMap);

@@ -13,6 +13,7 @@ softdepend:
     - Factions
     - Jobs
     - Heroes
+    - uSkyBlock
 
 commands:
   sb:reload:
