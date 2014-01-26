@@ -125,6 +125,13 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>us.talabrek.ultimateskyblock</groupId>
+            <artifactId>uSkyBlock</artifactId>
+            <version>1.0.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/uSkyBlock.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
