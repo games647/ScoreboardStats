@@ -71,7 +71,7 @@ public class ScoreboardStats extends JavaPlugin {
 
         //Start the refresh task
         refreshTask = new RefreshTask(this);
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, refreshTask
+        getServer().getScheduler().runTaskTimer(this, refreshTask
                 , 60L, 1L);
 
         if (Settings.isUpdateEnabled()) {
