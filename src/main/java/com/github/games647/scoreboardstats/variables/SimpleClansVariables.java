@@ -65,6 +65,10 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
             return clan == null ? -1 : clan.getAllies().size();
         }
 
+        if ("%members_online%".equals(variable)) {
+            return clan == null ? -1 : clan.getOnlineMembers().size();
+        }
+
         if ("%allies_total%".equals(variable)) {
             return clan == null ? -1 : clan.getAllAllyMembers().size();
         }
