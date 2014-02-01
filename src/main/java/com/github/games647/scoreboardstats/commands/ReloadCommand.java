@@ -19,13 +19,8 @@ public class ReloadCommand implements CommandExecutor {
             commandSender.sendMessage(Language.get("noPermission"));
             return true;
         }
-        final ScoreboardStats instance = ScoreboardStats.getInstance();
-        instance.getServer().getScheduler().runTask(instance, new BukkitRunnable() {
-            @Override
-            public void run() {
-                instance.onReload();
-            }
-        });
+        
+        ScoreboardStats.getInstance().onReload();
         commandSender.sendMessage(Language.get("onReload"));
         return true;
     }
