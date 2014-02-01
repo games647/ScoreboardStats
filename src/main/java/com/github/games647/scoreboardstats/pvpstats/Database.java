@@ -21,6 +21,9 @@ import javax.persistence.PersistenceException;
 
 import org.bukkit.entity.Player;
 
+/**
+ * This represents a handler for saving player stats.
+ */
 public final class Database {
 
     private static EbeanServer databaseInstance;
@@ -52,6 +55,9 @@ public final class Database {
                 }
             });
 
+    /**
+     * Get the cache player stats if they exists and the arguments are valid.
+     */
     public static PlayerCache getCacheIfAbsent(Player request) {
         if (request != null && Settings.isPvpStats()) {
             final String playerName = request.getName();
@@ -63,6 +69,9 @@ public final class Database {
         return null;
     }
 
+    /**
+     * Starts loading the stats from a specific player in an external thread.
+     */
     public static void loadAccount(String name) {
         final Map<String, PlayerCache> cache = CACHE.asMap();
         if (!Settings.isPvpStats() || cache.containsKey(name)) {
@@ -72,6 +81,9 @@ public final class Database {
         EXECUTOR.execute(new StatsLoader(name));
     }
 
+    /*
+     * Starts saving all cache player stats and then clears the cache.
+     */
     public static void saveAll() {
         if (Settings.isPvpStats()) {
             //If pvpstats are enabled save all stats that are in the cache
@@ -79,6 +91,9 @@ public final class Database {
         }
     }
 
+    /*
+     * Gets the a map of the best players for a specific category.
+     */
     public static Map<String, Integer> getTop() {
         //Get the top players for a specific type
         final String type = Settings.getTopType();
@@ -100,6 +115,9 @@ public final class Database {
         return top;
     }
 
+    /*
+     * Initialize a components and checking for an existing database
+     */
     public static void setupDatabase(ScoreboardStats pluginInstance) {
         //Check if pvpstats should be enabled
         if (Settings.isPvpStats()) {

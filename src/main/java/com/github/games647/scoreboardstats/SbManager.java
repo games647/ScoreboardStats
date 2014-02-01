@@ -64,7 +64,10 @@ public class SbManager {
         }
     }
 
-    public void regAll() {
+    /*
+     * Adding all players to the refresh queue and loading the player stats if enabled
+     */
+    public void registerAll() {
         final boolean ispvpstats = Settings.isPvpStats();
         for (Player player: Bukkit.getOnlinePlayers()) {
             if (player.isOnline()) {
@@ -78,6 +81,9 @@ public class SbManager {
         }
     }
 
+    /*
+     * Clear the scoreboard for all players
+     */
     public void unregisterAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isOnline()) {
@@ -86,6 +92,9 @@ public class SbManager {
         }
     }
 
+    /**
+     * Creates a new scoreboard for the best of NUMBER players
+     */
     protected void createTopListScoreboard(Player player) {
         final Scoreboard scoreboard = player.getScoreboard();
         final Objective oldObjective = scoreboard.getObjective(DisplaySlot.SIDEBAR);

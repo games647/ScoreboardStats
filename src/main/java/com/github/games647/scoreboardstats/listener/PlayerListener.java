@@ -15,6 +15,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 public class PlayerListener implements Listener {
 
+    /**
+     * Tracks player deaths and kills
+     */
     @EventHandler
     public void onDeath(PlayerDeathEvent deathEvent) {
         final Player killed = deathEvent.getEntity();
@@ -22,12 +25,12 @@ public class PlayerListener implements Listener {
         if (Settings.isPvpStats() && !Settings.isDisabledWorld(killed.getWorld())) {
             final PlayerCache killedcache = Database.getCacheIfAbsent(killed);
             if (killedcache != null) {
-                killedcache.onDeath();
+                killedcache.incrementDeaths();
             }
 
             final PlayerCache killercache = Database.getCacheIfAbsent(killer);
             if (killercache != null) {
-                killercache.onKill();
+                killercache.incrementKills();
             }
         }
     }
@@ -40,6 +43,9 @@ public class PlayerListener implements Listener {
         ScoreboardStats.getInstance().getRefreshTask().addToQueue(player);
     }
 
+    /**
+     * Checks if the player moves in a scoreboard disabled world
+     */
     @EventHandler(ignoreCancelled = true)
     public void onChange(PlayerChangedWorldEvent teleport) {
         final Player player = teleport.getPlayer();

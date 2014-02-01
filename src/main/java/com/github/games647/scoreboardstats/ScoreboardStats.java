@@ -66,7 +66,7 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager = new SbManager(this);
         }
 
-        scoreboardManager.regAll();
+        scoreboardManager.registerAll();
 
         //Start the refresh task
         refreshTask = new RefreshTask(this);
@@ -91,7 +91,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        //Clear all scoreboards and saveDefault them
+        //Clear all scoreboards and copyDefault them
         if (scoreboardManager != null) {
            scoreboardManager.unregisterAll();
         }
@@ -100,6 +100,7 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     public void onReload() {
+        Language.copyDefault(false);
         final boolean pvpstats = Settings.isPvpStats();
 
         settings.loadConfig();
@@ -109,7 +110,7 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         scoreboardManager.unregisterAll();
-        scoreboardManager.regAll();
+        scoreboardManager.registerAll();
     }
 
     public Set<String> getHidelist() {
@@ -121,8 +122,7 @@ public class ScoreboardStats extends JavaPlugin {
         return super.getClassLoader();
     }
 
-    @Override
-    public File getFile() {
+    public File getFileBypass() {
         return super.getFile();
     }
 

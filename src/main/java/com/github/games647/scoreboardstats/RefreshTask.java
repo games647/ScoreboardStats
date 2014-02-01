@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 
 import org.bukkit.entity.Player;
 
+/*
+ * Handling all updates for a player in a performance optimized variant. This
+ * class split the updates over the ticks much smoother.
+ */
 public class RefreshTask implements Runnable {
 
     private final ScoreboardStats pluginInstance;
@@ -34,6 +38,9 @@ public class RefreshTask implements Runnable {
         }
     }
 
+    /*
+     * Add a player to the queue for updating him.
+     */
     public void addToQueue(Player request) {
         queue.add(new DelayedElement(request, Settings.getIntervall()));
     }

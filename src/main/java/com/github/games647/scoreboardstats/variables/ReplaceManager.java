@@ -27,7 +27,6 @@ public final class ReplaceManager implements Listener {
         tempMap.put(GeneralVariables.class, "ScoreboardStats");
         tempMap.put(PlayerPingVariable.class, "ScoreboardStats");
         tempMap.put(StatsVariables.class, "ScoreboardStats");
-//        tempMap.put(TicksVariables.class, "ScoreboardStats");
 
         tempMap.put(VaultVariables.class, "Vault");
 
@@ -54,8 +53,7 @@ public final class ReplaceManager implements Listener {
      * @throws IllegalArgumentException if pluginName is empty
      * @throws IllegalStateException if replacer is already registered
      */
-    public void register(Replaceable replacer, String pluginName)
-            throws NullPointerException, IllegalArgumentException, IllegalStateException {
+    public void register(Replaceable replacer, String pluginName) {
         Preconditions.checkNotNull(replacer, "replacer cannot be null");
         Preconditions.checkNotNull(pluginName, "pluginName cannot be null");
 
@@ -67,6 +65,9 @@ public final class ReplaceManager implements Listener {
         replacers.put(replacer, pluginName);
     }
 
+    /**
+     * Unregister a replacer
+     */
     public void unregister(Replaceable replacer) {
         //fail safe
         if (replacers.containsKey(replacer)) {
