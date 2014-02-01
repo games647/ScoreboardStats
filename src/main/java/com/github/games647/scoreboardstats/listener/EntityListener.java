@@ -11,6 +11,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+/*
+ * If enabled this class counts the mob kills.
+ */
 public class EntityListener implements Listener {
 
     @EventHandler
@@ -27,7 +30,7 @@ public class EntityListener implements Listener {
 
         final PlayerCache killercache = Database.getCacheIfAbsent(killer);
         if (killercache != null) {
-            killercache.onMobKill();
+            killercache.incrementMobKills();
         }
     }
 }

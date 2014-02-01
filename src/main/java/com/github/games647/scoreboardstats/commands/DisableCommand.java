@@ -11,6 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
+/**
+ * Represents the class for handling a toggle command.
+ */
 public class DisableCommand implements CommandExecutor {
 
     private final ScoreboardStats plugin;

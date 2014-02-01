@@ -1,11 +1,22 @@
 package com.github.games647.scoreboardstats;
 
+import com.google.common.io.Closeables;
+import com.google.common.io.Resources;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/*
+ * Used to seperate messages and code.
+ */
 public class Language {
 
     private static final Language INSTANCE = new Language();
@@ -24,12 +35,33 @@ public class Language {
         return INSTANCE.getReplacedString(input);
     }
 
-    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), new ReloadFixLoader());
-    private final ResourceBundle utf_characters = ResourceBundle.getBundle("characters", Locale.getDefault(), new ReloadFixLoader());
-
-    public void load(File file) {
-        throw new UnsupportedOperationException();
+    public static void copyDefault(boolean replace) {
+        copyDefault("characters.properties", replace);
+        copyDefault("messages.properties", replace);
     }
+
+    public static void copyDefault(String name, boolean replace) {
+        final File file = new File(ScoreboardStats.getInstance().getDataFolder(), name);
+        final URL url = ScoreboardStats.getInstance().getClassLoaderBypass().getResource(name);
+        if (!replace && file.exists()) {
+            return;
+        }
+
+        FileOutputStream out = null;
+        try {
+            file.createNewFile();
+
+            out = new FileOutputStream(file);
+            Resources.copy(url, out);
+        } catch (IOException ex) {
+            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Closeables.closeQuietly(out);
+        }
+    }
+
+    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), ReloadFixLoader.getNewInstance());
+    private final ResourceBundle utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), ReloadFixLoader.getNewInstance());
 
     private String getFormatted(String key, Object... arguments) {
         if (defaultMessages.containsKey(key)) {
@@ -48,10 +80,10 @@ public class Language {
     private String getReplacedString(String input) {
         //Replace all utf-8 characters
         String replacedInput = input;
-        final Enumeration<String> characters = utf_characters.getKeys();
+        final Enumeration<String> characters = utfCharacters.getKeys();
         for (final Enumeration<String> e = characters; e.hasMoreElements();) {
             final String character = e.nextElement();
-            final String value = utf_characters.getString(character);
+            final String value = utfCharacters.getString(character);
             replacedInput = replacedInput.replace(character, value);
         }
 

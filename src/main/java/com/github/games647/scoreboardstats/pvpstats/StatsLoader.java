@@ -1,9 +1,15 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+/**
+ * This class is used for loading the player stats.
+ */
 public class StatsLoader implements Runnable {
 
     private final String playerName;
 
+    /*
+     * Creates a new loader for a specific player
+     */
     public StatsLoader(String playerName) {
         this.playerName = playerName;
     }

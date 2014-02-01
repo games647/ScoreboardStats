@@ -5,6 +5,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+/*
+ * This class forward all comands to the user commands for a better access
+ */
 public class SidebarCommand implements CommandExecutor {
 
     //Forward all commands

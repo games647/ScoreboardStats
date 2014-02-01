@@ -3,6 +3,9 @@ package com.github.games647.scoreboardstats.pvpstats;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Represents a cached object of the player stats
+ */
 @EqualsAndHashCode
 @ToString(includeFieldNames=true)
 public class PlayerCache {
@@ -23,11 +26,14 @@ public class PlayerCache {
         highestStreak  = paramstreak;
     }
 
+    /**
+     * Creates a new cached object where all stats are initialized as 0
+     */
     public PlayerCache() {
         //Do nothing, because all variables are automatically init as 0
     }
 
-    public void onKill() {
+    public void incrementKills() {
         onChange();
 
         kills++;
@@ -38,13 +44,13 @@ public class PlayerCache {
         }
     }
 
-    public void onMobKill() {
+    public void incrementMobKills() {
         onChange();
 
         mob++;
     }
 
-    public void onDeath() {
+    public void incrementDeaths() {
         onChange();
 
         laststreak = 0;
@@ -71,6 +77,9 @@ public class PlayerCache {
         return laststreak;
     }
 
+    /*
+     * Get the current kdr rounded
+     */
     public int getKdr() {
         if (deaths == 0) {
             //We can't divide by zero
@@ -80,13 +89,18 @@ public class PlayerCache {
         }
     }
 
+    /*
+     * Check if any value was changed
+     */
     public boolean hasChanged() {
         //Check if the stats was changed
         return changed;
     }
 
+    /*
+     * Marks the stats as changed
+     */
     private void onChange() {
-        //Marks the stats as changed
         changed = true;
     }
 }

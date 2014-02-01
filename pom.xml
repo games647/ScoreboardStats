@@ -22,10 +22,10 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
 
-        <!--Repository for vault and heroes-->
+        <!--Used for ProtocolLib-->
         <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <id>comphenix-repo</id>
+            <url>http://repo.comphenix.net/content/repositories/releases/</url>
         </repository>
 
         <!--Repo for simpleclans-->
@@ -34,14 +34,22 @@
             <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
         </repository>
 
-        <!--Repository for the auto updater to keep it up to date-->
+        <!--for mcMMO-->
         <repository>
-            <id>gravity-repo</id>
-            <url>http://repo.gravitydevelopment.net</url>
+            <id>md_5-releases</id>
+            <url>http://repo.md-5.net/content/repositories/releases/</url>
         </repository>
     </repositories>
 
     <dependencies>
+        <!--Automatic Source Code generation using annotations-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--Testing-->
         <dependency>
             <groupId>junit</groupId>
@@ -51,15 +59,14 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
             <version>LATEST</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
+            <groupId>com.gmail.nossr50.mcMMO</groupId>
+            <artifactId>mcMMO</artifactId>
             <version>LATEST</version>
         </dependency>
 
@@ -99,15 +106,6 @@
             <version>2.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
-        </dependency>
-
-        <!--Maven repo for mcmmo is down-->
-        <dependency>
-            <groupId>com.gmail.nossr50</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.4.07</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mcMMO.jar</systemPath>
         </dependency>
 
         <dependency>
