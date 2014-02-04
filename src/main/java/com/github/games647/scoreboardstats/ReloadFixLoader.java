@@ -1,8 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import com.google.common.io.Closeables;
-
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +16,9 @@ import java.util.logging.Logger;
  */
 public class ReloadFixLoader extends ClassLoader {
 
-    public static ClassLoader getNewInstance() {
+    public static ClassLoader newInstance() {
         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+            @Override
             public ClassLoader run() {
                 return new ReloadFixLoader();
             }
@@ -40,13 +38,24 @@ public class ReloadFixLoader extends ClassLoader {
                     return jarFile.getInputStream(entry);
                 }
             }
+
+            closeQuietly(jarFile);
         } catch (IOException ex) {
-            Logger.getLogger("ScoreboardStats").log(Level.WARNING, "Couln't load the resourceBundle", ex);
-        } finally {
-            //Can't use finally because the jarFile have to be openen when we return the stream
-            Closeables.closeQuietly((Closeable) jarFile);
+            closeQuietly(jarFile);
+            Logger.getLogger("ScoreboardStats")
+                    .log(Level.WARNING, "Couln't load the resourceBundle", ex);
         }
 
         return null;
+    }
+
+    private void closeQuietly(JarFile file) {
+        if (file != null) {
+            try {
+                file.close();
+            } catch (IOException ex) {
+                Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

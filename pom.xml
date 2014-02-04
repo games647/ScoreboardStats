@@ -22,18 +22,12 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
 
-        <!--Used for ProtocolLib-->
-        <repository>
-            <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/repositories/releases/</url>
-        </repository>
-
         <!--Repo for simpleclans-->
         <repository>
             <id>simpleclans-repo</id>
             <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
         </repository>
-        
+
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
@@ -128,6 +122,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>us.talabrek.ultimateskyblock</groupId>
             <artifactId>uSkyBlock</artifactId>
@@ -163,8 +158,8 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
-                        Add gravity's updater to scoreboardstats
                         <includes>
+                            Add gravity's updater to scoreboardstats
                             <include>net.gravitydevelopment.updater</include>
                         </includes>
                     </artifactSet>

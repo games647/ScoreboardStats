@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.google.common.base.Throwables;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -26,7 +28,7 @@ public class PlayerPingVariable implements ReplaceManager.Replaceable {
             return pingField.getInt(entityPlayer);
         } catch (Exception ex) {
             //Forward the exception to replaceManager
-            throw new RuntimeException("Unable to get the ping for a player.", ex);
+            throw Throwables.propagate(ex);
         }
     }
 }
