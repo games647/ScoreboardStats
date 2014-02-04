@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Handle the Reload command for the plugin.
@@ -19,7 +18,7 @@ public class ReloadCommand implements CommandExecutor {
             commandSender.sendMessage(Language.get("noPermission"));
             return true;
         }
-        
+
         ScoreboardStats.getInstance().onReload();
         commandSender.sendMessage(Language.get("onReload"));
         return true;

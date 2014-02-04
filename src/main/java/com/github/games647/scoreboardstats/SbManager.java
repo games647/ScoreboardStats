@@ -116,9 +116,8 @@ public class SbManager {
         try {
             player.setScoreboard(scoreboard);
 
-            final Map<String, Integer> top = Database.getTop();
             //Colorize and send all elements
-            for (Map.Entry<String, Integer> entry: top.entrySet()) {
+            for (Map.Entry<String, Integer> entry : Database.getTop()) {
                 final String color = Settings.getTempColor();
                 final String scoreName = String.format("%s%s", color, checkLength(entry.getKey()));
                 sendScore(objective, scoreName, entry.getValue(), false);

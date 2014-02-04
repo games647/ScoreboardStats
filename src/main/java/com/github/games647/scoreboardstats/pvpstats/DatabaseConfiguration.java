@@ -5,11 +5,9 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,23 +30,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
     protected void loadConfiguration() {
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.setRegister(false);
-        databaseConfig.setClasses(getDatabaseClasses());
+        databaseConfig.addClass(PlayerStats.class);
         //Give the database a specific name
         databaseConfig.setName(pluginInstance.getName());
+        databaseConfig.setValidateOnSave(true);
 
         final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
 
         serverConfig = databaseConfig;
-    }
-
-    private List<Class<?>> getDatabaseClasses() {
-        //list all types
-        final List<Class<?>> classes = Lists.newArrayList();
-        classes.add(PlayerStats.class);
-
-        return classes;
     }
 
     private DataSourceConfig getSqlConfig(ServerConfig serverConfig) {
@@ -98,7 +89,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
     private String replaceUrlString(String input) {
         final Pattern pat = Pattern.compile("\\\\");
-        return input.replace("{DIR}", pat.matcher(pluginInstance.getDataFolder().getPath()).replaceAll("/") + '/')
+        return input
+                .replace("{DIR}", pat.matcher(pluginInstance.getDataFolder().getPath()).replaceAll("/") + '/')
                 .replace("{NAME}", pluginInstance.getName());
     }
 }

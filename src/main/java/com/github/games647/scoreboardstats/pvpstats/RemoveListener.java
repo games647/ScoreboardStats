@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 /* package */ class RemoveListener implements RemovalListener<String, PlayerCache> {
 
-    protected static RemovalListener<String, PlayerCache> getNewInstace(ExecutorService executor) {
+    protected static RemovalListener<String, PlayerCache> newInstace(ExecutorService executor) {
         final RemoveListener listener = new RemoveListener();
 
         //Return an asynch removallistener
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
         final PlayerCache playerCache = notification.getValue();
 
         //There are no need to query the database
-        if (playerCache == null || playerCache.hasChanged()) {
+        if (playerCache == null || !playerCache.hasChanged()) {
             return;
         }
 
@@ -42,6 +42,4 @@ import java.util.concurrent.ExecutorService;
         //Save the stats to the database
         Database.getDatabaseInstance().save(stats);
     }
-
-
 }

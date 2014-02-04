@@ -42,7 +42,7 @@ public class Language {
 
     public static void copyDefault(String name, boolean replace) {
         final File file = new File(ScoreboardStats.getInstance().getDataFolder(), name);
-        final URL url = ScoreboardStats.getInstance().getClassLoaderBypass().getResource(name);
+        final URL url = Language.class.getResource(name);
         if (!replace && file.exists()) {
             return;
         }
@@ -54,14 +54,14 @@ public class Language {
             out = new FileOutputStream(file);
             Resources.copy(url, out);
         } catch (IOException ex) {
-            Logger.getLogger(Language.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
         } finally {
             Closeables.closeQuietly(out);
         }
     }
 
-    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), ReloadFixLoader.getNewInstance());
-    private final ResourceBundle utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), ReloadFixLoader.getNewInstance());
+    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), ReloadFixLoader.newInstance());
+    private final ResourceBundle utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), ReloadFixLoader.newInstance());
 
     private String getFormatted(String key, Object... arguments) {
         if (defaultMessages.containsKey(key)) {

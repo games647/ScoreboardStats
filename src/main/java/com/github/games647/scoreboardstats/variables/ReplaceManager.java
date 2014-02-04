@@ -3,7 +3,9 @@ package com.github.games647.scoreboardstats.variables;
 import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,10 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 
 public final class ReplaceManager implements Listener {
 
@@ -37,7 +37,7 @@ public final class ReplaceManager implements Listener {
         tempMap.put(SkyBlockVariables.class, "uSkyBlock");
 
         //Prevent futur modifications
-        defaults = Collections.unmodifiableMap(tempMap);
+        defaults = ImmutableMap.copyOf(tempMap);
 
         Bukkit.getServer().getPluginManager().registerEvents(this, ScoreboardStats.getInstance());
         addDefaultReplacer();
@@ -90,9 +90,7 @@ public final class ReplaceManager implements Listener {
                 iter.remove();
 
                 ScoreboardStats.getInstance().getLogger()
-                        .log(Level.WARNING
-                                , Language.get("replacerException", replacer)
-                                , e);
+                        .warning(Language.get("replacerException", replacer, e));
             }
         }
 
@@ -149,11 +147,12 @@ public final class ReplaceManager implements Listener {
         } catch (UnsupportedPluginException ex) {
             ScoreboardStats.getInstance().getLogger()
                     .fine(Language.get("debugException", ex));
-            ScoreboardStats.getInstance().getLogger().log(Level.WARNING
-                    , Language.get("unsupportedPluginVersion", replacerClass.getSimpleName()));
+            ScoreboardStats.getInstance().getLogger()
+                    .warning(Language.get("unsupportedPluginVersion"
+                            , replacerClass.getSimpleName()));
         } catch (Exception ex) {
-            ScoreboardStats.getInstance().getLogger().log(Level.WARNING
-                    , Language.get("noRegister"), ex);
+            ScoreboardStats.getInstance().getLogger()
+                    .warning(Language.get("noRegister", ex));
         }
     }
 

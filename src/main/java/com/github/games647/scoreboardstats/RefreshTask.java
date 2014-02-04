@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats;
 
+import com.google.common.collect.ComparisonChain;
+
 import java.util.Queue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
@@ -46,11 +48,11 @@ public class RefreshTask implements Runnable {
     }
 
     private int getNextUpdates() {
-        int nextUpdates = queue.size() / 20;
+        final int nextUpdates = queue.size() / 20;
         if (queue.isEmpty()) {
             return 0;
         } else if (nextUpdates < 1) {
-            nextUpdates = 1;
+            return 1;
         }
 
         return nextUpdates;
@@ -79,14 +81,9 @@ public class RefreshTask implements Runnable {
 
         @Override
         public int compareTo(Delayed delayed) {
-            if (this.startTime < ((DelayedElement) delayed).startTime) {
-                return -1;
-            }
-            if (this.startTime > ((DelayedElement) delayed).startTime) {
-                return 1;
-            }
-
-            return 0;
+            return ComparisonChain.start()
+                    .compare(startTime, ((DelayedElement) delayed).startTime)
+                    .result();
         }
     }
 }
