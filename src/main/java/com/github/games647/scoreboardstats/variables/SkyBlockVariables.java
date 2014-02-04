@@ -4,10 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
 import us.talabrek.ultimateskyblock.PlayerInfo;
 import us.talabrek.ultimateskyblock.uSkyBlock;
 
 public class SkyBlockVariables implements ReplaceManager.Replaceable {
+    
     private uSkyBlock instance;
 
     public SkyBlockVariables() {
@@ -16,12 +18,14 @@ public class SkyBlockVariables implements ReplaceManager.Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {
-        final PlayerInfo pi = instance.getActivePlayers().containsKey(player.getName()) ?
+        final PlayerInfo playerInfo = instance.getActivePlayers().containsKey(player.getName()) ?
                 instance.getActivePlayers().get(player.getName()) :
                 instance.readPlayerFile(player.getName());
+
         if ("%island_level%".equals(variable)) {
-            return pi == null ? 0 : pi.getIslandLevel();
+            return playerInfo == null ? 0 : playerInfo.getIslandLevel();
         }
+
         return UNKOWN_VARIABLE;
     }
 
@@ -32,6 +36,7 @@ public class SkyBlockVariables implements ReplaceManager.Replaceable {
         if (version >= 200) {
             throw new UnsupportedPluginException();
         }
+
         instance = uSkyBlock.getInstance();
     }
 }

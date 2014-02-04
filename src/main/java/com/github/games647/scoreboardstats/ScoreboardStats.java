@@ -8,10 +8,11 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignsListener;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.google.common.collect.Sets;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Set;
+
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class ScoreboardStats extends JavaPlugin {
 
@@ -86,7 +87,6 @@ public class ScoreboardStats extends JavaPlugin {
         isScoreboardCompatible();
     }
 
-
     @Override
     public void onDisable() {
         //Clear all scoreboards and copyDefault them
@@ -98,7 +98,6 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     public void onReload() {
-        Language.copyDefault(false);
         final boolean pvpstats = Settings.isPvpStats();
 
         settings.loadConfig();
@@ -115,13 +114,12 @@ public class ScoreboardStats extends JavaPlugin {
         return hidelist;
     }
 
-    public ClassLoader getClassLoaderBypass() {
-        //make the access to the class loader public because we need it for setting the database up
-        return super.getClassLoader();
-    }
-
     public File getFileBypass() {
         return super.getFile();
+    }
+
+    public ClassLoader getClassLoaderBypass() {
+        return super.getClassLoader();
     }
 
     public RefreshTask getRefreshTask() {

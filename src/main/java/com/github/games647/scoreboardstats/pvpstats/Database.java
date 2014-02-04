@@ -13,9 +13,11 @@ import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
@@ -32,9 +34,10 @@ public final class Database {
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
     private static final Cache<String, PlayerCache> CACHE = CacheBuilder.newBuilder()
-            .maximumSize(512)
+            .initialCapacity(100)
+            .maximumSize(256)
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
-            .removalListener(RemoveListener.getNewInstace(EXECUTOR))
+            .removalListener(RemoveListener.newInstace(EXECUTOR))
             .build(new CacheLoader<String, PlayerCache>() {
                 @Override
                 public PlayerCache load(String playerName) {
@@ -88,13 +91,21 @@ public final class Database {
         if (Settings.isPvpStats()) {
             //If pvpstats are enabled save all stats that are in the cache
             CACHE.invalidateAll();
+            EXECUTOR.shutdown();
+            try {
+                Logger.getLogger("ScoreboardStats").info(Language.get("savingStats"));
+                EXECUTOR.awaitTermination(1, TimeUnit.MINUTES);
+            } catch (InterruptedException ex) {
+                Logger.getLogger("ScoreboardStats")
+                        .severe(Language.get("debugException", ex));
+            }
         }
     }
 
     /*
      * Gets the a map of the best players for a specific category.
      */
-    public static Map<String, Integer> getTop() {
+    public static Set<Map.Entry<String, Integer>> getTop() {
         //Get the top players for a specific type
         final String type = Settings.getTopType();
         final Map<String, Integer> top = new HashMap<String, Integer>(Settings.getTopitems());
@@ -112,7 +123,7 @@ public final class Database {
             }
         }
 
-        return top;
+        return top.entrySet();
     }
 
     /*

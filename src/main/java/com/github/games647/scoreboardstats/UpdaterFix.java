@@ -19,7 +19,7 @@ public class UpdaterFix extends Updater {
      * @param file The file that the plugin is running from, get this by doing this.getFile() from within your main class.
      */
     public UpdaterFix(Plugin plugin, File file) {
-        super(plugin, 55148, file, Updater.UpdateType.DEFAULT, false);
+        super(plugin, file, 55148, true);
     }
 
     @Override
