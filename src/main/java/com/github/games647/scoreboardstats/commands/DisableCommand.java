@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.commands;
 import com.github.games647.scoreboardstats.Language;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +36,7 @@ public class DisableCommand implements CommandExecutor {
 
         final String name = commandSender.getName();
         final Player player = (Player) commandSender;
-        final Set<String> list = plugin.getHidelist();
+        final Collection<String> list = plugin.getHidelist();
         if (list.contains(name)) {
             list.remove(name);
             plugin.getScoreboardManager().createScoreboard(player);

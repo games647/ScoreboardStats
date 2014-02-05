@@ -5,6 +5,7 @@ import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.github.games647.scoreboardstats.Language;
+import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.google.common.cache.Cache;
@@ -13,7 +14,6 @@ import com.google.common.cache.CacheLoader;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -105,7 +105,7 @@ public final class Database {
     /*
      * Gets the a map of the best players for a specific category.
      */
-    public static Set<Map.Entry<String, Integer>> getTop() {
+    public static Iterable<Map.Entry<String, Integer>> getTop() {
         //Get the top players for a specific type
         final String type = Settings.getTopType();
         final Map<String, Integer> top = new HashMap<String, Integer>(Settings.getTopitems());
@@ -136,23 +136,27 @@ public final class Database {
             dbConfiguration.loadConfiguration();
 
             final ClassLoader previous = Thread.currentThread().getContextClassLoader();
-
             Thread.currentThread().setContextClassLoader(pluginInstance.getClassLoaderBypass());
-            final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
-            Thread.currentThread().setContextClassLoader(previous);
 
-            try {
-                //Check if a database is avaible with the requesting datas
-                database.find(PlayerStats.class).findRowCount();
-            } catch (PersistenceException ex) {
-                //Create a new table
-                pluginInstance.getLogger().fine(Language.get("debugException", ex));
-                pluginInstance.getLogger().info(Language.get("newDatabase"));
-                final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-                gen.runScript(false, gen.generateCreateDdl());
+            if (ReloadFixLoader.changeClassCache(false)) {
+                final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
+
+                ReloadFixLoader.changeClassCache(true);
+                Thread.currentThread().setContextClassLoader(previous);
+
+                try {
+                    //Check if a database is avaible with the requesting datas
+                    database.find(PlayerStats.class).findRowCount();
+                } catch (PersistenceException ex) {
+                    //Create a new table
+                    pluginInstance.getLogger().fine(Language.get("debugException", ex));
+                    pluginInstance.getLogger().info(Language.get("newDatabase"));
+                    final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+                    gen.runScript(false, gen.generateCreateDdl());
+                }
+
+                databaseInstance = database;
             }
-
-            databaseInstance = database;
         }
     }
 
