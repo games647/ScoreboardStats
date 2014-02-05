@@ -142,19 +142,19 @@ public class Updater {
             folder.mkdir();
         }
 
-        BufferedInputStream in = null;
+        BufferedInputStream inputStream = null;
         FileOutputStream fout = null;
         try {
             // Download the file
-            in = new BufferedInputStream(new URL(link).openStream());
+            inputStream = new BufferedInputStream(new URL(link).openStream());
             fout = new FileOutputStream(folder.getAbsolutePath() + File.separator + file);
 
-            ByteStreams.copy(in, fout);
+            ByteStreams.copy(inputStream, fout);
         } catch (Exception ex) {
             this.plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
-            Closeables.closeQuietly(in);
+            Closeables.closeQuietly(inputStream);
             Closeables.closeQuietly(fout);
         }
     }

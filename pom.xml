@@ -69,15 +69,6 @@
             <version>LATEST</version>
         </dependency>
 
-        <!--Auto updater-->
-
-<!--        This is only temporarily cause on gravity's repo is an outdated version-->
-<!--        <dependency>
-            <groupId>net.gravitydevelopment.updater</groupId>
-            <artifactId>updater</artifactId>
-            <version>LATEST</version>
-        </dependency>-->
-
         <!--API for economy, permissions and chat-->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -150,34 +141,6 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
-
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <artifactSet>
-                        <includes>
-                            Add gravity's updater to scoreboardstats
-                            <include>net.gravitydevelopment.updater</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>net.gravitydevelopment.updater</pattern>
-                            <shadedPattern>com.github.games647.scoreboardstats</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
         </plugins>
 
         <resources>
