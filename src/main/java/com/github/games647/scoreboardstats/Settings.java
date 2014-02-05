@@ -1,9 +1,9 @@
 package com.github.games647.scoreboardstats;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +32,7 @@ public final class Settings {
     private static int                 tempDisapper;
 
     private static final Map<String, String> ITEMS = Maps.newHashMap();
-    private static List<String> disabledWorlds;
+    private static Set<String> disabledWorlds;
 
     public static int getItemsLenght() {
         return ITEMS.size();
@@ -120,7 +120,7 @@ public final class Settings {
         pvpStats = config.getBoolean("enable-pvpstats");
         updateEnabled = config.getBoolean("pluginUpdate");
 
-        disabledWorlds = config.getStringList("disabled-worlds");
+        disabledWorlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
         intervall = config.getInt("Scoreboard.Update-delay");
         saveIntervall = config.getInt("PvPStats-SaveIntervall");
         title = ChatColor.translateAlternateColorCodes('&'
@@ -166,12 +166,12 @@ public final class Settings {
     }
 
     private void loaditems(ConfigurationSection config) {
-        final Set<String> keys = config.getKeys(false);
         if (!ITEMS.isEmpty()) {
             //clear all existing items
             ITEMS.clear();
         }
 
+        final Set<String> keys = config.getKeys(false);
         for (String key : keys) {
             if (ITEMS.size() == 16 - 1) {
                 pluginInstance.getLogger().warning(Language.get("tooManyItems"));
