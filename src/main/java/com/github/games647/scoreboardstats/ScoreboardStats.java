@@ -24,6 +24,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     private final Set<String> hidelist = Sets.newHashSet();
 
+    private final TicksPerSecondTask tpsTask = new TicksPerSecondTask();
     private RefreshTask refreshTask;
     private SbManager scoreboardManager;
     private Settings settings;
@@ -40,6 +41,11 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Updater updater = null;
+        if (Settings.isUpdateEnabled()) {
+            updater = new UpdaterFix(this, getFile());
+        }
+
         //Load the config and setting the database up
         if (settings == null) {
             settings = new Settings(this);
@@ -65,6 +71,7 @@ public class ScoreboardStats extends JavaPlugin {
         refreshTask = new RefreshTask(this);
         getServer().getScheduler().runTaskTimer(this, refreshTask
                 , 60L, 1L);
+        getServer().getScheduler().runTaskTimer(this, tpsTask, 60L, 20L);
 
         if (scoreboardManager == null) {
             scoreboardManager = new SbManager(this);
@@ -72,8 +79,8 @@ public class ScoreboardStats extends JavaPlugin {
 
         scoreboardManager.registerAll();
 
-        if (Settings.isUpdateEnabled()) {
-            final Updater updater = new UpdaterFix(this, getFile());
+        if (updater != null) {
+            //the updater run async so don't block it this method
             if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                 //Check if a new update is available
                 getLogger().info(Language.get("onUpdate"));
