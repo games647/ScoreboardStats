@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.Settings;
+import com.github.games647.scoreboardstats.TicksPerSecondTask;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -29,6 +30,10 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {
+        if ("%tps%".equals(variable)) {
+            return (int) Math.round(TicksPerSecondTask.getLastTicks());
+        }
+
         if ("%health%".equals(variable)) {
             return (int) Math.round(player.getHealth());
         }
