@@ -15,21 +15,21 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public final class Settings {
 
-    private static boolean             pvpStats;
-    private static boolean             tempScoreboard;
-    private static boolean             hideVanished;
-    private static boolean             updateEnabled;
+    private static boolean pvpStats;
+    private static boolean tempScoreboard;
+    private static boolean hideVanished;
+    private static boolean updateEnabled = true;
 
-    private static String              title;
-    private static String              tempTitle;
-    private static String              tempColor;
-    private static String              topType;
+    private static String title;
+    private static String tempTitle;
+    private static String tempColor;
+    private static String topType;
 
-    private static int                 intervall;
-    private static int                 saveIntervall;
-    private static int                 topitems;
-    private static int                 tempShow;
-    private static int                 tempDisapper;
+    private static int intervall;
+    private static int saveIntervall;
+    private static int topitems;
+    private static int tempShow;
+    private static int tempDisapper;
 
     private static final Map<String, String> ITEMS = Maps.newHashMap();
     private static Set<String> disabledWorlds;
@@ -157,7 +157,9 @@ public final class Settings {
         if (input >= 16) {
             pluginInstance.getLogger().warning(Language.get("tooManyItems"));
             return 16 - 1;
-        } else if (input <= 0) {
+        }
+
+        if (input <= 0) {
             pluginInstance.getLogger().warning(Language.get("notEnoughItems", "tempscoreboard"));
             return 5;
         }

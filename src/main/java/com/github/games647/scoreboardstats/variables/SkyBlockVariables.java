@@ -9,7 +9,7 @@ import us.talabrek.ultimateskyblock.PlayerInfo;
 import us.talabrek.ultimateskyblock.uSkyBlock;
 
 public class SkyBlockVariables implements ReplaceManager.Replaceable {
-    
+
     private uSkyBlock instance;
 
     public SkyBlockVariables() {
@@ -34,7 +34,7 @@ public class SkyBlockVariables implements ReplaceManager.Replaceable {
         final Plugin skyblockPlugin = pluginManager.getPlugin("uSkyBlock");
         final int version = Integer.parseInt(skyblockPlugin.getDescription().getVersion().replace(".", ""));
         if (version >= 200) {
-            throw new UnsupportedPluginException();
+            throw new UnsupportedPluginException("Version over 2.0 is not supported");
         }
 
         instance = uSkyBlock.getInstance();
