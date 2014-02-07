@@ -39,6 +39,7 @@ public final class Database {
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
             .removalListener(RemoveListener.newInstace(EXECUTOR))
             .build(new CacheLoader<String, PlayerCache>() {
+                
                 @Override
                 public PlayerCache load(String playerName) {
                     //This shouldn't be called because that can freeze the server

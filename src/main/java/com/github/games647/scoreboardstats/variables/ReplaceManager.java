@@ -94,7 +94,7 @@ public final class ReplaceManager implements Listener {
             }
         }
 
-        throw new UnknownVariableException();
+        throw new UnknownVariableException("Variable was not found");
     }
 
     //Register the listener back again if the plugin is availble

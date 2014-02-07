@@ -5,6 +5,7 @@
  */
 package com.github.games647.scoreboardstats;
 
+import com.google.common.base.Charsets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
@@ -26,13 +27,16 @@ import org.json.simple.JSONValue;
 
 public class Updater {
 
-    private static final String TITLE_VALUE = "name"; // Gets remote file's title
-    private static final String LINK_VALUE = "downloadUrl"; // Gets remote file's download link
-    private static final String QUERY = "https://api.curseforge.com/servermods/files?projectIds="; // Slugs will be appended to this to get to the project's RSS feed
-
-    private static final String USER_AGENT = "Updater (by Gravity and modifed by games647)";
-    private static final String DELIMITER = "^v|[\\s_-]v"; // Used for locating version numbers in file names
-    private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT" }; // If the version number contains one of these, don't update.
+    // Gets remote file's title
+    private static final String TITLE_VALUE = "name";
+    // Gets remote file's download link
+    private static final String LINK_VALUE = "downloadUrl";
+    // Slugs will be appended to this to get to the project's RSS feed
+    private static final String QUERY = "https://api.curseforge.com/servermods/files?projectIds=";
+    // Used for locating version numbers in file names
+    private static final String DELIMITER = "^v|[\\s_-]v";
+    // If the version number contains one of these, don't update.
+    private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT" };
 
     protected final Plugin plugin;
     protected final boolean shouldDownload;
@@ -40,12 +44,16 @@ public class Updater {
     protected String versionLink;
 
     protected final File file;
-    protected URL url; // Connecting to RSS
-    protected final String updateFolder;// The folder that downloads will be placed in
-    protected Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used for determining the outcome of the update process
+    // Connecting to RSS
+    protected URL url;
+    // The folder that downloads will be placed in
+    protected final String updateFolder;
+    // Used for determining the outcome of the update process
+    protected Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
 
     private final Thread thread;
-    private final int projectId; // Project's Curse ID
+    // Project's Curse ID
+    private final int projectId;
 
     public Updater(Plugin plugin, File file, int projectId, boolean shouldDownload) {
         this.plugin = plugin;
@@ -121,7 +129,7 @@ public class Updater {
      * before allowing anyone to check the result.
      */
     private void waitForThread() {
-        if (this.thread != null && this.thread.isAlive()) {
+        if (this.thread.isAlive()) {
             try {
                 this.thread.join();
             } catch (InterruptedException e) {
@@ -151,7 +159,7 @@ public class Updater {
 
             ByteStreams.copy(inputStream, fout);
         } catch (Exception ex) {
-            this.plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
+            this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             Closeables.closeQuietly(inputStream);
@@ -168,7 +176,8 @@ public class Updater {
     private boolean versionCheck(String title) {
         final String localVersion = this.plugin.getDescription().getVersion();
         if (title.split(DELIMITER).length == 2) {
-            final String remoteVersion = title.split(DELIMITER)[1].split(" ")[0]; // Get the newest file's version number
+            // Get the newest file's version number
+            final String remoteVersion = title.split(DELIMITER)[1].split(" ")[0];
 
             if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
                 // We already have the latest version, or this build is tagged for no-update
@@ -207,13 +216,18 @@ public class Updater {
      * @return true if successful.
      */
     private boolean read() {
+        BufferedReader reader = null;
         try {
             final URLConnection conn = this.url.openConnection();
             conn.setConnectTimeout(5000);
 
-            conn.addRequestProperty("User-Agent", Updater.USER_AGENT);
+            final String userAgent = String.format("%s/%s (by %s)"
+                    , plugin.getName()
+                    , plugin.getDescription().getVersion()
+                    , plugin.getDescription().getAuthors().toString());
+            conn.addRequestProperty("User-Agent", userAgent);
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charsets.UTF_8));
             final JSONArray array = (JSONArray) JSONValue.parse(reader.readLine());
             if (array.isEmpty()) {
                 this.plugin.getLogger().log(Level.WARNING, "The updater could not find any files for the project id {0}", this.projectId);
@@ -231,6 +245,8 @@ public class Updater {
             this.result = UpdateResult.FAIL_DBO;
             this.plugin.getLogger().log(Level.SEVERE, null, e);
             return false;
+        } finally {
+            Closeables.closeQuietly(reader);
         }
     }
 
