@@ -41,14 +41,14 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Updater updater = null;
-        if (Settings.isUpdateEnabled()) {
-            updater = new UpdaterFix(this, getFile());
-        }
-
         //Load the config and setting the database up
         if (settings == null) {
             settings = new Settings(this);
+        }
+
+        Updater updater = null;
+        if (Settings.isUpdateEnabled()) {
+            updater = new UpdaterFix(this, getFile());
         }
 
         settings.loadConfig();
@@ -58,7 +58,7 @@ public class ScoreboardStats extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
-            //Register a this listerner if InSigns is availble
+            //Register a this listerner if InSigns is available
             getServer().getPluginManager().registerEvents(new SignsListener(), this);
         }
 
@@ -79,12 +79,10 @@ public class ScoreboardStats extends JavaPlugin {
 
         scoreboardManager.registerAll();
 
-        if (updater != null) {
+        if (updater != null && updater.getResult() == Updater.UpdateResult.SUCCESS) {
             //the updater run async so don't block it this method
-            if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                //Check if a new update is available
-                getLogger().info(Language.get("onUpdate"));
-            }
+            //Check if a new update is available
+            getLogger().info(Language.get("onUpdate"));
         }
     }
 

@@ -9,7 +9,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.7.2</version>
+    <version>0.7.3</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -105,7 +105,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
         </dependency>
-        <!--MCore must be avaible for factions-->
+        <!--MCore must be available for factions-->
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
@@ -133,7 +133,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <!--To be compatible on all running craftbukkit version-->
+                    <!--To be compatible on all running craftbukkit version that supports scoreboards-->
                     <source>1.6</source>
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>

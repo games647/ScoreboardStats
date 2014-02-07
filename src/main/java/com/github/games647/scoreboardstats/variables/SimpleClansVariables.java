@@ -85,7 +85,7 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
         final Plugin clansPlugin = pluginManager.getPlugin("SimpleClans");
         final String version = clansPlugin.getDescription().getVersion();
         if (!"Legacy".equalsIgnoreCase(version)) {
-            throw new UnsupportedPluginException();
+            throw new UnsupportedPluginException("SimpleClans under version Legacy are not supported");
         }
 
         final SimpleClans simpleClans = (SimpleClans) clansPlugin;

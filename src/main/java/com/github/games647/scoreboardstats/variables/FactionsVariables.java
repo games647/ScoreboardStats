@@ -41,11 +41,11 @@ public class FactionsVariables implements ReplaceManager.Replaceable {
     private void checkVersion() {
         final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
         final Plugin clansPlugin = pluginManager.getPlugin("Factions");
-        
+
         final String versionString = clansPlugin.getDescription().getVersion().replace(".", "");
         final int version = Integer.parseInt(versionString);
         if (version < 200) {
-            throw new UnsupportedPluginException();
+            throw new UnsupportedPluginException("Factions version under 2.0 isn't supported");
         }
     }
 }
