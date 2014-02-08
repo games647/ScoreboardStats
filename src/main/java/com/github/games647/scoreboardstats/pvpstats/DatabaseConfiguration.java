@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 import com.avaje.ebean.config.DataSourceConfig;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
-import com.github.games647.scoreboardstats.Language;
+import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.io.File;
@@ -75,7 +75,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {
-                pluginInstance.getLogger().warning(Language.get("databaseConfigSaveError"));
+                pluginInstance.getLogger().warning(Lang.get("databaseConfigSaveError"));
                 pluginInstance.getLogger().throwing(pluginInstance.getClass().getName(), "getSqlConfig", ex);
             }
         }

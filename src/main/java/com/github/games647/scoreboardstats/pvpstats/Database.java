@@ -4,7 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import com.github.games647.scoreboardstats.Language;
+import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
@@ -39,11 +39,11 @@ public final class Database {
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
             .removalListener(RemoveListener.newInstace(EXECUTOR))
             .build(new CacheLoader<String, PlayerCache>() {
-                
+
                 @Override
                 public PlayerCache load(String playerName) {
                     //This shouldn't be called because that can freeze the server
-                    ScoreboardStats.getInstance().getLogger().warning(Language.get("synchLoading"));
+                    ScoreboardStats.getInstance().getLogger().warning(Lang.get("synchLoading"));
 
                     final PlayerStats stats = databaseInstance.find(PlayerStats.class)
                             .where().eq("playername", playerName).findUnique();
@@ -94,11 +94,11 @@ public final class Database {
             CACHE.invalidateAll();
             EXECUTOR.shutdown();
             try {
-                Logger.getLogger("ScoreboardStats").info(Language.get("savingStats"));
+                Logger.getLogger("ScoreboardStats").info(Lang.get("savingStats"));
                 EXECUTOR.awaitTermination(1, TimeUnit.MINUTES);
             } catch (InterruptedException ex) {
                 Logger.getLogger("ScoreboardStats")
-                        .severe(Language.get("debugException", ex));
+                        .severe(Lang.get("debugException", ex));
             }
         }
     }
@@ -150,8 +150,8 @@ public final class Database {
                     database.find(PlayerStats.class).findRowCount();
                 } catch (PersistenceException ex) {
                     //Create a new table
-                    pluginInstance.getLogger().fine(Language.get("debugException", ex));
-                    pluginInstance.getLogger().info(Language.get("newDatabase"));
+                    pluginInstance.getLogger().fine(Lang.get("debugException", ex));
+                    pluginInstance.getLogger().info(Lang.get("newDatabase"));
                     final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
                     gen.runScript(false, gen.generateCreateDdl());
                 }
