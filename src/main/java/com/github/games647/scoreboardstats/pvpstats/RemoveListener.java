@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
         final PlayerCache playerCache = notification.getValue();
 
         //There are no need to query the database
-        if (playerCache == null || !playerCache.hasChanged()) {
+        if (playerCache == null || !playerCache.isChanged()) {
             return;
         }
 

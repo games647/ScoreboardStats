@@ -92,7 +92,7 @@ public class PlayerCache {
     /*
      * Check if any value was changed
      */
-    public boolean hasChanged() {
+    public boolean isChanged() {
         //Check if the stats was changed
         return changed;
     }

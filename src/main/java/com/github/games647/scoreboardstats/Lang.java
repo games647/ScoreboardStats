@@ -17,9 +17,9 @@ import java.util.logging.Logger;
 /*
  * Used to seperate messages and code.
  */
-public class Language {
+public class Lang {
 
-    private static final Language INSTANCE = new Language();
+    private static final Lang INSTANCE = new Lang();
 
     //Static method wrapper
     public static String get(String key, Object... arguments) {
@@ -42,7 +42,7 @@ public class Language {
 
     public static void copyDefault(String name, boolean replace) {
         final File file = new File(ScoreboardStats.getInstance().getDataFolder(), name);
-        final URL url = Language.class.getResource(name);
+        final URL url = Lang.class.getResource(name);
         if (!replace && file.exists()) {
             return;
         }

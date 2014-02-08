@@ -124,7 +124,7 @@ public final class Settings {
         intervall = config.getInt("Scoreboard.Update-delay");
         saveIntervall = config.getInt("PvPStats-SaveIntervall");
         title = ChatColor.translateAlternateColorCodes('&'
-                , checkLength(Language.getReplaced(config.getString("Scoreboard.Title")), 32));
+                , checkLength(Lang.getReplaced(config.getString("Scoreboard.Title")), 32));
 
         tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
 
@@ -137,7 +137,7 @@ public final class Settings {
 
         tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         tempTitle = ChatColor.translateAlternateColorCodes('&',
-                checkLength(Language.getReplaced(config.getString("Temp-Scoreboard.Title")), 32));
+                checkLength(Lang.getReplaced(config.getString("Temp-Scoreboard.Title")), 32));
     }
 
     private String checkLength(String check, int limit) {
@@ -145,7 +145,7 @@ public final class Settings {
             //If the string check is longer cut it down
             final String cut = check.substring(0, limit + 1);
             //We are couting from 0 so plus 1
-            pluginInstance.getLogger().warning(Language.get("tooLongName", cut, limit));
+            pluginInstance.getLogger().warning(Lang.get("tooLongName", cut, limit));
 
             return cut;
         }
@@ -155,12 +155,12 @@ public final class Settings {
 
     private int checkItems(int input) {
         if (input >= 16) {
-            pluginInstance.getLogger().warning(Language.get("tooManyItems"));
+            pluginInstance.getLogger().warning(Lang.get("tooManyItems"));
             return 16 - 1;
         }
 
         if (input <= 0) {
-            pluginInstance.getLogger().warning(Language.get("notEnoughItems", "tempscoreboard"));
+            pluginInstance.getLogger().warning(Lang.get("notEnoughItems", "tempscoreboard"));
             return 5;
         }
 
@@ -176,18 +176,18 @@ public final class Settings {
         final Set<String> keys = config.getKeys(false);
         for (String key : keys) {
             if (ITEMS.size() == 16 - 1) {
-                pluginInstance.getLogger().warning(Language.get("tooManyItems"));
+                pluginInstance.getLogger().warning(Lang.get("tooManyItems"));
                 break;
             }
 
-            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Language.getReplaced(key), 16));
+            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Lang.getReplaced(key), 16));
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
             ITEMS.put(name, variable);
         }
 
         if (ITEMS.isEmpty()) {
-            pluginInstance.getLogger().info(Language.get("notEnoughItems", "scoreboard"));
+            pluginInstance.getLogger().info(Lang.get("notEnoughItems", "scoreboard"));
         }
     }
 }

@@ -26,6 +26,18 @@ public class ReloadFixLoader extends ClassLoader {
         });
     }
 
+    public static boolean changeClassCache(boolean status) {
+        try {
+            final Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
+            cacheField.setAccessible(true);
+            cacheField.setBoolean(null, status);
+            return true;
+        } catch (Exception ex) {
+            Logger.getLogger("ScoreboardStats").severe(Lang.get("changeChageEx", ex));
+            return false;
+        }
+    }
+
     private final File pluginFile = ScoreboardStats.getInstance().getFileBypass();
 
     @Override
@@ -56,18 +68,6 @@ public class ReloadFixLoader extends ClassLoader {
             } catch (IOException ex) {
                 Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
             }
-        }
-    }
-
-    public static boolean changeClassCache(boolean status) {
-        try {
-            final Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
-            cacheField.setAccessible(true);
-            cacheField.setBoolean(null, status);
-            return true;
-        } catch (Exception ex) {
-            Logger.getLogger("ScoreboardStats").severe(Language.get("changeChageEx", ex));
-            return false;
         }
     }
 }

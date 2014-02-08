@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
-import com.github.games647.scoreboardstats.Language;
+import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -90,7 +90,7 @@ public final class ReplaceManager implements Listener {
                 iter.remove();
 
                 ScoreboardStats.getInstance().getLogger()
-                        .warning(Language.get("replacerException", replacer, e));
+                        .warning(Lang.get("replacerException", replacer, e));
             }
         }
 
@@ -146,13 +146,13 @@ public final class ReplaceManager implements Listener {
             }
         } catch (UnsupportedPluginException ex) {
             ScoreboardStats.getInstance().getLogger()
-                    .fine(Language.get("debugException", ex));
+                    .fine(Lang.get("debugException", ex));
             ScoreboardStats.getInstance().getLogger()
-                    .warning(Language.get("unsupportedPluginVersion"
+                    .warning(Lang.get("unsupportedPluginVersion"
                             , replacerClass.getSimpleName()));
         } catch (Exception ex) {
             ScoreboardStats.getInstance().getLogger()
-                    .warning(Language.get("noRegister", ex));
+                    .warning(Lang.get("noRegister", ex));
         }
     }
 

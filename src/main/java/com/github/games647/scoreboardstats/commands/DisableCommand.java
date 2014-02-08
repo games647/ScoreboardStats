@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.Language;
+import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.util.Collection;
@@ -25,12 +25,12 @@ public class DisableCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command cmd, String label, String[] args) {
         if (!commandSender.hasPermission("scoreboardstats.hide")) {
-            commandSender.sendMessage(Language.get("noPermission"));
+            commandSender.sendMessage(Lang.get("noPermission"));
             return true;
         }
 
         if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage(Language.get("noConsole"));
+            commandSender.sendMessage(Lang.get("noConsole"));
             return true;
         }
 
@@ -45,7 +45,7 @@ public class DisableCommand implements CommandExecutor {
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
 
-        commandSender.sendMessage(Language.get("onToggle"));
+        commandSender.sendMessage(Lang.get("onToggle"));
         return true;
     }
 }

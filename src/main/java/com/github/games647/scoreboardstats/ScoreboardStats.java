@@ -82,7 +82,7 @@ public class ScoreboardStats extends JavaPlugin {
         if (updater != null && updater.getResult() == Updater.UpdateResult.SUCCESS) {
             //the updater run async so don't block it this method
             //Check if a new update is available
-            getLogger().info(Language.get("onUpdate"));
+            getLogger().info(Lang.get("onUpdate"));
         }
     }
 
@@ -140,7 +140,7 @@ public class ScoreboardStats extends JavaPlugin {
             return true;
         }
 
-        getLogger().warning(Language.get("noCompatibleVersion"));
+        getLogger().warning(Lang.get("noCompatibleVersion"));
         //This plugin isn't compatible with the server version so we disabling it
         getPluginLoader().disablePlugin(this);
         return false;
