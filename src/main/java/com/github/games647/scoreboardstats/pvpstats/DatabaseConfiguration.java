@@ -38,6 +38,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
         final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
+        sqlConfig.setHeartbeatSql("SELECT 1");
 
         serverConfig = databaseConfig;
     }
