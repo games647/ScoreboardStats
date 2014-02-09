@@ -33,36 +33,32 @@ public final class Database {
     //We are using a mysql databse so we can use only one thread for saving because of locks
     private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
 
-    private static final Cache<String, PlayerCache> CACHE = CacheBuilder.newBuilder()
+    private static final Cache<String, PlayerStats> CACHE = CacheBuilder.newBuilder()
             .initialCapacity(100)
             .maximumSize(256)
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
             .removalListener(RemoveListener.newInstace(EXECUTOR))
-            .build(new CacheLoader<String, PlayerCache>() {
+            .build(new CacheLoader<String, PlayerStats>() {
 
                 @Override
-                public PlayerCache load(String playerName) {
+                public PlayerStats load(String playerName) {
                     //This shouldn't be called because that can freeze the server
                     ScoreboardStats.getInstance().getLogger().warning(Lang.get("synchLoading"));
 
                     final PlayerStats stats = databaseInstance.find(PlayerStats.class)
                             .where().eq("playername", playerName).findUnique();
                     if (stats == null) {
-                        return new PlayerCache();
+                        return new PlayerStats();
                     }
 
-                    final int kills = stats.getKills();
-                    final int deaths = stats.getDeaths();
-                    final int mobKills = stats.getMobkills();
-                    final int killstreak = stats.getKillstreak();
-                    return new PlayerCache(kills, mobKills, deaths, killstreak);
+                    return stats;
                 }
             });
 
     /**
      * Get the cache player stats if they exists and the arguments are valid.
      */
-    public static PlayerCache getCacheIfAbsent(Player request) {
+    public static PlayerStats getCacheIfAbsent(Player request) {
         if (request != null && Settings.isPvpStats()) {
             final String playerName = request.getName();
             if (CACHE.asMap().containsKey(playerName)) {
@@ -77,7 +73,7 @@ public final class Database {
      * Starts loading the stats from a specific player in an external thread.
      */
     public static void loadAccount(String name) {
-        final Map<String, PlayerCache> cache = CACHE.asMap();
+        final Map<String, PlayerStats> cache = CACHE.asMap();
         if (!Settings.isPvpStats() || cache.containsKey(name)) {
             return;
         }
@@ -95,7 +91,7 @@ public final class Database {
             EXECUTOR.shutdown();
             try {
                 Logger.getLogger("ScoreboardStats").info(Lang.get("savingStats"));
-                EXECUTOR.awaitTermination(1, TimeUnit.MINUTES);
+                EXECUTOR.awaitTermination(3, TimeUnit.MINUTES);
             } catch (InterruptedException ex) {
                 Logger.getLogger("ScoreboardStats")
                         .severe(Lang.get("debugException", ex));
@@ -165,7 +161,7 @@ public final class Database {
         return databaseInstance;
     }
 
-    protected static void putIntoCache(String name, PlayerCache cacheObject) {
+    protected static void putIntoCache(String name, PlayerStats cacheObject) {
         //delegate
         CACHE.asMap().put(name, cacheObject);
     }

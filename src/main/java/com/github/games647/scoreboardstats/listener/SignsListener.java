@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.listener;
 
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import de.blablubbabc.insigns.SignSendEvent;
 
@@ -24,7 +24,7 @@ public final class SignsListener implements Listener {
     }
 
     private void replaceVariable(SignSendEvent signSendEvent, Player player, int lineNumber) {
-        final PlayerCache playerCache = Database.getCacheIfAbsent(player);
+        final PlayerStats playerCache = Database.getCacheIfAbsent(player);
         if (playerCache == null) {
             //The stats aren't loaded yet
             return;
@@ -43,7 +43,7 @@ public final class SignsListener implements Listener {
             final String kdr = String.valueOf(playerCache.getKdr());
             replacedString = line.replace("[KDR]", kdr);
         } else if (line.contains("[Streak]")) {
-            final String streak = String.valueOf(playerCache.getHighestStreak());
+            final String streak = String.valueOf(playerCache.getKillstreak());
             replacedString = line.replace("[Streak]", streak);
         }
 

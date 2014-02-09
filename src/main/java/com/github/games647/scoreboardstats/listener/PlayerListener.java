@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.listener;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,12 +23,12 @@ public class PlayerListener implements Listener {
         final Player killed = deathEvent.getEntity();
         final Player killer = killed.getKiller();
         if (Settings.isPvpStats() && !Settings.isDisabledWorld(killed.getWorld())) {
-            final PlayerCache killedcache = Database.getCacheIfAbsent(killed);
+            final PlayerStats killedcache = Database.getCacheIfAbsent(killed);
             if (killedcache != null) {
                 killedcache.incrementDeaths();
             }
 
-            final PlayerCache killercache = Database.getCacheIfAbsent(killer);
+            final PlayerStats killercache = Database.getCacheIfAbsent(killer);
             if (killercache != null) {
                 killercache.incrementKills();
             }

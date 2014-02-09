@@ -2,7 +2,7 @@ package com.github.games647.scoreboardstats.listener;
 
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerCache;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class EntityListener implements Listener {
             return;
         }
 
-        final PlayerCache killercache = Database.getCacheIfAbsent(killer);
+        final PlayerStats killercache = Database.getCacheIfAbsent(killer);
         if (killercache != null) {
             killercache.incrementMobKills();
         }
