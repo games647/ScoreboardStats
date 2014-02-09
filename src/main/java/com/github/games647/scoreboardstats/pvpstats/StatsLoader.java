@@ -16,18 +16,16 @@ public class StatsLoader implements Runnable {
 
     @Override
     public void run() {
-        final PlayerStats stats = Database.getDatabaseInstance()
+        PlayerStats stats = Database.getDatabaseInstance()
                 .find(PlayerStats.class).where().eq("playername", playerName)
                 .findUnique();
+
+        //If there are no existing stat create a new cache object with empty stuff
         if (stats == null) {
-            //If there are no existing stat create a new cache object with empty stuff
-            Database.putIntoCache(playerName, new PlayerCache());
-        } else {
-            final int kills = stats.getKills();
-            final int deaths = stats.getDeaths();
-            final int mobKills = stats.getMobkills();
-            final int killstreak = stats.getKillstreak();
-            Database.putIntoCache(playerName, new PlayerCache(kills, mobKills, deaths, killstreak));
+            stats = new PlayerStats();
+            stats.setPlayername(playerName);
         }
+
+        Database.putIntoCache(playerName, stats);
     }
 }
