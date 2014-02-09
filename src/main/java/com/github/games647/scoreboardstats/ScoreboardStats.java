@@ -1,8 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.commands.DisableCommand;
-import com.github.games647.scoreboardstats.commands.ReloadCommand;
-import com.github.games647.scoreboardstats.commands.SidebarCommand;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignsListener;
@@ -63,9 +60,7 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         //register all commands
-        getCommand("sb:toggle").setExecutor(new DisableCommand(this));
-        getCommand("sb:reload").setExecutor(new ReloadCommand());
-        getCommand("sidebar").setExecutor(new SidebarCommand());
+        getCommand("sidebar").setExecutor(new SidebarCommands(this));
 
         //Start the refresh task
         refreshTask = new RefreshTask(this);

@@ -9,10 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Entity
 @Table(name = "PlayerStats")
+@EqualsAndHashCode
 @ToString(includeFieldNames=true)
 public class PlayerStats {
 
