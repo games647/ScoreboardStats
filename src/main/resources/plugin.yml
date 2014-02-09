@@ -16,12 +16,8 @@ softdepend:
     - uSkyBlock
 
 commands:
-  sb:reload:
-    aliases: []
-  sb:toggle:
-    aliases: []
   sidebar:
-    aliases: [scoreboardstats, side, ss]
+    aliases: [scoreboardstats, side, ss, sb, board]
 
 permissions:
   scoreboardstats.admin:
