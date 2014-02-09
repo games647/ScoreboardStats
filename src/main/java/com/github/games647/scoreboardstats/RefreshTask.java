@@ -49,11 +49,7 @@ public class RefreshTask implements Runnable {
 
     private int getNextUpdates() {
         final int nextUpdates = queue.size() / 20;
-        if (queue.isEmpty()) {
-            return 0;
-        }
-
-        if (nextUpdates < 1) {
+        if (!queue.isEmpty() && nextUpdates < 1) {
             return 1;
         }
 
