@@ -2,26 +2,41 @@ package com.github.games647.scoreboardstats;
 
 import com.google.common.collect.ComparisonChain;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Queue;
+import java.util.WeakHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import org.bukkit.entity.Player;
 
-/*
+/**
  * Handling all updates for a player in a performance optimized variant. This
  * class split the updates over the ticks much smoother.
  */
 public class RefreshTask implements Runnable {
 
-    private final ScoreboardStats pluginInstance;
-    private final Queue<DelayedElement> queue = new DelayQueue<DelayedElement>();
+    private final ScoreboardStats plugin;
 
-    public RefreshTask(ScoreboardStats instance) {
-        this.pluginInstance = instance;
+    private final Queue<DelayedElement> queue = new DelayQueue<DelayedElement>();
+    private final Collection<Player> hidelist = Collections.newSetFromMap(new WeakHashMap<Player, Boolean>(30));
+
+    RefreshTask(ScoreboardStats instance) {
+        this.plugin = instance;
+    }
+
+    /**
+     * Get a set of players who disabled the scoreboards.
+     *
+     * @return a set of players who disabled the scoreboards
+     */
+    public Collection<Player> getHidelist() {
+        return hidelist;
     }
 
     @Override
@@ -32,19 +47,34 @@ public class RefreshTask implements Runnable {
             if (poll == null) {
                 //cancel the loop if there are no more elements
                 break;
-            } else if (poll.getPlayer().isOnline()) {
-                final Player player = poll.getPlayer();
-                pluginInstance.getScoreboardManager().sendUpdate(player);
+            }
+
+            final Player player = poll.getPlayer();
+            if (player != null
+                    && player.isOnline()
+                    && Settings.isActiveWorld(player.getWorld())
+                    && !hidelist.contains(player)) {
+                plugin.getScoreboardManager().sendUpdate(player);
                 addToQueue(player);
             }
         }
     }
 
-    /*
+    /**
      * Add a player to the queue for updating him.
+     *
+     * @param request the player that should be added.
      */
     public void addToQueue(Player request) {
-        queue.add(new DelayedElement(request, Settings.getIntervall()));
+        final DelayedElement element = new DelayedElement(request, Settings.getIntervall());
+        queue.add(element);
+    }
+
+    /**
+     * Clears the complete queue.
+     */
+    public void clear() {
+        queue.clear();
     }
 
     private int getNextUpdates() {
@@ -56,7 +86,8 @@ public class RefreshTask implements Runnable {
         return nextUpdates;
     }
 
-    @EqualsAndHashCode
+    @EqualsAndHashCode(exclude = "startTime")
+    @ToString
     private static class DelayedElement implements Delayed {
 
         private final long startTime;

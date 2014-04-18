@@ -13,16 +13,21 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 
+/**
+ * Listening to players events.
+ */
 public class PlayerListener implements Listener {
 
     /**
      * Tracks player deaths and kills
+     *
+     * @param deathEvent the death event.
      */
     @EventHandler
     public void onDeath(PlayerDeathEvent deathEvent) {
         final Player killed = deathEvent.getEntity();
         final Player killer = killed.getKiller();
-        if (Settings.isPvpStats() && !Settings.isDisabledWorld(killed.getWorld())) {
+        if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld())) {
             final PlayerStats killedcache = Database.getCacheIfAbsent(killed);
             if (killedcache != null) {
                 killedcache.incrementDeaths();
@@ -35,22 +40,36 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Add the player to the refresh queue and load if stats is enable the account
+     * from the database in the cache.
+     *
+     * @param join the join event
+     */
     @EventHandler
     public void onJoin(PlayerJoinEvent join) {
-        //Add the player to the refresh queue and/or load the stats
         final Player player = join.getPlayer();
-        Database.loadAccount(player.getName());
+        //Add the player to the refresh queue and/or load the stats
+        Database.loadAccount(player);
         ScoreboardStats.getInstance().getRefreshTask().addToQueue(player);
     }
 
     /**
-     * Checks if the player moves in a scoreboard disabled world
+     * Check if the player moves in a scoreboard disabled world
+     * 
+     * @param teleport the teleport event
      */
     @EventHandler(ignoreCancelled = true)
     public void onChange(PlayerChangedWorldEvent teleport) {
         final Player player = teleport.getPlayer();
-        //Disable the scoreboard if the player is in a disabled world
-        if (Settings.isDisabledWorld(player.getWorld())) {
+        if (Settings.isActiveWorld(player.getWorld())) {
+            //Activate the scoreboard if it was disabled
+            if (!Settings.isActiveWorld(teleport.getFrom())) {
+                ScoreboardStats.getInstance().getRefreshTask().addToQueue(player);
+            }
+        } else if (player.getScoreboard().getObjective(DisplaySlot.SIDEBAR) != null
+                && player.getScoreboard().getObjective(DisplaySlot.SIDEBAR).getName().startsWith("Stats")) {
+            //Disable the scoreboard if the player goes in a disabled world
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
     }

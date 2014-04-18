@@ -6,14 +6,20 @@ import com.herocraftonline.heroes.characters.Hero;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
 
+/**
+ * Replace all variables that are associated with the heroes plugin
+ */
 public class HeroesVariables implements ReplaceManager.Replaceable {
 
-    private CharacterManager characterManager;
+    private final CharacterManager characterManager;
 
+    /**
+     * Creates a new heroes replacer
+     */
     public HeroesVariables() {
-        initialize();
+        final Heroes heroesPlugin = (Heroes) Bukkit.getPluginManager().getPlugin("Heroes");
+        characterManager = heroesPlugin.getCharacterManager();
     }
 
     @Override
@@ -36,11 +42,5 @@ public class HeroesVariables implements ReplaceManager.Replaceable {
         }
 
         return UNKOWN_VARIABLE;
-    }
-
-    private void initialize() {
-        final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        final Heroes heroesPlugin = (Heroes) pluginManager.getPlugin("Heroes");
-        characterManager = heroesPlugin.getCharacterManager();
     }
 }

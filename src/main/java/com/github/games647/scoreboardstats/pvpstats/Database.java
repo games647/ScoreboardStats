@@ -11,16 +11,19 @@ import com.github.games647.scoreboardstats.Settings;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
-
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 /**
@@ -30,12 +33,15 @@ public final class Database {
 
     private static EbeanServer databaseInstance;
     private static DatabaseConfiguration dbConfiguration;
-    //We are using a mysql databse so we can use only one thread for saving because of locks
-    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor();
+
+    private static final ExecutorService EXECUTOR = Executors
+            .newSingleThreadExecutor(new ThreadFactoryBuilder()
+                    .setNameFormat("ScoreboardStats-Saver").build());
 
     private static final Cache<String, PlayerStats> CACHE = CacheBuilder.newBuilder()
             .initialCapacity(100)
             .maximumSize(256)
+            .concurrencyLevel(2)
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
             .removalListener(RemoveListener.newInstace(EXECUTOR))
             .build(new CacheLoader<String, PlayerStats>() {
@@ -43,12 +49,11 @@ public final class Database {
                 @Override
                 public PlayerStats load(String playerName) {
                     //This shouldn't be called because that can freeze the server
-                    ScoreboardStats.getInstance().getLogger().warning(Lang.get("synchLoading"));
+                    Logger.getLogger("ScoreboardStats").warning(Lang.get("synchLoading"));
 
-                    final PlayerStats stats = databaseInstance.find(PlayerStats.class)
-                            .where().eq("playername", playerName).findUnique();
+                    final PlayerStats stats = databaseInstance.find(PlayerStats.class, playerName);
                     if (stats == null) {
-                        return new PlayerStats();
+                        return new PlayerStats(playerName);
                     }
 
                     return stats;
@@ -57,9 +62,12 @@ public final class Database {
 
     /**
      * Get the cache player stats if they exists and the arguments are valid.
+     *
+     * @param request the associated player
+     * @return the stats if they are in the cache
      */
     public static PlayerStats getCacheIfAbsent(Player request) {
-        if (request != null && Settings.isPvpStats()) {
+        if (Settings.isPvpStats() && request != null) {
             final String playerName = request.getName();
             if (CACHE.asMap().containsKey(playerName)) {
                 return CACHE.getUnchecked(playerName);
@@ -71,17 +79,19 @@ public final class Database {
 
     /**
      * Starts loading the stats from a specific player in an external thread.
+     *
+     * @param player the associated player
      */
-    public static void loadAccount(String name) {
-        final Map<String, PlayerStats> cache = CACHE.asMap();
-        if (!Settings.isPvpStats() || cache.containsKey(name)) {
-            return;
+    public static void loadAccount(Player player) {
+        if (player != null && Settings.isPvpStats() && databaseInstance != null) {
+            final String playerName = player.getName();
+            if (!CACHE.asMap().containsKey(playerName)) {
+                EXECUTOR.execute(new StatsLoader(playerName));
+            }
         }
-
-        EXECUTOR.execute(new StatsLoader(name));
     }
 
-    /*
+    /**
      * Starts saving all cache player stats and then clears the cache.
      */
     public static void saveAll() {
@@ -93,81 +103,97 @@ public final class Database {
                 Logger.getLogger("ScoreboardStats").info(Lang.get("savingStats"));
                 EXECUTOR.awaitTermination(3, TimeUnit.MINUTES);
             } catch (InterruptedException ex) {
-                Logger.getLogger("ScoreboardStats")
-                        .severe(Lang.get("debugException", ex));
+                Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
             }
         }
     }
 
-    /*
-     * Gets the a map of the best players for a specific category.
+    /**
+     * Get the a map of the best players for a specific category.
+     *
+     * @return a iterable of the entries
      */
     public static Iterable<Map.Entry<String, Integer>> getTop() {
         //Get the top players for a specific type
         final String type = Settings.getTopType();
-        final Map<String, Integer> top = new HashMap<String, Integer>(Settings.getTopitems());
+        final Map<String, Integer> top = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
         if ("%killstreak%".equals(type)) {
-            for (PlayerStats stats : getTopList("killstreak desc")) {
+            for (PlayerStats stats : getTopList("killstreak")) {
                 top.put(stats.getPlayername(), stats.getKillstreak());
             }
         } else if ("%mob%".equals(type)) {
-            for (PlayerStats stats : getTopList("mobkills desc")) {
+            for (PlayerStats stats : getTopList("mobkills")) {
                 top.put(stats.getPlayername(), stats.getMobkills());
             }
         } else {
-            for (PlayerStats stats : getTopList("kills desc")) {
+            for (PlayerStats stats : getTopList("kills")) {
                 top.put(stats.getPlayername(), stats.getKills());
             }
         }
 
-        return top.entrySet();
+        return Iterables.unmodifiableIterable(top.entrySet());
     }
 
-    /*
+    /**
      * Initialize a components and checking for an existing database
+     *
+     * @param plugin the scoreboardstats instance
      */
-    public static void setupDatabase(ScoreboardStats pluginInstance) {
+    public static void setupDatabase(ScoreboardStats plugin) {
         //Check if pvpstats should be enabled
         if (Settings.isPvpStats()) {
-            dbConfiguration = new DatabaseConfiguration(pluginInstance);
-            dbConfiguration.loadConfiguration();
+            try {
+                dbConfiguration = new DatabaseConfiguration(plugin);
+                dbConfiguration.loadConfiguration();
 
-            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(pluginInstance.getClassLoaderBypass());
+                final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+                Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
 
-            if (ReloadFixLoader.changeClassCache(false)) {
-                final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
+                if (ReloadFixLoader.changeClassCache(false)) {
+                    final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
 
-                ReloadFixLoader.changeClassCache(true);
-                Thread.currentThread().setContextClassLoader(previous);
+                    ReloadFixLoader.changeClassCache(true);
+                    Thread.currentThread().setContextClassLoader(previous);
 
-                try {
-                    //Check if a database is avaible with the requesting datas
-                    database.find(PlayerStats.class).findRowCount();
-                } catch (PersistenceException ex) {
-                    //Create a new table
-                    pluginInstance.getLogger().fine(Lang.get("debugException", ex));
-                    pluginInstance.getLogger().info(Lang.get("newDatabase"));
                     final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-                    gen.runScript(false, gen.generateCreateDdl());
-                }
+                    gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
 
-                databaseInstance = database;
+                    databaseInstance = database;
+                }
+            } catch (InvalidConfigurationException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, "Invalid configuration:", ex);
             }
         }
     }
 
+    /**
+     * Get the database instance.
+     *
+     * @return the database instance
+     */
     protected static EbeanServer getDatabaseInstance() {
         return databaseInstance;
     }
 
+    /**
+     * Put an entry into the cache.
+     *
+     * @param name the player name
+     * @param cacheObject the cache object
+     */
     protected static void putIntoCache(String name, PlayerStats cacheObject) {
         //delegate
         CACHE.asMap().put(name, cacheObject);
     }
 
-    private static Iterable<PlayerStats> getTopList(String order) {
-        return databaseInstance.find(PlayerStats.class).orderBy(order)
+    private static Iterable<PlayerStats> getTopList(String type) {
+        if (databaseInstance == null) {
+            return Collections.emptyList();
+        }
+
+        return databaseInstance.find(PlayerStats.class)
+                .order(type + " desc")
+                .select("playername, " + type)
                 .setMaxRows(Settings.getTopitems()).findList();
     }
 
