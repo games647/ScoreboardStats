@@ -9,33 +9,21 @@ import java.util.GregorianCalendar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.NumberConversions;
 
+/**
+ * Replace all bukkit and general variables
+ */
 public class GeneralVariables implements ReplaceManager.Replaceable {
-
-    private static int getOnlinePlayers(Player player) {
-        //If one player is vanish count all visible player
-        if (Settings.isHideVanished()) {
-            int online = 0;
-            for (Player other: Bukkit.getOnlinePlayers()) {
-                if (player.canSee(other)) {
-                    online++;
-                }
-            }
-
-            return online;
-        } else {
-            return Bukkit.getOnlinePlayers().length;
-        }
-    }
 
     @Override
     public int getScoreValue(Player player, String variable) {
         if ("%tps%".equals(variable)) {
-            return (int) Math.round(TicksPerSecondTask.getLastTicks());
+            return NumberConversions.round(TicksPerSecondTask.getLastTicks());
         }
 
         if ("%health%".equals(variable)) {
-            return (int) Math.round(player.getHealth());
+            return NumberConversions.round(player.getHealth());
         }
 
         if ("%online%".equals(variable)) {
@@ -91,41 +79,46 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%helmet%".equals(variable)) {
-            final ItemStack helmet = player.getInventory().getHelmet();
-            if (helmet == null || helmet.getType().getMaxDurability() == 0) {
-                return -2;
-            } else {
-                return (helmet.getDurability() * 100) / helmet.getType().getMaxDurability();
-            }
+            return calculateDurabilityRatio(player.getInventory().getHelmet());
         }
 
         if ("%boots%".equals(variable)) {
-            final ItemStack boots = player.getInventory().getBoots();
-            if (boots == null || boots.getType().getMaxDurability() == 0) {
-                return -2;
-            } else {
-                return (boots.getDurability() * 100) / boots.getType().getMaxDurability();
-            }
+            return calculateDurabilityRatio(player.getInventory().getBoots());
         }
 
         if ("%leggings%".equals(variable)) {
-            final ItemStack leggings = player.getInventory().getLeggings();
-            if (leggings == null || leggings.getType().getMaxDurability() == 0) {
-                return -2;
-            } else {
-                return (leggings.getDurability() * 100) / leggings.getType().getMaxDurability();
-            }
+            return calculateDurabilityRatio(player.getInventory().getLeggings());
         }
 
         if ("%chestplate%".equals(variable)) {
-            final ItemStack chestplate = player.getInventory().getChestplate();
-            if (chestplate == null || chestplate.getType().getMaxDurability() == 0) {
-                return -2;
-            } else {
-                return (chestplate.getDurability() * 100) / chestplate.getType().getMaxDurability();
-            }
+            return calculateDurabilityRatio(player.getInventory().getChestplate());
         }
 
         return UNKOWN_VARIABLE;
+    }
+
+    private int calculateDurabilityRatio(ItemStack item) {
+        //Check if the user have an item on the slot and if the item isn't a stone block or something
+        if  (item == null || item.getType().getMaxDurability() == 0) {
+            return -2;
+        } else {
+            return item.getDurability() * 100 / item.getType().getMaxDurability();
+        }
+    }
+
+    private int getOnlinePlayers(Player player) {
+        //If one player is vanish count all visible player
+        if (Settings.isHideVanished()) {
+            int online = 0;
+            for (Player other: Bukkit.getOnlinePlayers()) {
+                if (player.canSee(other)) {
+                    online++;
+                }
+            }
+
+            return online;
+        } else {
+            return Bukkit.getOnlinePlayers().length;
+        }
     }
 }
