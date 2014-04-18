@@ -8,18 +8,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
-/*
+/**
  * This class forward all comands to the user commands for a better access
  */
 public class SidebarCommands implements CommandExecutor {
 
     private final ScoreboardStats plugin;
 
-    public SidebarCommands(ScoreboardStats plugin) {
+    SidebarCommands(ScoreboardStats plugin) {
         this.plugin = plugin;
     }
 
-    //Forward all commands
+    /**
+     * Executes the given command, returning its success
+     *
+     * @param commandSender Source of the command
+     * @param cmd Command which was executed
+     * @param label Alias of the command which was used
+     * @param args Passed command arguments
+     * @return true if a valid command, otherwise false
+     */
     @Override
     public boolean onCommand(CommandSender commandSender, Command cmd, String label, String[] args) {
         if (args.length == 0
@@ -47,14 +55,13 @@ public class SidebarCommands implements CommandExecutor {
             return true;
         }
 
-        final String name = commandSender.getName();
         final Player player = (Player) commandSender;
-        final Collection<String> list = plugin.getHidelist();
-        if (list.contains(name)) {
-            list.remove(name);
-            plugin.getScoreboardManager().createScoreboard(player);
+        final Collection<Player> hideList = plugin.getRefreshTask().getHidelist();
+        if (hideList.contains(player)) {
+            hideList.remove(player);
+            plugin.getRefreshTask().addToQueue(player);
         } else {
-            list.add(name);
+            hideList.add(player);
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
 

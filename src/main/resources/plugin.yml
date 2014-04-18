@@ -5,15 +5,14 @@ version: ${project.version}
 description: ${project.description}
 website: ${project.url}
 softdepend:
-    - mcMMO
-    - Vault
-    - SimpleClans
-    - InSigns
-    - Essentials
-    - Factions
-    - Jobs
-    - Heroes
-    - uSkyBlock
+  - ProtocolLib
+  - mcMMO
+  - Vault
+  - SimpleClans
+  - InSigns
+  - Factions
+  - Heroes
+  - uSkyBlock
 
 commands:
   sidebar:

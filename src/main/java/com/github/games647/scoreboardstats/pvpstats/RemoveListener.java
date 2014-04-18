@@ -1,26 +1,31 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.avaje.ebean.EbeanServer;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalListeners;
 import com.google.common.cache.RemovalNotification;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
+/**
+ * Listener for removing the cache elements.
+ */
 /* package */ class RemoveListener implements RemovalListener<String, PlayerStats> {
 
-    protected static RemovalListener<String, PlayerStats> newInstace(ExecutorService executor) {
-        final RemoveListener listener = new RemoveListener();
-
-        //Return an asynch removallistener
-        return RemovalListeners.asynchronous(listener, executor);
+    /**
+     * Return an asynch removallistener
+     */
+    static RemovalListener<String, PlayerStats> newInstace(Executor executor) {
+        return RemovalListeners.asynchronous(new RemoveListener(), executor);
     }
 
     @Override
     public void onRemoval(RemovalNotification<String, PlayerStats> notification) {
         final PlayerStats stats = notification.getValue();
-        if (stats != null) {
+        final EbeanServer databaseInstance = Database.getDatabaseInstance();
+        if (stats != null && stats.isChanged() && databaseInstance != null) {
             //Save the stats to the database
-            Database.getDatabaseInstance().save(stats);
+            databaseInstance.save(stats);
         }
     }
 }

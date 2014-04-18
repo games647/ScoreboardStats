@@ -1,12 +1,13 @@
 package com.github.games647.scoreboardstats.variables;
 
-import com.google.common.base.Throwables;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.bukkit.entity.Player;
 
+/**
+ * Replace the ping variable.
+ */
 public class PlayerPingVariable implements ReplaceManager.Replaceable {
 
     @Override
@@ -28,7 +29,7 @@ public class PlayerPingVariable implements ReplaceManager.Replaceable {
             return pingField.getInt(entityPlayer);
         } catch (Exception ex) {
             //Forward the exception to replaceManager
-            throw Throwables.propagate(ex);
+            throw new RuntimeException(ex);
         }
     }
 }

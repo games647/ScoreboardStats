@@ -9,10 +9,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * Replace some variables on signs with the player individual stats
+ */
 public final class SignsListener implements Listener {
 
     private static final String PERMISSION = "scoreboardstats.sign";
 
+    /**
+     * Replace the variables before the sign packet is send.
+     *
+     * @param signSendEvent the sign event
+     */
     @EventHandler
     public void onSignSendEvent(SignSendEvent signSendEvent) {
         final Player player = signSendEvent.getPlayer();
@@ -34,16 +42,16 @@ public final class SignsListener implements Listener {
         String replacedString = null;
         if (line.contains("[Kill]")) {
             //Convert it to a string
-            final String kills = String.valueOf(playerCache.getKills());
+            final String kills = Integer.toString(playerCache.getKills());
             replacedString = line.replace("[Kill]", kills);
         } else if (line.contains("[Death]")) {
-            final String deaths = String.valueOf(playerCache.getDeaths());
+            final String deaths = Integer.toString(playerCache.getDeaths());
             replacedString = line.replace("[Death]", deaths);
         } else if (line.contains("[KDR]")) {
-            final String kdr = String.valueOf(playerCache.getKdr());
+            final String kdr = Integer.toString(playerCache.getKdr());
             replacedString = line.replace("[KDR]", kdr);
         } else if (line.contains("[Streak]")) {
-            final String streak = String.valueOf(playerCache.getKillstreak());
+            final String streak = Integer.toString(playerCache.getKillstreak());
             replacedString = line.replace("[Streak]", streak);
         }
 
