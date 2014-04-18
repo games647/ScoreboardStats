@@ -5,38 +5,48 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
-
+import java.util.logging.Level;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * Configuration for the sql database.
+ */
 /* package */ class DatabaseConfiguration {
 
-    private final ScoreboardStats pluginInstance;
+    private final ScoreboardStats plugin;
 
     private ServerConfig serverConfig;
 
-    protected DatabaseConfiguration(ScoreboardStats instance) {
-        pluginInstance = instance;
+    DatabaseConfiguration(ScoreboardStats instance) {
+        plugin = instance;
     }
 
+    /**
+     * Gets the sql configuration
+     *
+     * @return the server config
+     */
     public ServerConfig getServerConfig() {
         return serverConfig;
     }
 
-    protected void loadConfiguration() {
+    void loadConfiguration() throws InvalidConfigurationException {
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.setRegister(false);
         databaseConfig.addClass(PlayerStats.class);
         //Give the database a specific name
-        databaseConfig.setName(pluginInstance.getName());
+        databaseConfig.setName(plugin.getName());
         databaseConfig.setValidateOnSave(true);
 
         final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
+
+        validatePath();
+
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
         sqlConfig.setHeartbeatSql("SELECT 1");
 
@@ -47,7 +57,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
         FileConfiguration sqlConfig;
         DataSourceConfig config;
 
-        final File file = new File(pluginInstance.getDataFolder(), "sql.yml");
+        final File file = new File(plugin.getDataFolder(), "sql.yml");
         //Check if the file exists. If so load the settings form there
         if (file.exists()) {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
@@ -62,8 +72,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
             serverConfig.setDataSourceConfig(config);
         } else {
             //Create a new configuration based on the default settings form bukkit.yml
-            pluginInstance.saveResource("sql.yml", false);
-            pluginInstance.getServer().configureDbConfig(serverConfig);
+            plugin.saveResource("sql.yml", false);
+            plugin.getServer().configureDbConfig(serverConfig);
 
             config = serverConfig.getDataSourceConfig();
 
@@ -76,22 +86,29 @@ import org.bukkit.configuration.file.YamlConfiguration;
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {
-                pluginInstance.getLogger().warning(Lang.get("databaseConfigSaveError"));
-                pluginInstance.getLogger().throwing(pluginInstance.getClass().getName(), "getSqlConfig", ex);
+                plugin.getLogger().log(Level.WARNING, Lang.get("databaseConfigSaveError"), ex);
             }
         }
 
-        config.setMinConnections(sqlConfig.getInt("SQL-Settings.MinConnections"));
-        config.setMaxConnections(sqlConfig.getInt("SQL-Settings.MaxConnections"));
         config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
 
         return config;
     }
 
     private String replaceUrlString(String input) {
-        final Pattern pat = Pattern.compile("\\\\");
-        return input
-                .replace("{DIR}", pat.matcher(pluginInstance.getDataFolder().getPath()).replaceAll("/") + '/')
-                .replace("{NAME}", pluginInstance.getName());
+        String result = input.replaceAll("\\{DIR\\}", plugin.getDataFolder().getPath().replaceAll("\\\\", "/") + '/');
+        result = result.replaceAll("\\{NAME\\}", plugin.getDescription().getName().replaceAll("[^\\w-]", ""));
+
+        return result;
+    }
+
+    private void validatePath() throws InvalidConfigurationException {
+        final String path = plugin.getDataFolder().getPath();
+        if (!path.matches("[\\p{L}0-9-.:\\\\]+")) {
+            throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
+                    + "The non-latin characters aren't allowed, because these occures a bug in java 6."
+                    + "Please use normal characters instead of this: "
+                    + path);
+        }
     }
 }

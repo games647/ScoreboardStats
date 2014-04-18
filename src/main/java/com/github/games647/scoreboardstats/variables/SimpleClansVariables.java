@@ -8,14 +8,27 @@ import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.util.NumberConversions;
 
+/**
+ * Replace all variabls that are associated with the simpleclans plugin
+ */
 public class SimpleClansVariables implements ReplaceManager.Replaceable {
 
-    private ClanManager clanManager;
+    private final ClanManager clanManager;
 
+    /**
+     * Creates a new simpleclans replacer
+     */
     public SimpleClansVariables() {
-        initialize();
+        final Plugin clansPlugin = Bukkit.getPluginManager().getPlugin("SimpleClans");
+        final String version = clansPlugin.getDescription().getVersion();
+        if (!"Legacy".equalsIgnoreCase(version)) {
+            throw new UnsupportedPluginException("SimpleClans under version Legacy are not supported");
+        }
+
+        final SimpleClans simpleClans = (SimpleClans) clansPlugin;
+        clanManager = simpleClans.getClanManager();
     }
 
     @Override
@@ -54,7 +67,7 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%clan_money%".equals(variable)) {
-            return clan == null ? -1 : (int) Math.round(clan.getBalance());
+            return clan == null ? -1 : NumberConversions.round(clan.getBalance());
         }
 
         if ("%rivals%".equals(variable)) {
@@ -78,17 +91,5 @@ public class SimpleClansVariables implements ReplaceManager.Replaceable {
         }
 
         return UNKOWN_VARIABLE;
-    }
-
-    private void initialize() {
-        final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        final Plugin clansPlugin = pluginManager.getPlugin("SimpleClans");
-        final String version = clansPlugin.getDescription().getVersion();
-        if (!"Legacy".equalsIgnoreCase(version)) {
-            throw new UnsupportedPluginException("SimpleClans under version Legacy are not supported");
-        }
-
-        final SimpleClans simpleClans = (SimpleClans) clansPlugin;
-        clanManager = simpleClans.getClanManager();
     }
 }
