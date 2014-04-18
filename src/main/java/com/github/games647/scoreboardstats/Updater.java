@@ -1,8 +1,3 @@
-/*
- * Updater for Bukkit.
- *
- * This class provides the means to safely and easily update a plugin, or check to see if it is updated using dev.bukkit.org
- */
 package com.github.games647.scoreboardstats;
 
 import com.google.common.base.Charsets;
@@ -25,50 +20,67 @@ import org.bukkit.plugin.Plugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 
+/**
+ * Modified version of Gravity's Updater with some improvements
+ *
+ * Thanks to Gravity's work. You can find his project here: https://github.com/gravitylow/Updater/
+ */
 public class Updater {
 
-    // Gets remote file's title
+    //Gets remote file's title
     private static final String TITLE_VALUE = "name";
-    // Gets remote file's download link
+    //Gets remote file's download link
     private static final String LINK_VALUE = "downloadUrl";
-    // Slugs will be appended to this to get to the project's RSS feed
+    //Gets remote file's release type
+    private static final String TYPE_VALUE = "releaseType";
+    //Slugs will be appended to this to get to the project's RSS feed
     private static final String QUERY = "https://api.curseforge.com/servermods/files?projectIds=";
-    // Used for locating version numbers in file names
+    //Used for locating version numbers in file names
     private static final String DELIMITER = "^v|[\\s_-]v";
-    // If the version number contains one of these, don't update.
-    private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT" };
 
     protected final Plugin plugin;
     protected final boolean shouldDownload;
     protected String versionName;
     protected String versionLink;
+    protected String versionType;
 
-    protected final File file;
-    // Connecting to RSS
+    protected final String fileName;
+    //Connecting to RSS
     protected URL url;
-    // The folder that downloads will be placed in
+    //The folder that downloads will be placed in
     protected final String updateFolder;
-    // Used for determining the outcome of the update process
+    //Used for determining the outcome of the update process
     protected Updater.UpdateResult result = Updater.UpdateResult.SUCCESS;
 
     private final Thread thread;
-    // Project's Curse ID
+    //Project's Curse ID
     private final int projectId;
 
+    /**
+     * Creates a new updater instance that checks for an update
+     *
+     * @param plugin the plugin what should be checked for an update
+     * @param file the jar file of the plugin
+     * @param projectId the project id on curse
+     * @param shouldDownload whether the updater should download the upade
+     */
     public Updater(Plugin plugin, File file, int projectId, boolean shouldDownload) {
         this.plugin = plugin;
-        this.shouldDownload = shouldDownload;
-        this.file = file;
+        this.fileName = file.getName();
         this.projectId = projectId;
+        this.shouldDownload = shouldDownload;
+
         this.updateFolder = plugin.getServer().getUpdateFolder();
 
         try {
             this.url = new URL(Updater.QUERY + projectId);
         } catch (MalformedURLException e) {
             //This can only happen if we do something wrong not the user
+            throw new RuntimeException(e);
         }
 
         this.thread = new Thread(new UpdateRunnable());
+        this.thread.setName(plugin.getName() + "-Update Checker");
         this.thread.start();
     }
 
@@ -132,8 +144,8 @@ public class Updater {
         if (this.thread.isAlive()) {
             try {
                 this.thread.join();
-            } catch (InterruptedException e) {
-                plugin.getLogger().log(Level.SEVERE, null, e);
+            } catch (InterruptedException ex) {
+                plugin.getLogger().log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -145,7 +157,8 @@ public class Updater {
      * @param file the name of the file to save it as.
      * @param link the url of the file.
      */
-    private void saveFile(File folder, String file, String link) {
+    private void saveFile(String link) {
+        final File folder = new File(plugin.getDataFolder().getParent(), Updater.this.updateFolder);
         if (!folder.exists()) {
             folder.mkdir();
         }
@@ -155,10 +168,10 @@ public class Updater {
         try {
             // Download the file
             inputStream = new URL(link).openStream();
-            fout = new FileOutputStream(folder.getAbsolutePath() + File.separator + file);
+            fout = new FileOutputStream(folder.getAbsolutePath() + File.separator + this.fileName);
 
             ByteStreams.copy(inputStream, fout);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
@@ -175,11 +188,12 @@ public class Updater {
      */
     private boolean versionCheck(String title) {
         final String localVersion = this.plugin.getDescription().getVersion();
-        if (title.split(DELIMITER).length == 2) {
+        final String[] removeVersions = title.split(DELIMITER);
+        if (removeVersions.length == 2) {
             // Get the newest file's version number
-            final String remoteVersion = title.split(DELIMITER)[1].split(" ")[0];
+            final String remoteVersion = removeVersions[1].split(" ")[0];
 
-            if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
+            if ("release".equals(this.versionType) || !this.shouldUpdate(localVersion, remoteVersion)) {
                 // We already have the latest version, or this build is tagged for no-update
                 this.result = Updater.UpdateResult.NO_UPDATE;
                 return false;
@@ -195,22 +209,6 @@ public class Updater {
     }
 
     /**
-     * Evaluate whether the version number is marked showing that it should not be updated by this program.
-     *
-     * @param version a version number to check for tags in.
-     * @return true if updating should be disabled.
-     */
-    private boolean hasTag(String version) {
-        for (String string : Updater.NO_UPDATE_TAG) {
-            if (version.contains(string)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Make a connection to the BukkitDev API and request the newest file's details.
      *
      * @return true if successful.
@@ -220,30 +218,35 @@ public class Updater {
         try {
             final URLConnection conn = this.url.openConnection();
             conn.setConnectTimeout(5000);
+            conn.setReadTimeout(10000);
 
-            final String userAgent = String.format("%s/%s (by %s)"
+            final String userAgent = String.format("%s/v%s (by %s)"
                     , plugin.getName()
                     , plugin.getDescription().getVersion()
                     , plugin.getDescription().getAuthors().toString());
             conn.addRequestProperty("User-Agent", userAgent);
 
             reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charsets.UTF_8));
-            final JSONArray array = (JSONArray) JSONValue.parse(reader.readLine());
+            final JSONArray array = (JSONArray) JSONValue.parse(reader);
             if (array.isEmpty()) {
                 this.plugin.getLogger().log(Level.WARNING, "The updater could not find any files for the project id {0}", this.projectId);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }
 
-            this.versionName = (String) ((Map) array.get(array.size() - 1)).get(Updater.TITLE_VALUE);
-            this.versionLink = (String) ((Map) array.get(array.size() - 1)).get(Updater.LINK_VALUE);
+            final Map<String, String> lastEntry = (Map<String, String>) array.get(array.size() - 1);
+
+            this.versionName = lastEntry.get(Updater.TITLE_VALUE);
+            this.versionLink = lastEntry.get(Updater.LINK_VALUE);
+            this.versionType = lastEntry.get(Updater.TYPE_VALUE);
 
             return true;
-        } catch (IOException e) {
-            this.plugin.getLogger().severe("The updater could not contact dev.bukkit.org for updating.");
-            this.plugin.getLogger().severe("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+        } catch (IOException ex) {
             this.result = UpdateResult.FAIL_DBO;
-            this.plugin.getLogger().log(Level.SEVERE, null, e);
+
+            this.plugin.getLogger().log(Level.SEVERE, "The updater could not contact dev.bukkit.org to check for an update.");
+            this.plugin.getLogger().log(Level.FINE, null, ex);
+
             return false;
         } finally {
             Closeables.closeQuietly(reader);
@@ -290,11 +293,9 @@ public class Updater {
         public void run() {
             // Obtain the results of the project's file feed
             if (Updater.this.url != null && Updater.this.read() && Updater.this.versionCheck(Updater.this.versionName)) {
-                final String versionLink = Updater.this.versionLink;
-                if (Updater.this.shouldDownload && versionLink != null) {
-                    final String name = Updater.this.file.getName();
-                    final File updateFolder = new File(plugin.getDataFolder().getParent(), Updater.this.updateFolder);
-                    Updater.this.saveFile(updateFolder, name, versionLink);
+                final String link = Updater.this.versionLink;
+                if (link != null && Updater.this.shouldDownload) {
+                    Updater.this.saveFile(link);
                 } else {
                     Updater.this.result = UpdateResult.UPDATE_AVAILABLE;
                 }

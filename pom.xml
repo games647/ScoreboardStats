@@ -9,17 +9,88 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8</version>
+    <version>0.7.4</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/games647/ScoreboardStats/issues</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/games647/ScoreboardStats</url>
+        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
+    </scm>
+
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+        <!--Just use the porject to replace an old version of the plugin if the user does only copy-paste-->
+        <finalName>${project.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <!--To be compatible on all running craftbukkit version that supports scoreboards-->
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+
+            <!--Add meta informations not only in the plugin.yml-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Url>${project.url}</Url>
+                            <Source>${project.scm.url}</Source>
+                            <Issue>${project.issueManagement.url}</Issue>
+                            <Description>${project.description}</Description>
+                            <Sealed>true</Sealed>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <!--Add all resources to the plugin without adding every file explicity-->
+                <includes>
+                    <include>**</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
     <repositories>
         <repository>
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+
+        <repository>
+            <id>comphenix-repo</id>
+            <url>http://repo.comphenix.net/content/groups/public/</url>
         </repository>
 
         <!--Repo for simpleclans-->
@@ -30,17 +101,25 @@
 
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <url>http://nexus.theyeticave.net/content/groups/public/</url>
         </repository>
 
         <!--for mcMMO-->
         <repository>
             <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/repositories/releases/</url>
+            <url>http://repo.md-5.net/content/groups/public/</url>
         </repository>
     </repositories>
 
     <dependencies>
+        <!--Testing environment-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
         <!--Automatic Source Code generation using annotations-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -49,23 +128,22 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--Testing-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <!--Use the newest version to be notificated for important changes-->
             <version>LATEST</version>
         </dependency>
 
         <dependency>
-            <groupId>com.gmail.nossr50.mcMMO</groupId>
-            <artifactId>mcMMO</artifactId>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
             <version>LATEST</version>
         </dependency>
 
@@ -83,10 +161,11 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
-            <artifactId>SimpleClans</artifactId>
+            <groupId>com.gmail.nossr50.mcMMO</groupId>
+            <artifactId>mcMMO</artifactId>
             <version>LATEST</version>
         </dependency>
+
         <!--dependencies in /lib-->
 
         <!--Stats on Signs-->
@@ -99,9 +178,27 @@
         </dependency>
 
         <dependency>
+            <groupId>us.talabrek.ultimateskyblock</groupId>
+            <artifactId>uSkyBlock</artifactId>
+            <version>1.0.8</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/uSkyBlock.jar</systemPath>
+        </dependency>
+
+        <!--Factions:-->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <!--the name can't be the same because maven would automatically use the newer version-->
+            <artifactId>factions1.6</artifactId>
+            <version>1.6.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Factions1.6.9.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
-            <version>2.3.0</version>
+            <version>2.3.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
         </dependency>
@@ -109,59 +206,9 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
-            <version>7.0.1</version>
+            <version>7.1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
         </dependency>
-
-        <dependency>
-            <groupId>us.talabrek.ultimateskyblock</groupId>
-            <artifactId>uSkyBlock</artifactId>
-            <version>1.0.8</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/uSkyBlock.jar</systemPath>
-        </dependency>
     </dependencies>
-
-    <build>
-        <defaultGoal>clean install</defaultGoal>
-        <finalName>${project.name}</finalName>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <!--To be compatible on all running craftbukkit version that supports scoreboards-->
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <optimize>true</optimize>
-                </configuration>
-            </plugin>
-        </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/games647/ScoreboardStats/issues</url>
-    </issueManagement>
-
-    <scm>
-        <url>https://github.com/games647/ScoreboardStats</url>
-        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
-    </scm>
 </project>

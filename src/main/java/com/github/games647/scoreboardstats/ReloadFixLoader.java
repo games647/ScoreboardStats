@@ -5,27 +5,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLConnection;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 
-/*
- * This class resolves the issue for can't finding a class resource after a server reload
+/**
+ * This class resolves the issue that the plugin couldn't find a specific resource after
+ * changing the plugin file. The cause is that java still have after the reload
+ * a reference to the old file in the cache.
  */
 public class ReloadFixLoader extends ClassLoader {
 
-    public static ClassLoader newInstance() {
-        return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            @Override
-            public ClassLoader run() {
-                return new ReloadFixLoader();
-            }
-        });
-    }
-
+    /**
+     * Disable or enable the use of class caching. Workaround for linking to an old jar version
+     * while the plugin jar was changed during a reload.
+     *
+     * @param status should the cache be activated
+     * @return if the process succeed.
+     */
     public static boolean changeClassCache(boolean status) {
         try {
             final Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
@@ -33,7 +31,7 @@ public class ReloadFixLoader extends ClassLoader {
             cacheField.setBoolean(null, status);
             return true;
         } catch (Exception ex) {
-            Logger.getLogger("ScoreboardStats").severe(Lang.get("changeChageEx", ex));
+            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, Lang.get("changeChageEx"), ex);
             return false;
         }
     }
@@ -54,8 +52,7 @@ public class ReloadFixLoader extends ClassLoader {
         } catch (IOException ex) {
             //We cannot use finally because we need the stream open if return the stream
             closeQuietly(jarFile);
-            Logger.getLogger("ScoreboardStats")
-                    .log(Level.WARNING, "Couln't load the resourceBundle", ex);
+            Logger.getLogger("ScoreboardStats").log(Level.WARNING, "Couln't load the resourceBundle", ex);
         }
 
         return super.getResourceAsStream(name);
