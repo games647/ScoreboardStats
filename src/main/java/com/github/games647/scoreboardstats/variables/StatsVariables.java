@@ -6,15 +6,19 @@ import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import org.bukkit.entity.Player;
 
+/**
+ * Replace the self tracking stats variables
+ */
 public class StatsVariables implements ReplaceManager.Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {
-        final PlayerStats stats = Database.getCacheIfAbsent(player);
-        //Null if the stats aren't loaded yet
         if (!Settings.isPvpStats()) {
             return UNKOWN_VARIABLE;
         }
+
+        //Null if the stats aren't loaded yet
+        final PlayerStats stats = Database.getCacheIfAbsent(player);
 
         if ("%kills%".equals(variable)) {
             return stats == null ? -1 : stats.getKills();

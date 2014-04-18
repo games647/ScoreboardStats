@@ -1,10 +1,12 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
+
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
 
-/*
+/**
  * This custom class fixes the issue that the curse api doesn't update so fast.
  *
  * Maybe this class execute the request with the old-style system. (files.rss)
@@ -24,9 +26,6 @@ public class UpdaterFix extends Updater {
 
     @Override
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        //Convert the version into integers
-        final String local = localVersion.replace(".", "");
-        final String remote = remoteVersion.replace(".", "");
-        return Integer.parseInt(remote) > Integer.parseInt(local);
+        return ReplaceManager.compare(localVersion, remoteVersion) > 0;
     }
 }
