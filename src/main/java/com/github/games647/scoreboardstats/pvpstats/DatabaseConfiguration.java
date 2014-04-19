@@ -5,9 +5,12 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.StringEscapeUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -104,7 +107,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
     private void validatePath() throws InvalidConfigurationException {
         final String path = plugin.getDataFolder().getPath();
-        if (!path.matches("[\\p{L}0-9-.:\\\\]+")) {
+        if (!path.matches("[\\p{L}0-9-" + StringEscapeUtils.escapeJava(File.separator) + ":]+")) {
             throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
                     + "The non-latin characters aren't allowed, because these occures a bug in java 6."
                     + "Please use normal characters instead of this: "
