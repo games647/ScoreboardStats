@@ -5,5 +5,9 @@ SQL-Settings:
   Password: 'walrus'
   Isolation: 'SERIALIZABLE'
   Driver: 'org.sqlite.JDBC'
+  # If you use mysql, delete org.sqlite.JDBC, comment out
+  #Driver: 'com.mysql.jdbc.Driver'
   Url: 'jdbc:sqlite:{DIR}{NAME}.db'
+  # MySQL IP address and port, databasename.
+  #Url: 'jdbc:mysql://IP:PORT/databaseName'
   Timeout: 1000
