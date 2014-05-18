@@ -41,6 +41,7 @@ public final class Database {
     private static final Cache<String, PlayerStats> CACHE = CacheBuilder.newBuilder()
             .initialCapacity(100)
             .maximumSize(256)
+            //Only two threads access this map
             .concurrencyLevel(2)
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)
             .removalListener(RemoveListener.newInstace(EXECUTOR))
@@ -51,9 +52,11 @@ public final class Database {
                     //This shouldn't be called because that can freeze the server
                     Logger.getLogger("ScoreboardStats").warning(Lang.get("synchLoading"));
 
-                    final PlayerStats stats = databaseInstance.find(PlayerStats.class, playerName);
+                    PlayerStats stats = databaseInstance.find(PlayerStats.class, playerName);
                     if (stats == null) {
-                        return new PlayerStats(playerName);
+                        stats = new PlayerStats();
+                        stats.setPlayername(playerName);
+                        return stats;
                     }
 
                     return stats;
@@ -81,6 +84,7 @@ public final class Database {
      * Starts loading the stats from a specific player in an external thread.
      *
      * @param player the associated player
+     * @see StatsLoader
      */
     public static void loadAccount(Player player) {
         if (player != null && Settings.isPvpStats() && databaseInstance != null) {
@@ -171,7 +175,7 @@ public final class Database {
      *
      * @return the database instance
      */
-    protected static EbeanServer getDatabaseInstance() {
+    public static EbeanServer getDatabaseInstance() {
         return databaseInstance;
     }
 
@@ -182,7 +186,6 @@ public final class Database {
      * @param cacheObject the cache object
      */
     protected static void putIntoCache(String name, PlayerStats cacheObject) {
-        //delegate
         CACHE.asMap().put(name, cacheObject);
     }
 
@@ -194,7 +197,9 @@ public final class Database {
         return databaseInstance.find(PlayerStats.class)
                 .order(type + " desc")
                 .select("playername, " + type)
-                .setMaxRows(Settings.getTopitems()).findList();
+                .setMaxRows(Settings.getTopitems())
+                .setBufferFetchSizeHint(Settings.getTopitems())
+                .findList();
     }
 
     private Database() {

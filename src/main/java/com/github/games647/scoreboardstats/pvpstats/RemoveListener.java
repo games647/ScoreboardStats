@@ -10,12 +10,15 @@ import java.util.concurrent.Executor;
 /**
  * Listener for removing the cache elements.
  */
-/* package */ class RemoveListener implements RemovalListener<String, PlayerStats> {
+public class RemoveListener implements RemovalListener<String, PlayerStats> {
 
     /**
      * Return an asynch removallistener
+     *
+     * @param executor on which executor (thread) should the code be executed
+     * @return an asynchronous removal listener that executes the tasks on the given executor
      */
-    static RemovalListener<String, PlayerStats> newInstace(Executor executor) {
+    public static RemovalListener<String, PlayerStats> newInstace(Executor executor) {
         return RemovalListeners.asynchronous(new RemoveListener(), executor);
     }
 

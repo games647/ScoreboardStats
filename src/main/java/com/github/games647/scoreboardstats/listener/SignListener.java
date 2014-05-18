@@ -4,30 +4,54 @@ import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import de.blablubbabc.insigns.SignSendEvent;
+import org.bukkit.ChatColor;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 
 /**
- * Replace some variables on signs with the player individual stats
+ * Replace some variables on signs with the player individual stats. The variables
+ * will be replaced dynamically
+ *
+ * @see SignSendEvent
+ * @see Database
  */
-public final class SignsListener implements Listener {
+public final class SignListener implements Listener {
 
     private static final String PERMISSION = "scoreboardstats.sign";
+
+    /**
+     * Listen to a sign change event. This will check the permission of the
+     * sign changer for creating a sign with a dynamic variable.
+     *
+     * @param signChangeEvent the change event fired by bukkit
+     */
+    @EventHandler(ignoreCancelled = true)
+    public void onSignChange(SignChangeEvent signChangeEvent) {
+        final Player player = signChangeEvent.getPlayer();
+        if (player.hasPermission(PERMISSION)) {
+            for (String line : signChangeEvent.getLines()) {
+                if (line.contains("[Kill]") || line.contains("[Death]")
+                        || line.contains("[KDR]") || line.contains("[Streak]")) {
+                    signChangeEvent.setCancelled(true);
+                    player.sendMessage(ChatColor.DARK_RED + "You have not enough permission to create a sign with a variable");
+                    break;
+                }
+            }
+        }
+    }
 
     /**
      * Replace the variables before the sign packet is send.
      *
      * @param signSendEvent the sign event
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onSignSendEvent(SignSendEvent signSendEvent) {
-        final Player player = signSendEvent.getPlayer();
-        if (player.hasPermission(PERMISSION)) {
-            for (int lineNumber = 0; lineNumber < 4; lineNumber++) {
-                replaceVariable(signSendEvent, player, lineNumber);
-            }
+        for (int lineNumber = 0; lineNumber < 4; lineNumber++) {
+            replaceVariable(signSendEvent, signSendEvent.getPlayer(), lineNumber);
         }
     }
 
@@ -55,6 +79,7 @@ public final class SignsListener implements Listener {
             replacedString = line.replace("[Streak]", streak);
         }
 
+        //Don't trigger an update if nothing was changed
         if (replacedString != null) {
             //If the variable was found the replace it
             signSendEvent.setLine(lineNumber, replacedString);

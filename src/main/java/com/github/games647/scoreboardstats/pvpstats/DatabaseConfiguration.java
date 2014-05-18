@@ -8,17 +8,55 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Configuration for the sql database.
+ *
+ * @see Database
  */
-/* package */ class DatabaseConfiguration {
+public class DatabaseConfiguration {
+
+    /**
+     * Checks if the path contains non-latin characters, which aren't allowed
+     * due a bug in java 6 where java can't read those jars over an zipinputstream.
+     * 
+     * This bug is now fixed, but the current ebean version in bukkit hasn't any workaround
+     * for both versions.
+     *
+     * @param path the validation path
+     *
+     * @throws InvalidConfigurationException if the path contains non-latin characters
+     */
+    public static void validatePath(String path) throws InvalidConfigurationException {
+        if (!path.matches("[\\p{L}0-9-/.:]+")) {
+            throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
+                    + "The non-latin characters aren't allowed, because these occures a bug according in java 6."
+                    + "Please use normal characters instead of this: "
+                    + path);
+        }
+    }
+
+    /**
+     * Gets the path to the server jar.
+     *
+     * @return the path to the server jar as string
+     */
+    public static String getServerJarLocation() {
+        //get the server jar for validating the path.
+        final URL location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation();
+        if ("file".equals(location.getProtocol())) {
+            return location.getPath();
+        }
+
+        throw new IllegalStateException("The Server isn't running on the file system, How?");
+    }
 
     private final ScoreboardStats plugin;
 
@@ -37,7 +75,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
         return serverConfig;
     }
 
-    void loadConfiguration() throws InvalidConfigurationException {
+    /**
+     * Loads the ebean configuration
+     *
+     * @throws InvalidConfigurationException if the path validation fails
+     */
+    public void loadConfiguration() throws InvalidConfigurationException {
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.setRegister(false);
         databaseConfig.addClass(PlayerStats.class);
@@ -45,11 +88,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
         databaseConfig.setName(plugin.getName());
         databaseConfig.setValidateOnSave(true);
 
+        //validate path
+        validatePath(getServerJarLocation());
+
         final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
-
-        validatePath();
-
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
         sqlConfig.setHeartbeatSql("SELECT 1");
 
@@ -99,19 +142,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
     }
 
     private String replaceUrlString(String input) {
+        //Replace the windows seperators ('\') with a '/'; \\ escape regEx --> \\\\ escape java
         String result = input.replaceAll("\\{DIR\\}", plugin.getDataFolder().getPath().replaceAll("\\\\", "/") + '/');
         result = result.replaceAll("\\{NAME\\}", plugin.getDescription().getName().replaceAll("[^\\w-]", ""));
 
         return result;
-    }
-
-    private void validatePath() throws InvalidConfigurationException {
-        final String path = plugin.getDataFolder().getPath();
-        if (!path.matches("[\\p{L}0-9-" + StringEscapeUtils.escapeJava(File.separator) + ":]+")) {
-            throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
-                    + "The non-latin characters aren't allowed, because these occures a bug in java 6."
-                    + "Please use normal characters instead of this: "
-                    + path);
-        }
     }
 }

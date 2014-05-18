@@ -9,11 +9,12 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.7.5</version>
+    <version>0.8</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <powermock.version>1.5.4</powermock.version>
     </properties>
 
     <issueManagement>
@@ -28,7 +29,7 @@
     </scm>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>install</defaultGoal>
         <!--Just use the porject to replace an old version of the plugin if the user does only copy-paste-->
         <finalName>${project.name}</finalName>
 
@@ -43,7 +44,8 @@
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <optimize>true</optimize>
+                    <!--Some IDEs have the compile on save feature. So this can speed up build process-->
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
 
@@ -88,9 +90,10 @@
             <url>http://repo.bukkit.org/content/groups/public/</url>
         </repository>
 
+        <!--ProtocolLib-->
         <repository>
             <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/groups/public/</url>
+            <url>http://repo.comphenix.net/content/repositories/releases</url>
         </repository>
 
         <!--Repo for simpleclans-->
@@ -99,9 +102,10 @@
             <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
         </repository>
 
+        <!--Vault and Heroes-->
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/groups/public/</url>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
         </repository>
 
         <!--for mcMMO-->
@@ -117,6 +121,28 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--We only need this dependency for testing the functionality with NMS and OBS class.
+        Craftbukkit shouldn't be used in development to ensure we target all servers.-->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -165,7 +191,6 @@
             <artifactId>mcMMO</artifactId>
             <version>LATEST</version>
         </dependency>
-
         <!--dependencies in /lib-->
 
         <!--Stats on Signs-->

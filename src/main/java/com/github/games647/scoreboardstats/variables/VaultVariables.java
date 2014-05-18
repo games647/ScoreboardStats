@@ -20,10 +20,10 @@ public class VaultVariables implements ReplaceManager.Replaceable {
     public VaultVariables() {
         final RegisteredServiceProvider<Economy> economyProvider = Bukkit
                 .getServicesManager().getRegistration(Economy.class);
-        if (economyProvider != null) {
-            economy = economyProvider.getProvider();
-        } else {
+        if (economyProvider == null) {
             throw new UnsupportedPluginException("Couldn't find an economy plugin");
+        } else {
+            economy = economyProvider.getProvider();
         }
     }
 

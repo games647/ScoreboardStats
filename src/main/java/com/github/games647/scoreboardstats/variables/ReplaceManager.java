@@ -211,7 +211,7 @@ public final class ReplaceManager implements Listener {
         }
 
         Logger.getLogger("ScoreboardStats").log(Level.INFO
-                , "Registered replacers: {0}", replacersName.toString());
+                , "Registered replacers: {0}", replacersName);
     }
 
     //Check if specific plugin is availble and activated
@@ -237,6 +237,9 @@ public final class ReplaceManager implements Listener {
         } catch (NoClassDefFoundError noClassEr) {
             Logger.getLogger("ScoreboardStats")
                     .log(Level.WARNING, Lang.get("noRegister"), noClassEr);
+        } catch (NoSuchMethodError noSuchMethodEr) {
+            Logger.getLogger("ScoreboardStats")
+                    .log(Level.WARNING, Lang.get("noRegister"), noSuchMethodEr);
         }
     }
 

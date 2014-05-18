@@ -1,62 +1,57 @@
 package com.github.games647.scoreboardstats;
 
-import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Maps;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Queue;
-import java.util.WeakHashMap;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
-
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.entity.Player;
 
 /**
  * Handling all updates for a player in a performance optimized variant. This
  * class split the updates over the ticks much smoother.
+ *
+ * @see SbManager
+ * @see com.github.games647.scoreboardstats.variables.ReplaceManager
  */
 public class RefreshTask implements Runnable {
 
     private final ScoreboardStats plugin;
 
-    private final Queue<DelayedElement> queue = new DelayQueue<DelayedElement>();
-    private final Collection<Player> hidelist = Collections.newSetFromMap(new WeakHashMap<Player, Boolean>(30));
+    //Prevent duplicate entries and is faster than the delay queue
+    private final Map<Player, int[]> queue = Maps.newHashMapWithExpectedSize(100);
 
     RefreshTask(ScoreboardStats instance) {
         this.plugin = instance;
     }
 
-    /**
-     * Get a set of players who disabled the scoreboards.
-     *
-     * @return a set of players who disabled the scoreboards
-     */
-    public Collection<Player> getHidelist() {
-        return hidelist;
-    }
-
     @Override
     public void run() {
         //let the players update smoother
-        for (int i = getNextUpdates(); i > 0; i--) {
-            final DelayedElement poll = queue.poll();
-            if (poll == null) {
-                //cancel the loop if there are no more elements
-                break;
+        final Set<Map.Entry<Player, int[]>> entrySet = queue.entrySet();
+        int nextUpdates = getNextUpdates();
+        for (Iterator<Map.Entry<Player, int[]>> it = entrySet.iterator(); it.hasNext();) {
+            final Map.Entry<Player, int[]> entry = it.next();
+
+            final Player player = entry.getKey();
+            final int[] valueArray = entry.getValue();
+            final int value = valueArray[0];
+            if (value == 0) {
+                //We will check if the player is online and remove it from queue if not so we can prevent memory leaks
+                if (player == null || !player.isOnline()) {
+                    it.remove();
+                } else if (nextUpdates != 0) {
+                    //Smoother refreshing
+                    plugin.getScoreboardManager().sendUpdate(player);
+                    addToQueue(player);
+                    valueArray[0] = 20 * Settings.getIntervall();
+                }
+            } else {
+                valueArray[0]--;
             }
 
-            final Player player = poll.getPlayer();
-            if (player != null
-                    && player.isOnline()
-                    && Settings.isActiveWorld(player.getWorld())
-                    && !hidelist.contains(player)) {
-                plugin.getScoreboardManager().sendUpdate(player);
-                addToQueue(player);
-            }
+            nextUpdates--;
         }
     }
 
@@ -66,8 +61,29 @@ public class RefreshTask implements Runnable {
      * @param request the player that should be added.
      */
     public void addToQueue(Player request) {
-        final DelayedElement element = new DelayedElement(request, Settings.getIntervall());
-        queue.add(element);
+        if (!queue.containsKey(request)) {
+            queue.put(request, new int[] {20 * Settings.getIntervall()});
+        }
+    }
+
+    /**
+     * Checks if the player is in the refresh queue.
+     *
+     * @param request player instance
+     * @return true if the player is in the refresh queue.
+     */
+    public boolean contains(Player request) {
+        return queue.containsKey(request);
+    }
+
+    /**
+     * Explicity removes the player from the refresh queue.
+     *
+     * @param request player who should be removed
+     * @return if the last entry exists
+     */
+    public boolean remove(Player request) {
+        return queue.remove(request) != null;
     }
 
     /**
@@ -84,35 +100,5 @@ public class RefreshTask implements Runnable {
         }
 
         return nextUpdates;
-    }
-
-    @EqualsAndHashCode(exclude = "startTime")
-    @ToString
-    private static class DelayedElement implements Delayed {
-
-        private final long startTime;
-        private final Player player;
-
-        DelayedElement(Player player, int delay) {
-            this.player = player;
-            this.startTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(delay);
-        }
-
-        public Player getPlayer() {
-            return player;
-        }
-
-        @Override
-        public long getDelay(TimeUnit unit) {
-            final long diff = startTime - System.currentTimeMillis();
-            return unit.convert(diff, TimeUnit.MILLISECONDS);
-        }
-
-        @Override
-        public int compareTo(Delayed delayed) {
-            return ComparisonChain.start()
-                    .compare(startTime, ((DelayedElement) delayed).startTime)
-                    .result();
-        }
     }
 }

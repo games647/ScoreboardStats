@@ -17,16 +17,16 @@ public class TicksPerSecondTask implements Runnable {
     }
 
     //the last time we updated the ticks
-    private long lastTime;
+    private long lastCheck;
 
     @Override
     public void run() {
         final long currentTime = System.currentTimeMillis();
-        final long difference = currentTime - lastTime;
-        lastTime = currentTime;
+        final long difference = currentTime - lastCheck;
+        lastCheck = currentTime;
 
-        final double tps = 20 * 1000D / difference;
-        if (tps >= 0 && tps < 25.0D) {
+        final double tps = 20 * 1000.0D / difference;
+        if (tps >= 0.0D && tps < 25.0D) {
             //Prevent all invalid values
             lastTicks = tps;
         }

@@ -1,7 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import java.util.Collection;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -56,13 +54,12 @@ public class SidebarCommands implements CommandExecutor {
         }
 
         final Player player = (Player) commandSender;
-        final Collection<Player> hideList = plugin.getRefreshTask().getHidelist();
-        if (hideList.contains(player)) {
-            hideList.remove(player);
-            plugin.getRefreshTask().addToQueue(player);
-        } else {
-            hideList.add(player);
+        final RefreshTask refreshTask = plugin.getRefreshTask();
+        if (refreshTask.contains(player)) {
+            refreshTask.remove(player);
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+        } else {
+            refreshTask.addToQueue(player);
         }
 
         commandSender.sendMessage(Lang.get("onToggle"));

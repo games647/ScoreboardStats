@@ -94,6 +94,10 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
             return calculateDurabilityRatio(player.getInventory().getChestplate());
         }
 
+        if ("%time%".equals(variable)) {
+            return (int) player.getWorld().getTime();
+        }
+
         return UNKOWN_VARIABLE;
     }
 
@@ -110,7 +114,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         //If one player is vanish count all visible player
         if (Settings.isHideVanished()) {
             int online = 0;
-            for (Player other: Bukkit.getOnlinePlayers()) {
+            for (Player other : Bukkit.getOnlinePlayers()) {
                 if (player.canSee(other)) {
                     online++;
                 }

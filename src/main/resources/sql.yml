@@ -7,3 +7,12 @@ SQL-Settings:
   Driver: 'org.sqlite.JDBC'
   Url: 'jdbc:sqlite:{DIR}{NAME}.db'
   Timeout: 1000
+
+#MySQL example
+#The default port for a mysql database is 3306
+#  Username: 'bukkit'
+#  Password: 'xyz'
+#  Isolation: 'SERIALIZABLE'
+#  Driver: 'com.mysql.jdbc.Driver'
+#  Url: 'jdbc:mysql://IP:PORT/databaseName'
+#  Timeout: 1000

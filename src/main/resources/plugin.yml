@@ -16,6 +16,7 @@ softdepend:
 
 commands:
   sidebar:
+    description: 'Command for all action in this plugin'
     aliases: [scoreboardstats, side, ss, sb, board]
 
 permissions:
@@ -30,13 +31,12 @@ permissions:
     default: true
     children:
       scoreboardstats.use: true
-      scoreboardstats.sign: true
       scoreboardstats.hide: true
   scoreboardstats.use:
-    description: ''
+    description: 'Sender is allowed to see the scoreboard'
   scoreboardstats.sign:
-    description: ''
+    description: 'Sender can make signs with variables on it'
   scoreboardstats.reload:
-    description: ''
+    description: 'Sender can perform a plugin reload'
   scoreboardstats.hide:
-    description: ''
+    description: 'Sender can toggle the scoreboard'

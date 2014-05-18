@@ -11,6 +11,8 @@ import org.bukkit.plugin.Plugin;
  *
  * Maybe this class execute the request with the old-style system. (files.rss)
  * Which is every time up to date.
+ *
+ * @see Updater
  */
 public class UpdaterFix extends Updater {
 
