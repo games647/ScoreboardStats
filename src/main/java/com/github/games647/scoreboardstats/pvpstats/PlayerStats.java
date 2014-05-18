@@ -26,8 +26,8 @@ import org.bukkit.util.NumberConversions;
  */
 @Entity
 @Table(name = "PlayerStats")
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(doNotUseGetters = true)
+@ToString(doNotUseGetters = true)
 public class PlayerStats {
 
     @Id
@@ -35,10 +35,10 @@ public class PlayerStats {
     @NotEmpty
     @NotNull
     //Tells ebean explicity that the string can only have 16 characters
-    @Length(max = 16)
+    @Length(min = 2,max = 16)
     @Pattern(regex = "^\\w{2,16}$")
     //A minecraft name cannot be longer than 16
-    private String playername;
+    private String playername = "";
 
     //You can't have negative stats
     @Range(min = 0)
@@ -55,22 +55,6 @@ public class PlayerStats {
 
     private transient int laststreak;
     private transient boolean changed;
-
-    /**
-     * Default constructor for ebean
-     */
-    public PlayerStats() {
-        //do nothing
-    }
-
-    /**
-     * Creates a new stats instance
-     *
-     * @param playername who have these stats
-     */
-    public PlayerStats(String playername) {
-        this.playername = playername;
-    }
 
     /**
      * Get the player name of these stats
@@ -219,7 +203,8 @@ public class PlayerStats {
     }
 
     /**
-     * Are the stats changed.
+     * Are the stats changed? This used to dertime if saving his data is useless
+     * because the only changes will be the playername.
      *
      * @return if stats are changed
      */

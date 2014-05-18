@@ -15,14 +15,19 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 /**
  * Managing the scoreboard access.
+ *
+ * @see com.github.games647.scoreboardstats.protocol.PacketSbManager
  */
 public class SbManager {
 
     protected static final String SB_NAME = "Stats";
     protected static final String TEMP_SB_NAME = SB_NAME + 'T';
+
+    private static final String DUMMY_CRITERIA = "dummy";
 
     protected final ScoreboardStats plugin;
 
@@ -56,16 +61,14 @@ public class SbManager {
      */
     public void createScoreboard(Player player) {
         final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (!isPermitted(player)
-                //Check if another scoreboard is showing
-                || oldObjective != null
-                && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        if (!isPermitted(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+            //Check if another scoreboard is showing
             return;
         }
 
         //Creates a new scoreboard and a new objective
         final Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = board.registerNewObjective(SB_NAME, "dummy");
+        final Objective objective = board.registerNewObjective(SB_NAME, DUMMY_CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTitle());
 
@@ -92,7 +95,7 @@ public class SbManager {
      */
     public void registerAll() {
         final boolean ispvpstats = Settings.isPvpStats();
-        for (Player player: Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isOnline()) {
                 if (ispvpstats) {
                     Database.loadAccount(player);
@@ -146,7 +149,7 @@ public class SbManager {
         }
 
         final Scoreboard board = player.getScoreboard();
-        final Objective objective = board.registerNewObjective(TEMP_SB_NAME, "dummy");
+        final Objective objective = board.registerNewObjective(TEMP_SB_NAME, DUMMY_CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTempTitle());
 
@@ -162,7 +165,7 @@ public class SbManager {
             //Colorize and send all elements
             for (Map.Entry<String, Integer> entry : Database.getTop()) {
                 final String color = Settings.getTempColor();
-                final String scoreName = checkLength(String.format("%s%s", color, entry.getKey()));
+                final String scoreName = stripLength(String.format("%s%s", color, entry.getKey()));
                 sendScore(objective, scoreName, entry.getValue(), true);
             }
             //schedule the next normal scoreboard show
@@ -175,7 +178,7 @@ public class SbManager {
         return player.hasPermission("scoreboardstats.use");
     }
 
-    protected String checkLength(String check) {
+    protected String stripLength(String check) {
         if (check.length() > 16) {
             return check.substring(0, 16);
         }
@@ -206,14 +209,40 @@ public class SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        final String name = ChatColor.translateAlternateColorCodes('&', title);
+        final String coloredTitle = ChatColor.translateAlternateColorCodes('&', title);
+        String scoreName;
+        final int titleLength = coloredTitle.length();
+        if (titleLength > 16) {
+            final Scoreboard scoreboard = objective.getScoreboard();
+            //Could maybe cause conflicts but .substring could also make conflicts if they have the same beginning
+            final String id = String.valueOf(coloredTitle.hashCode());
 
-        final Score score;
+            Team team = scoreboard.getTeam(id);
+            if (team == null) {
+                team = scoreboard.registerNewTeam(id);
+                team.setPrefix(coloredTitle.substring(0, 16));
+                scoreName = coloredTitle.substring(16, 32);
+                if (titleLength > 32) {
+                    team.setSuffix(scoreName);
+                    scoreName = coloredTitle.substring(32, 48);
+                }
+
+                team.setDisplayName(scoreName);
+                //This could affect the server performance in 1.7.8
+                team.addPlayer(Bukkit.getOfflinePlayer(scoreName));
+            } else {
+                scoreName = team.getDisplayName();
+            }
+        } else {
+            scoreName = stripLength(coloredTitle);
+        }
+
+        Score score;
         if (oldBukkit) {
             //This could affect the server performance in 1.7.8
-            score = objective.getScore(Bukkit.getOfflinePlayer(name));
+            score = objective.getScore(Bukkit.getOfflinePlayer(scoreName));
         } else {
-            score = objective.getScore(name);
+            score = objective.getScore(scoreName);
         }
 
         if (complete && value == 0) {

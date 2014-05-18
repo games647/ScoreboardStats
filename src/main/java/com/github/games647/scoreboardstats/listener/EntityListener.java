@@ -28,8 +28,8 @@ public class EntityListener implements Listener {
 
         if (!Settings.isPvpStats()
                 || !Settings.isActiveWorld(entity.getWorld())
-                //Check if it's not player because we are already handling it
                 || EntityType.PLAYER == entity.getType()) {
+            //Check if it's not player because we are already handling it
             return;
         }
 

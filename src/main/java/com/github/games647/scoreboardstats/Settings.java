@@ -1,18 +1,29 @@
 package com.github.games647.scoreboardstats;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import com.google.common.io.Closeables;
+import com.google.common.io.Files;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Managing all general configurations of this plugin.
@@ -190,21 +201,20 @@ public final class Settings {
 
     Settings(ScoreboardStats instance) {
         this.plugin = instance;
+
+        plugin.saveDefaultConfig();
+
     }
 
     /**
      * Load the configuration file in memory and convert it into simple variables
      */
     public void loadConfig() {
-        //Creates a default config and/or load it
-        plugin.saveDefaultConfig();
-        plugin.reloadConfig();
-
-        final FileConfiguration config = plugin.getConfig();
+        final FileConfiguration config = getConfigFromDisk();
 
         //Load all normal scoreboard variables
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
-//        setCompatibilityMode(config);
+        compatibilityMode = isCompatibilityMode(config);
 
         updateEnabled = config.getBoolean("pluginUpdate");
         hideVanished = config.getBoolean("hide-vanished");
@@ -228,6 +238,49 @@ public final class Settings {
         tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         tempTitle = ChatColor.translateAlternateColorCodes('&',
                 checkLength(Lang.getReplaced(config.getString("Temp-Scoreboard.Title")), 32));
+    }
+
+    /**
+     * Gets the yaml file configuration from the disk while loading it
+     * explicit with UTF-8. This allows umlauts and other utf-8 characters
+     * for all bukkit versions.
+     *
+     * Bukkit add also this feature since
+     * https://github.com/Bukkit/Bukkit/commit/24883a61704f78a952e948c429f63c4a2ab39912
+     * To be allow the same feature for all bukkit version, this method was
+     * created.
+     *
+     * @return the loaded file configuration
+     */
+    public FileConfiguration getConfigFromDisk() {
+        final File file = new File(plugin.getDataFolder(), "config.yml");
+
+        final YamlConfiguration newConf = new YamlConfiguration();
+        newConf.setDefaults(getDefaults());
+
+        BufferedReader reader = null;
+        try {
+            reader = Files.newReader(file, Charsets.UTF_8);
+
+            final StringBuilder builder = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+                builder.append(line);
+                builder.append('\n');
+                line = reader.readLine();
+            }
+
+            newConf.loadFromString(builder.toString());
+            return newConf;
+        } catch (InvalidConfigurationException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
+        } catch (IOException ex) {
+            plugin.getLogger().log(Level.SEVERE, null, ex);
+        } finally {
+            Closeables.closeQuietly(reader);
+        }
+
+        return newConf;
     }
 
     private String checkLength(String check, int limit) {
@@ -272,10 +325,10 @@ public final class Settings {
                 break;
             }
 
-            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Lang.getReplaced(key), 16));
+            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Lang.getReplaced(key), compatibilityMode ? 16 : 48));
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
-            if (variable.startsWith("%") && variable.endsWith("%")) {
+            if (variable.charAt(0) == '%' && variable.endsWith("%")) {
                 ITEMS.put(name, variable);
             } else {
                 //Prevent user mistakes
@@ -288,16 +341,26 @@ public final class Settings {
         }
     }
 
-    private boolean setCompatibilityMode(ConfigurationSection config) {
+    private boolean isCompatibilityMode(ConfigurationSection config) {
         final boolean active = config.getBoolean("compatibilityMode");
         if (active) {
             if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                 return true;
             } else {
-                plugin.getLogger().info("You need to have the plugin called ProtocolLib to activate compatibilityMode");
+                plugin.getLogger().info("You have to have the plugin called ProtocolLib to activate compatibilityMode");
             }
         }
 
         return false;
+    }
+
+    private Configuration getDefaults() {
+        final InputStream defConfigStream = plugin.getResource("config.yml");
+        if (defConfigStream != null) {
+            //stream will be closed in this method
+            return YamlConfiguration.loadConfiguration(defConfigStream);
+        }
+
+        return new YamlConfiguration();
     }
 }

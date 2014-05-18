@@ -153,8 +153,6 @@ public class Updater {
     /**
      * Save an update from dev.bukkit.org into the server's update folder.
      *
-     * @param folder the updates folder location.
-     * @param file the name of the file to save it as.
      * @param link the url of the file.
      */
     private void saveFile(String link) {
@@ -214,6 +212,7 @@ public class Updater {
      * @return true if successful.
      */
     private boolean read() {
+        InputStreamReader streamReader = null;
         BufferedReader reader = null;
         try {
             final URLConnection conn = this.url.openConnection();
@@ -223,10 +222,11 @@ public class Updater {
             final String userAgent = String.format("%s/v%s (by %s)"
                     , plugin.getName()
                     , plugin.getDescription().getVersion()
-                    , plugin.getDescription().getAuthors().toString());
+                    , plugin.getDescription().getAuthors());
             conn.addRequestProperty("User-Agent", userAgent);
 
-            reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), Charsets.UTF_8));
+            streamReader = new InputStreamReader(conn.getInputStream(), Charsets.UTF_8);
+            reader = new BufferedReader(streamReader);
             final JSONArray array = (JSONArray) JSONValue.parse(reader);
             if (array.isEmpty()) {
                 this.plugin.getLogger().log(Level.WARNING, "The updater could not find any files for the project id {0}", this.projectId);
@@ -234,6 +234,7 @@ public class Updater {
                 return false;
             }
 
+            //last file
             final Map<String, String> lastEntry = (Map<String, String>) array.get(array.size() - 1);
 
             this.versionName = lastEntry.get(Updater.TITLE_VALUE);
@@ -249,6 +250,7 @@ public class Updater {
 
             return false;
         } finally {
+            Closeables.closeQuietly(streamReader);
             Closeables.closeQuietly(reader);
         }
     }

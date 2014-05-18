@@ -10,6 +10,7 @@ package com.github.games647.scoreboardstats;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 //import java.util.logging.Level;
 //import java.util.logging.Logger;
 
@@ -81,6 +82,8 @@ public class Lang {
     private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), new ReloadFixLoader());
     private final ResourceBundle utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), new ReloadFixLoader());
 
+    private boolean logedWarning;
+
     private String getFormatted(String key, Object... arguments) {
         if (defaultMessages.containsKey(key)) {
             String result = defaultMessages.getString(key);
@@ -101,6 +104,12 @@ public class Lang {
         for (String character : utfCharacters.keySet()) {
             final String value = utfCharacters.getString(character);
             replacedInput = replacedInput.replace(character, value);
+            if (!logedWarning) {
+                Logger.getLogger("ScoreboardStats").warning("You can now put the special characters direct in the configuration.\n\t"
+                        + "Additionally this plugins now supports umlauts and any other UTF-8 charcters automatically for all systems.\n\t"
+                        + "The variables for the special characters are so no longer needed and are scheduled for deletion for the following version");
+                logedWarning = true;
+            }
         }
 
         return replacedInput;

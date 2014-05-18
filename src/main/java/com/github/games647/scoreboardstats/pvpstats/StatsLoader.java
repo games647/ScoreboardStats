@@ -5,7 +5,7 @@ import lombok.ToString;
 /**
  * This class is used for loading the player stats.
  */
-@ToString
+@ToString(doNotUseGetters = true)
 public class StatsLoader implements Runnable {
 
     private final String playerName;
@@ -25,7 +25,8 @@ public class StatsLoader implements Runnable {
 
         //If there are no existing stat create a new cache object with empty stuff
         if (stats == null) {
-            stats = new PlayerStats(playerName);
+            stats = new PlayerStats();
+            stats.setPlayername(playerName);
         }
 
         Database.putIntoCache(playerName, stats);

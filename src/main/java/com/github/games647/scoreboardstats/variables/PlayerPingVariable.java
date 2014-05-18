@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
  */
 public class PlayerPingVariable implements ReplaceManager.Replaceable {
 
+    private Method getHandleMethod;
+    private Field pingField;
+
     @Override
     public int getScoreValue(Player player, String variable) {
         if ("%ping%".equals(variable)) {
@@ -21,9 +24,15 @@ public class PlayerPingVariable implements ReplaceManager.Replaceable {
 
     private int getReflectionPing(Player player) {
         try {
-            final Method getHandleMethod = player.getClass().getDeclaredMethod("getHandle");
+            if (getHandleMethod == null) {
+                getHandleMethod = player.getClass().getDeclaredMethod("getHandle");
+            }
+
             final Object entityPlayer = getHandleMethod.invoke(player);
-            final Field pingField = entityPlayer.getClass().getDeclaredField("ping");
+
+            if (pingField == null) {
+                pingField = entityPlayer.getClass().getDeclaredField("ping");
+            }
 
             //returns the found int value
             return pingField.getInt(entityPlayer);
