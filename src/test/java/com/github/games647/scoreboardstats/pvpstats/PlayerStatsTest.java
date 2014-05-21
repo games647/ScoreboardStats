@@ -7,8 +7,10 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

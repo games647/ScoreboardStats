@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import java.io.File;
 
@@ -28,6 +27,6 @@ public class UpdaterFix extends Updater {
 
     @Override
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return ReplaceManager.compare(localVersion, remoteVersion) > 0;
+        return Version.compare(remoteVersion, localVersion) > 0;
     }
 }

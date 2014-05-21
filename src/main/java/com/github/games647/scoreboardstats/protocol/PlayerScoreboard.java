@@ -44,14 +44,21 @@ public class PlayerScoreboard {
      */
     public Objective createSidebarObjective(String objectiveName, String displayName)
             throws NullPointerException, IllegalArgumentException, IllegalStateException {
-        Preconditions.checkNotNull(objectiveName);
-        Preconditions.checkNotNull(displayName);
+        Preconditions.checkNotNull(objectiveName, "objective name cannot be null");
+        Preconditions.checkNotNull(displayName, "display name cannot be null");
 
-        Preconditions.checkArgument(objectiveName.length() <= 16);
-        Preconditions.checkArgument(displayName.length() <= 32);
+        Preconditions.checkArgument(objectiveName.length() <= 16, "objective name is longer than 16 characters");
+        Preconditions.checkArgument(displayName.length() <= 32, "display name is longer than 32 characters");
 
-        Preconditions.checkState(curSidebarObjective == null);
-        Preconditions.checkState(!objectivesByName.containsKey(objectiveName));
+        Preconditions.checkState(curSidebarObjective == null, "There is already an sidebar objective");
+        if (objectivesByName.containsKey(objectiveName)) {
+            //the objecive already exits. I assume that no other use this unique name
+            //so we expect that a other sidebar was showing
+            final Objective objective = objectivesByName.get(objectiveName);
+            PacketFactory.sendDisplayPacket(objective);
+            curSidebarObjective = objective;
+            return objective;
+        }
 
         final Objective objective = new Objective(this, objectiveName, displayName);
         curSidebarObjective = objective;

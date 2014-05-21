@@ -258,7 +258,7 @@ public class SbManager {
     }
 
     private boolean isOldBukkit() {
-        final int compare = ReplaceManager.compare("1.7.8", plugin.getMinecraftVersion());
+        final int compare = Version.compare("1.7.8", Version.getMinecraftVersionString());
         if (compare >= 0) {
             try {
                 Objective.class.getDeclaredMethod("getScore", String.class);

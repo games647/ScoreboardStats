@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.github.games647.scoreboardstats.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +21,7 @@ public class SkyBlockVariables implements ReplaceManager.Replaceable {
     public SkyBlockVariables() {
         final Plugin skyblockPlugin = Bukkit.getPluginManager().getPlugin("uSkyBlock");
         final String version = skyblockPlugin.getDescription().getVersion();
-        if (ReplaceManager.compare("2.0", version) >= 0) {
+        if (Version.compare(version, "2") >= 0) {
             throw new UnsupportedPluginException("Version over 2.0 is not supported");
         }
 

@@ -103,7 +103,6 @@ public class PacketSbManager extends SbManager {
             return;
         }
 
-        //Creates a new scoreboard and a new objective
         scoreboard.createSidebarObjective(SB_NAME, Settings.getTitle());
         sendUpdate(player);
         //Schedule the next tempscoreboard show
@@ -127,8 +126,14 @@ public class PacketSbManager extends SbManager {
             return;
         }
 
-        final Objective objective = scoreboard.
-                createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle());
+        Objective objective = scoreboard.getObjective(TEMP_SB_NAME);
+        if (objective != null) {
+            //It's better to send an unregister and let the client handle the remove than sending up to 15
+            //item remove packets
+            objective.unregister();
+        }
+
+        objective = scoreboard.createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle());
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : Database.getTop()) {

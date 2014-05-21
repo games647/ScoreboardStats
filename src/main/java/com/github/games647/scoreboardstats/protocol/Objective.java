@@ -201,10 +201,10 @@ public final class Objective {
      */
     public void unregisterItem(String name)
             throws NullPointerException, IllegalArgumentException, IllegalStateException {
-        Preconditions.checkState(isShown());
+        Preconditions.checkState(isShown(), "objective isn't active");
 
-        Preconditions.checkNotNull(name);
-        Preconditions.checkArgument(name.length() <= 16);
+        Preconditions.checkNotNull(name, "name cannot be null");
+        Preconditions.checkArgument(name.length() <= 16, "a scoreboard item cannot be longer than 16 characters");
 
         final Item item = items.remove(name);
         if (item != null) {
@@ -218,7 +218,7 @@ public final class Objective {
      * @throws IllegalStateException if the objective was removed
      */
     public void clearItems() throws IllegalStateException {
-        Preconditions.checkState(isShown());
+        Preconditions.checkState(isShown(), "objective isn't active");
 
         for (Item item : items.values()) {
             item.unregister();

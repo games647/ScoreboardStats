@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;

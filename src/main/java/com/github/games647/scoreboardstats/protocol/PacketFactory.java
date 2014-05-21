@@ -70,7 +70,7 @@ public final class PacketFactory {
         }
     }
 
-    private static void sendDisplayPacket(Objective objective) {
+    public static void sendDisplayPacket(Objective objective) {
         final PacketContainer displayPacket = PROTOCOL_MANAGER
                 .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
         displayPacket.getStrings().write(0, objective.getName());
