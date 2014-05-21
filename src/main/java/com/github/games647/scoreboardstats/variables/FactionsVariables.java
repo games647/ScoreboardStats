@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.github.games647.scoreboardstats.Version;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.entity.UPlayer;
@@ -21,7 +22,7 @@ public class FactionsVariables implements ReplaceManager.Replaceable {
     public FactionsVariables() {
         final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
         final String version = factionsPlugin.getDescription().getVersion();
-        newVersion = ReplaceManager.compare("2.0", version) >= 0;
+        newVersion = Version.compare(version, "2") >= 0;
     }
 
     @Override

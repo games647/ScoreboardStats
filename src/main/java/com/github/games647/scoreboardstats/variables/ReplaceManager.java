@@ -17,7 +17,6 @@ import org.bukkit.event.server.PluginEnableEvent;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,37 +44,6 @@ public final class ReplaceManager implements Listener {
 
         //Prevent further modifications
         DEFAULTS = ImmutableMap.copyOf(tempMap);
-    }
-
-    /**
-     * Compares two versions.
-     *
-     * @param v1 first version
-     * @param v2 second version
-     * @return 0 if equal, 1 if v2 is higher, and -1 if v2 is lower
-     */
-    public static int compare(String v1, String v2) {
-        final StringTokenizer v1Tokenizer = new StringTokenizer(v1, ".");
-        final StringTokenizer v2Tokenizer = new StringTokenizer(v2, ".");
-        while (v1Tokenizer.hasMoreTokens() || v2Tokenizer.hasMoreTokens()) {
-            if (!v1Tokenizer.hasMoreTokens()) {
-                return 1;
-            }
-
-            if (!v2Tokenizer.hasMoreTokens()) {
-                return -1;
-            }
-
-            final int version1 = Integer.parseInt(v1Tokenizer.nextToken());
-            final int version2 = Integer.parseInt(v2Tokenizer.nextToken());
-            if (version2 > version1) {
-                return 1;
-            } else if (version2 < version1) {
-                return -1;
-            }
-        }
-
-        return 0;
     }
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();

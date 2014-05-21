@@ -42,16 +42,14 @@ public class RefreshTask implements Runnable {
                 if (player == null || !player.isOnline()) {
                     it.remove();
                 } else if (nextUpdates != 0) {
-                    //Smoother refreshing
+                    //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().sendUpdate(player);
-                    addToQueue(player);
                     valueArray[0] = 20 * Settings.getIntervall();
+                    nextUpdates--;
                 }
             } else {
                 valueArray[0]--;
             }
-
-            nextUpdates--;
         }
     }
 

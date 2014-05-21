@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignListener;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -189,15 +188,6 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     /**
-     * Gets the minecraft version as string. So for example it will return 1.7.5
-     *
-     * @return the minecraft version
-     */
-    public String getMinecraftVersion() {
-        return getServer().getVersion().split("MC: ")[1].split("\\)")[0];
-    }
-
-    /**
      * Get the plugin file for this plugin. This is a workaround to make
      * it available for other classes, because getFile is as default
      * protected.
@@ -209,7 +199,7 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     private void checkScoreboardCompatibility() {
-        final int compare = ReplaceManager.compare("1.5.0", getMinecraftVersion());
+        final int compare = Version.compare("1.5", Version.getMinecraftVersionString());
         if (compare >= 0) {
             //The minecraft version is higher or equal the minimum scoreboard version
             return;

@@ -72,7 +72,7 @@ public final class Item implements Comparable<Item> {
      * @throws IllegalStateException if the objective was removed
      */
     public void setScore(int score) throws IllegalStateException {
-        Preconditions.checkState(isShown());
+        Preconditions.checkState(isShown(), "the parent objective or this item isn't active");
 
         if (this.score != score) {
             this.score = score;

@@ -11,8 +11,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 
 /**
- *
- * @author games647
+ * Version class for comparing and detecting minecraft and other versions
  */
 @EqualsAndHashCode(doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
@@ -21,21 +20,53 @@ public class Version implements Comparable<Version> {
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
+    public static int compare(String version, String expected) {
+        final int[] versionParts = parse(version);
+        final int[] expectedParts = parse(expected);
+
+        return ComparisonChain.start()
+                .compare(versionParts[0], expectedParts[0])
+                .compare(versionParts[1], expectedParts[1])
+                .compare(versionParts[2], expectedParts[2])
+                .result();
+
+    }
+
+    public static int[] parse(String version) throws IllegalArgumentException {
+        if (!version.matches("\\d+(\\.\\d+){0,5}")) {
+            throw new IllegalArgumentException("Invalid format: " + version);
+        }
+
+        final int[] versionParts = new int[3];
+
+        // escape regEx
+        final String[] split = version.split("\\.");
+        //We check if the length has min 1 entry.
+        versionParts[0] = Integer.parseInt(split[0]);
+        versionParts[1] = split.length > 1 ? Integer.parseInt(split[1]) : 0;
+        versionParts[2] = split.length > 2 ? Integer.parseInt(split[2]) : 0;
+        return versionParts;
+    }
+
     /**
      * Gets the minecraft version
      *
      * @return the minecraft version
      */
     public static Version getMinecraftVersion() {
-        return new Version(getVersionStringFromServer(Bukkit.getVersion()));
+        return new Version(getMinecraftVersionString());
+    }
+
+    public static String getMinecraftVersionString() {
+        return getVersionStringFromServer(Bukkit.getVersion());
     }
 
     private static String getVersionStringFromServer(String versionString) {
         final Pattern versionPattern = Pattern.compile(VERSION_REGEX);
-        final Matcher version = versionPattern.matcher(versionString);
+        final Matcher versionMatche = versionPattern.matcher(versionString);
 
-        if (version.matches() && version.group(1) != null) {
-            return version.group(1);
+        if (versionMatche.matches() && versionMatche.group(1) != null) {
+            return versionMatche.group(1);
         } else {
             throw new IllegalStateException("Cannot parse version String '" + versionString + '\'');
         }
@@ -52,16 +83,11 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the string doesn't match a version format
      */
     public Version(String version) throws IllegalArgumentException {
-        //X.X.X
-        if (!version.matches("\\d+\\.\\d+\\.\\d+")) {
-            throw new IllegalArgumentException("Invalid format: " + version);
-        }
+        int[] versionParts = parse(version);
 
-        // escape regEx
-        final String[] split = version.split("\\.");
-        major = Integer.parseInt(split[0]);
-        minor = Integer.parseInt(split[1]);
-        build = Integer.parseInt(split[2]);
+        major = versionParts[0];
+        minor = versionParts[1];
+        build = versionParts[2];
     }
 
     /**
