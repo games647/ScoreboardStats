@@ -1,14 +1,12 @@
 package com.github.games647.scoreboardstats;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLConnection;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
+
+import org.bukkit.plugin.Plugin;
 
 /**
  * This class resolves the issue that the plugin couldn't find a specific resource after
@@ -16,6 +14,13 @@ import java.util.zip.ZipEntry;
  * a reference to the old file in the cache.
  */
 public class ReloadFixLoader extends ClassLoader {
+
+    private final Plugin plugin;
+
+    public ReloadFixLoader(Plugin plugin, ClassLoader parent) {
+        super(parent);
+        this.plugin = plugin;
+    }
 
     /**
      * Disable or enable the use of class caching. Workaround for linking to an old jar version
@@ -36,35 +41,9 @@ public class ReloadFixLoader extends ClassLoader {
         }
     }
 
-    private final File pluginFile = ScoreboardStats.getInstance().getFileBypass();
-
     @Override
     public InputStream getResourceAsStream(String name) {
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(pluginFile);
-            final ZipEntry entry = jarFile.getEntry(name);
-            if (entry != null) {
-                return jarFile.getInputStream(entry);
-            }
-
-            closeQuietly(jarFile);
-        } catch (IOException ex) {
-            //We cannot use finally because we need the stream open if return the stream
-            closeQuietly(jarFile);
-            Logger.getLogger("ScoreboardStats").log(Level.WARNING, "Couln't load the resourceBundle", ex);
-        }
-
-        return super.getResourceAsStream(name);
-    }
-
-    private void closeQuietly(JarFile file) {
-        if (file != null) {
-            try {
-                file.close();
-            } catch (IOException ex) {
-                Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
-            }
-        }
+        //This will get the resource and not linking to the old file.
+        return plugin.getResource(name);
     }
 }

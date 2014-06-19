@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.github.games647.scoreboardstats.ScoreboardStats;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;

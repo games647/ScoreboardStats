@@ -26,7 +26,7 @@ public class DatabaseConfiguration {
     /**
      * Checks if the path contains non-latin characters, which aren't allowed
      * due a bug in java 6 where java can't read those jars over an zipinputstream.
-     * 
+     *
      * This bug is now fixed, but the current ebean version in bukkit hasn't any workaround
      * for both versions.
      *

@@ -186,12 +186,12 @@ public class Updater {
      */
     private boolean versionCheck(String title) {
         final String localVersion = this.plugin.getDescription().getVersion();
-        final String[] removeVersions = title.split(DELIMITER);
-        if (removeVersions.length == 2) {
+        final String[] remoteVersions = title.split(DELIMITER);
+        if (remoteVersions.length == 2) {
             // Get the newest file's version number
-            final String remoteVersion = removeVersions[1].split(" ")[0];
+            final String remoteVersion = remoteVersions[1].split(" ")[0];
 
-            if ("release".equals(this.versionType) || !this.shouldUpdate(localVersion, remoteVersion)) {
+            if (!"release".equals(this.versionType) || !this.shouldUpdate(localVersion, remoteVersion)) {
                 // We already have the latest version, or this build is tagged for no-update
                 this.result = Updater.UpdateResult.NO_UPDATE;
                 return false;

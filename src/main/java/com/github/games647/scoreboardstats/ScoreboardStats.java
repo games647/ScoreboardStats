@@ -32,6 +32,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     private final RefreshTask refreshTask = new RefreshTask(this);
     private final Settings settings = new Settings(this);
+    private final ClassLoader classLoader;
     private SbManager scoreboardManager;
 
     /**
@@ -41,6 +42,7 @@ public class ScoreboardStats extends JavaPlugin {
         super();
 
         instance = this;
+        classLoader = new ReloadFixLoader(this, getClassLoader());
     }
 
     /**
@@ -51,7 +53,7 @@ public class ScoreboardStats extends JavaPlugin {
      * @return the class loader for this plugin
      */
     public ClassLoader getClassLoaderBypass() {
-        return super.getClassLoader();
+        return classLoader;
     }
 
     /**
@@ -77,6 +79,10 @@ public class ScoreboardStats extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        if (!this.isEnabled()) {
+            return;
+        }
+
         super.onEnable();
 
         //Load the config
@@ -200,7 +206,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     private void checkScoreboardCompatibility() {
         final int compare = Version.compare("1.5", Version.getMinecraftVersionString());
-        if (compare >= 0) {
+        if (compare <= 0) {
             //The minecraft version is higher or equal the minimum scoreboard version
             return;
         }

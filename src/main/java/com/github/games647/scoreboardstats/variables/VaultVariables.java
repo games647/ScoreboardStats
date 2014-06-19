@@ -30,7 +30,7 @@ public class VaultVariables implements ReplaceManager.Replaceable {
     @Override
     public int getScoreValue(Player player, String variable) {
         if ("%money%".equals(variable)) {
-            return NumberConversions.round(economy.getBalance(player.getName()));
+            return NumberConversions.round(economy.getBalance(player, player.getWorld().getName()));
         }
 
         return UNKOWN_VARIABLE;
