@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats;
 
-
 import java.io.File;
 
 import org.bukkit.plugin.Plugin;
@@ -27,6 +26,6 @@ public class UpdaterFix extends Updater {
 
     @Override
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return Version.compare(remoteVersion, localVersion) > 0;
+        return Version.compare(localVersion, remoteVersion) < 0;
     }
 }

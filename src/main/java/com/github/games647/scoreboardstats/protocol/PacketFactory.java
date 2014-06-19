@@ -70,9 +70,15 @@ public final class PacketFactory {
         }
     }
 
+    /**
+     * Set the sidebar slot to this objective
+     *
+     * @param objective the displayed objective, if getName() is empty it will just clear the sidebar
+     */
     public static void sendDisplayPacket(Objective objective) {
         final PacketContainer displayPacket = PROTOCOL_MANAGER
                 .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
+        //Can be empty
         displayPacket.getStrings().write(0, objective.getName());
 
         displayPacket.getIntegers().write(0, SIDEBAR_SLOT);

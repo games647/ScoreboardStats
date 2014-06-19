@@ -259,18 +259,16 @@ public class SbManager {
 
     private boolean isOldBukkit() {
         final int compare = Version.compare("1.7.8", Version.getMinecraftVersionString());
-        if (compare >= 0) {
+        if (compare <= 0) {
             try {
                 Objective.class.getDeclaredMethod("getScore", String.class);
+                //We have access to the new method
+                return false;
             } catch (NoSuchMethodException noSuchMethodEx) {
                 plugin.getLogger().warning("You have an old version of your server. "
                         + "This version old version affects the performance in a negative way. "
                         + "Please update your server to a newer build");
-                return true;
             }
-
-            //We have access to the new method
-            return false;
         }
 
         //The version is under 1.7.8 so the method doesn't exist

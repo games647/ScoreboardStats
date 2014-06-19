@@ -1,18 +1,9 @@
 package com.github.games647.scoreboardstats;
 
-//import com.google.common.io.Closeables;
-//import com.google.common.io.Resources;
-//
-//import java.io.File;
-//import java.io.FileOutputStream;
-//import java.io.IOException;
-//import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
 
 /**
  * Seperates the code and the messages
@@ -54,35 +45,19 @@ public class Lang {
         return INSTANCE.getReplacedString(input);
     }
 
-//    public static void copyDefault(boolean replace) {
-//        copyDefault("characters.properties", replace);
-//        copyDefault("messages.properties", replace);
-//    }
-//
-//    public static void copyDefault(String name, boolean replace) {
-//        final File file = new File(ScoreboardStats.getInstance().getDataFolder(), name);
-//        final URL url = Lang.class.getResource(name);
-//        if (!replace && file.exists()) {
-//            return;
-//        }
-//
-//        FileOutputStream out = null;
-//        try {
-//            file.createNewFile();
-//
-//            out = new FileOutputStream(file);
-//            Resources.copy(url, out);
-//        } catch (IOException ex) {
-//            Logger.getLogger("").log(Level.SEVERE, null, ex);
-//        } finally {
-//            Closeables.closeQuietly(out);
-//        }
-//    }
 
-    private final ResourceBundle defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), new ReloadFixLoader());
-    private final ResourceBundle utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), new ReloadFixLoader());
+    private final ResourceBundle defaultMessages;
+    private final ResourceBundle utfCharacters;
 
     private boolean logedWarning;
+
+    public Lang() {
+        //Warning this can be null. - ToDo check it
+        final ClassLoader classLoader = ScoreboardStats.getInstance().getClassLoaderBypass();
+
+        defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
+        utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), classLoader);
+    }
 
     private String getFormatted(String key, Object... arguments) {
         if (defaultMessages.containsKey(key)) {

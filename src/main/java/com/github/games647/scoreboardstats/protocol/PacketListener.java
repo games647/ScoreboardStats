@@ -110,7 +110,7 @@ public class PacketListener extends PacketAdapter {
         final Player player = event.getPlayer();
         final PacketContainer packet = event.getPacket();
 
-        //Can be empty
+        //Can be empty; if so it would just clear the slot
         final String objectiveName = packet.getStrings().read(0);
         final Slot slot = Slot.fromId(packet.getIntegers().read(0));
 

@@ -20,9 +20,16 @@ public class Version implements Comparable<Version> {
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
-    public static int compare(String version, String expected) {
-        final int[] versionParts = parse(version);
-        final int[] expectedParts = parse(expected);
+    /**
+     * Compares the version with checking the first three digitals
+     *
+     * @param expected the object to be compared.
+     * @param version the object to be compared.
+     * @return -1 if version is higher <br>0 if both are equal <br>1 if version is lower
+     */
+    public static int compare(String expected, String version) {
+        final int[] versionParts = parse(expected);
+        final int[] expectedParts = parse(version);
 
         return ComparisonChain.start()
                 .compare(versionParts[0], expectedParts[0])
@@ -32,6 +39,13 @@ public class Version implements Comparable<Version> {
 
     }
 
+    /**
+     * Seperate the version into major, minor, build integers
+     *
+     * @param version the version that should be parsed
+     * @return the version parts
+     * @throws IllegalArgumentException if the version doesn't contains only positive digitals seperated by max. 5 dots.
+     */
     public static int[] parse(String version) throws IllegalArgumentException {
         if (!version.matches("\\d+(\\.\\d+){0,5}")) {
             throw new IllegalArgumentException("Invalid format: " + version);
@@ -57,6 +71,11 @@ public class Version implements Comparable<Version> {
         return new Version(getMinecraftVersionString());
     }
 
+    /**
+     * Gets the minecraft version as string
+     *
+     * @return the minecraft version as string
+     */
     public static String getMinecraftVersionString() {
         return getVersionStringFromServer(Bukkit.getVersion());
     }

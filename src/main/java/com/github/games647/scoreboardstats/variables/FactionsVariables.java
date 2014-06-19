@@ -22,7 +22,7 @@ public class FactionsVariables implements ReplaceManager.Replaceable {
     public FactionsVariables() {
         final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
         final String version = factionsPlugin.getDescription().getVersion();
-        newVersion = Version.compare(version, "2") >= 0;
+        newVersion = Version.compare("2", version) <= 0;
     }
 
     @Override

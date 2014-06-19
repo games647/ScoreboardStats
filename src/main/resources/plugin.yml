@@ -16,7 +16,7 @@ softdepend:
 
 commands:
   sidebar:
-    description: 'Command for all action in this plugin'
+    description: 'Root command for all commands in ScoreboardStats'
     aliases: [scoreboardstats, side, ss, sb, board]
 
 permissions:

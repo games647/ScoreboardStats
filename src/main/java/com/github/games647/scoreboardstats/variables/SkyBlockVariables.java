@@ -21,7 +21,7 @@ public class SkyBlockVariables implements ReplaceManager.Replaceable {
     public SkyBlockVariables() {
         final Plugin skyblockPlugin = Bukkit.getPluginManager().getPlugin("uSkyBlock");
         final String version = skyblockPlugin.getDescription().getVersion();
-        if (Version.compare(version, "2") >= 0) {
+        if (Version.compare("2", version) <= 0) {
             throw new UnsupportedPluginException("Version over 2.0 is not supported");
         }
 
