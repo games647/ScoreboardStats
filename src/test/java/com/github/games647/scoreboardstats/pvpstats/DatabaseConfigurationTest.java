@@ -10,7 +10,7 @@ public class DatabaseConfigurationTest {
 
     /**
      * Test of validatePath method, of class DatabaseConfiguration.
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Test
@@ -22,7 +22,6 @@ public class DatabaseConfigurationTest {
 
         //linux
         DatabaseConfiguration.validatePath("/home/xyz/abc.jar");
-
     }
 
     @Test

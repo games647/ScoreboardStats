@@ -116,41 +116,11 @@
     </repositories>
 
     <dependencies>
-        <!--Testing environment-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--We only need this dependency for testing the functionality with NMS and OBS class.
-        Craftbukkit shouldn't be used in development to ensure we target all servers.-->
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>LATEST</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!--Automatic Source Code generation using annotations-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>LATEST</version>
+            <version>1.14.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -158,38 +128,38 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <!--Use the newest version to be notificated for important changes-->
-            <version>LATEST</version>
+            <version>1.7.9-R0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>LATEST</version>
+            <version>3.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>LATEST</version>
+            <version>Legacy</version>
         </dependency>
 
         <!--API for economy, permissions and chat-->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>LATEST</version>
+            <version>1.4</version>
         </dependency>
 
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
-            <version>LATEST</version>
+            <version>1.5.3.3</version>
         </dependency>
 
         <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>LATEST</version>
+            <version>1.5.01-SNAPSHOT</version>
         </dependency>
         <!--dependencies in /lib-->
 
@@ -234,6 +204,37 @@
             <version>7.1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
+        </dependency>
+
+        <!--Testing environment-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--We only need this dependency for testing the functionality with NMS and OBS class.
+        Craftbukkit shouldn't be used in development to ensure we target all servers. This have
+        to be under the bukkit api dependency, because it makes conflicts with eclipse-->
+        <dependency>
+            <groupId>org.bukkit</groupId>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.7.9-R0.3-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
