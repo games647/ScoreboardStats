@@ -8,8 +8,12 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.logging.Level;
+
+import lombok.SneakyThrows;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -35,7 +39,8 @@ public class DatabaseConfiguration {
      * @throws InvalidConfigurationException if the path contains non-latin characters
      */
     public static void validatePath(String path) throws InvalidConfigurationException {
-        if (!path.matches("[\\p{L}0-9-/.:]+")) {
+        //Unescape character to perform a correct validation
+        if (!path.matches("[\\p{Space}\\p{L}0-9-/.:]+")) {
             throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
                     + "The non-latin characters aren't allowed, because these occures a bug according in java 6."
                     + "Please use normal characters instead of this: "
@@ -48,11 +53,13 @@ public class DatabaseConfiguration {
      *
      * @return the path to the server jar as string
      */
+    //UTF-8 is supported on all systems
+    @SneakyThrows(UnsupportedEncodingException.class)
     public static String getServerJarLocation() {
         //get the server jar for validating the path.
         final URL location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation();
         if ("file".equals(location.getProtocol())) {
-            return location.getPath();
+            return URLDecoder.decode(location.getPath(), "UTF-8");
         }
 
         throw new IllegalStateException("The Server isn't running on the file system, How?");
