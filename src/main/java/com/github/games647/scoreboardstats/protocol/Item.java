@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
  *
  * @see Objective
  */
-@EqualsAndHashCode(doNotUseGetters = true)
-@ToString(doNotUseGetters = true)
+@EqualsAndHashCode(doNotUseGetters = true, exclude = "parent")
+@ToString(doNotUseGetters = true, exclude = "parent")
 public final class Item implements Comparable<Item> {
 
     private final Objective parent;
@@ -43,7 +43,16 @@ public final class Item implements Comparable<Item> {
      * @return whether this item is shown to the player
      */
     public boolean isShown() {
-        return parent.items.containsValue(this) && parent.isShown();
+        return exists() && parent.isShown();
+    }
+
+    /**
+     * Checks if this item exists client-side.
+     *
+     * @return whether this item exists
+     */
+    public boolean exists() {
+        return parent.items.containsValue(this) && parent.exists();
     }
 
     /**
@@ -72,7 +81,7 @@ public final class Item implements Comparable<Item> {
      * @throws IllegalStateException if the objective was removed
      */
     public void setScore(int score) throws IllegalStateException {
-        Preconditions.checkState(isShown(), "the parent objective or this item isn't active");
+        Preconditions.checkState(exists(), "the parent objective or this item isn't active");
 
         if (this.score != score) {
             this.score = score;
@@ -84,7 +93,7 @@ public final class Item implements Comparable<Item> {
      * Unregister this item.
      */
     public void unregister() {
-        if (isShown()) {
+        if (exists()) {
             getScoreboard().resetScore(scoreName);
             PacketFactory.sendPacket(this, State.REMOVED);
         }

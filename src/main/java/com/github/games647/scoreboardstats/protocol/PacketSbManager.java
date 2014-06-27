@@ -98,12 +98,12 @@ public class PacketSbManager extends SbManager {
     public void createScoreboard(Player player) {
         final PlayerScoreboard scoreboard = getScoreboard(player);
         final Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isPermitted(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
         }
 
-        scoreboard.createSidebarObjective(SB_NAME, Settings.getTitle());
+        scoreboard.createSidebarObjective(SB_NAME, Settings.getTitle(), true);
         sendUpdate(player);
         //Schedule the next tempscoreboard show
         if (Settings.isTempScoreboard()) {
@@ -120,7 +120,7 @@ public class PacketSbManager extends SbManager {
     protected void createTopListScoreboard(Player player) {
         final PlayerScoreboard scoreboard = getScoreboard(player);
         final Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isPermitted(player) || oldObjective == null
+        if (!isValid(player) || oldObjective == null
                 || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
             return;
@@ -133,7 +133,10 @@ public class PacketSbManager extends SbManager {
             objective.unregister();
         }
 
-        objective = scoreboard.createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle());
+        //We are checking if another object is shown. If it's our scoreboard the code will continue to this
+        //were the force the replacement, because the scoreboard management in minecraft right now is sync,
+        //so we don't expect any crashes by other plugins.
+        objective = scoreboard.createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle(), true);
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : Database.getTop()) {

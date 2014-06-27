@@ -56,7 +56,7 @@ public final class PacketFactory {
                 .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
         objectivePacket.getStrings().write(0, objective.getName());
 
-        if (State.REMOVED != state) {
+        if (state != State.REMOVED) {
             objectivePacket.getStrings().write(1, objective.getDisplayName());
         }
 

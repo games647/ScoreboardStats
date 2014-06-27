@@ -51,6 +51,9 @@ public class Lang {
 
     private boolean logedWarning;
 
+    /**
+     *
+     */
     public Lang() {
         //Warning this can be null. - ToDo check it
         final ClassLoader classLoader = ScoreboardStats.getInstance().getClassLoaderBypass();

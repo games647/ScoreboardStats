@@ -15,13 +15,6 @@ import org.bukkit.plugin.Plugin;
  */
 public class ReloadFixLoader extends ClassLoader {
 
-    private final Plugin plugin;
-
-    public ReloadFixLoader(Plugin plugin, ClassLoader parent) {
-        super(parent);
-        this.plugin = plugin;
-    }
-
     /**
      * Disable or enable the use of class caching. Workaround for linking to an old jar version
      * while the plugin jar was changed during a reload.
@@ -39,6 +32,18 @@ public class ReloadFixLoader extends ClassLoader {
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, Lang.get("changeChageEx"), ex);
             return false;
         }
+    }
+
+    private final Plugin plugin;
+
+    /**
+     *
+     * @param plugin
+     * @param parent
+     */
+    public ReloadFixLoader(Plugin plugin, ClassLoader parent) {
+        super(parent);
+        this.plugin = plugin;
     }
 
     @Override
