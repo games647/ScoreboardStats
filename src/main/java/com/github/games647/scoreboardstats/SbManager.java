@@ -61,7 +61,7 @@ public class SbManager {
      */
     public void createScoreboard(Player player) {
         final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (!isPermitted(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
         }
@@ -137,7 +137,7 @@ public class SbManager {
 
     protected void createTopListScoreboard(Player player) {
         final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (!isPermitted(player) || oldObjective == null
+        if (!isValid(player) || oldObjective == null
                 || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
             return;
@@ -174,8 +174,8 @@ public class SbManager {
         }
     }
 
-    protected boolean isPermitted(Player player) {
-        return player.hasPermission("scoreboardstats.use");
+    protected boolean isValid(Player player) {
+        return player.hasPermission("scoreboardstats.use") && player.isOnline();
     }
 
     protected String stripLength(String check) {

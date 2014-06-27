@@ -34,6 +34,7 @@ public class PlayerScoreboard {
      *
      * @param objectiveName the objective name. have to be unique
      * @param displayName the displayed name
+     * @param force should it overwrite the sidebar objective This could end in conflicts if you overwrite it from other plugins
      * @return the created objective
      * @throws NullPointerException name is null
      * @throws NullPointerException displayName is null
@@ -42,7 +43,7 @@ public class PlayerScoreboard {
      * @throws IllegalStateException if there is already a objective with that name
      * @throws IllegalStateException if there is already a sidebar objective active
      */
-    public Objective createSidebarObjective(String objectiveName, String displayName)
+    public Objective createSidebarObjective(String objectiveName, String displayName, boolean force)
             throws NullPointerException, IllegalArgumentException, IllegalStateException {
         Preconditions.checkNotNull(objectiveName, "objective name cannot be null");
         Preconditions.checkNotNull(displayName, "display name cannot be null");
@@ -50,7 +51,10 @@ public class PlayerScoreboard {
         Preconditions.checkArgument(objectiveName.length() <= 16, "objective name is longer than 16 characters");
         Preconditions.checkArgument(displayName.length() <= 32, "display name is longer than 32 characters");
 
-        Preconditions.checkState(curSidebarObjective == null, "There is already an sidebar objective");
+        if (!force) {
+            Preconditions.checkState(curSidebarObjective == null, "There is already an sidebar objective");
+        }
+
         if (objectivesByName.containsKey(objectiveName)) {
             //the objecive already exits. I assume that no other use this unique name
             //so we expect that a other sidebar was showing
