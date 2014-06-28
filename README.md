@@ -1,8 +1,9 @@
 #ScoreboardStats
 
-ScoreboardStats is a [Bukkit](https://github.com/Bukkit/Bukkit) plugin that uses the sidebar from scoreboard feature which was introduced into [Minecraft](http://minecraft.net) since version [1.5](http://mcupdate.tumblr.com/post/45267771887/minecraft-1-5). This plugin simplifies, adds many new features and possible ways to improve the use of it. 
+ScoreboardStats is a [Bukkit](https://github.com/Bukkit/Bukkit) plugin that uses the sidebar from scoreboard feature which was introduced into [Minecraft](http://minecraft.net) since version [1.5](http://mcupdate.tumblr.com/post/45267771887/minecraft-1-5). This plugin simplifies, adds many new features and possible ways to improve the use of it.
 
 Project page: [on DevBukkit](http://dev.bukkit.org/bukkit-mods/scoreboardstats/)
+Build status: [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg?branch=master)](https://travis-ci.org/games647/ScoreboardStats/)
 
 ###Compatibility
 
@@ -10,7 +11,7 @@ This plugin is compatible with all Minecraft versions above the scoreboard featu
 
 ###Eclipse
 
-You need to install [Lombok](http://projectlombok.org/download.html). Lombok is used for automatic source code generation. It integrates perfect with Netbeans and IntelliJ. In order to perform a fast compilation the Compile-On-Save feature is activated and will be used on building. Just double click the jar and select your Eclipse folder and click install it. That's it. 
+You need to install [Lombok](http://projectlombok.org/download.html). Lombok is used for automatic source code generation. It integrates perfect with Netbeans and IntelliJ. In order to perform a fast compilation the Compile-On-Save feature is activated and will be used on building. Just double click the jar and select your Eclipse folder and click install it. That's it.
 
 ###Building
 
