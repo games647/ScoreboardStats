@@ -128,7 +128,7 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <!--Use the newest version to be notificated for important changes-->
-            <version>1.7.9-R0.3-SNAPSHOT</version>
+            <version>1.7.9-R0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
