@@ -5,3 +5,5 @@ jdk:
   - openjdk6
 script: mvn compile test
 install: true
+matrix:
+  fast_finish: true
