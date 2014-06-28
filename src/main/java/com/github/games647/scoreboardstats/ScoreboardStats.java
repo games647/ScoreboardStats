@@ -30,8 +30,8 @@ public class ScoreboardStats extends JavaPlugin {
         return instance;
     }
 
-    private final RefreshTask refreshTask = new RefreshTask(this);
-    private final Settings settings = new Settings(this);
+    private RefreshTask refreshTask;
+    private Settings settings;
     private final ClassLoader classLoader;
     private SbManager scoreboardManager;
 
@@ -84,6 +84,9 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         super.onEnable();
+
+        refreshTask = new RefreshTask(this);
+        settings = new Settings(this);
 
         //Load the config
         settings.loadConfig();
