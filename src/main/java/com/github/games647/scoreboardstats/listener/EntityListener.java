@@ -33,7 +33,7 @@ public class EntityListener implements Listener {
             return;
         }
 
-        final PlayerStats killercache = Database.getCacheIfAbsent(killer);
+        final PlayerStats killercache = Database.getCachedStats(killer);
         if (killercache != null) {
             //If the cache entry is loaded and the player isn't null, increase the mob kills
             killercache.incrementMobKills();

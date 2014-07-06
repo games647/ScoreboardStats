@@ -72,21 +72,18 @@ public class SbManager {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTitle());
 
-        boolean success = false;
         try {
             player.setScoreboard(board);
-            success = true;
         } catch (IllegalStateException stateEx) {
             //fail silently
+            return;
         }
 
-        if (success) {
-            sendUpdate(player, true);
-            //Schedule the next tempscoreboard show
-            if (Settings.isTempScoreboard()) {
-                Bukkit.getScheduler().runTaskLater(plugin
-                        , new ShowTask(player, true), Settings.getTempAppear() * 20L);
-            }
+        sendUpdate(player, true);
+        //Schedule the next tempscoreboard show
+        if (Settings.isTempScoreboard()) {
+            Bukkit.getScheduler().runTaskLater(plugin
+                    , new ShowTask(player, true), Settings.getTempAppear() * 20L);
         }
     }
 
@@ -153,25 +150,22 @@ public class SbManager {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTempTitle());
 
-        boolean success = false;
         try {
             player.setScoreboard(board);
-            success = true;
         } catch (IllegalStateException stateEx) {
             //fail silently
+            return;
         }
 
-        if (success) {
-            //Colorize and send all elements
-            for (Map.Entry<String, Integer> entry : Database.getTop()) {
-                final String color = Settings.getTempColor();
-                final String scoreName = stripLength(String.format("%s%s", color, entry.getKey()));
-                sendScore(objective, scoreName, entry.getValue(), true);
-            }
-            //schedule the next normal scoreboard show
-            Bukkit.getScheduler().runTaskLater(plugin
-                    , new ShowTask(player, false), Settings.getTempDisappear() * 20L);
+        //Colorize and send all elements
+        for (Map.Entry<String, Integer> entry : Database.getTop()) {
+            final String color = Settings.getTempColor();
+            final String scoreName = stripLength(String.format("%s%s", color, entry.getKey()));
+            sendScore(objective, scoreName, entry.getValue(), true);
         }
+        //schedule the next normal scoreboard show
+        Bukkit.getScheduler().runTaskLater(plugin
+                , new ShowTask(player, false), Settings.getTempDisappear() * 20L);
     }
 
     protected boolean isValid(Player player) {

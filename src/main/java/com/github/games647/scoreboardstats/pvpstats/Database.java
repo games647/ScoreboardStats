@@ -69,7 +69,7 @@ public final class Database {
      * @param request the associated player
      * @return the stats if they are in the cache
      */
-    public static PlayerStats getCacheIfAbsent(Player request) {
+    public static PlayerStats getCachedStats(Player request) {
         if (Settings.isPvpStats() && request != null) {
             final String playerName = request.getName();
             if (CACHE.asMap().containsKey(playerName)) {

@@ -332,7 +332,7 @@ public final class Settings {
                 ITEMS.put(name, variable);
             } else {
                 //Prevent user mistakes
-                plugin.getLogger().info("The variables has to contains % at the beginning and one % on the end");
+                plugin.getLogger().log(Level.INFO, "The variable {0} has to contains % at the beginning and one % on the end", name);
             }
         }
 
@@ -347,7 +347,7 @@ public final class Settings {
             if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                 return true;
             } else {
-                plugin.getLogger().info("You have to have the plugin called ProtocolLib to activate compatibilityMode");
+                plugin.getLogger().info("You have to have the plugin called ProtocolLib (http://dev.bukkit.org/bukkit-plugins/protocollib/) to activate compatibilityMode");
             }
         }
 

@@ -56,7 +56,7 @@ public final class SignListener implements Listener {
     }
 
     private void replaceVariable(SignSendEvent signSendEvent, Player player, int lineNumber) {
-        final PlayerStats playerCache = Database.getCacheIfAbsent(player);
+        final PlayerStats playerCache = Database.getCachedStats(player);
         if (playerCache == null) {
             //The stats aren't loaded yet
             return;

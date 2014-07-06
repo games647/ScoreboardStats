@@ -18,7 +18,7 @@ public class StatsVariables implements ReplaceManager.Replaceable {
         }
 
         //Null if the stats aren't loaded yet
-        final PlayerStats stats = Database.getCacheIfAbsent(player);
+        final PlayerStats stats = Database.getCachedStats(player);
 
         if ("%kills%".equals(variable)) {
             return stats == null ? -1 : stats.getKills();

@@ -46,12 +46,12 @@ public class PlayerListener implements Listener {
         final Player killed = deathEvent.getEntity();
         final Player killer = killed.getKiller();
         if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld())) {
-            final PlayerStats killedcache = Database.getCacheIfAbsent(killed);
+            final PlayerStats killedcache = Database.getCachedStats(killed);
             if (killedcache != null) {
                 killedcache.incrementDeaths();
             }
 
-            final PlayerStats killercache = Database.getCacheIfAbsent(killer);
+            final PlayerStats killercache = Database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.incrementKills();
             }
