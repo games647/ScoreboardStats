@@ -85,12 +85,10 @@ public final class ReplaceManager implements Listener {
      * Unregister a replacer
      *
      * @param replacer the replacer instance
+     * @return if the replacer existed
      */
-    public void unregister(Replaceable replacer) {
-        if (replacers.containsKey(replacer)) {
-            //fail safe
-            replacers.remove(replacer);
-        }
+    public boolean unregister(Replaceable replacer) {
+        return replacers.remove(replacer) != null;
     }
 
     /**
@@ -144,8 +142,6 @@ public final class ReplaceManager implements Listener {
         }
     }
 
-    //Remove the listener if the associated plugin was disabled
-
     /**
      * Check for disabled plugin to remove the associated replacer
      *
@@ -153,6 +149,7 @@ public final class ReplaceManager implements Listener {
      */
     @EventHandler
     public void onPluginDisable(PluginDisableEvent disableEvent) {
+        //Remove the listener if the associated plugin was disabled
         final String disablePluginName = disableEvent.getPlugin().getName();
 
         final Iterator<String> iter = replacers.values().iterator();

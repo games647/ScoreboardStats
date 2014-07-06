@@ -102,7 +102,7 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the string doesn't match a version format
      */
     public Version(String version) throws IllegalArgumentException {
-        int[] versionParts = parse(version);
+        final int[] versionParts = parse(version);
 
         major = versionParts[0];
         minor = versionParts[1];

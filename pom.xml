@@ -14,7 +14,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5.4</powermock.version>
+        <powermock.version>1.5.5</powermock.version>
+        <skipTests>true</skipTests>
     </properties>
 
     <issueManagement>
@@ -46,6 +47,15 @@
                     <showDeprecation>true</showDeprecation>
                     <!--Some IDEs have the compile on save feature. So this can speed up build process-->
                     <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
 
@@ -220,7 +230,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.7.9-R0.3-SNAPSHOT</version>
+            <version>1.7.9-R0.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 

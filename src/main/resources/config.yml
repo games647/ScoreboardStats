@@ -25,7 +25,7 @@ Scoreboard:
 enable-pvpstats: false
 
 #In minutes
-PvPStats-SaveIntervall: 15
+PvPStats-SaveIntervall: 5
 
 Temp-Scoreboard-enabled: false
 
