@@ -30,23 +30,23 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
         }
 
         if ("%free_ram%".equals(variable)) {
-            return (int)( Runtime.getRuntime().freeMemory() / ( 1024 * 1024 ) );
+            return (int)( Runtime.getRuntime().freeMemory() / 1024L / 1024L );
         }
 
         if ("%max_ram%".equals(variable)) {
-            return (int)( Runtime.getRuntime().maxMemory() / ( 1024 * 1024 ) );
+            return (int)( Runtime.getRuntime().maxMemory() / ( 1024L * 1024L ) );
         }
         
         if ("%current_ram%".equals(variable)) {
-            return (int)( Runtime.getRuntime().totalMemory() / ( 1024 * 1024 ) );
+            return (int)( Runtime.getRuntime().totalMemory() / ( 1024L * 1024L ) );
         }
 
         if ("%used_ram%".equals(variable)) {
-            return (int)( ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ) / ( 1024 * 1024 ) );
+            return (int)( ( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ) / ( 1024L * 1024L ) );
         }
 
         if ("%used%ram%".equals(variable)) {
-            return ((int)(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 100 / (int)Runtime.getRuntime().totalMemory());
+            return (int)((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 100L / Runtime.getRuntime().totalMemory());
         }
 
         if ("%date%".equals(variable)) {
