@@ -153,6 +153,7 @@ public final class Database {
                 final ClassLoader previous = Thread.currentThread().getContextClassLoader();
                 Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
 
+                //Disable the class caching temporialy, because after a reload (with plugin file replacement) it still reference to the old file
                 if (ReloadFixLoader.changeClassCache(false)) {
                     final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
 

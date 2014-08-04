@@ -72,7 +72,7 @@ public class SidebarCommands implements CommandExecutor {
             return true;
         }
 
-        ScoreboardStats.getInstance().onReload();
+        plugin.onReload();
         commandSender.sendMessage(Lang.get("onReload"));
         return true;
     }

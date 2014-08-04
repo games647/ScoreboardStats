@@ -9,13 +9,12 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8.1</version>
+    <version>0.8.2</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.5</powermock.version>
-        <skipTests>true</skipTests>
     </properties>
 
     <issueManagement>
@@ -30,7 +29,7 @@
     </scm>
 
     <build>
-        <defaultGoal>install</defaultGoal>
+        <defaultGoal>package install</defaultGoal>
         <!--Just use the porject to replace an old version of the plugin if the user does only copy-paste-->
         <finalName>${project.name}</finalName>
 
@@ -38,24 +37,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <!-- Don't use 3.0 since the incremtalCompilation compiles every file even they aren't changed-->
+                <version>2.5.1</version>
                 <configuration>
-                    <!--To be compatible on all running craftbukkit version that supports scoreboards-->
+                    <!--So many people still uses Java 6 ;(-->
                     <source>1.6</source>
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <!--Some IDEs have the compile on save feature. So this can speed up build process-->
-                    <useIncrementalCompilation>false</useIncrementalCompilation>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
 
@@ -63,7 +52,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.5</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -115,7 +104,7 @@
         <!--Vault and Heroes-->
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+            <url>http://nexus.theyeticave.net/content/repositories/public/</url>
         </repository>
 
         <!--for mcMMO-->
@@ -163,7 +152,7 @@
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
-            <version>1.5.3.3</version>
+            <version>1.5.3.4-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -203,7 +192,7 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
-            <version>2.3.1</version>
+            <version>2.5.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
         </dependency>
@@ -211,9 +200,9 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
-            <version>7.1.0</version>
+            <version>7.3.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mcore.jar</systemPath>
+            <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
         </dependency>
 
         <!--Testing environment-->
