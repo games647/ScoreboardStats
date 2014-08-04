@@ -214,13 +214,14 @@ public class SbManager {
             Team team = scoreboard.getTeam(id);
             if (team == null) {
                 team = scoreboard.registerNewTeam(id);
-                team.setPrefix(coloredTitle.substring(0, 16));
-                scoreName = coloredTitle.substring(16, 32);
+                final String prefix = coloredTitle.substring(0, 16);
+                team.setPrefix(prefix);
                 if (titleLength > 32) {
-                    team.setSuffix(scoreName);
-                    scoreName = coloredTitle.substring(32, 48);
+                    final String suffix = coloredTitle.substring(32, coloredTitle.length());
+                    team.setSuffix(suffix);
                 }
 
+                scoreName = coloredTitle.substring(16, 32);
                 team.setDisplayName(scoreName);
                 //This could affect the server performance in 1.7.8
                 team.addPlayer(Bukkit.getOfflinePlayer(scoreName));

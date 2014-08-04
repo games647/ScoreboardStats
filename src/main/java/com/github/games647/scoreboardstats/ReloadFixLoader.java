@@ -29,7 +29,7 @@ public class ReloadFixLoader extends ClassLoader {
             cacheField.setBoolean(null, status);
             return true;
         } catch (Exception ex) {
-            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, Lang.get("changeChageEx"), ex);
+            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, Lang.get("changeEx"), ex);
             return false;
         }
     }
@@ -49,6 +49,21 @@ public class ReloadFixLoader extends ClassLoader {
     @Override
     public InputStream getResourceAsStream(String name) {
         //This will get the resource and not linking to the old file.
-        return plugin.getResource(name);
+        InputStream resourceStream = plugin.getResource(name);
+        if (resourceStream == null) {
+            resourceStream = super.getResourceAsStream(name);
+        }
+
+        return resourceStream;
+    }
+
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        //temporialy fix
+        if (name.startsWith("org.joda.time.")) {
+            return getParent().getParent().loadClass(name);
+        }
+
+        return super.loadClass(name);
     }
 }

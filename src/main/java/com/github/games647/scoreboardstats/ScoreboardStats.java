@@ -7,7 +7,6 @@ import com.github.games647.scoreboardstats.listener.SignListener;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,7 +31,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     private RefreshTask refreshTask;
     private Settings settings;
-    private final ClassLoader classLoader;
+    private ReloadFixLoader classLoader;
     private SbManager scoreboardManager;
 
     /**
@@ -42,7 +41,6 @@ public class ScoreboardStats extends JavaPlugin {
         super();
 
         instance = this;
-        classLoader = new ReloadFixLoader(this, getClassLoader());
     }
 
     /**
@@ -52,7 +50,7 @@ public class ScoreboardStats extends JavaPlugin {
      *
      * @return the class loader for this plugin
      */
-    public ClassLoader getClassLoaderBypass() {
+    public ReloadFixLoader getClassLoaderBypass() {
         return classLoader;
     }
 
@@ -83,18 +81,23 @@ public class ScoreboardStats extends JavaPlugin {
             return;
         }
 
-        super.onEnable();
-
-        refreshTask = new RefreshTask(this);
+        classLoader = new ReloadFixLoader(this, getClassLoader());
         settings = new Settings(this);
+        refreshTask = new RefreshTask(this);
 
         //Load the config
         settings.loadConfig();
 
-        Updater updater = null;
         if (Settings.isUpdateEnabled()) {
-            //Run the update process early so it can run in the backround as seperate thread
-            updater = new UpdaterFix(this, getFile());
+            new UpdaterFix(this, this.getFile(), true, new Updater.UpdateCallback() {
+
+                @Override
+                public void onFinish(Updater updater) {
+                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                        getLogger().info(Lang.get("onUpdate"));
+                    }
+                }
+            });
         }
 
         Database.setupDatabase(this);
@@ -124,12 +127,6 @@ public class ScoreboardStats extends JavaPlugin {
         scoreboardManager.registerAll();
 
         checkCompatibility();
-
-        if (updater != null && Updater.UpdateResult.SUCCESS == updater.getResult()) {
-            //the updater run async so don't block it this method
-            //Check if a new update is available
-            getLogger().info(Lang.get("onUpdate"));
-        }
     }
 
     /**
@@ -137,8 +134,6 @@ public class ScoreboardStats extends JavaPlugin {
      */
     @Override
     public void onLoad() {
-        super.onLoad();
-
         //Create a logger that is available by just the plugin name
         Logger.getLogger("ScoreboardStats").setParent(getLogger());
 
@@ -151,8 +146,6 @@ public class ScoreboardStats extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        super.onDisable();
-
         if (scoreboardManager != null) {
             //Clear all scoreboards
             scoreboardManager.unregisterAll();
@@ -194,17 +187,6 @@ public class ScoreboardStats extends JavaPlugin {
         if (scoreboardManager != null) {
             scoreboardManager.registerAll();
         }
-    }
-
-    /**
-     * Get the plugin file for this plugin. This is a workaround to make
-     * it available for other classes, because getFile is as default
-     * protected.
-     *
-     * @return the plugin file
-     */
-    protected File getFileBypass() {
-        return super.getFile();
     }
 
     private void checkScoreboardCompatibility() {

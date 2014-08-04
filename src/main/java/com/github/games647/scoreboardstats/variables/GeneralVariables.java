@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.variables;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.TicksPerSecondTask;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.GregorianCalendar;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -121,12 +120,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
             return online;
         } else {
-            final Object object = Bukkit.getOnlinePlayers();
-            if (object instanceof Object[]) {
-                return ((Object[]) object).length;
-            } else {
-                return ((Collection<?>) object).size();
-            }
+            return Bukkit.getOnlinePlayers().length;
         }
     }
 }

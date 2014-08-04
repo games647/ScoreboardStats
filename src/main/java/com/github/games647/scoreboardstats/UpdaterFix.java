@@ -5,23 +5,19 @@ import java.io.File;
 import org.bukkit.plugin.Plugin;
 
 /**
- * This custom class fixes the issue that the curse api doesn't update so fast.
- *
- * Maybe this class execute the request with the old-style system. (files.rss)
- * Which is every time up to date.
+ * This file exists to make sure auto updater doesn't check for new updates if
+ * the user has a development version
  *
  * @see Updater
  */
 public class UpdaterFix extends Updater {
 
-    /**
-     * Creates a new Updater
-     *
-     * @param plugin The plugin that is checking for an update.
-     * @param file The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     */
-    public UpdaterFix(Plugin plugin, File file) {
-        super(plugin, file, 55148, true);
+    public UpdaterFix(Plugin plugin, File file, boolean shouldDownload) {
+        super(plugin, 55148, file, shouldDownload);
+    }
+
+    public UpdaterFix(Plugin plugin, File file, boolean shouldDownload, UpdateCallback callback) {
+        super(plugin, 55148, file, shouldDownload, callback);
     }
 
     @Override
