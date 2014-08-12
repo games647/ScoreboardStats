@@ -40,18 +40,14 @@ public final class ReplaceManager implements Listener {
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         tempMap.put(FactionsVariables.class, "Factions");
-        tempMap.put(SkyBlockVariables.class, "uSkyBlock");
 
         //Prevent further modifications
         DEFAULTS = ImmutableMap.copyOf(tempMap);
     }
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();
-    private final ScoreboardStats plugin;
 
     public ReplaceManager(ScoreboardStats plugin) {
-        this.plugin = plugin;
-
         Bukkit.getPluginManager().registerEvents(this, plugin);
         addDefaultReplacer();
     }
