@@ -4,8 +4,8 @@ import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import de.blablubbabc.insigns.SignSendEvent;
-import org.bukkit.ChatColor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

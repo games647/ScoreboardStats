@@ -20,9 +20,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
- * This is a simplier and optimized version of Gravity's Updater (Thanks for the great work). Y
- * ou can find his project here: https://github.com/gravitylow/Updater/
- * 
+ * This is a simplier and optimized version of Gravity's Updater (Thanks for the great work).
+ * You can find his project here: https://github.com/gravitylow/Updater/
+ *
  * Check for updates on BukkitDev for a given plugin, and download the updates if needed.
  * <p/>
  * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
@@ -47,10 +47,6 @@ public class Updater {
     private static final String TITLE_VALUE = "name";
     // Remote file's download link
     private static final String LINK_VALUE = "downloadUrl";
-    // Remote file's release type
-    private static final String TYPE_VALUE = "releaseType";
-    // Remote file's build version
-    private static final String VERSION_VALUE = "gameVersion";
     // Path to GET
     private static final String QUERY = "/servermods/files?projectIds=";
     // Slugs will be appended to this to get to the project's RSS feed
@@ -79,8 +75,6 @@ public class Updater {
 
     private String versionName;
     private String versionLink;
-    private String versionType;
-    private String versionGameVersion;
 
     /* Update process variables */
 
@@ -126,24 +120,6 @@ public class Updater {
     }
 
     /**
-     * Represents the various release types of a file on BukkitDev.
-     */
-    public enum ReleaseType {
-        /**
-         * An "alpha" file.
-         */
-        ALPHA,
-        /**
-         * A "beta" file.
-         */
-        BETA,
-        /**
-         * A "release" file.
-         */
-        RELEASE
-    }
-
-    /**
      * Initialize the updater.
      *
      * @param plugin   The plugin that is checking for an update.
@@ -174,13 +150,13 @@ public class Updater {
 
         try {
             this.url = new URL(Updater.HOST + Updater.QUERY + this.id);
-        } catch (final MalformedURLException e) {
+        } catch (MalformedURLException e) {
             //This can only happend if we modified the url. Just an int cannot make it malformed
             this.plugin.getLogger().log(Level.SEVERE, "The project ID provided for updating, " + this.id + " is invalid.", e);
             this.result = UpdateResult.FAIL_BADID;
             return;
         }
-        
+
         this.thread = new Thread(new UpdateRunnable());
         this.thread.start();
 
@@ -196,34 +172,6 @@ public class Updater {
     public Updater.UpdateResult getResult() {
         this.waitForThread();
         return this.result;
-    }
-
-    /**
-     * Get the latest version's release type.
-     *
-     * @return latest version's release type.
-     * @see ReleaseType
-     */
-    public ReleaseType getLatestType() {
-        this.waitForThread();
-        if (this.versionType != null) {
-            for (ReleaseType type : ReleaseType.values()) {
-                if (this.versionType.equalsIgnoreCase(type.name())) {
-                    return type;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get the latest version's game version (such as "CB 1.2.5-R1.0").
-     *
-     * @return latest version's game version.
-     */
-    public String getLatestGameVersion() {
-        this.waitForThread();
-        return this.versionGameVersion;
     }
 
     /**
@@ -321,7 +269,7 @@ public class Updater {
             this.result = Updater.UpdateResult.FAIL_NOVERSION;
             return false;
         }
-        
+
         return true;
     }
 
@@ -388,21 +336,19 @@ public class Updater {
                     , plugin.getDescription().getAuthors());
             conn.addRequestProperty("User-Agent", userAgent);
 
-            InputStreamReader streamReader = new InputStreamReader(conn.getInputStream(), Charsets.UTF_8);
+            final InputStreamReader streamReader = new InputStreamReader(conn.getInputStream(), Charsets.UTF_8);
 
             final JSONArray array = (JSONArray) JSONValue.parse(streamReader);
-
             if (array.isEmpty()) {
                 this.plugin.getLogger().log(Level.WARNING, "The updater could not find any files for the project id {0}", this.id);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }
 
+            //gets the last entry
             final JSONObject latestUpdate = (JSONObject) array.get(array.size() - 1);
             this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
             this.versionLink = (String) latestUpdate.get(Updater.LINK_VALUE);
-            this.versionType = (String) latestUpdate.get(Updater.TYPE_VALUE);
-            this.versionGameVersion = (String) latestUpdate.get(Updater.VERSION_VALUE);
 
             return true;
         } catch (final IOException e) {

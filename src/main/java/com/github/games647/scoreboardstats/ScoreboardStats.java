@@ -16,32 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class ScoreboardStats extends JavaPlugin {
 
-    private static ScoreboardStats instance;
-
-    /**
-     * Get the current instance of scoreboardstats. This makes the instance
-     * easier available for other plugins and makes it useless useless to keep
-     * EVERY time the reference.
-     *
-     * @return the current instance of scoreboardstats or null
-     */
-    public static ScoreboardStats getInstance() {
-        return instance;
-    }
-
     private RefreshTask refreshTask;
     private Settings settings;
     private ReloadFixLoader classLoader;
     private SbManager scoreboardManager;
-
-    /**
-     * Create a new plugin instance
-     */
-    public ScoreboardStats() {
-        super();
-
-        instance = this;
-    }
 
     /**
      * Get the class loader for this plugin. This is a workaround to make
@@ -103,7 +81,7 @@ public class ScoreboardStats extends JavaPlugin {
         Database.setupDatabase(this);
 
         //Register all events
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
             //Register a this listerner if InSigns is available
@@ -191,7 +169,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     private void checkScoreboardCompatibility() {
         final int compare = Version.compare("1.5", Version.getMinecraftVersionString());
-        if (compare <= 0) {
+        if (compare >= 0) {
             //The minecraft version is higher or equal the minimum scoreboard version
             return;
         }
@@ -206,7 +184,7 @@ public class ScoreboardStats extends JavaPlugin {
         if (Settings.isCompatibilityMode()) {
             getLogger().info("The plugin will now use raw packets to be compatible with other scoreboard plugins");
         } else {
-            final String[] plugins = {"HealthBar", "ColoredTags"};
+            final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
             boolean found = false;
             for (String name : plugins) {
                 if (getServer().getPluginManager().getPlugin(name) != null) {

@@ -40,7 +40,7 @@
                 <!-- Don't use 3.0 since the incremtalCompilation compiles every file even they aren't changed-->
                 <version>2.5.1</version>
                 <configuration>
-                    <!--So many people still uses Java 6 ;(-->
+                    <!--So many people still use Java 6 ;(-->
                     <source>1.6</source>
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
@@ -119,7 +119,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.14.2</version>
+            <version>1.14.4</version>
             <scope>provided</scope>
         </dependency>
 
@@ -130,6 +130,7 @@
             <version>1.7.9-R0.2-SNAPSHOT</version>
         </dependency>
 
+        <!--Libary for listening and sending minecraft packets-->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
@@ -171,14 +172,6 @@
             <systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
         </dependency>
 
-        <dependency>
-            <groupId>us.talabrek.ultimateskyblock</groupId>
-            <artifactId>uSkyBlock</artifactId>
-            <version>1.0.8</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/uSkyBlock.jar</systemPath>
-        </dependency>
-
         <!--Factions:-->
         <dependency>
             <groupId>com.massivecraft</groupId>
@@ -210,16 +203,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!--We only need this dependency for testing the functionality with NMS and OBS class.
-        Craftbukkit shouldn't be used in development to ensure we target all servers. This have
-        to be under the bukkit api dependency, because it makes conflicts with eclipse-->
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.9-R0.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 

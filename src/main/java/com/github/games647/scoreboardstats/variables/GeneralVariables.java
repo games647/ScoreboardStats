@@ -2,8 +2,9 @@ package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.TicksPerSecondTask;
+
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +13,7 @@ import org.bukkit.util.NumberConversions;
 /**
  * Replace all bukkit and general variables
  */
-public class GeneralVariables implements ReplaceManager.Replaceable {
+public class GeneralVariables implements Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {
@@ -46,12 +47,12 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%date%".equals(variable)) {
             //Get the current date
-            return new GregorianCalendar().get(Calendar.DAY_OF_MONTH);
+            return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         }
 
         if ("%lifetime%".equals(variable)) {
             // --> Minutes
-            return player.getTicksLived() / 20 / 60;
+            return player.getTicksLived() / (20 * 60);
         }
 
         if ("%exp%".equals(variable)) {
@@ -60,7 +61,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%no_damage_ticks%".equals(variable)) {
             // --> Minutes
-            return player.getNoDamageTicks() / 20 / 60;
+            return player.getNoDamageTicks() / (20 * 60);
         }
 
         if ("%xp_to_level%".equals(variable)) {
@@ -69,7 +70,7 @@ public class GeneralVariables implements ReplaceManager.Replaceable {
 
         if ("%last_damage%".equals(variable)) {
             // --> Minutes
-            return (int) (player.getLastDamage() / 20 / 60);
+            return (int) (player.getLastDamage() / (20 * 60));
         }
 
         if ("%max_player%".equals(variable)) {

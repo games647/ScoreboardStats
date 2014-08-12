@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  * Replace the self tracking stats variables
  */
-public class StatsVariables implements ReplaceManager.Replaceable {
+public class StatsVariables implements Replaceable {
 
     @Override
     public int getScoreValue(Player player, String variable) {

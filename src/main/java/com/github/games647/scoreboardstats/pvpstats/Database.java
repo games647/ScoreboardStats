@@ -40,7 +40,7 @@ public final class Database {
 
     private static final Cache<String, PlayerStats> CACHE = CacheBuilder.newBuilder()
             .initialCapacity(100)
-            .maximumSize(256)
+            .maximumSize(1024)
             //Only two threads access this map
             .concurrencyLevel(2)
             .expireAfterAccess(Settings.getSaveIntervall(), TimeUnit.MINUTES)

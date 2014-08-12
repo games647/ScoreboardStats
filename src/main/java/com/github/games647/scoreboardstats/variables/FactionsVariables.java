@@ -12,7 +12,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Replace all variables that are associated with the faction plugin
  */
-public class FactionsVariables implements ReplaceManager.Replaceable {
+public class FactionsVariables implements Replaceable {
 
     private final boolean newVersion;
 
@@ -22,7 +22,7 @@ public class FactionsVariables implements ReplaceManager.Replaceable {
     public FactionsVariables() {
         final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
         final String version = factionsPlugin.getDescription().getVersion();
-        newVersion = Version.compare("2", version) <= 0;
+        newVersion = Version.compare("2", version) >= 0;
     }
 
     @Override

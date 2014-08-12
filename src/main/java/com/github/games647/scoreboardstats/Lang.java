@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+
 /**
  * Seperates the code and the messages
  */
@@ -56,7 +58,8 @@ public class Lang {
      */
     public Lang() {
         //Warning this can be null. - ToDo check it
-        final ClassLoader classLoader = ScoreboardStats.getInstance().getClassLoaderBypass();
+        final ScoreboardStats plugin = (ScoreboardStats) Bukkit.getPluginManager().getPlugin("ScoreboardStats");
+        final ClassLoader classLoader = plugin.getClassLoaderBypass();
 
         defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
         utfCharacters = ResourceBundle.getBundle("characters", Locale.getDefault(), classLoader);
