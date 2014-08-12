@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * Replace all variables that are associated with the heroes plugin
  */
-public class HeroesVariables implements ReplaceManager.Replaceable {
+public class HeroesVariables implements Replaceable {
 
     private final CharacterManager characterManager;
 

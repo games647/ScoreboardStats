@@ -25,18 +25,19 @@ public class Version implements Comparable<Version> {
      *
      * @param expected the object to be compared.
      * @param version the object to be compared.
-     * @return -1 if version is higher <br>0 if both are equal <br>1 if version is lower
+     * @return 1 version is higher; 0 both are equal; -1 version is lower<br>
+     *          a negative integer, zero, or a positive integer as this object
+     *          is less than, equal to, or greater than the specified object.
      */
     public static int compare(String expected, String version) {
-        final int[] versionParts = parse(expected);
         final int[] expectedParts = parse(version);
+        final int[] versionParts = parse(expected);
 
         return ComparisonChain.start()
-                .compare(versionParts[0], expectedParts[0])
-                .compare(versionParts[1], expectedParts[1])
-                .compare(versionParts[2], expectedParts[2])
+                .compare(expectedParts[0], versionParts[0])
+                .compare(expectedParts[1], versionParts[1])
+                .compare(expectedParts[2], versionParts[2])
                 .result();
-
     }
 
     /**

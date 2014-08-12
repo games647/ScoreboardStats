@@ -20,6 +20,12 @@ import org.bukkit.scoreboard.Objective;
  */
 public class PlayerListener implements Listener {
 
+    private final ScoreboardStats plugin;
+
+    public PlayerListener(ScoreboardStats plugin) {
+        this.plugin = plugin;
+    }
+
     /**
      * Add the player to the refresh queue and load if stats is enable the account
      * from the database in the cache.
@@ -33,7 +39,7 @@ public class PlayerListener implements Listener {
         final Player player = joinEvent.getPlayer();
         //Add the player to the refresh queue and/or load the stats
         Database.loadAccount(player);
-        ScoreboardStats.getInstance().getRefreshTask().addToQueue(player);
+        plugin.getRefreshTask().addToQueue(player);
     }
 
     /**
@@ -72,11 +78,11 @@ public class PlayerListener implements Listener {
         if (Settings.isActiveWorld(player.getWorld())) {
             if (!Settings.isActiveWorld(worldChange.getFrom())) {
                 //Activate the scoreboard if it was disabled
-                ScoreboardStats.getInstance().getRefreshTask().addToQueue(player);
+                plugin.getRefreshTask().addToQueue(player);
             }
         } else if (objective != null && objective.getName().startsWith("Stats")) {
             //Disable the scoreboard if the player goes in a disabled world
-            ScoreboardStats.getInstance().getRefreshTask().remove(player);
+            plugin.getRefreshTask().remove(player);
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
     }

@@ -31,7 +31,7 @@ public class RefreshTask implements Runnable {
         //let the players update smoother
         final Set<Map.Entry<Player, int[]>> entrySet = queue.entrySet();
         int nextUpdates = getNextUpdates();
-        for (Iterator<Map.Entry<Player, int[]>> it = entrySet.iterator(); it.hasNext();) {
+        for (final Iterator<Map.Entry<Player, int[]>> it = entrySet.iterator(); it.hasNext();) {
             final Map.Entry<Player, int[]> entry = it.next();
 
             final Player player = entry.getKey();
@@ -93,7 +93,7 @@ public class RefreshTask implements Runnable {
 
     private int getNextUpdates() {
         final int nextUpdates = queue.size() / 20;
-        if (!queue.isEmpty() && nextUpdates < 1) {
+        if (nextUpdates <= 0) {
             return 1;
         }
 

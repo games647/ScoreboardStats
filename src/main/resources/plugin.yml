@@ -12,7 +12,6 @@ softdepend:
   - InSigns
   - Factions
   - Heroes
-  - uSkyBlock
 
 commands:
   sidebar:

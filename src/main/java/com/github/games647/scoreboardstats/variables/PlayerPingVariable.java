@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * Replace the ping variable.
  */
-public class PlayerPingVariable implements ReplaceManager.Replaceable {
+public class PlayerPingVariable implements Replaceable {
 
     private Method getHandleMethod;
     private Field pingField;

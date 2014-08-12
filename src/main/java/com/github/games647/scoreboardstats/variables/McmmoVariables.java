@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * Replace all variables that are associated with the mcmmo pluin
  */
-public class McmmoVariables implements ReplaceManager.Replaceable {
+public class McmmoVariables implements Replaceable {
 
     private final Set<String> skillTypes;
 

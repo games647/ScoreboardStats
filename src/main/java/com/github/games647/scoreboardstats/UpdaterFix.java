@@ -22,6 +22,6 @@ public class UpdaterFix extends Updater {
 
     @Override
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return Version.compare(localVersion, remoteVersion) < 0;
+        return Version.compare(localVersion, remoteVersion) > 0;
     }
 }

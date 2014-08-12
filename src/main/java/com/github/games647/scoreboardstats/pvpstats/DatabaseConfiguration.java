@@ -89,7 +89,6 @@ public class DatabaseConfiguration {
      */
     public void loadConfiguration() throws InvalidConfigurationException {
         final ServerConfig databaseConfig = new ServerConfig();
-        databaseConfig.setRegister(false);
         databaseConfig.addClass(PlayerStats.class);
         //Give the database a specific name
         databaseConfig.setName(plugin.getName());

@@ -13,7 +13,7 @@ import org.bukkit.util.NumberConversions;
 /**
  * Replace all variabls that are associated with the simpleclans plugin
  */
-public class SimpleClansVariables implements ReplaceManager.Replaceable {
+public class SimpleClansVariables implements Replaceable {
 
     private final ClanManager clanManager;
 

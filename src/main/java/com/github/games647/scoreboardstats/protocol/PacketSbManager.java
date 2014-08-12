@@ -11,7 +11,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -74,7 +73,6 @@ public class PacketSbManager extends SbManager {
                     iter.remove();
 
                     plugin.getLogger().info(Lang.get("unknownVariable", variable));
-                    plugin.getLogger().log(Level.FINE, null, ex);
                 }
             }
         }

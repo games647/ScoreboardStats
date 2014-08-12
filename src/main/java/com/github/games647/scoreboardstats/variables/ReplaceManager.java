@@ -47,12 +47,12 @@ public final class ReplaceManager implements Listener {
     }
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();
+    private final ScoreboardStats plugin;
 
-    /**
-     * Creates a new replace manager.
-     */
-    public ReplaceManager() {
-        Bukkit.getPluginManager().registerEvents(this, ScoreboardStats.getInstance());
+    public ReplaceManager(ScoreboardStats plugin) {
+        this.plugin = plugin;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         addDefaultReplacer();
     }
 
@@ -194,7 +194,7 @@ public final class ReplaceManager implements Listener {
             Logger.getLogger("ScoreboardStats")
                     .warning(Lang.get("unsupportedPluginVersion"
                             , replacerClass.getSimpleName(), ex.getMessage()));
-            ScoreboardStats.getInstance().getLogger().log(Level.FINE, null, ex);
+            Logger.getLogger("ScoreboardStats").log(Level.FINE, null, ex);
         } catch (Exception ex) {
             //We can't use mulit catches because we need still be compatible with java 6
             Logger.getLogger("ScoreboardStats")
@@ -206,28 +206,6 @@ public final class ReplaceManager implements Listener {
             Logger.getLogger("ScoreboardStats")
                     .log(Level.WARNING, Lang.get("noRegister"), noSuchMethodEr);
         }
-    }
-
-
-    /**
-     * Represents a variable replacer
-     */
-    public interface Replaceable {
-
-        //find another method to prevent conflicts
-        /**
-         * Represents an unknown variable
-         */
-        int UNKOWN_VARIABLE = -1337;
-
-        /**
-         * Get the score for specific variable
-         *
-         * @param player the associated player
-         * @param variable the variable
-         * @return the score
-         */
-        int getScoreValue(Player player, String variable);
     }
 }
 

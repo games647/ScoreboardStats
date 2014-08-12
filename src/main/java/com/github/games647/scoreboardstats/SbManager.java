@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +30,7 @@ public class SbManager {
 
     protected final ScoreboardStats plugin;
 
-    protected final ReplaceManager replaceManager = new ReplaceManager();
+    protected final ReplaceManager replaceManager;
 
     private final boolean oldBukkit;
 
@@ -41,6 +40,7 @@ public class SbManager {
      */
     public SbManager(ScoreboardStats pluginInstance) {
         this.plugin = pluginInstance;
+        replaceManager = new ReplaceManager(pluginInstance);
 
         oldBukkit = isOldBukkit();
     }
@@ -196,7 +196,6 @@ public class SbManager {
                     iter.remove();
 
                     plugin.getLogger().info(Lang.get("unknownVariable", variable));
-                    plugin.getLogger().log(Level.FINE, null, ex);
                 }
             }
         }
@@ -224,7 +223,7 @@ public class SbManager {
                 scoreName = coloredTitle.substring(16, 32);
                 team.setDisplayName(scoreName);
                 //This could affect the server performance in 1.7.8
-                team.addPlayer(Bukkit.getOfflinePlayer(scoreName));
+                team.addPlayer(new FastOfflinePlayer(scoreName));
             } else {
                 scoreName = team.getDisplayName();
             }
@@ -235,7 +234,7 @@ public class SbManager {
         Score score;
         if (oldBukkit) {
             //This could affect the server performance in 1.7.8
-            score = objective.getScore(Bukkit.getOfflinePlayer(scoreName));
+            score = objective.getScore(new FastOfflinePlayer(scoreName));
         } else {
             score = objective.getScore(scoreName);
         }
@@ -254,7 +253,7 @@ public class SbManager {
 
     private boolean isOldBukkit() {
         final int compare = Version.compare("1.7.8", Version.getMinecraftVersionString());
-        if (compare <= 0) {
+        if (compare >= 0) {
             try {
                 Objective.class.getDeclaredMethod("getScore", String.class);
                 //We have access to the new method
