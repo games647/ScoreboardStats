@@ -28,9 +28,6 @@ public class PrisonVariables implements Replaceable {
 		if("%moneyNeeded%".equals(variable)) {
 			return (int) Math.round(userInfo.getNextRank().getPrice() - eco.getBalance(player));
 		} 
-		if("%currentBal%".equals(variable)) {
-			return (int) Math.round(eco.getBalance(player));
-		}
 		return UNKOWN_VARIABLE;
 	}
 
