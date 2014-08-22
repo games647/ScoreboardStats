@@ -1,222 +1,237 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.games647</groupId>
-    <artifactId>scoreboardstats</artifactId>
-    <packaging>jar</packaging>
+	<groupId>com.github.games647</groupId>
+	<artifactId>scoreboardstats</artifactId>
+	<packaging>jar</packaging>
 
-    <name>ScoreboardStats</name>
-    <inceptionYear>2013</inceptionYear>
-    <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8.2</version>
-    <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
+	<name>ScoreboardStats</name>
+	<inceptionYear>2013</inceptionYear>
+	<description>Show the Scoreboard with many custom variables</description>
+	<version>0.8.2</version>
+	<url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5.5</powermock.version>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<powermock.version>1.5.5</powermock.version>
+	</properties>
 
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/games647/ScoreboardStats/issues</url>
-    </issueManagement>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/games647/ScoreboardStats/issues</url>
+	</issueManagement>
 
-    <scm>
-        <url>https://github.com/games647/ScoreboardStats</url>
-        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
-    </scm>
+	<scm>
+		<url>https://github.com/games647/ScoreboardStats</url>
+		<connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
+	</scm>
 
-    <build>
-        <defaultGoal>package install</defaultGoal>
-        <!--Just use the porject to replace an old version of the plugin if the user does only copy-paste-->
-        <finalName>${project.name}</finalName>
+	<build>
+		<defaultGoal>package install</defaultGoal>
+		<!--Just use the porject to replace an old version of the plugin if the 
+			user does only copy-paste -->
+		<finalName>${project.name}</finalName>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <!-- Don't use 3.0 since the incremtalCompilation compiles every file even they aren't changed-->
-                <version>2.5.1</version>
-                <configuration>
-                    <!--So many people still use Java 6 ;(-->
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- Don't use 3.0 since the incremtalCompilation compiles every file 
+					even they aren't changed -->
+				<version>2.5.1</version>
+				<configuration>
+					<!--So many people still use Java 6 ;( -->
+					<source>1.6</source>
+					<target>1.6</target>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
 
-            <!--Add meta informations not only in the plugin.yml-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Url>${project.url}</Url>
-                            <Source>${project.scm.url}</Source>
-                            <Issue>${project.issueManagement.url}</Issue>
-                            <Description>${project.description}</Description>
-                            <Sealed>true</Sealed>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
+			<!--Add meta informations not only in the plugin.yml -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<manifestEntries>
+							<Url>${project.url}</Url>
+							<Source>${project.scm.url}</Source>
+							<Issue>${project.issueManagement.url}</Issue>
+							<Description>${project.description}</Description>
+							<Sealed>true</Sealed>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
 
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <!--Add all resources to the plugin without adding every file explicity-->
-                <includes>
-                    <include>**</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<!--Add all resources to the plugin without adding every file explicity -->
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
 
-    <repositories>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
+	<repositories>
+		<repository>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public/</url>
+		</repository>
 
-        <!--ProtocolLib-->
-        <repository>
-            <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/repositories/releases</url>
-        </repository>
+		<!--ProtocolLib -->
+		<repository>
+			<id>comphenix-repo</id>
+			<url>http://repo.comphenix.net/content/repositories/releases</url>
+		</repository>
 
-        <!--Repo for simpleclans-->
-        <repository>
-            <id>simpleclans-repo</id>
-            <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
-        </repository>
+		<!--Repo for simpleclans -->
+		<repository>
+			<id>simpleclans-repo</id>
+			<url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
+		</repository>
 
-        <!--Vault and Heroes-->
-        <repository>
-            <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/public/</url>
-        </repository>
+		<!--Vault and Heroes -->
+		<repository>
+			<id>vault-repo</id>
+			<url>http://nexus.theyeticave.net/content/repositories/public/</url>
+		</repository>
 
-        <!--for mcMMO-->
-        <repository>
-            <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
-        </repository>
-    </repositories>
+		<!--for mcMMO -->
+		<repository>
+			<id>md_5-releases</id>
+			<url>http://repo.md-5.net/content/groups/public/</url>
+		</repository>
+		<!-- Repo for Prison -->
+		<repository>
+			<id>prison-releases</id>
+			<url>https://github.com/SirFaizdat/Prison/raw/master/releases/</url>
+		</repository>
+	</repositories>
 
-    <dependencies>
-        <!--Automatic Source Code generation using annotations-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.4</version>
-            <scope>provided</scope>
-        </dependency>
+	<dependencies>
+		<!--Automatic Source Code generation using annotations -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.14.4</version>
+			<scope>provided</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <!--Use the newest version to be notificated for important changes-->
-            <version>1.7.9-R0.2-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<!--Use the newest version to be notificated for important changes -->
+			<version>1.7.9-R0.2-SNAPSHOT</version>
+		</dependency>
 
-        <!--Libary for listening and sending minecraft packets-->
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.4.0</version>
-        </dependency>
+		<!--Libary for listening and sending minecraft packets -->
+		<dependency>
+			<groupId>com.comphenix.protocol</groupId>
+			<artifactId>ProtocolLib</artifactId>
+			<version>3.4.0</version>
+		</dependency>
 
-        <dependency>
-            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
-            <artifactId>SimpleClans</artifactId>
-            <version>Legacy</version>
-        </dependency>
+		<dependency>
+			<groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+			<artifactId>SimpleClans</artifactId>
+			<version>Legacy</version>
+		</dependency>
 
-        <!--API for economy, permissions and chat-->
-        <dependency>
-            <groupId>net.milkbowl.vault</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.4</version>
-        </dependency>
+		<!--API for economy, permissions and chat -->
+		<dependency>
+			<groupId>net.milkbowl.vault</groupId>
+			<artifactId>VaultAPI</artifactId>
+			<version>1.4</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.herocraftonline.heroes</groupId>
-            <artifactId>Heroes</artifactId>
-            <version>1.5.3.4-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>com.herocraftonline.heroes</groupId>
+			<artifactId>Heroes</artifactId>
+			<version>1.5.3.4-SNAPSHOT</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.gmail.nossr50.mcMMO</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>1.5.01-SNAPSHOT</version>
-        </dependency>
-        <!--dependencies in /lib-->
+		<dependency>
+			<groupId>com.gmail.nossr50.mcMMO</groupId>
+			<artifactId>mcMMO</artifactId>
+			<version>1.5.01-SNAPSHOT</version>
+		</dependency>
+		<!--dependencies in /lib -->
 
-        <!--Stats on Signs-->
-        <dependency>
-            <groupId>de.blablubbabc</groupId>
-            <artifactId>insigns</artifactId>
-            <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
-        </dependency>
+		<!--Stats on Signs -->
+		<dependency>
+			<groupId>de.blablubbabc</groupId>
+			<artifactId>insigns</artifactId>
+			<version>2.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
+		</dependency>
 
-        <!--Factions:-->
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <!--the name can't be the same because maven would automatically use the newer version-->
-            <artifactId>factions1.6</artifactId>
-            <version>1.6.9</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions1.6.9.jar</systemPath>
-        </dependency>
+		<!-- Prison -->
+		<dependency>
+			<groupId>me.sirfaizdat.prison</groupId>
+			<artifactId>Prison</artifactId>
+			<version>2.0.5.1</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>factions</artifactId>
-            <version>2.5.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
-        </dependency>
-        <!--MCore must be available for factions-->
-        <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>mcore</artifactId>
-            <version>7.3.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
-        </dependency>
+		<!--Factions: -->
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<!--the name can't be the same because maven would automatically use the 
+				newer version -->
+			<artifactId>factions1.6</artifactId>
+			<version>1.6.9</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Factions1.6.9.jar</systemPath>
+		</dependency>
 
-        <!--Testing environment-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>factions</artifactId>
+			<version>2.5.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+		</dependency>
+		<!--MCore must be available for factions -->
+		<dependency>
+			<groupId>com.massivecraft</groupId>
+			<artifactId>mcore</artifactId>
+			<version>7.3.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
+		</dependency>
 
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+		<!--Testing environment -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

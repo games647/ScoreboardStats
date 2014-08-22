@@ -34,13 +34,14 @@ public final class ReplaceManager implements Listener {
         tempMap.put(StatsVariables.class, "ScoreboardStats");
 
         tempMap.put(VaultVariables.class, "Vault");
+        tempMap.put(PrisonVariables.class, "Prison");
 
         tempMap.put(HeroesVariables.class, "Heroes");
         tempMap.put(McmmoVariables.class, "mcMMO");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         tempMap.put(FactionsVariables.class, "Factions");
-
+        
         //Prevent further modifications
         DEFAULTS = ImmutableMap.copyOf(tempMap);
     }
