@@ -18,7 +18,7 @@ public class PlayerScoreboard {
 
     private final Map<String, Objective> objectivesByName = Maps.newHashMap();
 
-    private Objective curSidebarObjective;
+    private Objective sidebarObjective;
 
     /**
      * Creates a new scoreboard for specific player.
@@ -34,7 +34,7 @@ public class PlayerScoreboard {
      *
      * @param objectiveName the objective name. have to be unique
      * @param displayName the displayed name
-     * @param force should it overwrite the sidebar objective This could end in conflicts if you overwrite it from other plugins
+     * @param replace overwrite the sidebar slot. Conflicts if you overwrite scoreboards from other plugins
      * @return the created objective
      * @throws NullPointerException name is null
      * @throws NullPointerException displayName is null
@@ -43,7 +43,7 @@ public class PlayerScoreboard {
      * @throws IllegalStateException if there is already a objective with that name
      * @throws IllegalStateException if there is already a sidebar objective active
      */
-    public Objective createSidebarObjective(String objectiveName, String displayName, boolean force)
+    public Objective createSidebarObjective(String objectiveName, String displayName, boolean replace)
             throws NullPointerException, IllegalArgumentException, IllegalStateException {
         Preconditions.checkNotNull(objectiveName, "objective name cannot be null");
         Preconditions.checkNotNull(displayName, "display name cannot be null");
@@ -51,8 +51,8 @@ public class PlayerScoreboard {
         Preconditions.checkArgument(objectiveName.length() <= 16, "objective name is longer than 16 characters");
         Preconditions.checkArgument(displayName.length() <= 32, "display name is longer than 32 characters");
 
-        if (!force) {
-            Preconditions.checkState(curSidebarObjective == null, "There is already an sidebar objective");
+        if (!replace) {
+            Preconditions.checkState(sidebarObjective == null, "There is already an sidebar objective");
         }
 
         if (objectivesByName.containsKey(objectiveName)) {
@@ -60,12 +60,12 @@ public class PlayerScoreboard {
             //so we expect that a other sidebar was showing
             final Objective objective = objectivesByName.get(objectiveName);
             PacketFactory.sendDisplayPacket(objective);
-            curSidebarObjective = objective;
+            sidebarObjective = objective;
             return objective;
         }
 
         final Objective objective = new Objective(this, objectiveName, displayName);
-        curSidebarObjective = objective;
+        sidebarObjective = objective;
         objectivesByName.put(objectiveName, objective);
         return objective;
     }
@@ -76,7 +76,7 @@ public class PlayerScoreboard {
      * @return current sidebar objective or null
      */
     public Objective getSidebarObjective() {
-        return curSidebarObjective;
+        return sidebarObjective;
     }
 
     /**
@@ -107,7 +107,7 @@ public class PlayerScoreboard {
 
     void removeObjective(String objectiveName) {
         objectivesByName.remove(objectiveName);
-        if (curSidebarObjective != null && curSidebarObjective.getName().equals(objectiveName)) {
+        if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
             clearSidebarObjective();
         }
     }
@@ -116,12 +116,12 @@ public class PlayerScoreboard {
         if (objectiveName.isEmpty()) {
             clearSidebarObjective();
         } else {
-            curSidebarObjective = objectivesByName.get(objectiveName);
+            sidebarObjective = objectivesByName.get(objectiveName);
         }
     }
 
     void clearSidebarObjective() {
-        curSidebarObjective = null;
+        sidebarObjective = null;
     }
 
     void resetScore(String scoreName) {

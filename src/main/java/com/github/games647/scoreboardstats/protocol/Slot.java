@@ -2,6 +2,8 @@ package com.github.games647.scoreboardstats.protocol;
 
 /**
  * Represent the three different sides a scoreboard objective can have
+ *
+ * Protocol specifications can be found here http://wiki.vg/Protocol
  */
 public enum Slot {
 
@@ -11,7 +13,8 @@ public enum Slot {
     PLAYER_LIST,
 
     /**
-     * The objective will be displayed on the right middle side of the client screen
+     * The objective will be displayed on the right middle side of the client
+     * screen
      */
     SIDEBAR,
 
@@ -23,10 +26,10 @@ public enum Slot {
     /**
      * Get the enum from his id
      *
-     * @param id the id
+     * @param slotId the id
      * @return the representing enum or null if the id isn't valid
      */
-    public static Slot fromId(int id) {
-        return Slot.values()[id];
+    public static Slot fromId(int slotId) {
+        return Slot.values()[slotId];
     }
 }

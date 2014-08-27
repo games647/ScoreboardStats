@@ -28,6 +28,8 @@ public class PlayerPingVariable implements Replaceable {
         try {
             if (getHandleMethod == null) {
                 getHandleMethod = player.getClass().getDeclaredMethod("getHandle");
+                //disable java security check. This will speed it a little
+                getHandleMethod.setAccessible(true);
             }
 
             final Object entityPlayer = getHandleMethod.invoke(player);
@@ -38,6 +40,8 @@ public class PlayerPingVariable implements Replaceable {
                     setMCPCPing(entityPlayer);
                 } else {
                     pingField = entityPlayer.getClass().getDeclaredField("ping");
+                    //disable java security check. This will speed it a little
+                    pingField.setAccessible(true);
                 }
             }
 
@@ -50,6 +54,8 @@ public class PlayerPingVariable implements Replaceable {
     }
 
     private void setMCPCPing(Object entityPlayer) {
+        //this isn't a secure, because it detects the ping variable by the ordering
+        //a remaping (deobfuscate the variables) would work, but it won't be forwardcompatible
         Class<?> lastType = null;
         Field lastIntField = null;
         for (Field field : entityPlayer.getClass().getDeclaredFields()) {
@@ -62,6 +68,8 @@ public class PlayerPingVariable implements Replaceable {
 
             if (field.getType() == Boolean.TYPE && lastIntField != null) {
                 pingField = lastIntField;
+                //disable java security check. This will speed it a little
+                pingField.setAccessible(true);
                 break;
             }
 

@@ -12,6 +12,8 @@ import org.bukkit.util.NumberConversions;
 
 /**
  * Replace the economy variable with Vault.
+ *
+ * @see Economy
  */
 public class VaultVariables implements Replaceable {
 
@@ -26,6 +28,7 @@ public class VaultVariables implements Replaceable {
         final RegisteredServiceProvider<Economy> economyProvider = Bukkit
                 .getServicesManager().getRegistration(Economy.class);
         if (economyProvider == null) {
+            //check if an economy plugin is installed otherwise it would throw a exception if the want to replace
             throw new UnsupportedPluginException("Couldn't find an economy plugin");
         } else {
             economy = economyProvider.getProvider();
@@ -41,6 +44,13 @@ public class VaultVariables implements Replaceable {
         return UNKOWN_VARIABLE;
     }
 
+    /**
+     * Check if the server has Vault above 1.4.1 installed, because there they
+     * introduced UUID support, but this doesn't make Vault incompatible with
+     * older Minecraft versions
+     *
+     * @see Economy#getBalance(org.bukkit.OfflinePlayer)
+     */
     private void checkVersion() {
         final Plugin vaultPlugin = Bukkit.getPluginManager().getPlugin("Vault");
         final String version = vaultPlugin.getDescription().getVersion();

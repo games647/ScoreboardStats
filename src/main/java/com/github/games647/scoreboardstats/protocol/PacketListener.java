@@ -11,6 +11,11 @@ import org.bukkit.plugin.Plugin;
 /**
  * Listening all outgoing packets and check + handle for possibly client crash cases.
  * This Listener should only read and listen to relevant packets.
+ *
+ * Protocol specifications can be found here http://wiki.vg/Protocol
+*
+ * @see PacketFactory
+ * @see PacketAdapter
  */
 public class PacketListener extends PacketAdapter {
 
@@ -24,8 +29,8 @@ public class PacketListener extends PacketAdapter {
     /**
      * Creates a new packet listener
      *
-     * @param plugin plugin for registrating into protocollib
-     * @param manager packetmanager instance
+     * @param plugin plugin for registration into ProtcolLib
+     * @param manager packet manager instance
      */
     public PacketListener(Plugin plugin, PacketSbManager manager) {
         super(plugin, DISPLAY_TYPE, OBJECTIVE_TYPE, SCORE_TYPE);
@@ -59,12 +64,14 @@ public class PacketListener extends PacketAdapter {
         final State action = State.fromId(packet.getIntegers().read(1));
 
         //Packet receiving validation
-        if (scoreName.length() > 16 || action == null || (action == State.CREATED && parent.length() > 16)) {
+        if (scoreName.length() > 16
+                || (action == State.CREATED && parent.length() > 16)) {
             //Invalid packet
             return;
         }
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
+        //scores actually only have two state id, because these
         if (action == State.CREATED) {
             scoreboard.createOrUpdateScore(scoreName, parent, score);
         } else if (action == State.REMOVED) {
@@ -82,22 +89,17 @@ public class PacketListener extends PacketAdapter {
         final State action = State.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
-        if (action == null || objectiveName.length() > 16 || displayName.length() > 32) {
+        if (objectiveName.length() > 16 || displayName.length() > 32) {
             //Invalid packet
             return;
         }
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
-
+        final Objective objective = scoreboard.getObjective(objectiveName);
         if (action == State.CREATED) {
             scoreboard.addObjective(objectiveName, displayName);
-        } else {
-            final Objective objective = scoreboard.getObjective(objectiveName);
-            if (objective == null) {
-                //Could cause a NPE at the client if the objective wasn't found
-                return;
-            }
-
+        } else if (objective != null) {
+            //Could cause a NPE at the client if the objective wasn't found
             if (action == State.REMOVED) {
                 scoreboard.removeObjective(objectiveName);
             } else if (action == State.UPDATE_TITLE) {
@@ -120,7 +122,6 @@ public class PacketListener extends PacketAdapter {
         }
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
-
         if (slot == Slot.SIDEBAR) {
             scoreboard.setSidebarObjective(objectiveName);
         } else {

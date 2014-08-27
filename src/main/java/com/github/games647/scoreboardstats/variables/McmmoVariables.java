@@ -10,18 +10,19 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 
 /**
- * Replace all variables that are associated with the mcmmo pluin
+ * Replace all variables that are associated with the mcMMO plugin
  */
 public class McmmoVariables implements Replaceable {
 
     private final Set<String> skillTypes;
 
     /**
-     * Creates a new mcmmo replacer. This also validates if all variables are available
+     * Creates a new mcMMO replacer. This also validates if all variables are available
      * and can be used in the runtime.
      */
     public McmmoVariables() {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+        //goes through all available skill types
         for (SkillType type : SkillType.values()) {
             final String skillName = type.name().toLowerCase(Locale.ENGLISH);
             builder.add('%' + skillName + '%');

@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 
 /**
  * Replace the self tracking stats variables
+ *
+ * @see Database
  */
 public class StatsVariables implements Replaceable {
 

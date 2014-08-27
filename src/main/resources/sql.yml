@@ -1,20 +1,26 @@
-#These settings aren't required if you disable pvpstats
-#Here can you configurate your sql setting if you don't have or want to use a mysql database you can also use a sqlite datbase
-SQL-Settings:
-  Username: 'bukkit'
-  Password: 'walrus'
-  Isolation: 'SERIALIZABLE'
-  Driver: 'org.sqlite.JDBC'
-  # If you use mysql, delete org.sqlite.JDBC, comment out
-  #Driver: 'com.mysql.jdbc.Driver'
-  Url: 'jdbc:sqlite:{DIR}{NAME}.db'
-  Timeout: 1000
-
-#MySQL example
-#The default port for a mysql database is 3306
+# These settings aren't required if you disable pvpstats.
+# Here can you configurate your sql setting.
+# If you don't have or want to use a mysql database you can also use a sqlite database
+#
+# MySQL example
+# The default port for a mysql database is 3306
 #  Username: 'bukkit'
 #  Password: 'xyz'
 #  Isolation: 'SERIALIZABLE'
 #  Driver: 'com.mysql.jdbc.Driver'
 #  Url: 'jdbc:mysql://IP:PORT/databaseName'
 #  Timeout: 1000
+
+SQL-Settings:
+  Username: 'bukkit'
+  Password: 'walrus'
+  Isolation: 'SERIALIZABLE'
+  Driver: 'org.sqlite.JDBC'
+  # If you use mysql, delete org.sqlite.JDBC, comment out
+  # Driver: 'com.mysql.jdbc.Driver'
+  Url: 'jdbc:sqlite:{DIR}{NAME}.db'
+  Timeout: 1000
+
+# This value is used for the pvpstats database. It's not used for the scoreboard features
+# If this value is true. The database will be searched by uuids. 
+uuidUse: false

@@ -66,7 +66,7 @@ public final class Objective {
     }
 
     /**
-     * Get the unique name for this objective.
+     * Get the unique name (id) for this objective.
      *
      * @return the unique name for this objective
      */
@@ -100,7 +100,7 @@ public final class Objective {
      * Set the display name
      *
      * @param displayName the new displayName
-     * @param send should the displayname instantly be sended
+     * @param send should the displayname instantly be sent
      * @throws NullPointerException if displayName is null
      * @throws IllegalArgumentException if displayName is longer than 32 characters
      * @throws IllegalStateException if this objective was removed
@@ -190,7 +190,7 @@ public final class Objective {
 
     /**
      * Gets a collection of all registered item/scores in this objective as an
-     * immutable soted list.
+     * immutable sorted list.
      *
      * @return all items for this objective
      */

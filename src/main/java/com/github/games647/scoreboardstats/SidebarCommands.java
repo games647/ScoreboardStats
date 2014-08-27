@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
 /**
- * This class forward all comands to the user commands for a better access
+ * This class forward all commands to the user commands for a better access
  */
 public class SidebarCommands implements CommandExecutor {
 
@@ -29,40 +29,54 @@ public class SidebarCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command cmd, String label, String[] args) {
         if (args.length == 0
-                || "hide".equalsIgnoreCase(args[0])
-                || "toggle".equalsIgnoreCase(args[0])
-                || "show".equalsIgnoreCase(args[0])) {
-            return onToggleCommand(commandSender);
+                || "toggle".equalsIgnoreCase(args[0])) {
+            return onToggleCommand(commandSender, "toggle");
+        }
+
+        if ("show".equalsIgnoreCase(args[0])
+                || "on".equalsIgnoreCase(args[0])) {
+            onToggleCommand(commandSender, "show");
+        }
+
+        if ("hide".equalsIgnoreCase(args[0])
+                || "off".equalsIgnoreCase(args[0])) {
+            onToggleCommand(commandSender, "hide");
         }
 
         if ("reload".equalsIgnoreCase(args[0])) {
             return onReloadCommand(commandSender);
         }
 
+        //there is no command, so send the usage message. Maybe implements a help page
         return false;
     }
 
-    private boolean onToggleCommand(CommandSender commandSender) {
+    private boolean onToggleCommand(CommandSender commandSender, String newState) {
         if (!commandSender.hasPermission("scoreboardstats.hide")) {
             commandSender.sendMessage(Lang.get("noPermission"));
             return true;
         }
 
         if (!(commandSender instanceof Player)) {
+            //the console can't have a scoreboard
             commandSender.sendMessage(Lang.get("noConsole"));
             return true;
         }
 
+        //We checked that it can only be players
         final Player player = (Player) commandSender;
         final RefreshTask refreshTask = plugin.getRefreshTask();
         if (refreshTask.contains(player)) {
-            refreshTask.remove(player);
-            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-        } else {
+            if ("hide".equals(newState) || "toggle".equals(newState)) {
+                refreshTask.remove(player);
+                player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+                commandSender.sendMessage(Lang.get("onToggle"));
+            }
+        } else if ("show".equals(newState) || "toggle".equals(newState)) {
+            commandSender.sendMessage(Lang.get("onToggle"));
             refreshTask.addToQueue(player);
         }
 
-        commandSender.sendMessage(Lang.get("onToggle"));
         return true;
     }
 

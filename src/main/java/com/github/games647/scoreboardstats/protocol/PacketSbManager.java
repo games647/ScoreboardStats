@@ -26,7 +26,7 @@ public class PacketSbManager extends SbManager {
     /**
      * Creates a new scoreboard manager for the packet system.
      *
-     * @param plugin scoreboardstats instance
+     * @param plugin ScoreboardStats instance
      */
     public PacketSbManager(ScoreboardStats plugin) {
         super(plugin);

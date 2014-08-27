@@ -1,9 +1,11 @@
+# This is a java project
 language: java
+
+# So many servers still have Java 6. So test if the code is Java 6 compatible.
+# http://mcstats.org/global/#Java+Version
 jdk:
-  - oraclejdk8
-  - oraclejdk7
   - openjdk6
-script: mvn compile test
-install: true
+
+# if one build failed, exit testing
 matrix:
   fast_finish: true

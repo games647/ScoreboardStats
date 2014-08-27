@@ -16,10 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,7 +39,6 @@ public final class Settings {
     private static String topType;
 
     private static int intervall;
-    private static int saveIntervall;
     private static int topitems;
     private static int tempShow;
     private static int tempDisapper;
@@ -61,13 +57,13 @@ public final class Settings {
     }
 
     /**
-     * Check if a world is from scoreboardstats ignored
+     * Check if a world is from ScoreboardStats ignored
      *
-     * @param world the checked world
+     * @param worldName the checked world
      * @return if the world is disabled
      */
-    public static boolean isActiveWorld(World world) {
-        return !disabledWorlds.contains(world.getName());
+    public static boolean isActiveWorld(String worldName) {
+        return !disabledWorlds.contains(worldName);
     }
 
     /**
@@ -80,10 +76,10 @@ public final class Settings {
     }
 
     /**
-     * Check whether compatibility mode that scoreboardstats should operate
-     * over raw packets instead of using the bukkit api.
+     * Check whether compatibility mode that ScoreboardStats should operate
+     * over raw packets instead of using the Bukkit API.
      *
-     * @return whether compatibility mode that scoreboardstats should operate over raw packets
+     * @return whether compatibility mode that ScoreboardStats should operate over raw packets
      */
     public static boolean isCompatibilityMode() {
         return compatibilityMode;
@@ -162,15 +158,6 @@ public final class Settings {
     }
 
     /**
-     * Get the interval (in minutes) the stats should be saved
-     *
-     * @return the interval (in minutes) the stats should be saved
-     */
-    public static int getSaveIntervall() {
-        return saveIntervall;
-    }
-
-    /**
      * Get how many items the temp-scoreboard should have
      *
      * @return how many items the temp-scoreboard should have
@@ -203,7 +190,6 @@ public final class Settings {
         this.plugin = instance;
 
         plugin.saveDefaultConfig();
-
     }
 
     /**
@@ -212,8 +198,7 @@ public final class Settings {
     public void loadConfig() {
         final FileConfiguration config = getConfigFromDisk();
 
-        //Load all normal scoreboard variables
-        loaditems(config.getConfigurationSection("Scoreboard.Items"));
+        //check if compatibilityMode can be activated
         compatibilityMode = isCompatibilityMode(config);
 
         updateEnabled = config.getBoolean("pluginUpdate");
@@ -223,9 +208,12 @@ public final class Settings {
         //This set only changes after another call to loadConfig so this set can be immutable
         disabledWorlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
         intervall = config.getInt("Scoreboard.Update-delay");
-        saveIntervall = config.getInt("PvPStats-SaveIntervall");
-        title = ChatColor.translateAlternateColorCodes('&', checkLength(Lang.getReplaced(config.getString("Scoreboard.Title")), 32));
+        title = ChatColor.translateAlternateColorCodes('&', trimLength(config.getString("Scoreboard.Title"), 32));
 
+        //Load all normal scoreboard variables
+        loaditems(config.getConfigurationSection("Scoreboard.Items"));
+
+        //temp-scoreboard
         tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
 
         topitems = checkItems(config.getInt("Temp-Scoreboard.Items"));
@@ -237,17 +225,17 @@ public final class Settings {
 
         tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
         tempTitle = ChatColor.translateAlternateColorCodes('&',
-                checkLength(Lang.getReplaced(config.getString("Temp-Scoreboard.Title")), 32));
+                trimLength(config.getString("Temp-Scoreboard.Title"), 32));
     }
 
     /**
-     * Gets the yaml file configuration from the disk while loading it
-     * explicit with UTF-8. This allows umlauts and other utf-8 characters
-     * for all bukkit versions.
+     * Gets the YAML file configuration from the disk while loading it
+     * explicit with UTF-8. This allows umlauts and other UTF-8 characters
+     * for all Bukkit versions.
      *
      * Bukkit add also this feature since
      * https://github.com/Bukkit/Bukkit/commit/24883a61704f78a952e948c429f63c4a2ab39912
-     * To be allow the same feature for all bukkit version, this method was
+     * To be allow the same feature for all Bukkit version, this method was
      * created.
      *
      * @return the loaded file configuration
@@ -260,12 +248,14 @@ public final class Settings {
 
         BufferedReader reader = null;
         try {
+            //UTF-8 should be available on all java running systems
             reader = Files.newReader(file, Charsets.UTF_8);
 
             final StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
                 builder.append(line);
+                //indicates a new line
                 builder.append('\n');
                 line = reader.readLine();
             }
@@ -273,9 +263,9 @@ public final class Settings {
             newConf.loadFromString(builder.toString());
             return newConf;
         } catch (InvalidConfigurationException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
+            plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
         } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
         } finally {
             Closeables.closeQuietly(reader);
         }
@@ -283,11 +273,11 @@ public final class Settings {
         return newConf;
     }
 
-    private String checkLength(String check, int limit) {
+    private String trimLength(String check, int limit) {
+        //Check if the string is longer, so we don't end up with a indexoutofboundex
         if (check.length() > limit) {
             //If the string check is longer cut it down
             final String cut = check.substring(0, limit);
-            //We are couting from 0 so plus 1
             plugin.getLogger().warning(Lang.get("tooLongName", cut, limit));
 
             return cut;
@@ -312,31 +302,32 @@ public final class Settings {
     }
 
     private void loaditems(ConfigurationSection config) {
-        if (!ITEMS.isEmpty()) {
-            //clear all existing items
-            ITEMS.clear();
-        }
+        //clear all existing items
+        ITEMS.clear();
 
-        final Set<String> keys = config.getKeys(false);
-        for (String key : keys) {
-            //Only 15 items per sidebar objective are allowed
+        //not implemented yet in compatibility mode
+        final int maxLength = compatibilityMode ? 16 : 48;
+        for (String key : config.getKeys(false)) {
             if (ITEMS.size() == 16 - 1) {
+                //Only 15 items per sidebar objective are allowed
                 plugin.getLogger().warning(Lang.get("tooManyItems"));
                 break;
             }
 
-            final String name = ChatColor.translateAlternateColorCodes('&', checkLength(Lang.getReplaced(key), compatibilityMode ? 16 : 48));
+            final String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
             if (variable.charAt(0) == '%' && variable.endsWith("%")) {
+                //indicates a variable
                 ITEMS.put(name, variable);
             } else {
                 //Prevent user mistakes
-                plugin.getLogger().log(Level.INFO, "The variable {0} has to contains % at the beginning and one % on the end", name);
+                plugin.getLogger().info(Lang.get("missingVariableSymbol", name));
             }
         }
 
         if (ITEMS.isEmpty()) {
+            //It won't show up if there isn't at least one item
             plugin.getLogger().info(Lang.get("notEnoughItems", "scoreboard"));
         }
     }
@@ -344,17 +335,24 @@ public final class Settings {
     private boolean isCompatibilityMode(ConfigurationSection config) {
         final boolean active = config.getBoolean("compatibilityMode");
         if (active) {
-            if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+            //Check only if it was activated by the administrator
+            if (plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
                 return true;
             } else {
-                plugin.getLogger().info("You have to have the plugin called ProtocolLib (http://dev.bukkit.org/bukkit-plugins/protocollib/) to activate compatibilityMode");
+                //we cannot active compatibilityMode without ProtocolLib
+                plugin.getLogger().info(Lang.get("missingProtocolLib"));
             }
         }
 
         return false;
     }
 
-    private Configuration getDefaults() {
+    /**
+     * Get the default configuration located in the plugin jar
+     *
+     * @return the default configuration
+     */
+    private FileConfiguration getDefaults() {
         final InputStream defConfigStream = plugin.getResource("config.yml");
         if (defConfigStream != null) {
             //stream will be closed in this method

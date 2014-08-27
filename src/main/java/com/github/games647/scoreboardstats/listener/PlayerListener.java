@@ -6,12 +6,16 @@ import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 
@@ -22,13 +26,18 @@ public class PlayerListener implements Listener {
 
     private final ScoreboardStats plugin;
 
+    /**
+     * Creates a new player listener
+     *
+     * @param plugin ScoreboardStats plugin
+     */
     public PlayerListener(ScoreboardStats plugin) {
         this.plugin = plugin;
     }
 
     /**
-     * Add the player to the refresh queue and load if stats is enable the account
-     * from the database in the cache.
+     * Add the player to the refresh queue and load if stats is enabled
+     * the account from the database in the cache.
      *
      * @param joinEvent the join event
      * @see Database
@@ -37,9 +46,36 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent joinEvent) {
         final Player player = joinEvent.getPlayer();
-        //Add the player to the refresh queue and/or load the stats
-        Database.loadAccount(player);
+        //load the pvpstats if activated
+        Database.loadAccountAsync(player);
+        //add it to the refresh queue
         plugin.getRefreshTask().addToQueue(player);
+    }
+
+    /**
+     * Saves the stats to database if the player laves
+     *
+     * @param quitEvent leave event
+     * @see Database
+     * @see RefreshTask
+     */
+    @EventHandler
+    public void onQuit(PlayerQuitEvent quitEvent) {
+        //gladly the event will be cancelled on every player quit
+        final Player player = quitEvent.getPlayer();
+
+        final List<MetadataValue> metadata = player.getMetadata("player_stats");
+        //can be null if that metadata doesn't exist
+        if (metadata != null) {
+            for (MetadataValue metadataValue : metadata) {
+                //just remove our metadata
+                if (metadataValue.getOwningPlugin().equals(plugin)) {
+                    metadataValue.invalidate();
+                }
+            }
+        }
+        
+        player.removeMetadata("player_stats", plugin);
     }
 
     /**
@@ -50,8 +86,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent deathEvent) {
         final Player killed = deathEvent.getEntity();
+        //killer is null if it's not a player
         final Player killer = killed.getKiller();
-        if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld())) {
+        if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld().getName())) {
             final PlayerStats killedcache = Database.getCachedStats(killed);
             if (killedcache != null) {
                 killedcache.incrementDeaths();
@@ -71,19 +108,22 @@ public class PlayerListener implements Listener {
      * @param worldChange the teleport event
      * @see RefreshTask
      */
+    //ignore cancelled events
     @EventHandler(ignoreCancelled = true)
     public void onChange(PlayerChangedWorldEvent worldChange) {
         final Player player = worldChange.getPlayer();
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (Settings.isActiveWorld(player.getWorld())) {
-            if (!Settings.isActiveWorld(worldChange.getFrom())) {
+        //new world
+        if (Settings.isActiveWorld(player.getWorld().getName())) {
+            //old world
+            if (!Settings.isActiveWorld(worldChange.getFrom().getName())) {
                 //Activate the scoreboard if it was disabled
                 plugin.getRefreshTask().addToQueue(player);
             }
         } else if (objective != null && objective.getName().startsWith("Stats")) {
-            //Disable the scoreboard if the player goes in a disabled world
+            //Disable the scoreboard if the player goes into a disabled world
             plugin.getRefreshTask().remove(player);
-            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+            objective.unregister();
         }
     }
 }

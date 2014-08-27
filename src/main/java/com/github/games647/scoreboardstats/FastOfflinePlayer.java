@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * Since 1.7 Bukkit introduced CraftServer.getOfflinePlayer(String name).
  *
- * This method is blocking as it looks up the cache. So it could cause laggs
+ * This method is blocking as it looks up the cache. So it could cause lags
  * on big servers. Because we only need the name this class is made.
  *
  * Bukkit already implemented methods to get around this problem, but the
@@ -21,17 +21,25 @@ import org.bukkit.entity.Player;
  *
  * Servers below 1.7 with use of this class doesn't need to search for the
  * player.
+ *
+ * @see org.bukkit.Bukkit#getOfflinePlayer(java.lang.String)
  */
 public class FastOfflinePlayer implements OfflinePlayer {
 
     private final String playerName;
 
+    /**
+     * Creates a new instance based of this name
+     *
+     * @param playerName the player name
+     */
     public FastOfflinePlayer(String playerName) {
         this.playerName = playerName;
     }
 
     @Override
     public boolean isOnline() {
+        //it's a fake player, so it won't be online
         return false;
     }
 
