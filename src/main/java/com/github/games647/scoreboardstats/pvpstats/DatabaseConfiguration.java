@@ -1,106 +1,77 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.avaje.ebean.config.DataSourceConfig;
+import com.avaje.ebean.config.GlobalProperties;
 import com.avaje.ebean.config.ServerConfig;
+import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.logging.Level;
 
-import lombok.SneakyThrows;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * Configuration for the sql database.
+ * Configuration for the SQL database.
  *
  * @see Database
  */
 public class DatabaseConfiguration {
 
-    /**
-     * Checks if the path contains non-latin characters, which aren't allowed
-     * due a bug in java 6 where java can't read those jars over an zipinputstream.
-     *
-     * This bug is now fixed, but the current ebean version in bukkit hasn't any workaround
-     * for both versions.
-     *
-     * @param path the validation path
-     *
-     * @throws InvalidConfigurationException if the path contains non-latin characters
-     */
-    public static void validatePath(String path) throws InvalidConfigurationException {
-        //Unescape character to perform a correct validation
-        if (!path.matches("[\\p{Space}\\p{L}0-9-/.:]+")) {
-            throw new InvalidConfigurationException("The path to your craftbukkit.jar is invalid format. "
-                    + "The non-latin characters aren't allowed, because these occures a bug according in java 6."
-                    + "Please use normal characters instead of this: "
-                    + path);
-        }
-    }
-
-    /**
-     * Gets the path to the server jar.
-     *
-     * @return the path to the server jar as string
-     */
-    //UTF-8 is supported on all systems
-    @SneakyThrows(UnsupportedEncodingException.class)
-    public static String getServerJarLocation() {
-        //get the server jar for validating the path.
-        final URL location = Bukkit.class.getProtectionDomain().getCodeSource().getLocation();
-        if ("file".equals(location.getProtocol())) {
-            return URLDecoder.decode(location.getPath(), "UTF-8");
-        }
-
-        throw new IllegalStateException("The Server isn't running on the file system, How?");
-    }
-
     private final ScoreboardStats plugin;
 
     private ServerConfig serverConfig;
+    private boolean uuidUse;
 
     DatabaseConfiguration(ScoreboardStats instance) {
         plugin = instance;
     }
 
     /**
-     * Gets the sql configuration
+     * Gets the SQL configuration
      *
-     * @return the server config
+     * @return the server configuration
      */
     public ServerConfig getServerConfig() {
         return serverConfig;
     }
 
+    public boolean isUuidUse() {
+        return uuidUse;
+    }
+
     /**
-     * Loads the ebean configuration
-     *
-     * @throws InvalidConfigurationException if the path validation fails
+     * Loads the eBean configuration
      */
-    public void loadConfiguration() throws InvalidConfigurationException {
+    public void loadConfiguration() {
+        GlobalProperties.put("ebean.classpathreader", "com.github.games647.scoreboardstats.pvpstats.PathReader");
+
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.addClass(PlayerStats.class);
+        //we will replace it on every reload. As we cannot unregister the server easier, we choose this
+        databaseConfig.setRegister(false);
         //Give the database a specific name
         databaseConfig.setName(plugin.getName());
+        //don't put invalid values to the database
         databaseConfig.setValidateOnSave(true);
-
-        //validate path
-        validatePath(getServerJarLocation());
 
         final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
-        sqlConfig.setHeartbeatSql("SELECT 1");
+        //choose a heartbeat that just respond with a minimum of cpu usage
+        sqlConfig.setHeartbeatSql("SELECT 1 LIMIT 1");
+
+        if (sqlConfig.getDriver().contains("sqlite")) {
+            //According to a bug in ebean the "autoincrement" will be before
+            //"primary key" which occures a syntax exception on sqlite
+            databaseConfig.setDatabasePlatform(new SQLitePlatform());
+            databaseConfig.getDatabasePlatform().getDbDdlSyntax().setIdentity("");
+        }
 
         serverConfig = databaseConfig;
     }
@@ -115,26 +86,31 @@ public class DatabaseConfiguration {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             config = new DataSourceConfig();
 
-            config.setUsername(sqlConfig.getString("SQL-Settings.Username"));
-            config.setPassword(sqlConfig.getString("SQL-Settings.Password"));
-            config.setIsolationLevel(TransactionIsolation.getLevel(sqlConfig.getString("SQL-Settings.Isolation")));
-            config.setDriver(sqlConfig.getString("SQL-Settings.Driver"));
-            config.setUrl(sqlConfig.getString("SQL-Settings.Url"));
+            uuidUse = sqlConfig.getBoolean("uuidUse", false);
+
+            final ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
+            config.setUsername(sqlSettingSection.getString("Username"));
+            config.setPassword(sqlSettingSection.getString("Password"));
+            config.setIsolationLevel(TransactionIsolation.getLevel(sqlSettingSection.getString("Isolation")));
+            config.setDriver(sqlSettingSection.getString("Driver"));
+            config.setUrl(sqlSettingSection.getString("Url"));
 
             serverConfig.setDataSourceConfig(config);
         } else {
             //Create a new configuration based on the default settings form bukkit.yml
             plugin.saveResource("sql.yml", false);
+            //Some hosters configures the bukkit.yml database settings. Use them as default as they can be correct
             plugin.getServer().configureDbConfig(serverConfig);
 
             config = serverConfig.getDataSourceConfig();
 
             sqlConfig = YamlConfiguration.loadConfiguration(file);
-            sqlConfig.set("SQL-Settings.Username", config.getUsername());
-            sqlConfig.set("SQL-Settings.Password", config.getPassword());
-            sqlConfig.set("SQL-Settings.Isolation", TransactionIsolation.getLevelDescription(config.getIsolationLevel()));
-            sqlConfig.set("SQL-Settings.Driver", config.getDriver());
-            sqlConfig.set("SQL-Settings.Url", config.getUrl());
+            final ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
+            sqlSettingSection.set("Username", config.getUsername());
+            sqlSettingSection.set("Password", config.getPassword());
+            sqlSettingSection.set("Isolation", TransactionIsolation.getLevelDescription(config.getIsolationLevel()));
+            sqlSettingSection.set("Driver", config.getDriver());
+            sqlSettingSection.set("Url", config.getUrl());
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {

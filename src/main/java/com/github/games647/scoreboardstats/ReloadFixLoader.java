@@ -9,15 +9,17 @@ import java.util.logging.Logger;
 import org.bukkit.plugin.Plugin;
 
 /**
- * This class resolves the issue that the plugin couldn't find a specific resource after
- * changing the plugin file. The cause is that java still have after the reload
- * a reference to the old file in the cache.
+ * This class resolves the issue that the plugin couldn't find a specific
+ * resource after changing the plugin file. The cause is that java still have
+ * after the reload a reference to the old file in the cache.
+ *
+ * @see com.github.games647.scoreboardstats.pvpstats.Database
  */
 public class ReloadFixLoader extends ClassLoader {
 
     /**
-     * Disable or enable the use of class caching. Workaround for linking to an old jar version
-     * while the plugin jar was changed during a reload.
+     * Disable or enable the use of class caching. Workaround for linking to an
+     * old jar version while the plugin jar was changed during a reload.
      *
      * @param status should the cache be activated
      * @return if the process succeed.
@@ -38,11 +40,12 @@ public class ReloadFixLoader extends ClassLoader {
 
     /**
      *
-     * @param plugin
-     * @param parent
+     * @param plugin the plugin instance
+     * @param parent Bukkits plugin class loader
      */
     public ReloadFixLoader(Plugin plugin, ClassLoader parent) {
         super(parent);
+
         this.plugin = plugin;
     }
 
@@ -61,6 +64,8 @@ public class ReloadFixLoader extends ClassLoader {
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         //temporialy fix
         if (name.startsWith("org.joda.time.")) {
+            //Bukkits Classloader --> default Classloader
+            //Bukkits ClassLoader doens't load it
             return getParent().getParent().loadClass(name);
         }
 

@@ -1,6 +1,12 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import java.lang.ref.WeakReference;
+
 import lombok.ToString;
+
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This class is used for loading the player stats.
@@ -8,27 +14,52 @@ import lombok.ToString;
 @ToString(doNotUseGetters = true)
 public class StatsLoader implements Runnable {
 
-    private final String playerName;
+    private final Plugin plugin;
+    private final boolean uuidSearch;
+    private final boolean uuidCompatible;
+
+    private final WeakReference<Player> weakPlayer;
 
     /**
      * Creates a new loader for a specific player
      *
-     * @param playerName the associated player for the stats
+     * @param plugin
+     * @param uuidSearch should it be searched by uuid
+     * @param uuidCompatible if server version is above 1.7.2 and so uses mojang uuids
+     * @param player player instance
      */
-    public StatsLoader(String playerName) {
-        this.playerName = playerName;
+    public StatsLoader(Plugin plugin, boolean uuidSearch, boolean uuidCompatible, Player player) {
+        this.plugin = plugin;
+        this.uuidSearch = uuidSearch;
+        this.uuidCompatible = uuidCompatible;
+
+        //don't prevent the garbage collection of this player if he logs out
+        this.weakPlayer = new WeakReference<Player>(player);
     }
 
     @Override
     public void run() {
-        PlayerStats stats = Database.getDatabaseInstance().find(PlayerStats.class, playerName);
+        final Player player = weakPlayer.get();
+        if (player != null) {
+            final PlayerStats stats = Database.loadAccount(uuidSearch ? player.getUniqueId() : player.getName());
+            //update player name on every load, because it's changeable
+            stats.setPlayername(player.getName());
+            if (uuidCompatible) {
+                //Set the uuid if the server is uuid compatible
+                stats.setUuid(player.getUniqueId());
+            }
 
-        //If there are no existing stat create a new cache object with empty stuff
-        if (stats == null) {
-            stats = new PlayerStats();
-            stats.setPlayername(playerName);
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    //possible not thread-safe, so reschedule it while setMetadata is thread-safe
+                    if (player.isOnline()) {
+                        //sets it only if the player is only
+                        player.setMetadata("player_stats", new CachedPlayerStats(plugin, stats));
+                    }
+                }
+            }.runTask(plugin);
         }
-
-        Database.putIntoCache(playerName, stats);
     }
 }

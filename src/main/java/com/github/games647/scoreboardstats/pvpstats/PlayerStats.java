@@ -1,14 +1,21 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.avaje.ebean.annotation.UpdatedTimestamp;
 import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotEmpty;
 import com.avaje.ebean.validation.NotNull;
 import com.avaje.ebean.validation.Pattern;
 import com.avaje.ebean.validation.Range;
 
+import java.sql.Timestamp;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,44 +24,100 @@ import org.bukkit.util.NumberConversions;
 
 /**
  * Represents the stats from a player. The stats are kills, deaths, mobkills and
- * killstreak. All stats are annotated to be validated on runtime to be not invalid.
+ * killstreak. All stats are annotated to be validated on runtime to be
+ * not invalid.
  *
  * Maybe these stats also have to be validated to be not null, so we can prevent
- * some special cases while using it especially for sql database, but this can also
- * occures on using it as file database due incorrect format or unexpected user
- * modifications.
+ * some special cases while using it especially for SQL database, but this can
+ * also occurs on using it as file database due incorrect format or
+ * unexpected user modifications.
  */
 @Entity
-@Table(name = "PlayerStats")
+@Table(name = "player_stats")
 @EqualsAndHashCode(doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
 public class PlayerStats {
 
     @Id
-    //min 1 character
-    @NotEmpty
+    @NotNull
+    @GeneratedValue
+    private int id;
+
+    @Nullable
+    //is null in non-uuid compatible servers or isn't updated yet
+    @Column(unique = true)
+    private UUID uuid;
+
+    //isn't unique since 1.7 anymore
     @NotNull
     //Tells ebean explicity that the string can only have 16 characters
-    @Length(min = 2,max = 16)
+    @Length(min = 2, max = 16)
     @Pattern(regex = "^\\w{2,16}$")
-    //A minecraft name cannot be longer than 16
     private String playername = "";
 
     //You can't have negative stats
+    @NotNull
     @Range(min = 0)
     private int kills;
 
+    @NotNull
     @Range(min = 0)
     private int deaths;
 
+    @NotNull
     @Range(min = 0)
     private int mobkills;
 
+    @NotNull
     @Range(min = 0)
     private int killstreak;
 
+    //in mysql this will be saved as datetime, but we actually only need date to calculate the difference
+    @UpdatedTimestamp
+    //can be null if the instance is just created and not in the database
+    //ebean currently defines this column as not null
+    private Timestamp lastOnline;
+
+    @Transient
     private transient int laststreak;
-    private transient boolean changed;
+
+    /**
+     * Get the auto incrementing id
+     *
+     * @return the auto incrementing id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Set id. Should be only be used by eBean
+     *
+     * @param id database id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * Get the UUID of this player. The database represents this one as string
+     *
+     * @return the UUID of the player
+     */
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    /**
+     * Sets the UUID of this player
+     *
+     * @param uuid the Mojang UUID for this player if onlinemode
+     *
+     * @see org.bukkit.Bukkit#getOnlineMode()
+     */
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
     /**
      * Get the player name of these stats
@@ -156,7 +219,7 @@ public class PlayerStats {
     }
 
     /**
-     * Get the current kdr rounded
+     * Get the current kill-death-ratio rounded
      *
      * @return the kill death ratio rounded to an integer
      */
@@ -165,7 +228,8 @@ public class PlayerStats {
         if (deaths == 0) {
             return kills;
         } else {
-            return NumberConversions.round((double) kills / (double) deaths);
+            //Triggers float division to have decimals
+            return NumberConversions.round(kills / (float) deaths);
         }
     }
 
@@ -173,12 +237,12 @@ public class PlayerStats {
      * Increment the kills
      */
     public void incrementKills() {
-        changed = true;
         //We need to use this to trigger ebean
         setKills(kills + 1);
 
         laststreak++;
         if (laststreak > killstreak) {
+            //triggers a change for ebean
             setKillstreak(laststreak);
         }
     }
@@ -187,8 +251,7 @@ public class PlayerStats {
      * Increment the mob kills
      */
     public void incrementMobKills() {
-        changed = true;
-
+        //triggers a change for ebean
         setMobkills(mobkills + 1);
     }
 
@@ -196,19 +259,29 @@ public class PlayerStats {
      * Increment the deaths
      */
     public void incrementDeaths() {
-        changed = true;
-
         laststreak = 0;
+        //triggers a change for ebean
         setDeaths(deaths + 1);
     }
 
     /**
-     * Are the stats changed? This used to dertime if saving his data is useless
-     * because the only changes will be the playername.
+     * Get the UNIX timestamp where this entry was last updated. This implies
+     * the last online value with a difference of a couple of minutes from
+     * the cache.
      *
-     * @return if stats are changed
+     * @return the timestamp this eBean was last updated
      */
-    public boolean isChanged() {
-        return changed;
+    public Timestamp getLastOnline() {
+        return lastOnline;
+    }
+
+    /**
+     * Set the update timestamp value. This currently managed by eBean itself,
+     * which updates the value on every save.
+     *
+     * @param lastOnline the player was online
+     */
+    public void setLastOnline(Timestamp lastOnline) {
+        this.lastOnline = lastOnline;
     }
 }

@@ -22,7 +22,12 @@ public class RefreshTask implements Runnable {
     //Prevent duplicate entries and is faster than the delay queue
     private final Map<Player, int[]> queue = Maps.newHashMapWithExpectedSize(100);
 
-    RefreshTask(ScoreboardStats instance) {
+    /**
+     * Initialize refresh task
+     *
+     * @param instance ScoreboardStats instance
+     */
+    public RefreshTask(ScoreboardStats instance) {
         this.plugin = instance;
     }
 
@@ -57,11 +62,16 @@ public class RefreshTask implements Runnable {
      * Add a player to the queue for updating him.
      *
      * @param request the player that should be added.
+     * @return true if it was successfully queued
      */
-    public void addToQueue(Player request) {
-        if (!queue.containsKey(request)) {
+    public boolean addToQueue(Player request) {
+        final boolean alreadyQueued = queue.containsKey(request);
+        if (!alreadyQueued) {
+            //check if it isn't already in the queue
             queue.put(request, new int[] {20 * Settings.getIntervall()});
         }
+
+        return !alreadyQueued;
     }
 
     /**
@@ -94,6 +104,8 @@ public class RefreshTask implements Runnable {
     private int getNextUpdates() {
         final int nextUpdates = queue.size() / 20;
         if (nextUpdates <= 0) {
+            //just update minimum one player per tick. Otherwise servers with not much players
+            //won't receive any updates
             return 1;
         }
 

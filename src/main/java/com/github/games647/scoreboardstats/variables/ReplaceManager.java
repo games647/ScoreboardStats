@@ -47,6 +47,11 @@ public final class ReplaceManager implements Listener {
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();
 
+    /**
+     * Creates a new replace manager
+     *
+     * @param plugin ScoreboardStats plugin
+     */
     public ReplaceManager(ScoreboardStats plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         addDefaultReplacer();
@@ -171,6 +176,7 @@ public final class ReplaceManager implements Listener {
             replacersName.add(replacer.getClass().getSimpleName());
         }
 
+        //log registered replacers
         Logger.getLogger("ScoreboardStats").log(Level.INFO
                 , "Registered replacers: {0}", replacersName);
     }
@@ -190,7 +196,6 @@ public final class ReplaceManager implements Listener {
             Logger.getLogger("ScoreboardStats")
                     .warning(Lang.get("unsupportedPluginVersion"
                             , replacerClass.getSimpleName(), ex.getMessage()));
-            Logger.getLogger("ScoreboardStats").log(Level.FINE, null, ex);
         } catch (Exception ex) {
             //We can't use mulit catches because we need still be compatible with java 6
             Logger.getLogger("ScoreboardStats")

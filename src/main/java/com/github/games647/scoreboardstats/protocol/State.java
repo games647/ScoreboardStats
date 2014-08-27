@@ -2,6 +2,8 @@ package com.github.games647.scoreboardstats.protocol;
 
 /**
  * Represents the state of a scoreboard packet
+ *
+ * Protocol specifications can be found here http://wiki.vg/Protocol
  */
 public enum State {
 
@@ -23,10 +25,10 @@ public enum State {
     /**
      * Get the enum from his id
      *
-     * @param id the id
+     * @param stateId the id
      * @return the representing enum or null if the id not valid
      */
-    public static State fromId(int id) {
-        return State.values()[id];
+    public static State fromId(int stateId) {
+        return State.values()[stateId];
     }
 }

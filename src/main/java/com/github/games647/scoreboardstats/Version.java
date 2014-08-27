@@ -11,7 +11,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 
 /**
- * Version class for comparing and detecting minecraft and other versions
+ * Version class for comparing and detecting Minecraft and other versions
  */
 @EqualsAndHashCode(doNotUseGetters = true)
 @ToString(doNotUseGetters = true)
@@ -21,7 +21,7 @@ public class Version implements Comparable<Version> {
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
     /**
-     * Compares the version with checking the first three digitals
+     * Compares the version with checking the first three numbers
      *
      * @param expected the object to be compared.
      * @param version the object to be compared.
@@ -41,11 +41,11 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Seperate the version into major, minor, build integers
+     * Separate the version into major, minor, build integers
      *
      * @param version the version that should be parsed
      * @return the version parts
-     * @throws IllegalArgumentException if the version doesn't contains only positive digitals seperated by max. 5 dots.
+     * @throws IllegalArgumentException if the version doesn't contains only positive numbers separated by max. 5 dots.
      */
     public static int[] parse(String version) throws IllegalArgumentException {
         if (!version.matches("\\d+(\\.\\d+){0,5}")) {
@@ -54,7 +54,7 @@ public class Version implements Comparable<Version> {
 
         final int[] versionParts = new int[3];
 
-        // escape regEx
+        //escape regEx and split by dots
         final String[] split = version.split("\\.");
         //We check if the length has min 1 entry.
         versionParts[0] = Integer.parseInt(split[0]);
@@ -64,18 +64,18 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Gets the minecraft version
+     * Gets the Minecraft version
      *
-     * @return the minecraft version
+     * @return the Minecraft version
      */
     public static Version getMinecraftVersion() {
         return new Version(getMinecraftVersionString());
     }
 
     /**
-     * Gets the minecraft version as string
+     * Gets the Minecraft version as string
      *
-     * @return the minecraft version as string
+     * @return the Minecraft version as string
      */
     public static String getMinecraftVersionString() {
         return getVersionStringFromServer(Bukkit.getVersion());
@@ -88,7 +88,8 @@ public class Version implements Comparable<Version> {
         if (versionMatche.matches() && versionMatche.group(1) != null) {
             return versionMatche.group(1);
         } else {
-            throw new IllegalStateException("Cannot parse version String '" + versionString + '\'');
+            //Couldn't extract the version
+            throw new IllegalStateException("Cannot parse version String '" + versionString);
         }
     }
 

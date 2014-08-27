@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import com.avaje.ebean.EbeanServer;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class ScoreboardStats extends JavaPlugin {
 
+    //don't create instances here, because it causes incompatibility with older minecraft versions (i.e. 1.5.2)
     private RefreshTask refreshTask;
     private Settings settings;
     private ReloadFixLoader classLoader;
@@ -50,61 +52,11 @@ public class ScoreboardStats extends JavaPlugin {
         return refreshTask;
     }
 
-    /**
-     * Enable the plugin
-     */
+
     @Override
-    public void onEnable() {
-        if (!this.isEnabled()) {
-            return;
-        }
-
-        classLoader = new ReloadFixLoader(this, getClassLoader());
-        settings = new Settings(this);
-        refreshTask = new RefreshTask(this);
-
-        //Load the config
-        settings.loadConfig();
-
-        if (Settings.isUpdateEnabled()) {
-            new UpdaterFix(this, this.getFile(), true, new Updater.UpdateCallback() {
-
-                @Override
-                public void onFinish(Updater updater) {
-                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                        getLogger().info(Lang.get("onUpdate"));
-                    }
-                }
-            });
-        }
-
-        Database.setupDatabase(this);
-
-        //Register all events
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-        getServer().getPluginManager().registerEvents(new EntityListener(), this);
-        if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
-            //Register a this listerner if InSigns is available
-            getServer().getPluginManager().registerEvents(new SignListener(), this);
-        }
-
-        //register all commands
-        getCommand("sidebar").setExecutor(new SidebarCommands(this));
-
-        //start tracking the ticks
-        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 20L * 5, 20L);
-        //Start the refresh task
-        getServer().getScheduler().runTaskTimer(this, refreshTask, 20L * 5, 1L);
-
-        if (Settings.isCompatibilityMode()) {
-            scoreboardManager = new PacketSbManager(this);
-        } else {
-            scoreboardManager = new SbManager(this);
-        }
-
-        scoreboardManager.registerAll();
-
-        checkCompatibility();
+    public EbeanServer getDatabase() {
+        //these method exists to make it easier access from anothe plugin
+        return Database.getDatabaseInstance();
     }
 
     /**
@@ -113,10 +65,75 @@ public class ScoreboardStats extends JavaPlugin {
     @Override
     public void onLoad() {
         //Create a logger that is available by just the plugin name
+        //have to be peformed before the first logging message by this plugin, so it prints it correctly
         Logger.getLogger("ScoreboardStats").setParent(getLogger());
 
-        //Check if server can display scoreboards
+        //Check if server can display scoreboards; the version can only be with a complete shutdown
         checkScoreboardCompatibility();
+    }
+
+    /**
+     * Enable the plugin
+     */
+    @Override
+    public void onEnable() {
+        if (!this.isEnabled()) {
+            //cancel initialization if the already disabled it
+            return;
+        }
+
+        //this is needed by settings (for localized messages)
+        classLoader = new ReloadFixLoader(this, getClassLoader());
+
+        //Load the config + needs to be initialised to get the configurated value for update-checking
+        settings = new Settings(this);
+        settings.loadConfig();
+
+        if (Settings.isUpdateEnabled()) {
+            //start this as early as possible, so it can run async in the background
+            new UpdaterFix(this, this.getFile(), true, new Updater.UpdateCallback() {
+
+                @Override
+                public void onFinish(Updater updater) {
+                    //This method will be performed on the main thread after the
+                    //update check finished so this won't block the main thread
+                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                        getLogger().info(Lang.get("onUpdate"));
+                    }
+                }
+            });
+        }
+
+        refreshTask = new RefreshTask(this);
+        Database.setupDatabase(this);
+
+        //Register all events
+        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(), this);
+        if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
+            //Register this listerner if InSigns is available
+            getServer().getPluginManager().registerEvents(new SignListener(), this);
+        }
+
+        //register all commands
+        getCommand("sidebar").setExecutor(new SidebarCommands(this));
+
+        //start tracking the ticks
+        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 20L * 5, 20L);
+        //Start the refresh task; it should run on every tick, because it's smoothly update the variables with limit
+        getServer().getScheduler().runTaskTimer(this, refreshTask, 20L * 5, 1L);
+
+        if (Settings.isCompatibilityMode()) {
+            scoreboardManager = new PacketSbManager(this);
+        } else {
+            scoreboardManager = new SbManager(this);
+        }
+
+        //creates scoreboards for every player that is online
+        scoreboardManager.registerAll();
+
+        //Inform the user that he should use compatibility modus to be compatible with some plugins
+        checkCompatibility();
     }
 
     /**
@@ -129,9 +146,11 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager.unregisterAll();
         }
 
+        //flush the cache to the database
         Database.saveAll();
 
         if (Settings.isCompatibilityMode()) {
+            //the plugin will be disabled unregister all listeners including protocollibs
             ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         }
     }
@@ -180,23 +199,24 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     private void checkCompatibility() {
-        //Inform the user that he should use compatibility modus to be compatible with some plugins
-        if (Settings.isCompatibilityMode()) {
-            getLogger().info("The plugin will now use raw packets to be compatible with other scoreboard plugins");
-        } else {
+        if (!Settings.isCompatibilityMode()) {
+            //Thise plugins won't work without compatibilityMode, but do with it, so suggest it
             final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
             boolean found = false;
             for (String name : plugins) {
+                //just check if the plugin is available not if it's active
                 if (getServer().getPluginManager().getPlugin(name) != null) {
                     found = true;
+                    //we already found one, so there is no need to check the other ones
                     break;
                 }
             }
 
             if (found) {
-                getLogger().info("You are using plugins that with your configuration not compatible with scoreboardstats");
-                getLogger().info("Please enable in your configuration the 'compatibilityMode'");
-                getLogger().info("If you do so, this plugin operate over raw packets. All your plugins will still be compatible with scoreboards");
+                //Found minimum one plugin. Inform the adminstrator
+                getLogger().info("You are using plugins that requires to activate compatibilityMode");
+                getLogger().info("Please enable in your configuration 'compatibilityMode'");
+                getLogger().info("Then this plugin sends raw packets, but will still compatible other plugins");
             }
         }
     }

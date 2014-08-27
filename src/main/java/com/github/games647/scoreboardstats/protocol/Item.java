@@ -132,6 +132,11 @@ public final class Item implements Comparable<Item> {
         return Ints.compare(other.score, score);
     }
 
+    /**
+     * Sends a new packet
+     *
+     * @see PacketFactory
+     */
     private void update() {
         PacketFactory.sendPacket(this, State.CREATED);
     }

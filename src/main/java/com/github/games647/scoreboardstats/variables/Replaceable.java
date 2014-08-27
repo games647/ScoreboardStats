@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
  * Represents a variable replacer
  */
 public interface Replaceable {
-    
-    //find another method to prevent conflicts
+
+    //todo find another method to prevent conflicts
     /**
      * Represents an unknown variable
      */

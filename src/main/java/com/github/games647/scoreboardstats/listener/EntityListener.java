@@ -20,23 +20,22 @@ public class EntityListener implements Listener {
      * Tracks the mob kills.
      *
      * @param event the death event
+     * @see PlayerListener#onDeath(org.bukkit.event.entity.PlayerDeathEvent)
      */
     @EventHandler
     public void onMobDeath(EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
+        //killer is null if it's not a player
         final Player killer = entity.getKiller();
 
-        if (!Settings.isPvpStats()
-                || !Settings.isActiveWorld(entity.getWorld())
-                || EntityType.PLAYER == entity.getType()) {
-            //Check if it's not player because we are already handling it
-            return;
-        }
-
-        final PlayerStats killercache = Database.getCachedStats(killer);
-        if (killercache != null) {
-            //If the cache entry is loaded and the player isn't null, increase the mob kills
-            killercache.incrementMobKills();
+        //Check if it's not player because we are already handling it
+        if (EntityType.PLAYER != entity.getType() && Settings.isPvpStats()
+                && Settings.isActiveWorld(entity.getWorld().getName())) {
+            final PlayerStats killercache = Database.getCachedStats(killer);
+            if (killercache != null) {
+                //If the cache entry is loaded and the player isn't null, increase the mob kills
+                killercache.incrementMobKills();
+            }
         }
     }
 }

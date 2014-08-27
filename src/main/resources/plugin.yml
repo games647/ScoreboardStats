@@ -1,17 +1,23 @@
 name: ${project.name}
-main: ${project.groupId}.${project.artifactId}.${project.name}
-author: games647
 version: ${project.version}
-description: ${project.description}
+main: ${project.groupId}.${project.artifactId}.${project.name}
+
+# meta informations for plugin manager
+author: games647
+description: |
+    ${project.description}
 website: ${project.url}
+dev-url: ${project.url}
+
+# depending on them
 softdepend:
-  - ProtocolLib
-  - mcMMO
-  - Vault
-  - SimpleClans
-  - InSigns
-  - Factions
-  - Heroes
+    - ProtocolLib
+    - mcMMO
+    - Vault
+    - SimpleClans
+    - InSigns
+    - Factions
+    - Heroes
 
 commands:
   sidebar:

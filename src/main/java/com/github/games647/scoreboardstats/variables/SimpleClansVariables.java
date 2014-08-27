@@ -11,14 +11,19 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 
 /**
- * Replace all variabls that are associated with the simpleclans plugin
+ * Replace all variables that are associated with the SimpleClans plugin
+ *
+ * @see SimpleClans
+ * @see ClanPlayer
+ * @see Clan
+ * @see ClanManager
  */
 public class SimpleClansVariables implements Replaceable {
 
     private final ClanManager clanManager;
 
     /**
-     * Creates a new simpleclans replacer
+     * Creates a new SimpleClans replacer
      */
     public SimpleClansVariables() {
         final Plugin clansPlugin = Bukkit.getPluginManager().getPlugin("SimpleClans");

@@ -8,7 +8,7 @@ public class TicksPerSecondTask implements Runnable {
     private static double lastTicks = 20.0D;
 
     /**
-     * Get the ticks count of the last check.
+     * Get the ticks count of the last check. 20 Ticks should pass per second
      *
      * @return the ticks count of the last check
      */
@@ -22,10 +22,12 @@ public class TicksPerSecondTask implements Runnable {
     @Override
     public void run() {
         final long currentTime = System.currentTimeMillis();
-        final long difference = currentTime - lastCheck;
+        final long timeSpent = currentTime - lastCheck;
+        //update the last check
         lastCheck = currentTime;
 
-        final double tps = 20 * 1000.0D / difference;
+        //how many ticks passed since the last check * 1000 to convert to seconds
+        final double tps = 20 * 1000.0D / timeSpent;
         if (tps >= 0.0D && tps < 25.0D) {
             //Prevent all invalid values
             lastTicks = tps;

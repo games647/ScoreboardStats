@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.NumberConversions;
 
 /**
- * Replace all bukkit and general variables
+ * Replace all Bukkit and general variables
  */
 public class GeneralVariables implements Replaceable {
 
@@ -30,19 +30,24 @@ public class GeneralVariables implements Replaceable {
         }
 
         if ("%free_ram%".equals(variable)) {
+            //casting should be made after division
             return (int) (Runtime.getRuntime().freeMemory() / (1024 * 1024));
         }
 
         if ("%max_ram%".equals(variable)) {
+            //casting should be made after division
             return (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
         }
 
         if ("%used_ram%".equals(variable)) {
+            //casting should be made after division
             return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024));
         }
 
         if ("%used%ram%".equals(variable)) {
-            return (int) ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) * 100 / Runtime.getRuntime().maxMemory());
+            //casting should be made after division
+            final Runtime runtime = Runtime.getRuntime();
+            return (int) ((runtime.maxMemory() - runtime.freeMemory()) * 100 / runtime.maxMemory());
         }
 
         if ("%date%".equals(variable)) {
@@ -69,6 +74,7 @@ public class GeneralVariables implements Replaceable {
         }
 
         if ("%last_damage%".equals(variable)) {
+            //casting should be made after division
             // --> Minutes
             return (int) (player.getLastDamage() / (20 * 60));
         }

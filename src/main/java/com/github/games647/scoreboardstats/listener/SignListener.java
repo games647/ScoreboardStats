@@ -1,19 +1,19 @@
 package com.github.games647.scoreboardstats.listener;
 
+import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
 import de.blablubbabc.insigns.SignSendEvent;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
 /**
- * Replace some variables on signs with the player individual stats. The variables
- * will be replaced dynamically
+ * Replace some variables on signs with the player individual stats.
+ * The variables will be replaced dynamically
  *
  * @see SignSendEvent
  * @see Database
@@ -26,17 +26,18 @@ public final class SignListener implements Listener {
      * Listen to a sign change event. This will check the permission of the
      * sign changer for creating a sign with a dynamic variable.
      *
-     * @param signChangeEvent the change event fired by bukkit
+     * @param signChangeEvent the change event fired by Bukkit
      */
+    //ignore cancelled events
     @EventHandler(ignoreCancelled = true)
     public void onSignChange(SignChangeEvent signChangeEvent) {
         final Player player = signChangeEvent.getPlayer();
-        if (player.hasPermission(PERMISSION)) {
+        if (!player.hasPermission(PERMISSION)) {
             for (String line : signChangeEvent.getLines()) {
                 if (line.contains("[Kill]") || line.contains("[Death]")
                         || line.contains("[KDR]") || line.contains("[Streak]")) {
                     signChangeEvent.setCancelled(true);
-                    player.sendMessage(ChatColor.DARK_RED + "You have not enough permission to create a sign with a variable");
+                    player.sendMessage(Lang.get("noPermissionSign"));
                     break;
                 }
             }
@@ -48,6 +49,7 @@ public final class SignListener implements Listener {
      *
      * @param signSendEvent the sign event
      */
+    //ignore cancelled events
     @EventHandler(ignoreCancelled = true)
     public void onSignSendEvent(SignSendEvent signSendEvent) {
         for (int lineNumber = 0; lineNumber < 4; lineNumber++) {

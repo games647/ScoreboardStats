@@ -20,25 +20,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 /**
- * This is a simplier and optimized version of Gravity's Updater (Thanks for the great work).
- * You can find his project here: https://github.com/gravitylow/Updater/
+ * This is a simpler and optimized version of Gravity's Updater
+ * Thanks for the great work
  *
- * Check for updates on BukkitDev for a given plugin, and download the updates if needed.
- * <p/>
- * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
- * <br>
- * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from running <b>AT ALL</b>.
- * <br>
- * If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you attempt to submit it to dev.bukkit.org.
- * <p/>
- * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set to false you may NOT run the auto-updater.
- * <br>
- * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
+ * You can find his project here: https://github.com/gravitylow/Updater/
  *
  * @author Gravity, games647
  * @version 2.2
  */
-
 public class Updater {
 
     /* Constants */
@@ -58,7 +47,7 @@ public class Updater {
 
     /* User-provided variables */
 
-    // Plugin running Updater
+    // plugin running Updater
     private final Plugin plugin;
     // Type of update check to run
     private final boolean shouldDownload;
@@ -114,7 +103,7 @@ public class Updater {
          */
         FAIL_BADID,
         /**
-         * The updater found an update, but because of the UpdateType being set to NO_DOWNLOAD, it wasn't downloaded.
+         * The updater found an update, but because of the shouldDownload being set to false, it wasn't downloaded.
          */
         UPDATE_AVAILABLE
     }
@@ -122,27 +111,27 @@ public class Updater {
     /**
      * Initialize the updater.
      *
-     * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     * @param shouldDownload     Specify the type of update this will be. See {@link UpdateType}
+     * @param plugin    The plugin that is checking for an update.
+     * @param id        The dev.bukkit.org id of the project.
+     * @param file      The file that the plugin is running from, get this from getFile() from within your main class.
+     * @param download  Specify the type of update this will be.
      */
-    public Updater(Plugin plugin, int id, File file, boolean shouldDownload) {
-        this(plugin, id, file, shouldDownload, null);
+    public Updater(Plugin plugin, int id, File file, boolean download) {
+        this(plugin, id, file, download, null);
     }
 
     /**
      * Initialize the updater with the provided callback.
      *
-     * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
-     * @param shouldDownload     Specify the type of update this will be. See {@link UpdateType}
-     * @param callback The callback instance to notify when the Updater has finished
+     * @param plugin    The plugin that is checking for an update.
+     * @param id        The dev.bukkit.org id of the project.
+     * @param file      The file that the plugin is running from, get this from getFile() from within your main class.
+     * @param download  Specify the type of update this will be.
+     * @param callback  The callback instance to notify when the Updater has finished
      */
-    public Updater(Plugin plugin, int id, File file, boolean shouldDownload, UpdateCallback callback) {
+    public Updater(Plugin plugin, int id, File file, boolean download, UpdateCallback callback) {
         this.plugin = plugin;
-        this.shouldDownload = shouldDownload;
+        this.shouldDownload = download;
         this.file = file;
         this.id = id;
         this.updateFolder = this.plugin.getServer().getUpdateFolderFile();
@@ -152,15 +141,13 @@ public class Updater {
             this.url = new URL(Updater.HOST + Updater.QUERY + this.id);
         } catch (MalformedURLException e) {
             //This can only happend if we modified the url. Just an int cannot make it malformed
-            this.plugin.getLogger().log(Level.SEVERE, "The project ID provided for updating, " + this.id + " is invalid.", e);
+            this.plugin.getLogger().log(Level.SEVERE, "Invalid URL", e);
             this.result = UpdateResult.FAIL_BADID;
             return;
         }
 
         this.thread = new Thread(new UpdateRunnable());
         this.thread.start();
-
-        runUpdater();
     }
 
     /**
@@ -195,8 +182,8 @@ public class Updater {
     }
 
     /**
-     * As the result of Updater output depends on the thread's completion, it is necessary to wait for the thread to finish
-     * before allowing anyone to check the result.
+     * As the result of Updater output depends on the thread's completion, it is necessary
+     * to wait for the thread to finish before allowing anyone to check the result.
      */
     private void waitForThread() {
         if (this.thread != null && this.thread.isAlive()) {
@@ -223,24 +210,22 @@ public class Updater {
 
     /**
      * Download a file and save it to the specified folder.
-     * @param link link to file.
-     * @param folder folder to save file to.
      */
     private void downloadFile() {
-        BufferedInputStream in = null;
+        BufferedInputStream inputstream = null;
         FileOutputStream fout = null;
         try {
             final URL fileUrl = new URL(this.versionLink);
-            in = new BufferedInputStream(fileUrl.openStream());
+            inputstream = new BufferedInputStream(fileUrl.openStream());
             fout = new FileOutputStream(new File(this.updateFolder, file.getName()));
 
-            ByteStreams.copy(in, fout);
+            ByteStreams.copy(inputstream, fout);
         } catch (Exception ex) {
             this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             Closeables.closeQuietly(fout);
-            Closeables.closeQuietly(in);
+            Closeables.closeQuietly(inputstream);
         }
     }
 
@@ -284,7 +269,7 @@ public class Updater {
      * determine whether a new update is actually an update is sometimes extremely complicated.
      * </p>
      * <p>
-     * Updater will call this method from {@link #versionCheck(String)} before deciding whether
+     * Updater will call this method from {@link #versionCheck()} before deciding whether
      * the remote version is actually an update.
      * If you have a specific versioning scheme with which a mathematical determination can
      * be reliably made to decide whether one version is higher than another, you may
@@ -325,6 +310,10 @@ public class Updater {
      * @return true if successful.
      */
     private boolean read() {
+        if (this.url == null) {
+            return false;
+        }
+
         try {
             final URLConnection conn = this.url.openConnection();
             conn.setConnectTimeout(5000);
@@ -340,7 +329,7 @@ public class Updater {
 
             final JSONArray array = (JSONArray) JSONValue.parse(streamReader);
             if (array.isEmpty()) {
-                this.plugin.getLogger().log(Level.WARNING, "The updater could not find any files for the project id {0}", this.id);
+                this.plugin.getLogger().log(Level.WARNING, "The updater could not find any file for the project id:{0}", this.id);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }
@@ -351,7 +340,7 @@ public class Updater {
             this.versionLink = (String) latestUpdate.get(Updater.LINK_VALUE);
 
             return true;
-        } catch (final IOException e) {
+        } catch (IOException e) {
             this.plugin.getLogger().severe("The updater could not contact dev.bukkit.org for updating.");
             this.plugin.getLogger().severe("The site may be experiencing temporary downtime.");
             this.plugin.getLogger().log(Level.SEVERE, null, e);
@@ -380,7 +369,7 @@ public class Updater {
     }
 
     private void runUpdater() {
-        if (this.url != null && this.read() && this.versionCheck()) {
+        if (this.read() && this.versionCheck()) {
             // Obtain the results of the project's file feed
             if (this.versionLink != null && this.shouldDownload) {
                 this.saveFile();

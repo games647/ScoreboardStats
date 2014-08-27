@@ -9,7 +9,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8.2</version>
+    <version>0.8.3</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -40,7 +40,7 @@
                 <!-- Don't use 3.0 since the incremtalCompilation compiles every file even they aren't changed-->
                 <version>2.5.1</version>
                 <configuration>
-                    <!--So many people still use Java 6 ;(-->
+                    <!--So many people still use Java 6 ;( http://mcstats.org/global/#Java+Version-->
                     <source>1.6</source>
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
@@ -64,7 +64,6 @@
                             <Source>${project.scm.url}</Source>
                             <Issue>${project.issueManagement.url}</Issue>
                             <Description>${project.description}</Description>
-                            <Sealed>true</Sealed>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -98,7 +97,7 @@
         <!--Repo for simpleclans-->
         <repository>
             <id>simpleclans-repo</id>
-            <url>http://repo.sacredlabyrinth.net:8081/artifactory/releases/</url>
+            <url>http://repo.sacredlabyrinth.net/artifactory/plugins-release-local</url>
         </repository>
 
         <!--Vault and Heroes-->
@@ -126,11 +125,10 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <!--Use the newest version to be notificated for important changes-->
             <version>1.7.9-R0.2-SNAPSHOT</version>
         </dependency>
 
-        <!--Libary for listening and sending minecraft packets-->
+        <!--Library for listening and sending Minecraft packets-->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
@@ -140,7 +138,7 @@
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>Legacy</version>
+            <version>2.5</version>
         </dependency>
 
         <!--API for economy, permissions and chat-->
@@ -163,7 +161,7 @@
         </dependency>
         <!--dependencies in /lib-->
 
-        <!--Stats on Signs-->
+        <!--stats on signs-->
         <dependency>
             <groupId>de.blablubbabc</groupId>
             <artifactId>insigns</artifactId>

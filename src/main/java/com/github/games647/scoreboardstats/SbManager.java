@@ -35,8 +35,9 @@ public class SbManager {
     private final boolean oldBukkit;
 
     /**
+     * Initialize scoreboard manager.
      *
-     * @param pluginInstance the scoreboardstats instance
+     * @param pluginInstance the ScoreboardStats instance
      */
     public SbManager(ScoreboardStats pluginInstance) {
         this.plugin = pluginInstance;
@@ -75,7 +76,7 @@ public class SbManager {
         try {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
-            //fail silently
+            //the player logged out - fail silently
             return;
         }
 
@@ -95,7 +96,8 @@ public class SbManager {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isOnline()) {
                 if (ispvpstats) {
-                    Database.loadAccount(player);
+                    //maybe batch this
+                    Database.loadAccountAsync(player);
                 }
 
                 plugin.getRefreshTask().addToQueue(player);
@@ -153,7 +155,7 @@ public class SbManager {
         try {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
-            //fail silently
+            //the player logged out - fail silently
             return;
         }
 
@@ -169,7 +171,8 @@ public class SbManager {
     }
 
     protected boolean isValid(Player player) {
-        return player.hasPermission("scoreboardstats.use") && player.isOnline();
+        return player.hasPermission("scoreboardstats.use") && player.isOnline()
+                && Settings.isActiveWorld(player.getWorld().getName());
     }
 
     protected String stripLength(String check) {
@@ -202,38 +205,36 @@ public class SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        final String coloredTitle = ChatColor.translateAlternateColorCodes('&', title);
-        String scoreName;
-        final int titleLength = coloredTitle.length();
+        String scoreName = ChatColor.translateAlternateColorCodes('&', title);
+        final int titleLength = scoreName.length();
         if (titleLength > 16) {
             final Scoreboard scoreboard = objective.getScoreboard();
             //Could maybe cause conflicts but .substring could also make conflicts if they have the same beginning
-            final String id = String.valueOf(coloredTitle.hashCode());
+            final String teamId = String.valueOf(scoreName.hashCode());
 
-            Team team = scoreboard.getTeam(id);
+            Team team = scoreboard.getTeam(teamId);
             if (team == null) {
-                team = scoreboard.registerNewTeam(id);
-                final String prefix = coloredTitle.substring(0, 16);
-                team.setPrefix(prefix);
+                team = scoreboard.registerNewTeam(teamId);
+                team.setPrefix(scoreName.substring(0, 16));
                 if (titleLength > 32) {
-                    final String suffix = coloredTitle.substring(32, coloredTitle.length());
-                    team.setSuffix(suffix);
+                    //we already validated that this one can only be 48 characters long in the Settings class
+                    team.setSuffix(scoreName.substring(32));
+                    scoreName = scoreName.substring(16, 32);
+                } else {
+                    scoreName = scoreName.substring(16);
                 }
 
-                scoreName = coloredTitle.substring(16, 32);
                 team.setDisplayName(scoreName);
-                //This could affect the server performance in 1.7.8
+                //Bukkit.getOfflinePlayer performance work around
                 team.addPlayer(new FastOfflinePlayer(scoreName));
             } else {
                 scoreName = team.getDisplayName();
             }
-        } else {
-            scoreName = stripLength(coloredTitle);
         }
 
         Score score;
         if (oldBukkit) {
-            //This could affect the server performance in 1.7.8
+            //Bukkit.getOfflinePlayer performance work around
             score = objective.getScore(new FastOfflinePlayer(scoreName));
         } else {
             score = objective.getScore(scoreName);
@@ -241,7 +242,7 @@ public class SbManager {
 
         if (complete && value == 0) {
             /*
-             * Workaround because the value from bukkit is set as default to zero and bukkit sends only
+             * Workaround because the value from Bukkit is set as default to zero and Bukkit sends only
              * the packet if the value changes
              * so we have to change it to another value earlier
              */
@@ -259,9 +260,8 @@ public class SbManager {
                 //We have access to the new method
                 return false;
             } catch (NoSuchMethodException noSuchMethodEx) {
-                plugin.getLogger().warning("You have an old version of your server. "
-                        + "This version old version affects the performance in a negative way. "
-                        + "Please update your server to a newer build");
+                //since we have an extra class for it (FastOfflinePlayer)
+                //we can fail silently
             }
         }
 
@@ -270,7 +270,7 @@ public class SbManager {
     }
 
     /**
-     * Scheduled appaer task
+     * Scheduled appear task
      */
     public class ShowTask implements Runnable {
 
