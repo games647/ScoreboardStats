@@ -1,5 +1,9 @@
+# Use https://travis-ci.org/ for automatic testing
+
 # This is a java project
 language: java
+
+script: mvn compile test
 
 # So many servers still have Java 6. So test if the code is Java 6 compatible.
 # http://mcstats.org/global/#Java+Version

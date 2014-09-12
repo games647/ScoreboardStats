@@ -39,6 +39,7 @@ public final class ReplaceManager implements Listener {
         tempMap.put(McmmoVariables.class, "mcMMO");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
+        //factions will be automatically disabled if mcore isn't enabled
         tempMap.put(FactionsVariables.class, "Factions");
 
         //Prevent further modifications
@@ -137,7 +138,7 @@ public final class ReplaceManager implements Listener {
         final String enablePluginName = enableEvent.getPlugin().getName();
         for (Map.Entry<Class<? extends Replaceable>, String> entry: DEFAULTS.entrySet()) {
             final String pluginName = entry.getValue();
-            if (enablePluginName.equalsIgnoreCase(entry.getValue())) {
+            if (enablePluginName.equals(entry.getValue())) {
                 registerDefault(entry.getKey(), pluginName);
             }
         }
@@ -156,7 +157,7 @@ public final class ReplaceManager implements Listener {
         final Iterator<String> iter = replacers.values().iterator();
         while (iter.hasNext()) {
             final String entry = iter.next();
-            if (disablePluginName.equalsIgnoreCase(entry)) {
+            if (disablePluginName.equals(entry)) {
                 iter.remove();
             }
         }
@@ -164,16 +165,14 @@ public final class ReplaceManager implements Listener {
 
     //add all replacers that are in the defaults map
     private void addDefaultReplacer() {
+        final Set<String> replacersName = Sets.newHashSet();
         for (Map.Entry<Class<? extends Replaceable>, String> entry : DEFAULTS.entrySet()) {
             final String pluginName = entry.getValue();
             if (isPluginAvailble(pluginName)) {
-                registerDefault(entry.getKey(), pluginName);
+                final Class<? extends Replaceable> clazz = entry.getKey();
+                registerDefault(clazz, pluginName);
+                replacersName.add(clazz.getSimpleName());
             }
-        }
-
-        final Set<String> replacersName = Sets.newHashSet();
-        for (Replaceable replacer : replacers.keySet()) {
-            replacersName.add(replacer.getClass().getSimpleName());
         }
 
         //log registered replacers

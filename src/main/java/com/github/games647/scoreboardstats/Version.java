@@ -48,6 +48,7 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the version doesn't contains only positive numbers separated by max. 5 dots.
      */
     public static int[] parse(String version) throws IllegalArgumentException {
+        version = version.trim();
         if (!version.matches("\\d+(\\.\\d+){0,5}")) {
             throw new IllegalArgumentException("Invalid format: " + version);
         }
@@ -88,6 +89,14 @@ public class Version implements Comparable<Version> {
         if (versionMatche.matches() && versionMatche.group(1) != null) {
             return versionMatche.group(1);
         } else {
+            //fallback to the toString() method
+            final String[] split = Bukkit.getServer().toString().split("[,}]");
+            for (String element : split) {
+                if (element.contains("minecraftVersion=")) {
+                    return element.split("minecraftVersion=")[1];
+                }
+            }
+
             //Couldn't extract the version
             throw new IllegalStateException("Cannot parse version String '" + versionString);
         }

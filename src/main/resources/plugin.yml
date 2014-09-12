@@ -2,7 +2,7 @@ name: ${project.name}
 version: ${project.version}
 main: ${project.groupId}.${project.artifactId}.${project.name}
 
-# meta informations for plugin manager
+# meta informations for plugin managers
 author: games647
 description: |
     ${project.description}

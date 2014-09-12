@@ -52,7 +52,6 @@ public class ScoreboardStats extends JavaPlugin {
         return refreshTask;
     }
 
-
     @Override
     public EbeanServer getDatabase() {
         //these method exists to make it easier access from anothe plugin
@@ -202,21 +201,16 @@ public class ScoreboardStats extends JavaPlugin {
         if (!Settings.isCompatibilityMode()) {
             //Thise plugins won't work without compatibilityMode, but do with it, so suggest it
             final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
-            boolean found = false;
             for (String name : plugins) {
                 //just check if the plugin is available not if it's active
                 if (getServer().getPluginManager().getPlugin(name) != null) {
-                    found = true;
-                    //we already found one, so there is no need to check the other ones
+                    //Found minimum one plugin. Inform the adminstrator
+                    getLogger().info("You are using plugins that requires to activate compatibilityMode");
+                    getLogger().info("Otherwise the plugins won't work");
+                    getLogger().info("Please enable it in the ScoreboardStats configuration 'compatibilityMode'");
+                    getLogger().info("Then this plugin sends raw packets, but will still compatible other plugins");
                     break;
                 }
-            }
-
-            if (found) {
-                //Found minimum one plugin. Inform the adminstrator
-                getLogger().info("You are using plugins that requires to activate compatibilityMode");
-                getLogger().info("Please enable in your configuration 'compatibilityMode'");
-                getLogger().info("Then this plugin sends raw packets, but will still compatible other plugins");
             }
         }
     }

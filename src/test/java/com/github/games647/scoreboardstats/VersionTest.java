@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +24,11 @@ public class VersionTest {
      */
     @Test
     public void testParsing() {
-        //Bukkit version parsing. Can be found here: META-INF/maven/org.bukkit/bukkit/pom.properties
+        //Bukkit version parsing. Can be found here: META-INF
         PowerMockito.mockStatic(Bukkit.class);
+        final Server server = Mockito.mock(Server.class);
+        Mockito.when(Bukkit.getServer()).thenReturn(server);
+
         Mockito.when(Bukkit.getVersion()).thenReturn("git-Bukkit-1.5.2-R1.0-1-gf46bd58-b2793jnks (MC: 1.7.9)");
         Version version = Version.getMinecraftVersion();
 
@@ -39,6 +43,14 @@ public class VersionTest {
         Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
         Assert.assertEquals("Minor version exception: " + version, 7, version.getMinor());
         Assert.assertEquals("Build version exception: " + version, 9, version.getBuild());
+
+        //Glowstone
+        Mockito.when(Bukkit.getVersion()).thenReturn("1.8-36-gbbc3960-dev");
+        Mockito.when(server.toString()).thenReturn("GlowServer{name=" + "Glowstone"
+                + ",version=" + "1.8-36-gbbc3960-dev" + ",minecraftVersion=" + "1.8" + "}");
+        version = Version.getMinecraftVersion();
+
+        Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
     }
 
     /**
