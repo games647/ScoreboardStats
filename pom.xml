@@ -48,7 +48,7 @@
                 </configuration>
             </plugin>
 
-            <!--Add meta informations not only in the plugin.yml-->
+            <!--Add meta data not only in the plugin.yml-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
