@@ -125,6 +125,8 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
+            <!--Compile with a low version, because the new getOnlinePlayers() won't be backwards compatibility.-->
+            <!--while the older version still exists-->
             <version>1.7.9-R0.2-SNAPSHOT</version>
         </dependency>
 

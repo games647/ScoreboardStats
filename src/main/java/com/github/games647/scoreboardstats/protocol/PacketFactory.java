@@ -69,6 +69,8 @@ public final class PacketFactory {
             //only send the title if needed, so while creating the objective or update the title
             //max length 32 and since 1.7 UTF-8 instead of UTF-16
             objectivePacket.getStrings().write(1, objective.getDisplayName());
+            //does we actually need this?
+            objectivePacket.getStrings().writeSafely(2, "integer");
         }
 
         //state id

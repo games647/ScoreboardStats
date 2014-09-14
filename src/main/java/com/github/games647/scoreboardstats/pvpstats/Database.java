@@ -19,7 +19,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -139,10 +138,10 @@ public final class Database {
 
             EXECUTOR.shutdown();
             try {
-                Logger.getLogger("ScoreboardStats").info(Lang.get("savingStats"));
+                instance.getLogger().info(Lang.get("savingStats"));
                 EXECUTOR.awaitTermination(15, TimeUnit.MINUTES);
             } catch (InterruptedException ex) {
-                Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
+                instance.getLogger().log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -195,19 +194,30 @@ public final class Database {
             //(with plugin file replacement) it still reference to the old file
             ReloadFixLoader.changeClassCache(false);
 
-            final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
+            try {
+                final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
+                final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+                gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
+                //only create the table if it doesn't exist
+
+                final DatabaseConverter converter = new DatabaseConverter(database);
+                converter.convertNewDatabaseSystem();
+
+                databaseInstance = database;
+            } catch (Exception ex) {
+                instance.getLogger().log(Level.WARNING, "Error creating database", ex);
+                //this also excludes null values
+                if (ex.getCause() instanceof ClassNotFoundException) {
+                    instance.getLogger().info("Probarly because of missing drivers");
+                    if (Bukkit.getName().equalsIgnoreCase("Glowstone")) {
+                        instance.getLogger().info("You're running Glowstone. Take a look here: \n"
+                                + "https://github.com/GlowstoneMC/Glowstone/wiki/Library-Management");
+                    }
+                }
+            }
 
             ReloadFixLoader.changeClassCache(true);
             Thread.currentThread().setContextClassLoader(previous);
-
-            final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-            gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
-            //only create the table if it doesn't exist
-
-            final DatabaseConverter converter = new DatabaseConverter(database);
-            converter.convertNewDatabaseSystem();
-
-            databaseInstance = database;
         }
     }
 

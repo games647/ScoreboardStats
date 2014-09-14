@@ -249,7 +249,10 @@ public class SbManager {
             score.setScore(1337);
         }
 
-        score.setScore(value);
+        if (score.getScore() != value) {
+            //don't spam the client
+            score.setScore(value);
+        }
     }
 
     private boolean isOldBukkit() {
