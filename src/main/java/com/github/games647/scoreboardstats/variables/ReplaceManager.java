@@ -117,10 +117,16 @@ public final class ReplaceManager implements Listener {
                 Logger.getLogger("ScoreboardStats").log(Level.WARNING,
                         Lang.get("replacerException", replacer), ex);
             } catch (NoClassDefFoundError noClassEr) {
+                //only catch these throwable, because they could probably happend
                 iter.remove();
 
                 Logger.getLogger("ScoreboardStats")
                         .log(Level.WARNING, Lang.get("replacerException", replacer), noClassEr);
+            } catch (NoSuchMethodError noSuchMethodEr) {
+                iter.remove();
+                
+                Logger.getLogger("ScoreboardStats")
+                        .log(Level.WARNING, Lang.get("replacerException", replacer), noSuchMethodEr);
             }
         }
 
@@ -200,6 +206,7 @@ public final class ReplaceManager implements Listener {
             Logger.getLogger("ScoreboardStats")
                     .log(Level.WARNING, Lang.get("noRegister"), ex);
         } catch (NoClassDefFoundError noClassEr) {
+            //only catch these throwable, because they could probably happend
             Logger.getLogger("ScoreboardStats")
                     .log(Level.WARNING, Lang.get("noRegister"), noClassEr);
         } catch (NoSuchMethodError noSuchMethodEr) {
