@@ -20,7 +20,7 @@ public class DatabaseConverter {
     //reserved for later use
 //    private static final String USERNAME_DATA_TIME = "https://api.mojang.com/users/profiles/minecraft/%USERNAME%?at=%TIMESTAMP%";
 
-    private static final String TEST_TABLE = "SELECT 1 FROM %table% LIMIT 1";
+    private static final String TEST_TABLE = "SELECT 1 FROM `%table%` LIMIT 1";
 
     private final EbeanServer databaseServer;
 
@@ -29,24 +29,30 @@ public class DatabaseConverter {
     }
 
     public void convertNewDatabaseSystem() {
-        if (existTable("playerstats")) {
+        // Some systems ingore uppercase other don't
+        convert("PlayerStats");
+        convert("playerstats");
+    }
+
+    private void convert(String from) {
+        if (existTable(from)) {
             databaseServer.beginTransaction();
             try {
-                final SqlUpdate convert = databaseServer.createSqlUpdate("INSERT INTO player_stats "
-                        + "(playername, kills, deaths, mobkills, killstreak, last_online) "
-                        + "SELECT playername, kills, deaths, mobkills, killstreak, ? "
-                        + "FROM playerstats");
+                final SqlUpdate convert = databaseServer.createSqlUpdate("INSERT INTO `player_stats` "
+                        + "(`playername`, `kills`, `deaths`, `mobkills`, `killstreak`, `last_online`) "
+                        + "SELECT `playername`, `kills`, `deaths`, `mobkills`, `killstreak`, ? "
+                        + "FROM `" + from + "`");
 
                 //sql parameters begins with one
                 convert.setParameter(1, System.currentTimeMillis());
                 final int affectedRows = convert.execute();
-                final SqlUpdate dropTable = databaseServer.createSqlUpdate("DROP TABLE playerstats");
+                final SqlUpdate dropTable = databaseServer.createSqlUpdate("DROP TABLE `" + from + "`");
                 dropTable.execute();
                 //a drop have to commited and should be rollbackable if process wasn't complete
                 databaseServer.commitTransaction();
 
-                Logger.getLogger("ScoreboardStats").log(Level.INFO
-                    , "Successfully converted {0} into new table structure", affectedRows);
+                Logger.getLogger("ScoreboardStats")
+                        .log(Level.INFO, "Successfully converted {0} into new table structure", affectedRows);
             } finally {
                 databaseServer.endTransaction();
             }
