@@ -48,6 +48,7 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the version doesn't contains only positive numbers separated by max. 5 dots.
      */
     public static int[] parse(String version) throws IllegalArgumentException {
+        //exludes spaces which could be added by mistake
         version = version.trim();
         if (!version.matches("\\d+(\\.\\d+){0,5}")) {
             throw new IllegalArgumentException("Invalid format: " + version);
