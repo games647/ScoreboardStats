@@ -3,8 +3,11 @@ package com.github.games647.scoreboardstats.pvpstats;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlUpdate;
+
+import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.persistence.PersistenceException;
 
 /**
@@ -44,7 +47,7 @@ public class DatabaseConverter {
                         + "FROM `" + from + "`");
 
                 //sql parameters begins with one
-                convert.setParameter(1, System.currentTimeMillis());
+                convert.setParameter(1, new Date(System.currentTimeMillis()));
                 final int affectedRows = convert.execute();
                 final SqlUpdate dropTable = databaseServer.createSqlUpdate("DROP TABLE `" + from + "`");
                 dropTable.execute();
