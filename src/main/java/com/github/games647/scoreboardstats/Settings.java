@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
 import java.io.BufferedReader;
@@ -43,6 +42,7 @@ public final class Settings {
     private static int tempShow;
     private static int tempDisapper;
 
+    //properly a memory leak
     //Sidebar objective can't have more than 15 items
     private static final Map<String, String> ITEMS = Maps.newHashMapWithExpectedSize(15);
     private static Set<String> disabledWorlds;
@@ -267,7 +267,15 @@ public final class Settings {
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
         } finally {
-            Closeables.closeQuietly(reader);
+            try {
+                reader.close();
+            } catch (Exception ex) {
+                plugin.getLogger().log(Level.SEVERE, null, ex);
+            }
+            //Incompatible issues due the guava update from spigot 1.8 (10 to 17)
+            //In  that version the method ...Quietly(Closeable) doesn't exist
+            //and in guava 10 doesn't exist any alternative method
+//            Closeables.closeQuietly(reader);
         }
 
         return newConf;

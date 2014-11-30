@@ -206,6 +206,32 @@ public class SbManager {
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
         String scoreName = ChatColor.translateAlternateColorCodes('&', title);
+        scoreName = expandScore(scoreName, objective);
+
+        Score score;
+        if (oldBukkit) {
+            //Bukkit.getOfflinePlayer performance work around
+            score = objective.getScore(new FastOfflinePlayer(scoreName));
+        } else {
+            score = objective.getScore(scoreName);
+        }
+
+        if (complete && value == 0) {
+            /*
+             * Workaround because the value from Bukkit is set as default to zero and Bukkit sends only
+             * the packet if the value changes
+             * so we have to change it to another value earlier
+             */
+            score.setScore(1337);
+        }
+
+        if (score.getScore() != value) {
+            //don't spam the client
+            score.setScore(value);
+        }
+    }
+
+    private String expandScore(String scoreName, Objective objective) {
         final int titleLength = scoreName.length();
         if (titleLength > 16) {
             final Scoreboard scoreboard = objective.getScoreboard();
@@ -232,27 +258,7 @@ public class SbManager {
             }
         }
 
-        Score score;
-        if (oldBukkit) {
-            //Bukkit.getOfflinePlayer performance work around
-            score = objective.getScore(new FastOfflinePlayer(scoreName));
-        } else {
-            score = objective.getScore(scoreName);
-        }
-
-        if (complete && value == 0) {
-            /*
-             * Workaround because the value from Bukkit is set as default to zero and Bukkit sends only
-             * the packet if the value changes
-             * so we have to change it to another value earlier
-             */
-            score.setScore(1337);
-        }
-
-        if (score.getScore() != value) {
-            //don't spam the client
-            score.setScore(value);
-        }
+        return scoreName;
     }
 
     private boolean isOldBukkit() {

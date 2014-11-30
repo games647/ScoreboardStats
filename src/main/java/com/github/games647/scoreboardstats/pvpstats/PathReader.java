@@ -13,14 +13,12 @@ import org.apache.commons.lang.ArrayUtils;
  * The actually problem is that non-latin characters cannot be read in Java 6.
  * Java 7 has a fix for it by passing a charset, but this still cannot be used in
  * Java 6 and eBean doesn't use it either.
- *
- * While do something kind of Bytecode manipulation, reflection or class
- * replacing would be possible. It could cause incompatibility with newer versions
  */
 public class PathReader implements ClassPathReader {
 
     @Override
     public Object[] readPath(ClassLoader classLoader) {
+        //return an empty array without creating one
         return ArrayUtils.EMPTY_OBJECT_ARRAY;
     }
 }

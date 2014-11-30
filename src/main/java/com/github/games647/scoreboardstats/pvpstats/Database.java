@@ -97,6 +97,11 @@ public final class Database {
         }
     }
 
+    /**
+     * Save PlayerStats async.
+     *
+     * @param stats PlayerStats data
+     */
     public static void saveAsync(final PlayerStats stats) {
         EXECUTOR.submit(new Runnable() {
 
@@ -107,6 +112,11 @@ public final class Database {
         });
     }
 
+    /**
+     * Save the PlayerStats on the current Thread.
+     *
+     * @param stats PlayerStats data
+     */
     public static void save(PlayerStats stats) {
         if (stats != null && databaseInstance != null) {
             //Save the stats to the database
@@ -209,7 +219,7 @@ public final class Database {
                 //this also excludes null values
                 if (ex.getCause() instanceof ClassNotFoundException) {
                     instance.getLogger().info("Probarly because of missing drivers");
-                    if (Bukkit.getName().equalsIgnoreCase("Glowstone")) {
+                    if ("Glowstone".equalsIgnoreCase(Bukkit.getName())) {
                         instance.getLogger().info("You're running Glowstone. Take a look here: \n"
                                 + "https://github.com/GlowstoneMC/Glowstone/wiki/Library-Management");
                     }

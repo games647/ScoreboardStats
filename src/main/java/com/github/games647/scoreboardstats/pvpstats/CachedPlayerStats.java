@@ -4,10 +4,15 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Represents the playerstats wrapped as Bukkit metatdata associated to the player
+ * Represents the PlayerStats wrapped as Bukkit MetaData associated to the player
  */
 public class CachedPlayerStats extends FixedMetadataValue {
 
+    /**
+     *
+     * @param owningPlugin
+     * @param value
+     */
     public CachedPlayerStats(Plugin owningPlugin, PlayerStats value) {
         super(owningPlugin, value);
     }

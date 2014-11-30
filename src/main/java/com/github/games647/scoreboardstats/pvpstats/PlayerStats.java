@@ -5,6 +5,7 @@ import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotNull;
 import com.avaje.ebean.validation.Pattern;
 import com.avaje.ebean.validation.Range;
+import com.google.common.base.Objects;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -17,9 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.util.NumberConversions;
 
 /**
@@ -34,8 +33,6 @@ import org.bukkit.util.NumberConversions;
  */
 @Entity
 @Table(name = "player_stats")
-@EqualsAndHashCode(doNotUseGetters = true)
-@ToString(doNotUseGetters = true)
 public class PlayerStats {
 
     @Id
@@ -269,7 +266,7 @@ public class PlayerStats {
      * the last online value with a difference of a couple of minutes from
      * the cache.
      *
-     * @return the timestamp this eBean was last updated
+     * @return the timestamp this eBean was last updated; can be null
      */
     public Timestamp getLastOnline() {
         return lastOnline;
@@ -279,9 +276,40 @@ public class PlayerStats {
      * Set the update timestamp value. This currently managed by eBean itself,
      * which updates the value on every save.
      *
-     * @param lastOnline the player was online
+     * @param lastOnline the player was online; can be null
      */
     public void setLastOnline(Timestamp lastOnline) {
         this.lastOnline = lastOnline;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, uuid, playername, lastOnline
+                , kills, deaths, killstreak, laststreak, mobkills);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //ignores also null
+        if (obj instanceof PlayerStats) {
+            final PlayerStats other = (PlayerStats) obj;
+            return id == other.id
+                    && Objects.equal(uuid, other.uuid)
+                    && Objects.equal(playername, other.playername)
+                    && Objects.equal(lastOnline, other.lastOnline)
+                    //don't wrap to primitive wrappers objects
+                    && kills == other.kills
+                    && deaths == other.deaths
+                    && killstreak == other.killstreak
+                    && laststreak == other.laststreak
+                    && mobkills == other.mobkills;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

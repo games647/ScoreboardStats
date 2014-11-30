@@ -31,23 +31,24 @@ public final class PacketFactory {
      */
     public static void sendPacket(Item item, State state) {
         final PacketContainer scorePacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_SCORE);
+                .createPacket(PacketType.Play.Server.SCOREBOARD_SCORE, true);
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         scorePacket.getStrings().write(0, item.getScoreName());
-
-        if (State.REMOVED != state) {
-            //Only need these if the score will be updated or created
-            scorePacket.getStrings().write(1, item.getParent().getName());
-            scorePacket.getIntegers().write(0, item.getScore());
-        }
+        scorePacket.getStrings().write(1, item.getParent().getName());
 
         //state id
         scorePacket.getIntegers().write(1, state.ordinal());
+        
+        if (State.REMOVED != state) {
+            //Only need these if the score will be updated or created
+            scorePacket.getIntegers().write(0, item.getScore());
+        }
 
         try {
             //false so we don't listen to our own packets
             PROTOCOL_MANAGER.sendServerPacket(item.getOwner(), scorePacket, false);
         } catch (InvocationTargetException ex) {
+            //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
         }
     }
@@ -61,7 +62,7 @@ public final class PacketFactory {
      */
     public static void sendPacket(Objective objective, State state) {
         final PacketContainer objectivePacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
+                .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         objectivePacket.getStrings().write(0, objective.getName());
 
@@ -69,7 +70,7 @@ public final class PacketFactory {
             //only send the title if needed, so while creating the objective or update the title
             //max length 32 and since 1.7 UTF-8 instead of UTF-16
             objectivePacket.getStrings().write(1, objective.getDisplayName());
-            //introduced in 1.8 don't fail on versions for 1.7 or lower
+            //introduced in 1.8 don't fail on versions for 1.7 or below
             objectivePacket.getStrings().writeSafely(2, "integer");
         }
 
@@ -81,6 +82,7 @@ public final class PacketFactory {
             PROTOCOL_MANAGER.sendServerPacket(objective.getOwner(), objectivePacket, false);
             sendDisplayPacket(objective);
         } catch (InvocationTargetException ex) {
+            //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
         }
     }
@@ -92,7 +94,7 @@ public final class PacketFactory {
      */
     public static void sendDisplayPacket(Objective objective) {
         final PacketContainer displayPacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
+                .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE, true);
         //Can be empty to clear the sidebar slot
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         displayPacket.getStrings().write(0, objective.getName());
@@ -103,6 +105,7 @@ public final class PacketFactory {
             //false so we don't listen to our own packets
             PROTOCOL_MANAGER.sendServerPacket(objective.getOwner(), displayPacket, false);
         } catch (InvocationTargetException ex) {
+            //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
         }
     }

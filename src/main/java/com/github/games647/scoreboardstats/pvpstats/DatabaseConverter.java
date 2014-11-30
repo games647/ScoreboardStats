@@ -27,10 +27,18 @@ public class DatabaseConverter {
 
     private final EbeanServer databaseServer;
 
+    /**
+     * Create a new database converter
+     *
+     * @param databaseServer server instance
+     */
     public DatabaseConverter(EbeanServer databaseServer) {
         this.databaseServer = databaseServer;
     }
 
+    /**
+     * Start converting the old database system into the new one.
+     */
     public void convertNewDatabaseSystem() {
         // Some systems ingore uppercase other don't
         convert("PlayerStats");

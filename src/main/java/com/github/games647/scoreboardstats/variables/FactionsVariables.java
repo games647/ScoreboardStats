@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.variables;
 import com.github.games647.scoreboardstats.Version;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.entity.UPlayer;
+import com.massivecraft.factions.entity.MPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,6 +23,14 @@ public class FactionsVariables implements Replaceable {
         final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
         final String version = factionsPlugin.getDescription().getVersion();
         newVersion = Version.compare("2", version) >= 0;
+
+        //Version is between 2.0 and 2.7
+        if (newVersion && Version.compare("2.7", version) < 0) {
+            throw new UnsupportedPluginException("Due the newest changes from "
+                    + "Factions, you have to upgrade your version to a version above 2.7. "
+                    + "If explicity want to use this version. Create a ticket on "
+                    + "the project page of ScoreboardStats");
+        }
     }
 
     @Override
@@ -34,20 +42,21 @@ public class FactionsVariables implements Replaceable {
         }
     }
 
+    //faction 2.7+
     private int getNewFactionScore(Player player, String variable) {
         //If factions doesn't track the player yet return -1
-        final UPlayer uplayer = UPlayer.get(player);
+        final MPlayer mplayer = MPlayer.get(player);
         if ("%power%".equals(variable)) {
-            return uplayer == null ? -1 : uplayer.getPowerRounded();
+            return mplayer == null ? -1 : mplayer.getPowerRounded();
         }
 
-        final com.massivecraft.factions.entity.Faction faction = uplayer == null ? null : uplayer.getFaction();
+        final com.massivecraft.factions.entity.Faction faction = mplayer == null ? null : mplayer.getFaction();
         if ("%f_power%".equals(variable)) {
             return faction == null ? -1 : faction.getPowerRounded();
         }
 
         if ("%members%".equals(variable)) {
-            return faction == null ? -1 : faction.getUPlayers().size();
+            return faction == null ? -1 : faction.getMPlayers().size();
         }
 
         if ("%members_online%".equals(variable)) {
@@ -57,6 +66,7 @@ public class FactionsVariables implements Replaceable {
         return UNKOWN_VARIABLE;
     }
 
+    //factions 1.6.9 and 1.8.2
     private int getOldFactionScore(Player player, String variable) {
         //If factions doesn't track the player yet return -1
         final FPlayer fPlayer = FPlayers.i.get(player);

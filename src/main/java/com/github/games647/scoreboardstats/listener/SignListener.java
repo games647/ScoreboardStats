@@ -35,7 +35,8 @@ public final class SignListener implements Listener {
         if (!player.hasPermission(PERMISSION)) {
             for (String line : signChangeEvent.getLines()) {
                 if (line.contains("[Kill]") || line.contains("[Death]")
-                        || line.contains("[KDR]") || line.contains("[Streak]")) {
+                        || line.contains("[KDR]") || line.contains("[Streak]")
+                        || line.contains("[Mob]")) {
                     signChangeEvent.setCancelled(true);
                     player.sendMessage(Lang.get("noPermissionSign"));
                     break;
@@ -79,6 +80,9 @@ public final class SignListener implements Listener {
         } else if (line.contains("[Streak]")) {
             final String streak = Integer.toString(playerCache.getKillstreak());
             replacedString = line.replace("[Streak]", streak);
+        } else if (line.contains("[Mob]")) {
+            final String mobKills = Integer.toString(playerCache.getMobkills());
+            replacedString = line.replace("[Mob]", mobKills);
         }
 
         //Don't trigger an update if nothing was changed

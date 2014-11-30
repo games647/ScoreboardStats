@@ -1,11 +1,10 @@
 package com.github.games647.scoreboardstats.protocol;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,13 +12,11 @@ import org.bukkit.entity.Player;
  *
  * @see Objective
  */
-@EqualsAndHashCode(doNotUseGetters = true, exclude = "parent")
-@ToString(doNotUseGetters = true, exclude = "parent")
 public final class Item implements Comparable<Item> {
 
     private final Objective parent;
-    private final String scoreName;
 
+    private final String scoreName;
     private int score;
 
     Item(Objective parent, String scoreName, int score) {
@@ -128,8 +125,30 @@ public final class Item implements Comparable<Item> {
 
     @Override
     public int compareTo(Item other) {
-        //Reverse order - first the highest element
+        //Reverse order - first the highest element like the scoreboard ingame
         return Ints.compare(other.score, score);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(scoreName, score);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //ignores also null
+        if (obj instanceof Item) {
+            final Item other = (Item) obj;
+            return Objects.equal(scoreName, other.scoreName)
+                    && score == other.score;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
     /**

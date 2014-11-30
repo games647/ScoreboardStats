@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.protocol;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -9,9 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.entity.Player;
 
 /**
@@ -19,8 +18,6 @@ import org.bukkit.entity.Player;
  *
  * @see Item
  */
-@EqualsAndHashCode(doNotUseGetters = true, exclude = "items")
-@ToString(doNotUseGetters = true)
 public final class Objective {
 
     //A scoreboard can't have more than 15 items
@@ -28,6 +25,7 @@ public final class Objective {
 
     private final PlayerScoreboard scoreboard;
 
+    //objectiveName must be unique
     private final String objectiveName;
     private String displayName;
 
@@ -100,7 +98,7 @@ public final class Objective {
      * Set the display name
      *
      * @param displayName the new displayName
-     * @param send should the displayname instantly be sent
+     * @param send should the displayName instantly be sent
      * @throws NullPointerException if displayName is null
      * @throws IllegalArgumentException if displayName is longer than 32 characters
      * @throws IllegalStateException if this objective was removed
@@ -168,6 +166,7 @@ public final class Objective {
         Preconditions.checkState(exists());
 
         Preconditions.checkNotNull(name);
+        //Since 1.8 the name can be up to 40 characters long. UUID in the future?
         Preconditions.checkArgument(name.length() <= 16);
 
         Preconditions.checkState(items.size() <= 15);
@@ -262,5 +261,27 @@ public final class Objective {
      */
     public PlayerScoreboard getScoreboard() {
         return scoreboard;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(objectiveName, displayName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //ignores also null
+        if (obj instanceof Objective) {
+            final Objective other = (Objective) obj;
+            return Objects.equal(objectiveName, other.objectiveName)
+                    && Objects.equal(displayName, other.displayName);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
