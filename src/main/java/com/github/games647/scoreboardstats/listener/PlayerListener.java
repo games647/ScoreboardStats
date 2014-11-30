@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.listener;
 
-import com.github.games647.scoreboardstats.RefreshTask;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
@@ -74,7 +73,7 @@ public class PlayerListener implements Listener {
                 }
             }
         }
-        
+
         player.removeMetadata("player_stats", plugin);
     }
 
@@ -106,7 +105,7 @@ public class PlayerListener implements Listener {
      * Check if the player moves in a scoreboard disabled world
      *
      * @param worldChange the teleport event
-     * @see RefreshTask
+     * @see com.github.games647.scoreboardstats.RefreshTask
      */
     //ignore cancelled events
     @EventHandler(ignoreCancelled = true)

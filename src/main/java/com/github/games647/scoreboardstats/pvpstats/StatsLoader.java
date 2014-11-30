@@ -2,8 +2,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import java.lang.ref.WeakReference;
 
-import lombok.ToString;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * This class is used for loading the player stats.
  */
-@ToString(doNotUseGetters = true)
 public class StatsLoader implements Runnable {
 
     private final Plugin plugin;
@@ -61,5 +59,10 @@ public class StatsLoader implements Runnable {
                 }
             }.runTask(plugin);
         }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

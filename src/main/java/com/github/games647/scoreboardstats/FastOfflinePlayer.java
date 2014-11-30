@@ -1,10 +1,13 @@
 package com.github.games647.scoreboardstats;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -60,7 +63,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setBanned(boolean banned) {
-        throw new UnsupportedOperationException();
+        //ignore
     }
 
     @Override
@@ -70,12 +73,12 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setWhitelisted(boolean value) {
-        throw new UnsupportedOperationException();
+        //ignore
     }
 
     @Override
     public Player getPlayer() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
@@ -95,7 +98,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public Location getBedSpawnLocation() {
-        throw new UnsupportedOperationException();
+        return new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
     }
 
     @Override
@@ -105,11 +108,39 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public void setOp(boolean value) {
-        throw new UnsupportedOperationException();
+        //ignore
     }
 
     @Override
     public Map<String, Object> serialize() {
-        throw new UnsupportedOperationException();
+        final Map<String, Object> result = Maps.newLinkedHashMap();
+
+        result.put("UUID", getUniqueId().toString());
+        result.put("name", playerName);
+
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(playerName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //checks for null too
+        if (!(obj instanceof FastOfflinePlayer)) {
+            return false;
+        }
+
+        final FastOfflinePlayer other = (FastOfflinePlayer) obj;
+        return this.playerName == null ? other.playerName == null : this.playerName.equals(other.playerName);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("playerName", playerName)
+                .toString();
     }
 }

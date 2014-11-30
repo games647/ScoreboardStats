@@ -9,12 +9,12 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8.3</version>
+    <version>0.8.4</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.5.5</powermock.version>
+        <powermock.version>1.5.6</powermock.version>
     </properties>
 
     <issueManagement>
@@ -73,25 +73,21 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <!--Replace variables-->
                 <filtering>true</filtering>
-                <!--Add all resources to the plugin without adding every file explicity-->
-                <includes>
-                    <include>**</include>
-                </includes>
+            </resource>
+            <!--Include source in the main jar-->
+            <resource>
+                <directory>src/main/java</directory>
             </resource>
         </resources>
     </build>
 
     <repositories>
-        <repository>
-            <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public/</url>
-        </repository>
-
         <!--ProtocolLib-->
         <repository>
             <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/repositories/releases</url>
+            <url>http://repo.comphenix.net/content/groups/public</url>
         </repository>
 
         <!--Repo for simpleclans-->
@@ -103,10 +99,10 @@
         <!--Vault and Heroes-->
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/public/</url>
+            <url>http://nexus.theyeticave.net/content/groups/public/</url>
         </repository>
 
-        <!--for mcMMO-->
+        <!--for mcMMO and Bukkit API-->
         <repository>
             <id>md_5-releases</id>
             <url>http://repo.md-5.net/content/groups/public/</url>
@@ -114,23 +110,18 @@
     </repositories>
 
     <dependencies>
-        <!--Automatic Source Code generation using annotations-->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.14.4</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <!--Compile with a low version, because the new getOnlinePlayers() won't be backwards compatibility.-->
             <!--while the older version still exists-->
-            <version>1.7.9-R0.2-SNAPSHOT</version>
+            <version>1.7.9-R0.2</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!--Library for listening and sending Minecraft packets-->
+        <!--Library for listening and sending Minecraft packets to workaround
+        the Bukkit API, so we can make scoreboard compatible with other
+        scoreboard plugins -->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
@@ -161,7 +152,7 @@
             </exclusions>
         </dependency>
 
-        <!--API for economy, permissions and chat-->
+        <!--API for economy variables-->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
@@ -171,9 +162,18 @@
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
-            <version>1.5.3.4-SNAPSHOT</version>
+            <version>1.5.5</version>
             <exclusions>
-                <!--We just need the API.-->
+                <exclusion>
+                    <groupId>me.desht</groupId>
+                    <artifactId>scrollingmenusign</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.dthielke.herochat</groupId>
+                    <artifactId>HeroChat</artifactId>
+                </exclusion>
+
+                <!--We just need the API, which we already have included-->
                 <exclusion>
                     <groupId>net.milkbowl.vault</groupId>
                     <artifactId>Vault</artifactId>
@@ -184,6 +184,7 @@
                     <groupId>org.spigotmc</groupId>
                     <artifactId>spigot</artifactId>
                 </exclusion>
+                <!--Only available on spigot server-->
                 <exclusion>
                     <groupId>org.spigotmc</groupId>
                     <artifactId>spigot-api</artifactId>
@@ -194,7 +195,7 @@
         <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>1.5.01-SNAPSHOT</version>
+            <version>1.5.00</version>
         </dependency>
         <!--dependencies in /lib-->
 
@@ -212,6 +213,7 @@
             <groupId>com.massivecraft</groupId>
             <!--the name can't be the same because maven would automatically use the newer version-->
             <artifactId>factions1.6</artifactId>
+            <!--1.6.9 and 1.8.2-->
             <version>1.6.9</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions1.6.9.jar</systemPath>
@@ -220,7 +222,8 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>factions</artifactId>
-            <version>2.5.0</version>
+            <!--2.7+-->
+            <version>2.7.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
         </dependency>
@@ -228,7 +231,7 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>mcore</artifactId>
-            <version>7.3.0</version>
+            <version>2.7.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
         </dependency>

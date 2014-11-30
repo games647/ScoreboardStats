@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Handling the replace management
@@ -47,6 +46,7 @@ public final class ReplaceManager implements Listener {
     }
 
     private final Map<Replaceable, String> replacers = Maps.newHashMap();
+    private final ScoreboardStats plugin;
 
     /**
      * Creates a new replace manager
@@ -54,6 +54,8 @@ public final class ReplaceManager implements Listener {
      * @param plugin ScoreboardStats plugin
      */
     public ReplaceManager(ScoreboardStats plugin) {
+        this.plugin = plugin;
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
         addDefaultReplacer();
     }
@@ -114,18 +116,18 @@ public final class ReplaceManager implements Listener {
                 //remove the replacer if it throws exceptions, to prevent future ones
                 iter.remove();
 
-                Logger.getLogger("ScoreboardStats").log(Level.WARNING,
+                plugin.getLogger().log(Level.WARNING,
                         Lang.get("replacerException", replacer), ex);
             } catch (NoClassDefFoundError noClassEr) {
                 //only catch these throwable, because they could probably happend
                 iter.remove();
 
-                Logger.getLogger("ScoreboardStats")
+                plugin.getLogger()
                         .log(Level.WARNING, Lang.get("replacerException", replacer), noClassEr);
             } catch (NoSuchMethodError noSuchMethodEr) {
                 iter.remove();
-                
-                Logger.getLogger("ScoreboardStats")
+
+                plugin.getLogger()
                         .log(Level.WARNING, Lang.get("replacerException", replacer), noSuchMethodEr);
             }
         }
@@ -182,8 +184,7 @@ public final class ReplaceManager implements Listener {
         }
 
         //log registered replacers
-        Logger.getLogger("ScoreboardStats").log(Level.INFO
-                , "Registered replacers: {0}", replacersName);
+        plugin.getLogger().log(Level.INFO, "Registered replacers: {0}", replacersName);
     }
 
     //Check if specific plugin is availble and activated
@@ -198,20 +199,16 @@ public final class ReplaceManager implements Listener {
                 register(instance, pluginName);
             }
         } catch (UnsupportedPluginException ex) {
-            Logger.getLogger("ScoreboardStats")
-                    .warning(Lang.get("unsupportedPluginVersion"
-                            , replacerClass.getSimpleName(), ex.getMessage()));
+            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
+                    , replacerClass.getSimpleName(), ex.getMessage()));
         } catch (Exception ex) {
             //We can't use mulit catches because we need still be compatible with java 6
-            Logger.getLogger("ScoreboardStats")
-                    .log(Level.WARNING, Lang.get("noRegister"), ex);
+            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), ex);
         } catch (NoClassDefFoundError noClassEr) {
-            //only catch these throwable, because they could probably happend
-            Logger.getLogger("ScoreboardStats")
-                    .log(Level.WARNING, Lang.get("noRegister"), noClassEr);
+            //only catch these throwables, because they could probably happend
+           plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), noClassEr);
         } catch (NoSuchMethodError noSuchMethodEr) {
-            Logger.getLogger("ScoreboardStats")
-                    .log(Level.WARNING, Lang.get("noRegister"), noSuchMethodEr);
+            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), noSuchMethodEr);
         }
     }
 }

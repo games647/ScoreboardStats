@@ -10,22 +10,24 @@ This plugin simplifies, adds many new features and possible ways to improve
 Project page: http://dev.bukkit.org/bukkit-mods/scoreboardstats/
 
 Build status:
-    [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg?branch=master)](https://travis-ci.org/games647/ScoreboardStats/)
+    [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg)](https://travis-ci.org/games647/ScoreboardStats/)
 
 ###Compatibility
 
 This plugin is compatible with all Minecraft versions above 1.5, where the
     scoreboard feature was introduced by [Mojang](https://mojang.com/).
 
-###Eclipse
+Based on vanilla servers (like Craftbukkit) doesn't allow individual and global
+objectives at the same time. By operating over packets, we can workaround this.
+For this method, you'll need ProtocolLib. It's used to prevent conflicts with
+other plugins which also access the sidebar objective. Otherwise the client
+could crash.
 
-You need to install [Lombok](http://projectlombok.org/download.html).
-Lombok is used for automatic source code generation. It integrates perfect with
-    Netbeans and IntelliJ.
-Just double click the jar and select your Eclipse folder and click install it.
-That's it.
-
-Download it from here: http://projectlombok.org/download.html
+These plugins are (tested) compatible (just activate comaptibilityMode):
+* HealthBar (http://dev.bukkit.org/bukkit-plugins/health-bar/)
+* ColoredTags (http://dev.bukkit.org/bukkit-plugins/colored-tags/)
+* GhostPlayer (http://dev.bukkit.org/bukkit-plugins/ghost-player/)
+* McCombatLevel (http://dev.bukkit.org/bukkit-plugins/mccombatlevel/)
 
 ###Building
 

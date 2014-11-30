@@ -29,7 +29,7 @@ public class EntityListener implements Listener {
         final Player killer = entity.getKiller();
 
         //Check if it's not player because we are already handling it
-        if (EntityType.PLAYER != entity.getType() && Settings.isPvpStats()
+        if (entity.getType() != EntityType.PLAYER && Settings.isPvpStats()
                 && Settings.isActiveWorld(entity.getWorld().getName())) {
             final PlayerStats killercache = Database.getCachedStats(killer);
             if (killercache != null) {

@@ -33,7 +33,7 @@ public class DatabaseConfiguration {
     }
 
     /**
-     * Gets the SQL configuration
+     * Get the SQL configuration
      *
      * @return the server configuration
      */
@@ -41,6 +41,11 @@ public class DatabaseConfiguration {
         return serverConfig;
     }
 
+    /**
+     * Get whether the stats should be searched by the UUID or name
+     *
+     * @return whether the stats should be searched by the UUID or name
+     */
     public boolean isUuidUse() {
         return uuidUse;
     }

@@ -51,6 +51,9 @@ public class VersionTest {
         version = Version.getMinecraftVersion();
 
         Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
+
+        //Plugin Parsing; shouldn't fail
+        Version.parse("1.6.9.5-U0.1.12-SNAPSHOT");
     }
 
     /**

@@ -8,11 +8,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 /**
  * Replace all variables that are associated with the mcMMO plugin
  */
-public class McmmoVariables implements Replaceable {
+public class McmmoVariables implements Replaceable, Listener {
 
     private final Set<String> skillTypes;
 
@@ -44,4 +45,10 @@ public class McmmoVariables implements Replaceable {
 
         return UNKOWN_VARIABLE;
     }
+
+//    @EventHandler(ignoreCancelled = true)
+//    public void onLevelUp(McMMOPlayerLevelChangeEvent levelChangeEvent) {
+//        final SkillType skill = levelChangeEvent.getSkill();
+//        final int newSkillLevel = levelChangeEvent.getSkillLevel();
+//    }
 }

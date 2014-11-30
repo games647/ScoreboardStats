@@ -1,20 +1,17 @@
 package com.github.games647.scoreboardstats;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.Bukkit;
 
 /**
  * Version class for comparing and detecting Minecraft and other versions
  */
-@EqualsAndHashCode(doNotUseGetters = true)
-@ToString(doNotUseGetters = true)
 public class Version implements Comparable<Version> {
 
     //thanks to the author of ProtocolLib aadnk
@@ -48,8 +45,8 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the version doesn't contains only positive numbers separated by max. 5 dots.
      */
     public static int[] parse(String version) throws IllegalArgumentException {
-        //exludes spaces which could be added by mistake
-        version = version.trim();
+        //exludes spaces which could be added by mistake and exclude build suffixes
+        version = version.trim().split("\\-")[0];
         if (!version.matches("\\d+(\\.\\d+){0,5}")) {
             throw new IllegalArgumentException("Invalid format: " + version);
         }
@@ -168,5 +165,28 @@ public class Version implements Comparable<Version> {
                 .compare(minor, other.minor)
                 .compare(build, other.build)
                 .result();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(major, minor, build);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //ignores also null
+        if (obj instanceof Version) {
+            final Version other = (Version) obj;
+            return major == other.major
+                    && minor == other.minor
+                    && build == other.build;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

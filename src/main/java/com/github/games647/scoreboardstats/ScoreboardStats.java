@@ -14,10 +14,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents the main class of this plugin.
+ *
+ * Take a look here to see newest source files and contribute to the project
+ * https://github.com/games647/ScoreboardStats
  */
 public class ScoreboardStats extends JavaPlugin {
 
-    //don't create instances here, because it causes incompatibility with older minecraft versions (i.e. 1.5.2)
+    //don't create instances here that accesses the bukkit API
     private RefreshTask refreshTask;
     private Settings settings;
     private ReloadFixLoader classLoader;
@@ -186,6 +189,7 @@ public class ScoreboardStats extends JavaPlugin {
     }
 
     private void checkScoreboardCompatibility() {
+        //Scoreboards are introduced in minecraft 1.5
         final int compare = Version.compare("1.5", Version.getMinecraftVersionString());
         if (compare >= 0) {
             //The minecraft version is higher or equal the minimum scoreboard version
@@ -208,7 +212,7 @@ public class ScoreboardStats extends JavaPlugin {
                     getLogger().info("You are using plugins that requires to activate compatibilityMode");
                     getLogger().info("Otherwise the plugins won't work");
                     getLogger().info("Please enable it in the ScoreboardStats configuration 'compatibilityMode'");
-                    getLogger().info("Then this plugin sends raw packets, but will still compatible other plugins");
+                    getLogger().info("Then this plugin will send raw packets, but will be still compatible other plugins");
                     break;
                 }
             }
