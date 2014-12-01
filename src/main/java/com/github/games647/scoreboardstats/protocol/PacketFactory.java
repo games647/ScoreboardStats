@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.reflect.StructureModifier;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -36,12 +37,19 @@ public final class PacketFactory {
         scorePacket.getStrings().write(0, item.getScoreName());
         scorePacket.getStrings().write(1, item.getParent().getName());
 
-        //state id
-        scorePacket.getIntegers().write(1, state.ordinal());
-        
-        if (State.REMOVED != state) {
+        if (State.REMOVE != state) {
             //Only need these if the score will be updated or created
             scorePacket.getIntegers().write(0, item.getScore());
+        }
+
+        //state id
+        final StructureModifier<Enum> enumModifier = scorePacket.getSpecificModifier(Enum.class);
+        final Enum<?> scoreboardActions = enumModifier.readSafely(0);
+        if (scoreboardActions == null) {
+            scorePacket.getIntegers().write(1, state.ordinal());
+        } else {
+            final Enum action = scoreboardActions.getClass().getEnumConstants()[state.ordinal()];
+            enumModifier.write(0, action);
         }
 
         try {
@@ -63,10 +71,10 @@ public final class PacketFactory {
     public static void sendPacket(Objective objective, State state) {
         final PacketContainer objectivePacket = PROTOCOL_MANAGER
                 .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
-        //max length 16 and since 1.7 UTF-8 instead of UTF-16
+//        max length 16 and since 1.7 UTF-8 instead of UTF-16
         objectivePacket.getStrings().write(0, objective.getName());
 
-        if (state != State.REMOVED) {
+        if (state != State.REMOVE) {
             //only send the title if needed, so while creating the objective or update the title
             //max length 32 and since 1.7 UTF-8 instead of UTF-16
             objectivePacket.getStrings().write(1, objective.getDisplayName());

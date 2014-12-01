@@ -40,7 +40,7 @@ public final class Objective {
         this.displayName = displayName;
 
         if (send) {
-            PacketFactory.sendPacket(this, State.CREATED);
+            PacketFactory.sendPacket(this, State.CREATE);
         }
     }
 
@@ -241,7 +241,7 @@ public final class Objective {
     public void unregister() {
         if (scoreboard.getObjective(objectiveName) == this) {
             scoreboard.removeObjective(objectiveName);
-            PacketFactory.sendPacket(this, State.REMOVED);
+            PacketFactory.sendPacket(this, State.REMOVE);
         }
     }
 
