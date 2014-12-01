@@ -10,12 +10,12 @@ public enum State {
     /**
      * The objective or the item was created
      */
-    CREATED,
+    CREATE,
 
     /**
      * The objective or the item was removed
      */
-    REMOVED,
+    REMOVE,
 
     /**
      * The display name of the objective was changed

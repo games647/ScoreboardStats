@@ -92,7 +92,7 @@ public final class Item implements Comparable<Item> {
     public void unregister() {
         if (exists()) {
             getScoreboard().resetScore(scoreName);
-            PacketFactory.sendPacket(this, State.REMOVED);
+            PacketFactory.sendPacket(this, State.REMOVE);
         }
     }
 
@@ -157,6 +157,6 @@ public final class Item implements Comparable<Item> {
      * @see PacketFactory
      */
     private void update() {
-        PacketFactory.sendPacket(this, State.CREATED);
+        PacketFactory.sendPacket(this, State.CREATE);
     }
 }

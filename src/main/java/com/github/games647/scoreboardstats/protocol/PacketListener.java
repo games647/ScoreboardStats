@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -61,20 +62,30 @@ public class PacketListener extends PacketAdapter {
         final String scoreName = packet.getStrings().read(0);
         final String parent = packet.getStrings().read(1);
         final int score = packet.getIntegers().read(0);
-        final State action = State.fromId(packet.getIntegers().read(1));
+
+        //state id
+        final StructureModifier<Enum> enumModifier = packet.getSpecificModifier(Enum.class);
+        final Enum<?> scoreboardActions = enumModifier.readSafely(0);
+        
+        State action;
+        if (scoreboardActions == null) {
+            action = State.fromId(packet.getIntegers().read(1));
+        } else {
+            action = State.fromId(scoreboardActions.ordinal());
+        }
 
         //Packet receiving validation
         if (scoreName.length() > 16
-                || (action == State.CREATED && parent.length() > 16)) {
+                || action == State.CREATE && parent.length() > 16) {
             //Invalid packet
             return;
         }
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
         //scores actually only have two state id, because these
-        if (action == State.CREATED) {
+        if (action == State.CREATE) {
             scoreboard.createOrUpdateScore(scoreName, parent, score);
-        } else if (action == State.REMOVED) {
+        } else if (action == State.REMOVE) {
             scoreboard.resetScore(scoreName);
         }
     }
@@ -96,11 +107,11 @@ public class PacketListener extends PacketAdapter {
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
         final Objective objective = scoreboard.getObjective(objectiveName);
-        if (action == State.CREATED) {
+        if (action == State.CREATE) {
             scoreboard.addObjective(objectiveName, displayName);
         } else if (objective != null) {
             //Could cause a NPE at the client if the objective wasn't found
-            if (action == State.REMOVED) {
+            if (action == State.REMOVE) {
                 scoreboard.removeObjective(objectiveName);
             } else if (action == State.UPDATE_TITLE) {
                 objective.setDisplayName(displayName, false);
