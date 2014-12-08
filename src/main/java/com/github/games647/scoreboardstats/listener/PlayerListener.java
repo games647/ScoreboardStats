@@ -119,10 +119,10 @@ public class PlayerListener implements Listener {
                 //Activate the scoreboard if it was disabled
                 plugin.getRefreshTask().addToQueue(player);
             }
-        } else if (objective != null && objective.getName().startsWith("Stats")) {
+        } else {
             //Disable the scoreboard if the player goes into a disabled world
             plugin.getRefreshTask().remove(player);
-            objective.unregister();
+            plugin.getScoreboardManager().unregister(player);
         }
     }
 }

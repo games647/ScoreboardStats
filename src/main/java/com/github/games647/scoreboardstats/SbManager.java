@@ -110,11 +110,15 @@ public class SbManager {
      */
     public void unregisterAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.isOnline()) {
-                final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-                if (objective != null && objective.getName().startsWith(SB_NAME)) {
-                    objective.unregister();
-                }
+            unregister(player);
+        }
+    }
+
+    public void unregister(Player player) {
+        if (player.isOnline()) {
+            final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+            if (objective != null && objective.getName().startsWith(SB_NAME)) {
+                objective.unregister();
             }
         }
     }
