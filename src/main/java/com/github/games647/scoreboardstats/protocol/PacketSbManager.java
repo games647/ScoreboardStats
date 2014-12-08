@@ -93,6 +93,15 @@ public class PacketSbManager extends SbManager {
     }
 
     @Override
+    public void unregister(Player player) {
+        final PlayerScoreboard scoreboard = scoreboards.get(player);
+        final Objective objective = scoreboard.getObjective(SB_NAME);
+        if (objective != null) {
+            objective.unregister();
+        }
+    }
+
+    @Override
     public void createScoreboard(Player player) {
         final PlayerScoreboard scoreboard = getScoreboard(player);
         final Objective oldObjective = scoreboard.getSidebarObjective();
