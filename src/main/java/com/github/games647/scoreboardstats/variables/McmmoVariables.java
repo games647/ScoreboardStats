@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.variables;
 
 import com.gmail.nossr50.api.ExperienceAPI;
+import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.google.common.collect.ImmutableSet;
 
@@ -34,13 +35,17 @@ public class McmmoVariables implements Replaceable, Listener {
 
     @Override
     public int getScoreValue(Player player, String variable) {
-        if ("%powlvl%".equals(variable)) {
-            return ExperienceAPI.getPowerLevel(player);
-        }
+        try {
+            if ("%powlvl%".equals(variable)) {
+                return ExperienceAPI.getPowerLevel(player);
+            }
 
-        if (skillTypes.contains(variable)) {
-            final String type = variable.replace("%", "").toUpperCase(Locale.ENGLISH);
-            return ExperienceAPI.getLevel(player, type);
+            if (skillTypes.contains(variable)) {
+                final String type = variable.replace("%", "").toUpperCase(Locale.ENGLISH);
+                return ExperienceAPI.getLevel(player, type);
+            }
+        } catch (McMMOPlayerNotFoundException playerNotFoundEx) {
+            //player not loaded yet - fail silently
         }
 
         return UNKOWN_VARIABLE;
