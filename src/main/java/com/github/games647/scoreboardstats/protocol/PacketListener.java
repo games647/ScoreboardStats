@@ -66,9 +66,10 @@ public class PacketListener extends PacketAdapter {
         //state id
         final StructureModifier<Enum> enumModifier = packet.getSpecificModifier(Enum.class);
         final Enum<?> scoreboardActions = enumModifier.readSafely(0);
-        
+
         State action;
         if (scoreboardActions == null) {
+            //old system
             action = State.fromId(packet.getIntegers().read(1));
         } else {
             action = State.fromId(scoreboardActions.ordinal());

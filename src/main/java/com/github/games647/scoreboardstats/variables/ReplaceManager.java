@@ -36,6 +36,7 @@ public final class ReplaceManager implements Listener {
 
         tempMap.put(HeroesVariables.class, "Heroes");
         tempMap.put(McmmoVariables.class, "mcMMO");
+        tempMap.put(SkyblockVariables.class, "uSkyBlock");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         //factions will be automatically disabled if mcore isn't enabled
@@ -112,23 +113,17 @@ public final class ReplaceManager implements Listener {
                 if (Replaceable.UNKOWN_VARIABLE != scoreValue) {
                     return scoreValue;
                 }
-            } catch (Exception ex) {
+            } catch (OutOfMemoryError outOfMemoryError) {
+                //rethrow these, because it's not related to this plugin
+                throw outOfMemoryError;
+            } catch (ThreadDeath threadDeath) {
+                throw threadDeath;
+            } catch (Throwable throwable) {
                 //remove the replacer if it throws exceptions, to prevent future ones
                 iter.remove();
 
-                plugin.getLogger().log(Level.WARNING,
-                        Lang.get("replacerException", replacer), ex);
-            } catch (NoClassDefFoundError noClassEr) {
-                //only catch these throwable, because they could probably happend
-                iter.remove();
-
                 plugin.getLogger()
-                        .log(Level.WARNING, Lang.get("replacerException", replacer), noClassEr);
-            } catch (NoSuchMethodError noSuchMethodEr) {
-                iter.remove();
-
-                plugin.getLogger()
-                        .log(Level.WARNING, Lang.get("replacerException", replacer), noSuchMethodEr);
+                        .log(Level.WARNING, Lang.get("replacerException", replacer), throwable);
             }
         }
 

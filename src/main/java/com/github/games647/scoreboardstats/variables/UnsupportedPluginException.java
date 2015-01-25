@@ -22,4 +22,15 @@ public class UnsupportedPluginException extends RuntimeException {
     public UnsupportedPluginException(String message) {
         super(message);
     }
+
+    /**
+     * Creates a new exception with a specific message and a throwable for it's
+     * cause.
+     *
+     * @param message additional information
+     * @param cause children cause
+     */
+    public UnsupportedPluginException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

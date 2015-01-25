@@ -46,6 +46,7 @@ public final class PacketFactory {
         final StructureModifier<Enum> enumModifier = scorePacket.getSpecificModifier(Enum.class);
         final Enum<?> scoreboardActions = enumModifier.readSafely(0);
         if (scoreboardActions == null) {
+            //old system
             scorePacket.getIntegers().write(1, state.ordinal());
         } else {
             final Enum action = scoreboardActions.getClass().getEnumConstants()[state.ordinal()];
