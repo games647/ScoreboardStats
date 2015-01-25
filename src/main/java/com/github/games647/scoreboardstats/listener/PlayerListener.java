@@ -15,8 +15,6 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
 
 /**
  * Listening to players events.
@@ -111,7 +109,6 @@ public class PlayerListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onChange(PlayerChangedWorldEvent worldChange) {
         final Player player = worldChange.getPlayer();
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         //new world
         if (Settings.isActiveWorld(player.getWorld().getName())) {
             //old world
