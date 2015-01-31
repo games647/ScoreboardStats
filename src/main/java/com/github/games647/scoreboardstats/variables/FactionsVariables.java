@@ -69,7 +69,7 @@ public class FactionsVariables implements Replaceable {
     //factions 1.6.9 and 1.8.2
     private int getOldFactionScore(Player player, String variable) {
         //If factions doesn't track the player yet return -1
-        final FPlayer fPlayer = FPlayers.i.get(player);
+        final FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
         if ("%power%".equals(variable)) {
             return fPlayer == null ? -1 : fPlayer.getPowerRounded();
         }

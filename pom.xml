@@ -219,17 +219,15 @@
         <!--Factions:-->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <!--the name can't be the same because maven would automatically use the newer version-->
-            <artifactId>factions1.6</artifactId>
-            <!--1.6.9 and 1.8.2-->
-            <version>1.6.9</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions1.6.9.jar</systemPath>
+            <artifactId>Factions</artifactId>
+            <!--Factions-UUID fork of 1.6/1.8-->
+            <version>1.6.9.5-U0.1.15-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>factions</artifactId>
+            <!--the name can't be the same because maven would automatically use the newer version-->
+            <artifactId>factions-2.7</artifactId>
             <!--2.7+-->
             <version>2.7.1</version>
             <scope>system</scope>
