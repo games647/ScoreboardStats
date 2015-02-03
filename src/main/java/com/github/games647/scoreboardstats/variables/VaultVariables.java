@@ -29,7 +29,7 @@ public class VaultVariables implements Replaceable {
                 .getServicesManager().getRegistration(Economy.class);
         if (economyProvider == null) {
             //check if an economy plugin is installed otherwise it would throw a exception if the want to replace
-            throw new UnsupportedPluginException("Couldn't find an economy plugin");
+            throw new UnsupportedPluginException("Cannot find an economy plugin");
         } else {
             economy = economyProvider.getProvider();
         }

@@ -8,7 +8,6 @@ import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
-import com.github.games647.scoreboardstats.Version;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
@@ -33,7 +32,6 @@ import org.bukkit.plugin.Plugin;
 public final class Database {
 
     private static final String METAKEY = "player_stats";
-    private static final boolean UUID_COMPATIBLE = Version.compare("1.7", Version.getMinecraftVersionString()) >= 0;
     private static final ExecutorService EXECUTOR = Executors
             //SQL transactions are mainly blocking so there is no need to update them smooth
             .newSingleThreadExecutor(new ThreadFactoryBuilder()
@@ -71,7 +69,7 @@ public final class Database {
      */
     public static void loadAccountAsync(Player player) {
         if (getCachedStats(player) == null && databaseInstance != null) {
-            EXECUTOR.execute(new StatsLoader(instance, uuidUse, UUID_COMPATIBLE, player));
+            EXECUTOR.execute(new StatsLoader(instance, uuidUse, player));
         }
     }
 
@@ -195,7 +193,7 @@ public final class Database {
         if (Settings.isPvpStats()) {
             dbConfiguration = new DatabaseConfiguration(plugin);
             dbConfiguration.loadConfiguration();
-            uuidUse = dbConfiguration.isUuidUse() && UUID_COMPATIBLE;
+            uuidUse = dbConfiguration.isUuidUse();
 
             final ClassLoader previous = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());

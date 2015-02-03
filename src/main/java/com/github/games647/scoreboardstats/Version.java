@@ -17,6 +17,35 @@ public class Version implements Comparable<Version> {
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
+    private static final boolean UUID_COMPATIBLE = compare("1.7", getMinecraftVersionString()) >= 0;
+
+    /**
+     * Gets whether server supports UUIDs
+     *
+     * @return whether server supports UUIDs
+     */
+    public static boolean isUUIDCompatible() {
+        return UUID_COMPATIBLE;
+    }
+
+    /**
+     * Gets the Minecraft version
+     *
+     * @return the Minecraft version
+     */
+    public static Version getMinecraftVersion() {
+        return new Version(getMinecraftVersionString());
+    }
+
+    /**
+     * Gets the Minecraft version as string
+     *
+     * @return the Minecraft version as string
+     */
+    public static String getMinecraftVersionString() {
+        return getVersionStringFromServer(Bukkit.getVersion());
+    }
+
     /**
      * Compares the version with checking the first three numbers
      *
@@ -60,24 +89,6 @@ public class Version implements Comparable<Version> {
         versionParts[1] = split.length > 1 ? Integer.parseInt(split[1]) : 0;
         versionParts[2] = split.length > 2 ? Integer.parseInt(split[2]) : 0;
         return versionParts;
-    }
-
-    /**
-     * Gets the Minecraft version
-     *
-     * @return the Minecraft version
-     */
-    public static Version getMinecraftVersion() {
-        return new Version(getMinecraftVersionString());
-    }
-
-    /**
-     * Gets the Minecraft version as string
-     *
-     * @return the Minecraft version as string
-     */
-    public static String getMinecraftVersionString() {
-        return getVersionStringFromServer(Bukkit.getVersion());
     }
 
     private static String getVersionStringFromServer(String versionString) {
