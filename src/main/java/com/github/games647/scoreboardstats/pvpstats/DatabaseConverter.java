@@ -70,31 +70,6 @@ public class DatabaseConverter {
         }
     }
 
-//    public void convertUUIDs() {
-//        try {
-//            final List<PlayerStats> buffer = databaseServer.find(PlayerStats.class)
-//                    .select("id, playername")
-//                    .where().isNull("uuid")
-//                    .setMaxRows(1024)
-//                    .findList();
-//
-//            final Map<String, Integer> map = Maps.newHashMapWithExpectedSize(1024);
-//            for (PlayerStats playerStats : buffer) {
-//                map.put(playerStats.getPlayername(), playerStats.getId());
-//            }
-//
-//            //this is a blocking internet call
-//            final Map<String, UUID> call = new UUIDFetcher(map.keySet()).call();
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, "Unable to convert to uuids", ex);
-//        }
-//    }
-//
-//    public void convertUUIDsAsync(ExecutorService executorService) {
-//
-//    }
-
     private boolean existTable(String tableName) {
         try {
             final SqlQuery query = databaseServer.createSqlQuery(TEST_TABLE.replace("%table%", tableName));

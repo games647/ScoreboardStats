@@ -28,6 +28,6 @@ public class SkyblockVariables implements Replaceable {
             return NumberConversions.round(skyBlockAPI.getIslandLevel(player));
         }
 
-        return Replaceable.UNKOWN_VARIABLE;
+        return UNKOWN_VARIABLE;
     }
 }

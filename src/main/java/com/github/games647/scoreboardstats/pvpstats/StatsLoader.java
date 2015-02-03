@@ -12,10 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class StatsLoader implements Runnable {
 
-    private final Plugin plugin;
-    private final boolean uuidSearch;
-    private final boolean uuidCompatible;
+    protected final Plugin plugin;
 
+    private final boolean uuidSearch;
     private final WeakReference<Player> weakPlayer;
 
     /**
@@ -23,13 +22,11 @@ public class StatsLoader implements Runnable {
      *
      * @param plugin
      * @param uuidSearch should it be searched by uuid
-     * @param uuidCompatible if server version is above 1.7.2 and so uses mojang uuids
      * @param player player instance
      */
-    public StatsLoader(Plugin plugin, boolean uuidSearch, boolean uuidCompatible, Player player) {
+    public StatsLoader(Plugin plugin, boolean uuidSearch, Player player) {
         this.plugin = plugin;
         this.uuidSearch = uuidSearch;
-        this.uuidCompatible = uuidCompatible;
 
         //don't prevent the garbage collection of this player if he logs out
         this.weakPlayer = new WeakReference<Player>(player);
@@ -42,7 +39,7 @@ public class StatsLoader implements Runnable {
             final PlayerStats stats = Database.loadAccount(uuidSearch ? player.getUniqueId() : player.getName());
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
-            if (uuidCompatible) {
+            if (uuidSearch) {
                 //Set the uuid if the server is uuid compatible
                 stats.setUuid(player.getUniqueId());
             }

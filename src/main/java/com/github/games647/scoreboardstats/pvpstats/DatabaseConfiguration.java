@@ -7,6 +7,7 @@ import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
+import com.github.games647.scoreboardstats.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class DatabaseConfiguration {
      * Loads the eBean configuration
      */
     public void loadConfiguration() {
+        //If the server path contains non-latin characters, ebean will fail because of the old version, so use this
         GlobalProperties.put("ebean.classpathreader", "com.github.games647.scoreboardstats.pvpstats.PathReader");
 
         final ServerConfig databaseConfig = new ServerConfig();
@@ -91,7 +93,17 @@ public class DatabaseConfiguration {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
             config = new DataSourceConfig();
 
-            uuidUse = sqlConfig.getBoolean("uuidUse", false);
+            uuidUse = sqlConfig.getBoolean("uuidUse", Version.isUUIDCompatible());
+            if (Version.isUUIDCompatible() && !uuidUse) {
+                sqlConfig.set("uuidUse", true);
+                uuidUse = true;
+                plugin.getLogger().info("Forcing uuidUse to true, because the server is uuid compatible");
+                try {
+                    sqlConfig.save(file);
+                } catch (IOException ex) {
+                    plugin.getLogger().log(Level.WARNING, Lang.get("databaseConfigSaveError"), ex);
+                }
+            }
 
             final ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
             config.setUsername(sqlSettingSection.getString("Username"));
@@ -116,6 +128,9 @@ public class DatabaseConfiguration {
             sqlSettingSection.set("Isolation", TransactionIsolation.getLevelDescription(config.getIsolationLevel()));
             sqlSettingSection.set("Driver", config.getDriver());
             sqlSettingSection.set("Url", config.getUrl());
+
+            sqlConfig.set("uuidUse", Version.isUUIDCompatible());
+            uuidUse = sqlConfig.getBoolean("uuidUse");
             try {
                 sqlConfig.save(file);
             } catch (IOException ex) {
