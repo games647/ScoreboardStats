@@ -4,7 +4,6 @@
 compatibilityMode: false
 
 disabled-worlds:
-  - world_nether
   - city
 
 # This will not count vanished players in the online value
