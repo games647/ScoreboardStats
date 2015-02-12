@@ -9,7 +9,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.8.5</version>
+    <version>0.8.6</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -29,7 +29,7 @@
     </scm>
 
     <build>
-        <defaultGoal>package install</defaultGoal>
+        <defaultGoal>install</defaultGoal>
         <!--Just use the project name to replace an old version of the plugin if the user does only copy-paste-->
         <finalName>${project.name}</finalName>
 
@@ -37,15 +37,39 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!-- Don't use 3.0 since the incremtalCompilation compiles every file even they aren't changed-->
-                <version>2.5.1</version>
+                <version>3.2</version>
                 <configuration>
                     <!--So many people still use Java 6 ;( http://mcstats.org/global/#Java+Version-->
                     <source>1.6</source>
                     <target>1.6</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
+                    <!--false means actual true http://jira.codehaus.org/browse/MCOMPILER-209-->
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
+            </plugin>
+
+            <!--Check if this project is really Java 6 compatible-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-maven-plugin</artifactId>
+                <version>1.13</version>
+                <configuration>
+                    <signature>
+                        <groupId>org.codehaus.mojo.signature</groupId>
+                        <artifactId>java16</artifactId>
+                        <version>1.0</version>
+                    </signature>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>animal-sniffer</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!--Add meta data not only in the plugin.yml-->
@@ -126,6 +150,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>3.4.0</version>
+            <optional>true</optional>
             <exclusions>
                 <!--definitely not needed-->
                 <exclusion>
@@ -143,6 +168,7 @@
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
             <version>2.5.1</version>
+            <optional>true</optional>
             <exclusions>
                 <!--definitely not needed-->
                 <exclusion>
@@ -157,12 +183,14 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.5</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>1.5.5.4-SNAPSHOT</version>
+            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>me.desht</groupId>
@@ -196,6 +224,7 @@
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
             <version>1.5.01-SNAPSHOT</version>
+            <optional>true</optional>
         </dependency>
         <!--dependencies in /lib-->
 
@@ -206,6 +235,7 @@
             <version>2.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -214,6 +244,7 @@
             <version>2.1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/uSkyBlock-api.jar</systemPath>
+            <optional>true</optional>
         </dependency>
 
         <!--Factions:-->
@@ -222,6 +253,7 @@
             <artifactId>Factions</artifactId>
             <!--Factions-UUID fork of 1.6/1.8-->
             <version>1.6.9.5-U0.1.15-SNAPSHOT</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -232,6 +264,7 @@
             <version>2.7.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
+            <optional>true</optional>
         </dependency>
         <!--MCore must be available for factions-->
         <dependency>
@@ -240,16 +273,10 @@
             <version>2.7.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
+            <optional>true</optional>
         </dependency>
 
         <!--Testing environment-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>

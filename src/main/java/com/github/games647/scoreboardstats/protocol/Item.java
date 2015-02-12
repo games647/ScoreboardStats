@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  *
  * @see Objective
  */
-public final class Item implements Comparable<Item> {
+public class Item implements Comparable<Item> {
 
     private final Objective parent;
 

@@ -24,7 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 /**
  * Managing all general configurations of this plugin.
  */
-public final class Settings {
+public class Settings {
 
     private static boolean updateEnabled;
     private static boolean compatibilityMode;
@@ -267,15 +267,13 @@ public final class Settings {
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
         } finally {
-            try {
-                reader.close();
-            } catch (Exception ex) {
-                plugin.getLogger().log(Level.SEVERE, null, ex);
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception ex) {
+                    plugin.getLogger().log(Level.SEVERE, null, ex);
+                }
             }
-            //Incompatible issues due the guava update from spigot 1.8 (10 to 17)
-            //In  that version the method ...Quietly(Closeable) doesn't exist
-            //and in guava 10 doesn't exist any alternative method
-//            Closeables.closeQuietly(reader);
         }
 
         return newConf;

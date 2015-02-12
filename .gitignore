@@ -5,9 +5,7 @@
 
 # netbeans
 /nbproject
-
-# we use maven!
-/build.xml
+nb-configuration.xml
 
 # maven
 /target
@@ -29,4 +27,3 @@
 *.ipr
 *.iws
 .idea/
-/ToDo.txt

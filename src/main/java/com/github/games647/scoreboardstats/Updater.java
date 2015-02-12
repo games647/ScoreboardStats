@@ -223,19 +223,20 @@ public class Updater {
             this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
-            //Incompatible issues due the guava update from spigot 1.8 (10 to 17)
-//            Closeables.closeQuietly(fout);
-//            Closeables.closeQuietly(inputstream);
-            try {
-                fout.close();
-            } catch (Exception ex) {
-                this.plugin.getLogger().log(Level.SEVERE, null, ex);
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (Exception ex) {
+                    this.plugin.getLogger().log(Level.SEVERE, null, ex);
+                }
             }
 
-            try {
-                inputstream.close();
-            } catch (Exception ex) {
-                this.plugin.getLogger().log(Level.SEVERE, null, ex);
+            if (inputstream != null) {
+                try {
+                    inputstream.close();
+                } catch (Exception ex) {
+                    this.plugin.getLogger().log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

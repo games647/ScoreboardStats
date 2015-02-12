@@ -29,7 +29,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @see EbeanServer
  */
-public final class Database {
+public class Database {
 
     private static final String METAKEY = "player_stats";
     private static final ExecutorService EXECUTOR = Executors
@@ -100,14 +100,8 @@ public final class Database {
      *
      * @param stats PlayerStats data
      */
-    public static void saveAsync(final PlayerStats stats) {
-        EXECUTOR.submit(new Runnable() {
-
-            @Override
-            public void run() {
-                save(stats);
-            }
-        });
+    public static void saveAsync(PlayerStats stats) {
+        EXECUTOR.submit(new StatsSaver(stats));
     }
 
     /**
@@ -127,29 +121,29 @@ public final class Database {
      */
     public static void saveAll() {
         if (Settings.isPvpStats()) {
-            //If pvpstats are enabled save all stats that are in the cache
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                //maybe batch this
-                final List<MetadataValue> metadata = player.getMetadata(METAKEY);
-                //can be null if that metadata doesn't exist
-                if (metadata != null) {
-                    for (MetadataValue metadataValue : metadata) {
-                        if (metadataValue.getOwningPlugin().equals(instance)) {
-                            //just remove our metadata
-                            metadataValue.invalidate();
-                        }
+            try {
+                instance.getLogger().info(Lang.get("savingStats"));
+                //If pvpstats are enabled save all stats that are in the cache
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    //maybe batch this
+                    final List<MetadataValue> metadata = player.getMetadata(METAKEY);
+                    //can be null if that metadata doesn't exist
+                    if (metadata != null) {
+                        //just remove our metadata
+                        save((PlayerStats) metadata.get(0).value());
                     }
                 }
 
-                player.removeMetadata(METAKEY, instance);
-            }
+                EXECUTOR.shutdown();
 
-            EXECUTOR.shutdown();
-            try {
-                instance.getLogger().info(Lang.get("savingStats"));
                 EXECUTOR.awaitTermination(15, TimeUnit.MINUTES);
-            } catch (InterruptedException ex) {
+            } catch (Exception ex) {
                 instance.getLogger().log(Level.SEVERE, null, ex);
+            } finally {
+                //Make rally sure we remove all even on error
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.removeMetadata(METAKEY, instance);
+                }
             }
         }
     }

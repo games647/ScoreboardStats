@@ -22,7 +22,7 @@ import java.util.logging.Level;
 /**
  * Handling the replace management
  */
-public final class ReplaceManager implements Listener {
+public class ReplaceManager implements Listener {
 
     private static final Map<Class<? extends Replaceable>, String> DEFAULTS;
 
@@ -97,6 +97,18 @@ public final class ReplaceManager implements Listener {
     }
 
     /**
+     * Notifies that a scoreboard has changed. This should be called from an
+     * event listener.
+     *
+     * @param player who receives the update
+     * @param variable what variable is going to be updated
+     * @param newScore what should be the new score
+     */
+    public void updateScore(Player player, String variable, int newScore) {
+
+    }
+
+    /**
      * Get the score for a specific variable.
      *
      * @param player the associated player
@@ -120,6 +132,7 @@ public final class ReplaceManager implements Listener {
                 throw threadDeath;
             } catch (Throwable throwable) {
                 //remove the replacer if it throws exceptions, to prevent future ones
+                //Maybe we need to catch compiler "errors"
                 iter.remove();
 
                 plugin.getLogger()

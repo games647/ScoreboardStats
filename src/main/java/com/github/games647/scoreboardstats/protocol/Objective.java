@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  *
  * @see Item
  */
-public final class Objective {
+public class Objective {
 
     //A scoreboard can't have more than 15 items
     final Map<String, Item> items = Maps.newHashMapWithExpectedSize(15);

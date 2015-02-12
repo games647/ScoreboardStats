@@ -97,6 +97,7 @@ public class SbManager {
             if (player.isOnline()) {
                 if (ispvpstats) {
                     //maybe batch this
+                    player.removeMetadata("player_stats", plugin);
                     Database.loadAccountAsync(player);
                 }
 
@@ -114,6 +115,11 @@ public class SbManager {
         }
     }
 
+    /**
+     * Unregister ScoreboardStats from the player
+     *
+     * @param player who owns the scoreboard
+     */
     public void unregister(Player player) {
         if (player.isOnline()) {
             final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);

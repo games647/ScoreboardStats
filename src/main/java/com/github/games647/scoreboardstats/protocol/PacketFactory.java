@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @see PacketListener
  * @see ProtocolManager
  */
-public final class PacketFactory {
+public class PacketFactory {
 
     private static final int SIDEBAR_SLOT = 1;
 

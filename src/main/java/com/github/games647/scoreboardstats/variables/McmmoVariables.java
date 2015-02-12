@@ -3,12 +3,14 @@ package com.github.games647.scoreboardstats.variables;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.datatypes.skills.SkillType;
+import com.gmail.nossr50.events.experience.McMMOPlayerLevelChangeEvent;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Locale;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 /**
@@ -51,9 +53,13 @@ public class McmmoVariables implements Replaceable, Listener {
         return UNKOWN_VARIABLE;
     }
 
-//    @EventHandler(ignoreCancelled = true)
-//    public void onLevelUp(McMMOPlayerLevelChangeEvent levelChangeEvent) {
-//        final SkillType skill = levelChangeEvent.getSkill();
-//        final int newSkillLevel = levelChangeEvent.getSkillLevel();
-//    }
+    @EventHandler(ignoreCancelled = true)
+    public void onLevelUp(McMMOPlayerLevelChangeEvent levelChangeEvent) {
+        final Player player = levelChangeEvent.getPlayer();
+        final SkillType skill = levelChangeEvent.getSkill();
+        final int newSkillLevel = levelChangeEvent.getSkillLevel();
+
+        String variable = '%' + skill.getName() + '%';
+
+    }
 }

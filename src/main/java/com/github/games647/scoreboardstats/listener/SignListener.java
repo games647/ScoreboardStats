@@ -18,7 +18,7 @@ import org.bukkit.event.block.SignChangeEvent;
  * @see SignSendEvent
  * @see Database
  */
-public final class SignListener implements Listener {
+public class SignListener implements Listener {
 
     private static final String PERMISSION = "scoreboardstats.sign";
 

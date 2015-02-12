@@ -43,6 +43,8 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent joinEvent) {
         final Player player = joinEvent.getPlayer();
+        player.removeMetadata("player_stats", plugin);
+        
         //load the pvpstats if activated
         Database.loadAccountAsync(player);
         //add it to the refresh queue
@@ -50,7 +52,7 @@ public class PlayerListener implements Listener {
     }
 
     /**
-     * Saves the stats to database if the player laves
+     * Saves the stats to database if the player leaves
      *
      * @param quitEvent leave event
      * @see Database
@@ -58,17 +60,13 @@ public class PlayerListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        //gladly the event will be cancelled on every player quit
         final Player player = quitEvent.getPlayer();
-
         final List<MetadataValue> metadata = player.getMetadata("player_stats");
         //can be null if that metadata doesn't exist
         if (metadata != null) {
             for (MetadataValue metadataValue : metadata) {
                 //just remove our metadata
-                if (metadataValue.getOwningPlugin().equals(plugin)) {
-                    metadataValue.invalidate();
-                }
+                metadataValue.invalidate();
             }
         }
 

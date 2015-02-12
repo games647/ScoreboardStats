@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.github.games647.scoreboardstats.Version;
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
@@ -28,12 +29,12 @@ public class SimpleClansVariables implements Replaceable {
     public SimpleClansVariables() {
         final Plugin clansPlugin = Bukkit.getPluginManager().getPlugin("SimpleClans");
         final String version = clansPlugin.getDescription().getVersion();
-        if (!"Legacy".equalsIgnoreCase(version)) {
+        if ("Legacy".equalsIgnoreCase(version) || Version.compare("2.5", version) >= 0) {
+            final SimpleClans simpleClans = (SimpleClans) clansPlugin;
+            clanManager = simpleClans.getClanManager();
+        } else {
             throw new UnsupportedPluginException("SimpleClans under version Legacy are not supported");
         }
-
-        final SimpleClans simpleClans = (SimpleClans) clansPlugin;
-        clanManager = simpleClans.getClanManager();
     }
 
     @Override

@@ -15,7 +15,7 @@ public class SkyblockVariables implements Replaceable {
 
     public SkyblockVariables() {
         final Plugin plugin = Bukkit.getPluginManager().getPlugin("uSkyBlock");
-        if (plugin instanceof uSkyBlockAPI && plugin.isEnabled()) {
+        if (plugin instanceof uSkyBlockAPI) {
             skyBlockAPI = (uSkyBlockAPI) plugin;
         } else {
             throw new UnsupportedPluginException("Your uSkyBlock version is outdated");
