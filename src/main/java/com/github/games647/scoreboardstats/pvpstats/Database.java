@@ -14,8 +14,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -31,10 +31,12 @@ import org.bukkit.plugin.Plugin;
  */
 public class Database {
 
+    //TODO remove this static stuff
+
     private static final String METAKEY = "player_stats";
-    private static final ExecutorService EXECUTOR = Executors
+    private static final ScheduledExecutorService EXECUTOR = Executors
             //SQL transactions are mainly blocking so there is no need to update them smooth
-            .newSingleThreadExecutor(new ThreadFactoryBuilder()
+            .newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                     //Give the thread a name so we can find them
                     .setNameFormat("ScoreboardStats-Database").build());
 
@@ -42,8 +44,19 @@ public class Database {
 
     private static Plugin instance;
 
+    private static final Map<String, Integer> TOPLIST = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+
     private static EbeanServer databaseInstance;
     private static DatabaseConfiguration dbConfiguration;
+
+    /**
+     * Get the database instance.
+     *
+     * @return the database instance
+     */
+    public static EbeanServer getDatabaseInstance() {
+        return databaseInstance;
+    }
 
     /**
      * Get the cache player stats if they exists and the arguments are valid.
@@ -149,33 +162,6 @@ public class Database {
     }
 
     /**
-     * Get the a map of the best players for a specific category.
-     *
-     * @return a iterable of the entries
-     */
-    public static Iterable<Map.Entry<String, Integer>> getTop() {
-        //Get the top players for a specific type
-        final String type = Settings.getTopType();
-        final Map<String, Integer> top = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
-        if ("%killstreak%".equals(type)) {
-            for (PlayerStats stats : getTopList("killstreak")) {
-                top.put(stats.getPlayername(), stats.getKillstreak());
-            }
-        } else if ("%mob%".equals(type)) {
-            for (PlayerStats stats : getTopList("mobkills")) {
-                top.put(stats.getPlayername(), stats.getMobkills());
-            }
-        } else {
-            for (PlayerStats stats : getTopList("kills")) {
-                top.put(stats.getPlayername(), stats.getKills());
-            }
-        }
-
-        //shouldn't be modifed, because it cause no effect
-        return top.entrySet();
-    }
-
-    /**
      * Initialize a components and checking for an existing database
      *
      * @param plugin the ScoreboardStats instance
@@ -220,16 +206,49 @@ public class Database {
 
             ReloadFixLoader.changeClassCache(true);
             Thread.currentThread().setContextClassLoader(previous);
+
+            EXECUTOR.scheduleWithFixedDelay(new Runnable() {
+
+                @Override
+                public void run() {
+                    updateTopList();
+                }
+            }, 0, 5, TimeUnit.MINUTES);
         }
     }
 
     /**
-     * Get the database instance.
+     * Get the a map of the best players for a specific category.
      *
-     * @return the database instance
+     * @return a iterable of the entries
      */
-    public static EbeanServer getDatabaseInstance() {
-        return databaseInstance;
+    public static Iterable<Map.Entry<String, Integer>> getTop() {
+        synchronized (TOPLIST) {
+            return TOPLIST.entrySet();
+        }
+    }
+
+    private static void updateTopList() {
+        final String type = Settings.getTopType();
+        final Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+        if ("%killstreak%".equals(type)) {
+            for (PlayerStats stats : getTopList("killstreak")) {
+                newToplist.put(stats.getPlayername(), stats.getKillstreak());
+            }
+        } else if ("%mob%".equals(type)) {
+            for (PlayerStats stats : getTopList("mobkills")) {
+                newToplist.put(stats.getPlayername(), stats.getMobkills());
+            }
+        } else {
+            for (PlayerStats stats : getTopList("kills")) {
+                newToplist.put(stats.getPlayername(), stats.getKills());
+            }
+        }
+
+        synchronized (TOPLIST) {
+            TOPLIST.clear();
+            TOPLIST.putAll(newToplist);
+        }
     }
 
     private static Iterable<PlayerStats> getTopList(String type) {
