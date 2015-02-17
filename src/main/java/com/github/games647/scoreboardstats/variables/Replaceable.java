@@ -4,14 +4,26 @@ import org.bukkit.entity.Player;
 
 /**
  * Represents a variable replacer
+ *
+// * @deprecated not fully featured and not safe to use (returns magic values)
  */
 public interface Replaceable {
 
     //todo find another method to prevent conflicts
     /**
      * Represents an unknown variable
+     *
+     * @deprecated Magic value
      */
     int UNKOWN_VARIABLE = -1337;
+
+    /**
+     * If the variable can be updated based on a event. Then the getScoreValue
+     * method will be called only on the first replace event
+     *
+     * @deprecated Magic value
+     */
+    int ON_EVENT = Integer.MIN_VALUE - 1;
 
     /**
      * Get the score for specific variable

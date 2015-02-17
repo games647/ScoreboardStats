@@ -7,7 +7,9 @@ ScoreboardStats is a [Bukkit](https://github.com/Bukkit/Bukkit) plugin
 This plugin simplifies, adds many new features and possible ways to improve
     the use of it.
 
-Project page: http://dev.bukkit.org/bukkit-mods/scoreboardstats/
+Project page:
+    http://dev.bukkit.org/bukkit-mods/scoreboardstats/
+    http://www.curse.com/bukkit-plugins/minecraft/scoreboardstats
 
 Build status:
     [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg)](https://travis-ci.org/games647/ScoreboardStats/)

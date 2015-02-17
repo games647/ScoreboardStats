@@ -45,6 +45,7 @@ public class Settings {
     //properly a memory leak
     //Sidebar objective can't have more than 15 items
     private static final Map<String, String> ITEMS = Maps.newHashMapWithExpectedSize(15);
+    private static final Map<String, String> ITEM_NAMES = Maps.newHashMapWithExpectedSize(15);
     private static Set<String> disabledWorlds;
 
     /**
@@ -54,6 +55,16 @@ public class Settings {
      */
     public static Iterator<Map.Entry<String, String>> getItems() {
         return ITEMS.entrySet().iterator();
+    }
+
+    /**
+     * Get the display name for the score item
+     *
+     * @param variable
+     * @return
+     */
+    public static String getItemName(String variable) {
+        return ITEM_NAMES.get(variable);
     }
 
     /**
@@ -326,6 +337,7 @@ public class Settings {
             if (variable.charAt(0) == '%' && variable.endsWith("%")) {
                 //indicates a variable
                 ITEMS.put(name, variable);
+                ITEM_NAMES.put(variable, name);
             } else {
                 //Prevent user mistakes
                 plugin.getLogger().info(Lang.get("missingVariableSymbol", name));

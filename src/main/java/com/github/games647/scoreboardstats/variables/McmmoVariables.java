@@ -18,13 +18,17 @@ import org.bukkit.event.Listener;
  */
 public class McmmoVariables implements Replaceable, Listener {
 
+    private final ReplaceManager replaceManager;
     private final Set<String> skillTypes;
 
     /**
      * Creates a new mcMMO replacer. This also validates if all variables are available
      * and can be used in the runtime.
+     *
+     * @param replaceManager to update the variables by event
      */
-    public McmmoVariables() {
+    public McmmoVariables(ReplaceManager replaceManager) {
+        this.replaceManager = replaceManager;
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         //goes through all available skill types
         for (SkillType type : SkillType.values()) {
@@ -39,12 +43,14 @@ public class McmmoVariables implements Replaceable, Listener {
     public int getScoreValue(Player player, String variable) {
         try {
             if ("%powlvl%".equals(variable)) {
-                return ExperienceAPI.getPowerLevel(player);
+                replaceManager.updateScore(player, variable, ExperienceAPI.getPowerLevel(player));
+                return ON_EVENT;
             }
 
             if (skillTypes.contains(variable)) {
                 final String type = variable.replace("%", "").toUpperCase(Locale.ENGLISH);
-                return ExperienceAPI.getLevel(player, type);
+                replaceManager.updateScore(player, variable, ExperienceAPI.getLevel(player, type));
+                return ON_EVENT;
             }
         } catch (McMMOPlayerNotFoundException playerNotFoundEx) {
             //player not loaded yet - fail silently
@@ -59,7 +65,7 @@ public class McmmoVariables implements Replaceable, Listener {
         final SkillType skill = levelChangeEvent.getSkill();
         final int newSkillLevel = levelChangeEvent.getSkillLevel();
 
-        String variable = '%' + skill.getName() + '%';
-
+        replaceManager.updateScore(player, '%' + skill.getName() + '%', newSkillLevel);
+        replaceManager.updateScore(player, "%powlvl%", ExperienceAPI.getPowerLevel(player));
     }
 }

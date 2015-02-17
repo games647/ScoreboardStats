@@ -7,7 +7,10 @@ import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignListener;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.google.common.collect.Lists;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,8 +60,15 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public EbeanServer getDatabase() {
-        //these method exists to make it easier access from anothe plugin
+        //these method exists to make it easier access from another plugin
         return Database.getDatabaseInstance();
+    }
+
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+        final List<Class<?>> classes = Lists.newArrayList();
+        classes.add(PlayerStats.class);
+        return classes;
     }
 
     /**
@@ -128,7 +138,7 @@ public class ScoreboardStats extends JavaPlugin {
         if (Settings.isCompatibilityMode()) {
             scoreboardManager = new PacketSbManager(this);
         } else {
-            scoreboardManager = new SbManager(this);
+            scoreboardManager = new BukkitScoreboardManager(this);
         }
 
         //creates scoreboards for every player that is online
@@ -179,7 +189,7 @@ public class ScoreboardStats extends JavaPlugin {
             if (Settings.isCompatibilityMode()) {
                 scoreboardManager = new PacketSbManager(this);
             } else {
-                scoreboardManager = new SbManager(this);
+                scoreboardManager = new BukkitScoreboardManager(this);
             }
         }
 

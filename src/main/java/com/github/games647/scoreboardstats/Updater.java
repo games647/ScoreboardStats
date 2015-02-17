@@ -36,9 +36,7 @@ public class Updater {
     // Remote file's download link
     private static final String LINK_VALUE = "downloadUrl";
     // Path to GET
-    private static final String QUERY = "/servermods/files?projectIds=";
-    // Slugs will be appended to this to get to the project's RSS feed
-    private static final String HOST = "https://api.curseforge.com";
+    private static final String QUERY = "https://api.curseforge.com/servermods/files?projectIds=";
     // Used for locating version numbers in file names
     private static final String DELIMETER = "^v|[\\s_-]v";
     // If the version number contains one of these, don't update.
@@ -137,7 +135,7 @@ public class Updater {
         this.callback = callback;
 
         try {
-            this.url = new URL(Updater.HOST + Updater.QUERY + this.id);
+            this.url = new URL(Updater.QUERY + this.id);
         } catch (MalformedURLException e) {
             //This can only happend if we modified the url. Just an int cannot make it malformed
             this.plugin.getLogger().log(Level.SEVERE, "Invalid URL", e);
@@ -145,7 +143,14 @@ public class Updater {
             return;
         }
 
-        this.thread = new Thread(new UpdateRunnable());
+        this.thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                runUpdater();
+            }
+        });
+
         this.thread.start();
     }
 
@@ -226,7 +231,7 @@ public class Updater {
             if (fout != null) {
                 try {
                     fout.close();
-                } catch (Exception ex) {
+                } catch (IOException ex) {
                     this.plugin.getLogger().log(Level.SEVERE, null, ex);
                 }
             }
@@ -234,7 +239,7 @@ public class Updater {
             if (inputstream != null) {
                 try {
                     inputstream.close();
-                } catch (Exception ex) {
+                } catch (IOException ex) {
                     this.plugin.getLogger().log(Level.SEVERE, null, ex);
                 }
             }
@@ -308,11 +313,12 @@ public class Updater {
      * @return true if updating should be disabled.
      */
     private boolean hasTag(String version) {
-        for (final String string : Updater.NO_UPDATE_TAG) {
+        for (String string : Updater.NO_UPDATE_TAG) {
             if (version.contains(string)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -341,7 +347,7 @@ public class Updater {
 
             final JSONArray array = (JSONArray) JSONValue.parse(streamReader);
             if (array.isEmpty()) {
-                this.plugin.getLogger().log(Level.WARNING, "The updater could not find any file for the project id:{0}", this.id);
+                this.plugin.getLogger().log(Level.WARNING, "The updater could not find any file for the project id: {0}", this.id);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }
@@ -373,13 +379,6 @@ public class Updater {
         void onFinish(Updater updater);
     }
 
-    private class UpdateRunnable implements Runnable {
-        @Override
-        public void run() {
-            runUpdater();
-        }
-    }
-
     private void runUpdater() {
         if (this.read() && this.versionCheck()) {
             // Obtain the results of the project's file feed
@@ -392,6 +391,7 @@ public class Updater {
 
         if (this.callback != null) {
             this.plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+
                 @Override
                 public void run() {
                     runCallback();

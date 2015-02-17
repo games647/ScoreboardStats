@@ -6,13 +6,13 @@ import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.variables.Replaceable;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -35,7 +35,7 @@ public class PacketSbManager extends SbManager {
     }
 
     /**
-     * Gets the scorebaord from a player.
+     * Gets the scoreboard from a player.
      *
      * @param player who owns the scoreboard
      * @return the scoreboard instance
@@ -56,38 +56,14 @@ public class PacketSbManager extends SbManager {
         final Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (sidebar == null) {
             createScoreboard(player);
-            return;
-        }
-
-        if (SB_NAME.equals(sidebar.getName())) {
-            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
-            while (iter.hasNext()) {
-                final Map.Entry<String, String> entry = iter.next();
-                final String title = entry.getKey();
-                final String variable = entry.getValue();
-                try {
-                    final int score = replaceManager.getScore(player, variable);
-                    sendScore(sidebar, title, score);
-                } catch (UnknownVariableException ex) {
-                    //Remove the variable becaue we can't replace it
-                    iter.remove();
-
-                    plugin.getLogger().info(Lang.get("unknownVariable", variable));
-                }
-            }
+        } else {
+            sendUpdate(player, false);
         }
     }
 
     @Override
     public void unregisterAll() {
-        for (PlayerScoreboard scoreboard : scoreboards.values()) {
-            for (Objective objective : scoreboard.getObjectives()) {
-                final String objectiveName = objective.getName();
-                if (objectiveName.startsWith(SB_NAME)) {
-                    objective.unregister();
-                }
-            }
-        }
+        super.unregisterAll();
 
         scoreboards.clear();
     }
@@ -95,9 +71,11 @@ public class PacketSbManager extends SbManager {
     @Override
     public void unregister(Player player) {
         final PlayerScoreboard scoreboard = scoreboards.get(player);
-        final Objective objective = scoreboard.getObjective(SB_NAME);
-        if (objective != null) {
-            objective.unregister();
+        for (Objective objective : scoreboard.getObjectives()) {
+            final String objectiveName = objective.getName();
+            if (objectiveName.startsWith(SB_NAME)) {
+                objective.unregister();
+            }
         }
     }
 
@@ -111,12 +89,10 @@ public class PacketSbManager extends SbManager {
         }
 
         scoreboard.createSidebarObjective(SB_NAME, Settings.getTitle(), true);
-        sendUpdate(player);
+        sendUpdate(player, true);
+
         //Schedule the next tempscoreboard show
-        if (Settings.isTempScoreboard()) {
-            Bukkit.getScheduler().runTaskLater(plugin
-                    , new ShowTask(player, true), Settings.getTempAppear() * 20L);
-        }
+        scheduleShowTask(player, true);
     }
 
     /**
@@ -124,7 +100,7 @@ public class PacketSbManager extends SbManager {
      * @param player who will receive the scoreboard
      */
     @Override
-    protected void createTopListScoreboard(Player player) {
+    public void createTopListScoreboard(Player player) {
         final PlayerScoreboard scoreboard = getScoreboard(player);
         final Objective oldObjective = scoreboard.getSidebarObjective();
         if (!isValid(player) || oldObjective == null
@@ -153,8 +129,49 @@ public class PacketSbManager extends SbManager {
         }
 
         //schedule the next normal scoreboard show
-        Bukkit.getScheduler().runTaskLater(plugin
-                , new ShowTask(player, false), Settings.getTempDisappear() * 20L);
+        scheduleShowTask(player, false);
+    }
+
+    @Override
+    public void update(Player player, String itemName, int newScore) {
+        final PlayerScoreboard scoreboard = scoreboards.get(player);
+        if (scoreboard != null) {
+            final Objective objective = scoreboard.getObjective(SB_NAME);
+            if (objective != null) {
+                sendScore(objective, itemName, newScore);
+            }
+        }
+    }
+
+    @Override
+    protected void sendUpdate(Player player, boolean complete) {
+        final Objective sidebar = getScoreboard(player).getSidebarObjective();
+        if (SB_NAME.equals(sidebar.getName())) {
+            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            while (iter.hasNext()) {
+                final Map.Entry<String, String> entry = iter.next();
+                final String title = entry.getKey();
+                final String variable = entry.getValue();
+                if (!complete && skipList.contains(variable)) {
+                    continue;
+                }
+
+                try {
+                    final int score = replaceManager.getScore(player, variable);
+                    if (score == Replaceable.ON_EVENT) {
+                        skipList.add(variable);
+                        continue;
+                    }
+
+                    sendScore(sidebar, title, score);
+                } catch (UnknownVariableException ex) {
+                    //Remove the variable becaue we can't replace it
+                    iter.remove();
+
+                    plugin.getLogger().info(Lang.get("unknownVariable", variable));
+                }
+            }
+        }
     }
 
     private void sendScore(Objective objective, String title, int value) {
