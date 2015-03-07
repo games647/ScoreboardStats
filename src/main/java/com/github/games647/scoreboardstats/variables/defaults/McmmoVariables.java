@@ -1,14 +1,19 @@
-package com.github.games647.scoreboardstats.variables;
+package com.github.games647.scoreboardstats.variables.defaults;
 
+import com.github.games647.scoreboardstats.variables.ReplaceEvent;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.gmail.nossr50.api.ExperienceAPI;
-import com.gmail.nossr50.api.exceptions.McMMOPlayerNotFoundException;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelChangeEvent;
+import com.gmail.nossr50.mcMMO;
+import com.gmail.nossr50.util.player.UserManager;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Locale;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +21,7 @@ import org.bukkit.event.Listener;
 /**
  * Replace all variables that are associated with the mcMMO plugin
  */
-public class McmmoVariables implements Replaceable, Listener {
+public class McmmoVariables extends VariableReplaceAdapter<mcMMO> implements Listener {
 
     private final ReplaceManager replaceManager;
     private final Set<String> skillTypes;
@@ -28,35 +33,41 @@ public class McmmoVariables implements Replaceable, Listener {
      * @param replaceManager to update the variables by event
      */
     public McmmoVariables(ReplaceManager replaceManager) {
+        super((mcMMO) Bukkit.getPluginManager().getPlugin("mcMMO"));
+
         this.replaceManager = replaceManager;
+
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
         //goes through all available skill types
         for (SkillType type : SkillType.values()) {
             final String skillName = type.name().toLowerCase(Locale.ENGLISH);
-            builder.add('%' + skillName + '%');
+            builder.add(skillName);
         }
 
         skillTypes = builder.build();
     }
 
     @Override
-    public int getScoreValue(Player player, String variable) {
-        try {
-            if ("%powlvl%".equals(variable)) {
-                replaceManager.updateScore(player, variable, ExperienceAPI.getPowerLevel(player));
-                return ON_EVENT;
+    public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
+        if ("powlvl".equals(variable)) {
+            //check if player is loaded
+            if (UserManager.hasPlayerDataKey(player)) {
+                replaceEvent.setScore(ExperienceAPI.getPowerLevel(player));
+                replaceEvent.setConstant(true);
+            } else {
+                replaceEvent.touch();
             }
-
-            if (skillTypes.contains(variable)) {
-                final String type = variable.replace("%", "").toUpperCase(Locale.ENGLISH);
-                replaceManager.updateScore(player, variable, ExperienceAPI.getLevel(player, type));
-                return ON_EVENT;
-            }
-        } catch (McMMOPlayerNotFoundException playerNotFoundEx) {
-            //player not loaded yet - fail silently
         }
 
-        return UNKOWN_VARIABLE;
+        if (skillTypes.contains(variable)) {
+            if (UserManager.hasPlayerDataKey(player)) {
+                final String type = variable.toUpperCase(Locale.ENGLISH);
+                replaceEvent.setScore(ExperienceAPI.getLevel(player, type));
+                replaceEvent.setConstant(true);
+            } else {
+                replaceEvent.touch();
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -65,7 +76,7 @@ public class McmmoVariables implements Replaceable, Listener {
         final SkillType skill = levelChangeEvent.getSkill();
         final int newSkillLevel = levelChangeEvent.getSkillLevel();
 
-        replaceManager.updateScore(player, '%' + skill.getName() + '%', newSkillLevel);
-        replaceManager.updateScore(player, "%powlvl%", ExperienceAPI.getPowerLevel(player));
+        replaceManager.updateScore(player, skill.getName(), newSkillLevel);
+        replaceManager.updateScore(player, "powlvl", ExperienceAPI.getPowerLevel(player));
     }
 }

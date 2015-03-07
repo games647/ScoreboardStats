@@ -2,12 +2,15 @@ package com.github.games647.scoreboardstats;
 
 import com.avaje.ebean.EbeanServer;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.github.games647.scoreboardstats.Updater.UpdateCallback;
+import com.github.games647.scoreboardstats.Updater.UpdateResult;
 import com.github.games647.scoreboardstats.listener.EntityListener;
 import com.github.games647.scoreboardstats.listener.PlayerListener;
 import com.github.games647.scoreboardstats.listener.SignListener;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -47,6 +50,19 @@ public class ScoreboardStats extends JavaPlugin {
      */
     public SbManager getScoreboardManager() {
         return scoreboardManager;
+    }
+
+    /**
+     * Get the replace manager.
+     *
+     * @return the manager
+     */
+    public ReplaceManager getReplaceManager() {
+        if (scoreboardManager != null) {
+            scoreboardManager.getReplaceManager();
+        }
+
+        return null;
     }
 
     /**
@@ -103,13 +119,13 @@ public class ScoreboardStats extends JavaPlugin {
 
         if (Settings.isUpdateEnabled()) {
             //start this as early as possible, so it can run async in the background
-            new UpdaterFix(this, this.getFile(), true, new Updater.UpdateCallback() {
+            new UpdaterFix(this, this.getFile(), true, new UpdateCallback() {
 
                 @Override
                 public void onFinish(Updater updater) {
                     //This method will be performed on the main thread after the
                     //update check finished so this won't block the main thread
-                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                    if (updater.getResult() == UpdateResult.SUCCESS) {
                         getLogger().info(Lang.get("onUpdate"));
                     }
                 }
@@ -124,7 +140,11 @@ public class ScoreboardStats extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
         if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
             //Register this listerner if InSigns is available
-            getServer().getPluginManager().registerEvents(new SignListener(), this);
+            new SignListener(this, "[Kill]");
+            new SignListener(this, "[Death]");
+            new SignListener(this, "[KDR]");
+            new SignListener(this, "[Streak]");
+            new SignListener(this, "[Mob]");
         }
 
         //register all commands
@@ -173,7 +193,9 @@ public class ScoreboardStats extends JavaPlugin {
     public void onReload() {
         final boolean oldMode = Settings.isCompatibilityMode();
 
-        settings.loadConfig();
+        if (settings != null) {
+            settings.loadConfig();
+        }
 
         Database.setupDatabase(this);
 

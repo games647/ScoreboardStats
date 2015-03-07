@@ -6,7 +6,6 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
 import com.github.games647.scoreboardstats.Lang;
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Version;
 
 import java.io.File;
@@ -16,6 +15,7 @@ import java.util.logging.Level;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Configuration for the SQL database.
@@ -24,12 +24,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class DatabaseConfiguration {
 
-    private final ScoreboardStats plugin;
+    private final Plugin plugin;
 
     private ServerConfig serverConfig;
     private boolean uuidUse;
 
-    DatabaseConfiguration(ScoreboardStats instance) {
+    DatabaseConfiguration(Plugin instance) {
         plugin = instance;
     }
 
@@ -56,7 +56,7 @@ public class DatabaseConfiguration {
      */
     public void loadConfiguration() {
         //If the server path contains non-latin characters, ebean will fail because of the old version, so use this
-        GlobalProperties.put("ebean.classpathreader", "com.github.games647.scoreboardstats.pvpstats.PathReader");
+        GlobalProperties.put("ebean.classpathreader", PathReader.class.getName());
 
         final ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.addClass(PlayerStats.class);

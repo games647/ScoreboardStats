@@ -8,6 +8,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.DisplaySlot;
 
 /**
  * Listening all outgoing packets and check + handle for possibly client crash cases.
@@ -126,7 +127,7 @@ public class PacketListener extends PacketAdapter {
 
         //Can be empty; if so it would just clear the slot
         final String objectiveName = packet.getStrings().read(0);
-        final Slot slot = Slot.fromId(packet.getIntegers().read(0));
+        final DisplaySlot slot = SlotTransformer.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
         if (slot == null || objectiveName.length() > 16) {
@@ -134,7 +135,7 @@ public class PacketListener extends PacketAdapter {
         }
 
         final PlayerScoreboard scoreboard = manager.getScoreboard(player);
-        if (slot == Slot.SIDEBAR) {
+        if (slot == DisplaySlot.SIDEBAR) {
             scoreboard.setSidebarObjective(objectiveName);
         } else {
             final Objective sidebarObjective = scoreboard.getSidebarObjective();

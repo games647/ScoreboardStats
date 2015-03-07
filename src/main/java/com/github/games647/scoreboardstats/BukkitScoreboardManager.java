@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.variables.Replaceable;
+import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
@@ -160,22 +160,15 @@ public class BukkitScoreboardManager extends SbManager {
                 final Map.Entry<String, String> entry = iter.next();
                 final String title = entry.getKey();
                 final String variable = entry.getValue();
-                if (!complete && skipList.contains(variable)) {
-                    continue;
-                }
 
                 try {
-                    int score = replaceManager.getScore(player, variable);
-                    if (score == Replaceable.ON_EVENT) {
-                        skipList.add(variable);
-                        continue;
+                    final ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    if (replaceEvent.isModified()) {
+                        sendScore(objective, title, replaceEvent.getScore(), complete);
                     }
-
-                    sendScore(objective, title, score, complete);
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
                     iter.remove();
-
                     plugin.getLogger().info(Lang.get("unknownVariable", variable));
                 }
             }
@@ -197,16 +190,12 @@ public class BukkitScoreboardManager extends SbManager {
         if (complete && value == 0) {
             /*
              * Workaround because the value from Bukkit is set as default to zero and Bukkit sends only
-             * the packet if the value changes
-             * so we have to change it to another value earlier
+             * the packet if the value changes so we have to change it to another value earlier
              */
             score.setScore(1337);
         }
 
-        if (score.getScore() != value) {
-            //don't spam the client
-            score.setScore(value);
-        }
+        score.setScore(value);
     }
 
     private String expandScore(String scoreName, Objective objective) {

@@ -5,11 +5,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -257,18 +257,15 @@ public class Settings {
         final YamlConfiguration newConf = new YamlConfiguration();
         newConf.setDefaults(getDefaults());
 
-        BufferedReader reader = null;
         try {
             //UTF-8 should be available on all java running systems
-            reader = Files.newReader(file, Charsets.UTF_8);
+            final List<String> lines = Files.readLines(file, Charsets.UTF_8);
 
             final StringBuilder builder = new StringBuilder();
-            String line = reader.readLine();
-            while (line != null) {
+            for (String line : lines) {
                 builder.append(line);
                 //indicates a new line
                 builder.append('\n');
-                line = reader.readLine();
             }
 
             newConf.loadFromString(builder.toString());
@@ -277,14 +274,6 @@ public class Settings {
             plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Exception ex) {
-                    plugin.getLogger().log(Level.SEVERE, null, ex);
-                }
-            }
         }
 
         return newConf;
@@ -334,9 +323,9 @@ public class Settings {
             final String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
             final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
-            if (variable.charAt(0) == '%' && variable.endsWith("%")) {
+            if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
                 //indicates a variable
-                ITEMS.put(name, variable);
+                ITEMS.put(name, variable.replace("%", ""));
                 ITEM_NAMES.put(variable, name);
             } else {
                 //Prevent user mistakes

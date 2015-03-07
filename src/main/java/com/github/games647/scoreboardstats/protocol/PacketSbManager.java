@@ -6,7 +6,7 @@ import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.variables.Replaceable;
+import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
@@ -152,18 +152,12 @@ public class PacketSbManager extends SbManager {
                 final Map.Entry<String, String> entry = iter.next();
                 final String title = entry.getKey();
                 final String variable = entry.getValue();
-                if (!complete && skipList.contains(variable)) {
-                    continue;
-                }
 
                 try {
-                    final int score = replaceManager.getScore(player, variable);
-                    if (score == Replaceable.ON_EVENT) {
-                        skipList.add(variable);
-                        continue;
+                    final ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    if (replaceEvent.isModified()) {
+                        sendScore(sidebar, title, replaceEvent.getScore());
                     }
-
-                    sendScore(sidebar, title, score);
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
                     iter.remove();

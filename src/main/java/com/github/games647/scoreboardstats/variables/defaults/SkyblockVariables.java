@@ -1,4 +1,9 @@
-package com.github.games647.scoreboardstats.variables;
+package com.github.games647.scoreboardstats.variables.defaults;
+
+import com.github.games647.scoreboardstats.variables.ReplaceEvent;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
+import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
+import com.github.games647.scoreboardstats.variables.VariableReplacer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,7 +18,7 @@ import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 /**
  * Replace all variables that are associated with the uSkyBlock plugin
  */
-public class SkyblockVariables implements Replaceable, Listener {
+public class SkyblockVariables implements Listener, VariableReplacer {
 
     private final ReplaceManager replaceManager;
     private final uSkyBlockAPI skyBlockAPI;
@@ -30,12 +35,11 @@ public class SkyblockVariables implements Replaceable, Listener {
     }
 
     @Override
-    public int getScoreValue(Player player, String variable) {
-        if ("%island_level%".equals(variable)) {
-            return NumberConversions.round(skyBlockAPI.getIslandLevel(player));
+    public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
+        if ("island_level".equals(variable)) {
+            replaceEvent.setScore(NumberConversions.round(skyBlockAPI.getIslandLevel(player)));
+            replaceEvent.setConstant(true);
         }
-
-        return UNKOWN_VARIABLE;
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -43,6 +47,6 @@ public class SkyblockVariables implements Replaceable, Listener {
         final Player player = scoreChangeEvent.getPlayer();
         final int newLevel = NumberConversions.round(scoreChangeEvent.getScore().getScore());
 
-        replaceManager.updateScore(player, "%island_level%", newLevel);
+        replaceManager.updateScore(player, "island_level", newLevel);
     }
 }

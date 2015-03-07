@@ -12,7 +12,6 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,7 +21,6 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
 
 /**
  * This represents a handler for saving player stats.
@@ -42,7 +40,7 @@ public class Database {
 
     private static boolean uuidUse;
 
-    private static Plugin instance;
+    private static ScoreboardStats instance;
 
     private static final Map<String, Integer> TOPLIST = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
@@ -66,9 +64,10 @@ public class Database {
      */
     public static PlayerStats getCachedStats(Player request) {
         if (Settings.isPvpStats() && request != null) {
-            final List<MetadataValue> metadata = request.getMetadata(METAKEY);
-            if (metadata != null && !metadata.isEmpty()) {
-                return (PlayerStats) metadata.get(0).value();
+            for (MetadataValue metadata : request.getMetadata(METAKEY)) {
+                if (metadata.value() instanceof PlayerStats) {
+                    return (PlayerStats) metadata.value();
+                }
             }
         }
 
@@ -139,18 +138,18 @@ public class Database {
                 //If pvpstats are enabled save all stats that are in the cache
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     //maybe batch this
-                    final List<MetadataValue> metadata = player.getMetadata(METAKEY);
-                    //can be null if that metadata doesn't exist
-                    if (metadata != null) {
-                        //just remove our metadata
-                        save((PlayerStats) metadata.get(0).value());
+                    for (MetadataValue metadata : player.getMetadata(METAKEY)) {
+                        if (metadata.value() instanceof PlayerStats) {
+                            //just remove our metadata
+                            save((PlayerStats) metadata.value());
+                        }
                     }
                 }
 
                 EXECUTOR.shutdown();
 
                 EXECUTOR.awaitTermination(15, TimeUnit.MINUTES);
-            } catch (Exception ex) {
+            } catch (InterruptedException ex) {
                 instance.getLogger().log(Level.SEVERE, null, ex);
             } finally {
                 //Make rally sure we remove all even on error
@@ -185,27 +184,16 @@ public class Database {
             try {
                 final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
                 final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-                gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
                 //only create the table if it doesn't exist
-
-                final DatabaseConverter converter = new DatabaseConverter(database);
-                converter.convertNewDatabaseSystem();
+                gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
 
                 databaseInstance = database;
             } catch (Exception ex) {
                 instance.getLogger().log(Level.WARNING, "Error creating database", ex);
-                //this also excludes null values
-                if (ex.getCause() instanceof ClassNotFoundException) {
-                    instance.getLogger().info("Probarly because of missing drivers");
-                    if ("Glowstone".equalsIgnoreCase(Bukkit.getName())) {
-                        instance.getLogger().info("You're running Glowstone. Take a look here: \n"
-                                + "https://github.com/GlowstoneMC/Glowstone/wiki/Library-Management");
-                    }
-                }
+            } finally {
+                Thread.currentThread().setContextClassLoader(previous);
+                ReloadFixLoader.changeClassCache(true);
             }
-
-            ReloadFixLoader.changeClassCache(true);
-            Thread.currentThread().setContextClassLoader(previous);
 
             EXECUTOR.scheduleWithFixedDelay(new Runnable() {
 

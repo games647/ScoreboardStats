@@ -5,8 +5,6 @@ import com.github.games647.scoreboardstats.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,7 +42,7 @@ public class PlayerListener implements Listener {
     public void onJoin(PlayerJoinEvent joinEvent) {
         final Player player = joinEvent.getPlayer();
         player.removeMetadata("player_stats", plugin);
-        
+
         //load the pvpstats if activated
         Database.loadAccountAsync(player);
         //add it to the refresh queue
@@ -61,13 +59,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
         final Player player = quitEvent.getPlayer();
-        final List<MetadataValue> metadata = player.getMetadata("player_stats");
-        //can be null if that metadata doesn't exist
-        if (metadata != null) {
-            for (MetadataValue metadataValue : metadata) {
-                //just remove our metadata
-                metadataValue.invalidate();
-            }
+        for (MetadataValue metadataValue : player.getMetadata("player_stats")) {
+            //just remove our metadata
+            metadataValue.invalidate();
         }
 
         player.removeMetadata("player_stats", plugin);

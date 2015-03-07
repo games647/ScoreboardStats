@@ -110,8 +110,8 @@
     <repositories>
         <!--ProtocolLib-->
         <repository>
-            <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/groups/public</url>
+            <id>shadowvolt-repo</id>
+            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
         </repository>
 
         <!--Repo for simpleclans-->
@@ -131,6 +131,13 @@
             <id>md_5-releases</id>
             <url>http://repo.md-5.net/content/groups/public/</url>
         </repository>
+
+        <!--Player points-->
+        <repository>
+            <id>dakani</id>
+            <name>Dakani Nexus Repo</name>
+            <url>http://repo.dakanilabs.com/content/repositories/public</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -149,33 +156,9 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>3.4.0</version>
+            <!--Later version aren't backwards compatible-->
+            <version>3.6.2-SNAPSHOT</version>
             <optional>true</optional>
-            <exclusions>
-                <!--definitely not needed-->
-                <exclusion>
-                    <groupId>com.comphenix.executors</groupId>
-                    <artifactId>BukkitExecutors</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>cglib</groupId>
-                    <artifactId>cglib-nodep</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
-            <artifactId>SimpleClans</artifactId>
-            <version>2.5.1</version>
-            <optional>true</optional>
-            <exclusions>
-                <!--definitely not needed-->
-                <exclusion>
-                    <groupId>org.getspout</groupId>
-                    <artifactId>spoutplugin</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!--API for economy variables-->
@@ -187,37 +170,23 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.5.1</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.black_ixx</groupId>
+            <artifactId>PlayerPoints</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
             <version>1.5.5.4-SNAPSHOT</version>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>me.desht</groupId>
-                    <artifactId>scrollingmenusign</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.dthielke.herochat</groupId>
-                    <artifactId>HeroChat</artifactId>
-                </exclusion>
-
-                <!--We just need the API, which we already have included-->
-                <exclusion>
-                    <groupId>net.milkbowl.vault</groupId>
-                    <artifactId>Vault</artifactId>
-                </exclusion>
-
-                <!--Currently not available and definitely not needed. Maybe just for testing-->
-                <exclusion>
-                    <groupId>org.spigotmc</groupId>
-                    <artifactId>spigot</artifactId>
-                </exclusion>
-                <!--Only available on spigot server-->
-                <exclusion>
-                    <groupId>org.spigotmc</groupId>
-                    <artifactId>spigot-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 /**
  * Represents a variable replacer
  *
-// * @deprecated not fully featured and not safe to use (returns magic values)
+ * @deprecated not fully featured and returns magic values. Will be removed in future versions
  */
 public interface Replaceable {
 

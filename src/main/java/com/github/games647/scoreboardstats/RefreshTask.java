@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,7 +21,7 @@ public class RefreshTask implements Runnable {
     private final ScoreboardStats plugin;
 
     //Prevent duplicate entries and is faster than the delay queue
-    private final Map<Player, int[]> queue = Maps.newHashMapWithExpectedSize(100);
+    private final Map<Player, MutableInt> queue = Maps.newHashMapWithExpectedSize(100);
 
     /**
      * Initialize refresh task
@@ -34,26 +35,25 @@ public class RefreshTask implements Runnable {
     @Override
     public void run() {
         //let the players update smoother
-        final Set<Map.Entry<Player, int[]>> entrySet = queue.entrySet();
+        final Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
         int nextUpdates = getNextUpdates();
-        for (final Iterator<Map.Entry<Player, int[]>> it = entrySet.iterator(); it.hasNext();) {
-            final Map.Entry<Player, int[]> entry = it.next();
+        for (final Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
+            final Map.Entry<Player, MutableInt> entry = it.next();
 
             final Player player = entry.getKey();
-            final int[] valueArray = entry.getValue();
-            final int value = valueArray[0];
-            if (value == 0) {
+            final MutableInt remanigTicks = entry.getValue();
+            if (remanigTicks.intValue() == 0) {
                 //We will check if the player is online and remove it from queue if not so we can prevent memory leaks
                 if (player == null || !player.isOnline()) {
                     it.remove();
                 } else if (nextUpdates != 0) {
                     //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().sendUpdate(player);
-                    valueArray[0] = 20 * Settings.getIntervall();
+                    remanigTicks.setValue(20 * Settings.getIntervall());
                     nextUpdates--;
                 }
             } else {
-                valueArray[0]--;
+                remanigTicks.decrement();
             }
         }
     }
@@ -68,7 +68,7 @@ public class RefreshTask implements Runnable {
         final boolean alreadyQueued = queue.containsKey(request);
         if (!alreadyQueued) {
             //check if it isn't already in the queue
-            queue.put(request, new int[] {20 * Settings.getIntervall()});
+            queue.put(request, new MutableInt(20 * Settings.getIntervall()));
         }
 
         return !alreadyQueued;

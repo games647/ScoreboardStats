@@ -2,9 +2,6 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.google.common.collect.Lists;
-
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,8 +14,6 @@ public abstract class SbManager {
     protected final ScoreboardStats plugin;
     protected final ReplaceManager replaceManager;
 
-    protected final List<String> skipList = Lists.newArrayList();
-
     public SbManager(ScoreboardStats plugin) {
         this.plugin = plugin;
         this.replaceManager = new ReplaceManager(this, plugin);
@@ -28,6 +23,7 @@ public abstract class SbManager {
      * Get the replace manager.
      *
      * @return the replace manager
+     * @deprecated Use ScoreboardStats.getReplaceManager
      */
     public ReplaceManager getReplaceManager() {
         return replaceManager;
@@ -38,8 +34,6 @@ public abstract class SbManager {
     public abstract void createTopListScoreboard(Player player);
 
     public abstract void sendUpdate(Player player);
-
-    protected abstract void sendUpdate(Player player, boolean complete);
 
     public abstract void update(Player player, String variable, int newScore);
 
@@ -72,6 +66,8 @@ public abstract class SbManager {
 
     public abstract void unregister(Player player);
 
+    protected abstract void sendUpdate(Player player, boolean complete);
+
     protected void scheduleShowTask(Player player, boolean action) {
         if (!Settings.isTempScoreboard()) {
             return;
@@ -84,47 +80,19 @@ public abstract class SbManager {
             intervall = Settings.getTempDisappear();
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, new ShowTask(player, action), intervall * 20L);
+        Bukkit.getScheduler().runTaskLater(plugin, new DelayedShowTask(player, action, this), intervall * 20L);
     }
 
     protected String stripLength(String check) {
         if (check.length() > 16) {
             return check.substring(0, 16);
         }
+
         return check;
     }
 
     protected boolean isValid(Player player) {
         return player.hasPermission("scoreboardstats.use") && player.isOnline()
                 && Settings.isActiveWorld(player.getWorld().getName());
-    }
-
-    /**
-     * Scheduled appear task
-     */
-    public class ShowTask implements Runnable {
-
-        private final Player player;
-        private final boolean action;
-
-        /**
-         * Creates a new scheduled appear of the normal scoreboard or the temp scoreboard
-         *
-         * @param player the specific player
-         * @param action if the temp scoreboard be displayed
-         */
-        public ShowTask(Player player, boolean action) {
-            this.player = player;
-            this.action = action;
-        }
-
-        @Override
-        public void run() {
-            if (action) {
-                createTopListScoreboard(player);
-            } else {
-                createScoreboard(player);
-            }
-        }
     }
 }

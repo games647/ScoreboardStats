@@ -75,15 +75,15 @@ public class Version implements Comparable<Version> {
      */
     public static int[] parse(String version) throws IllegalArgumentException {
         //exludes spaces which could be added by mistake and exclude build suffixes
-        version = version.trim().split("\\-")[0];
-        if (!version.matches("\\d+(\\.\\d+){0,5}")) {
+        final String trimedVersion = version.trim().split("\\-")[0];
+        if (!trimedVersion.matches("\\d+(\\.\\d+){0,5}")) {
             throw new IllegalArgumentException("Invalid format: " + version);
         }
 
         final int[] versionParts = new int[3];
 
         //escape regEx and split by dots
-        final String[] split = version.split("\\.");
+        final String[] split = trimedVersion.split("\\.");
         //We check if the length has min 1 entry.
         versionParts[0] = Integer.parseInt(split[0]);
         versionParts[1] = split.length > 1 ? Integer.parseInt(split[1]) : 0;
