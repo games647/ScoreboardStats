@@ -222,6 +222,9 @@
             <artifactId>Factions</artifactId>
             <!--Factions-UUID fork of 1.6/1.8-->
             <version>1.6.9.5-U0.1.15-SNAPSHOT</version>
+            <!--Make it possible to build automatically like https://github.com/drtshock/ObsidianDestroyer-->
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Factions-1.6.9.5-U0.1.15.jar</systemPath>
             <optional>true</optional>
         </dependency>
 
