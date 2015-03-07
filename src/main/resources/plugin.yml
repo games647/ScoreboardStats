@@ -19,6 +19,7 @@ softdepend:
     - Factions
     - Heroes
     - uSkyBlock
+    - PlayerPoints
 
 commands:
   sidebar:
