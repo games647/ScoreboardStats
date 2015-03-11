@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.variables;
 import com.github.games647.scoreboardstats.variables.defaults.*;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.SbManager;
-import com.github.games647.scoreboardstats.Settings;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,7 +33,6 @@ public class ReplaceManager implements Listener {
         tempMap.put(BukkitVariables.class, "ScoreboardStats");
         tempMap.put(GeneralVariables.class, "ScoreboardStats");
         tempMap.put(PlayerPingVariable.class, "ScoreboardStats");
-        tempMap.put(StatsVariables.class, "ScoreboardStats");
 
         tempMap.put(VaultVariables.class, "Vault");
 
@@ -72,13 +71,12 @@ public class ReplaceManager implements Listener {
     }
 
     /**
-     * Register a new replacer
-     *
      * @param replacer the variable replacer
      * @param pluginName the name of the associated plugin
      *
      * @deprecated no longer supported. Will be removed in future versions
      */
+    @Deprecated
     public void register(Replaceable replacer, String pluginName) {
         replacers.put(new LegacyReplaceWrapper(replacer), pluginName);
     }
@@ -94,13 +92,24 @@ public class ReplaceManager implements Listener {
     }
 
     /**
-     * Unregister a replacer
+     * Register a new replacer
      *
+     * @param replacer the variable replacer
+     */
+    public void register(VariableReplaceAdapter<Plugin> replacer) {
+        register(replacer, replacer.getPlugin().getName());
+        for (String variable : replacer.getVariables()) {
+            specificReplacer.put(variable, replacer);
+        }
+    }
+
+    /**
      * @param replacer the replacer instance
      * @return if the replacer existed
      *
      * @deprecated no longer supported. Will be removed in future versions
      */
+    @Deprecated
     public boolean unregister(Replaceable replacer) {
         return replacers.remove(replacer) != null;
     }
@@ -148,9 +157,9 @@ public class ReplaceManager implements Listener {
      *
      * @param player the associated player
      * @param variable the variable
-     * @param displayName
-     * @param oldScore
-     * @param complete
+     * @param displayName the display name of the scoreboard item
+     * @param oldScore the score of the scoreboard item
+     * @param complete whether it's the first refresh
      * @return the modified state
      * @throws UnknownVariableException if the variable couldn't be replace
      */

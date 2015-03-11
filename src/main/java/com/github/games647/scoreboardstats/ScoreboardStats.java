@@ -1,17 +1,14 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.avaje.ebean.EbeanServer;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.Updater.UpdateCallback;
 import com.github.games647.scoreboardstats.Updater.UpdateResult;
-import com.github.games647.scoreboardstats.listener.EntityListener;
-import com.github.games647.scoreboardstats.listener.PlayerListener;
-import com.github.games647.scoreboardstats.listener.SignListener;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -31,6 +28,7 @@ public class ScoreboardStats extends JavaPlugin {
     private Settings settings;
     private ReloadFixLoader classLoader;
     private SbManager scoreboardManager;
+    private Database database;
 
     /**
      * Get the class loader for this plugin. This is a workaround to make
@@ -58,11 +56,11 @@ public class ScoreboardStats extends JavaPlugin {
      * @return the manager
      */
     public ReplaceManager getReplaceManager() {
-        if (scoreboardManager != null) {
-            scoreboardManager.getReplaceManager();
+        if (scoreboardManager == null) {
+            return null;
         }
 
-        return null;
+        return scoreboardManager.getReplaceManager();
     }
 
     /**
@@ -74,17 +72,27 @@ public class ScoreboardStats extends JavaPlugin {
         return refreshTask;
     }
 
+    public Database getStatsDatabase() {
+        return database;
+    }
+
     @Override
     public EbeanServer getDatabase() {
-        //these method exists to make it easier access from another plugin
-        return Database.getDatabaseInstance();
+        if (database == null) {
+            return null;
+        }
+
+        //this method exists to make it easier access from another plugin
+        return database.getDatabaseInstance();
     }
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final List<Class<?>> classes = Lists.newArrayList();
-        classes.add(PlayerStats.class);
-        return classes;
+        if (database == null) {
+            return null;
+        }
+
+        return database.getDatabaseClasses();
     }
 
     /**
@@ -94,10 +102,13 @@ public class ScoreboardStats extends JavaPlugin {
     public void onLoad() {
         //Create a logger that is available by just the plugin name
         //have to be peformed before the first logging message by this plugin, so it prints it correctly
-        Logger.getLogger("ScoreboardStats").setParent(getLogger());
+        Logger.getLogger(getName()).setParent(getLogger());
 
         //Check if server can display scoreboards; the version can only be with a complete shutdown
         checkScoreboardCompatibility();
+
+        //this is needed by settings (for localized messages)
+        classLoader = new ReloadFixLoader(this, getClassLoader());
     }
 
     /**
@@ -109,9 +120,6 @@ public class ScoreboardStats extends JavaPlugin {
             //cancel initialization if the already disabled it
             return;
         }
-
-        //this is needed by settings (for localized messages)
-        classLoader = new ReloadFixLoader(this, getClassLoader());
 
         //Load the config + needs to be initialised to get the configurated value for update-checking
         settings = new Settings(this);
@@ -133,19 +141,9 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         refreshTask = new RefreshTask(this);
-        Database.setupDatabase(this);
 
         //Register all events
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
-        getServer().getPluginManager().registerEvents(new EntityListener(), this);
-        if (getServer().getPluginManager().isPluginEnabled("InSigns")) {
-            //Register this listerner if InSigns is available
-            new SignListener(this, "[Kill]");
-            new SignListener(this, "[Death]");
-            new SignListener(this, "[KDR]");
-            new SignListener(this, "[Streak]");
-            new SignListener(this, "[Mob]");
-        }
 
         //register all commands
         getCommand("sidebar").setExecutor(new SidebarCommands(this));
@@ -161,11 +159,13 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager = new BukkitScoreboardManager(this);
         }
 
+        if (Settings.isPvpStats()) {
+            database = new Database(this);
+            database.setupDatabase();
+        }
+
         //creates scoreboards for every player that is online
         scoreboardManager.registerAll();
-
-        //Inform the user that he should use compatibility modus to be compatible with some plugins
-        checkCompatibility();
     }
 
     /**
@@ -178,11 +178,13 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager.unregisterAll();
         }
 
-        //flush the cache to the database
-        Database.saveAll();
+        if (database != null) {
+            //flush the cache to the database
+            database.saveAll();
+        }
 
         if (Settings.isCompatibilityMode()) {
-            //the plugin will be disabled unregister all listeners including protocollibs
+            //the plugin should disable all listeners including protocollibs
             ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         }
     }
@@ -191,13 +193,9 @@ public class ScoreboardStats extends JavaPlugin {
      * Reload the plugin
      */
     public void onReload() {
-        final boolean oldMode = Settings.isCompatibilityMode();
-
         if (settings != null) {
             settings.loadConfig();
         }
-
-        Database.setupDatabase(this);
 
         if (refreshTask != null) {
             refreshTask.clear();
@@ -207,17 +205,17 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager.unregisterAll();
         }
 
-        if (oldMode != Settings.isCompatibilityMode()) {
-            if (Settings.isCompatibilityMode()) {
-                scoreboardManager = new PacketSbManager(this);
-            } else {
-                scoreboardManager = new BukkitScoreboardManager(this);
-            }
+        if (Settings.isCompatibilityMode()) {
+            scoreboardManager = new PacketSbManager(this);
+        } else {
+            scoreboardManager = new BukkitScoreboardManager(this);
         }
 
-        if (scoreboardManager != null) {
-            scoreboardManager.registerAll();
+        if (database != null) {
+            database.setupDatabase();
         }
+
+        scoreboardManager.registerAll();
     }
 
     private void checkScoreboardCompatibility() {
@@ -231,23 +229,5 @@ public class ScoreboardStats extends JavaPlugin {
         getLogger().warning(Lang.get("noCompatibleVersion"));
         //This plugin isn't compatible with the server version so we disabling it
         getPluginLoader().disablePlugin(this);
-    }
-
-    private void checkCompatibility() {
-        if (!Settings.isCompatibilityMode()) {
-            //Thise plugins won't work without compatibilityMode, but do with it, so suggest it
-            final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
-            for (String name : plugins) {
-                //just check if the plugin is available not if it's active
-                if (getServer().getPluginManager().getPlugin(name) != null) {
-                    //Found minimum one plugin. Inform the adminstrator
-                    getLogger().info("You are using plugins that requires to activate compatibilityMode");
-                    getLogger().info("Otherwise the plugins won't work");
-                    getLogger().info("Please enable it in the ScoreboardStats configuration 'compatibilityMode'");
-                    getLogger().info("Then this plugin will send raw packets, but will be still compatible other plugins");
-                    break;
-                }
-            }
-        }
     }
 }

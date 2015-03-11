@@ -1,7 +1,4 @@
-package com.github.games647.scoreboardstats.listener;
-
-import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+package com.github.games647.scoreboardstats.pvpstats;
 
 import de.blablubbabc.insigns.SimpleChanger;
 
@@ -13,22 +10,23 @@ import org.bukkit.plugin.Plugin;
  * Replace some variables on signs with the player individual stats.
  * The variables will be replaced dynamically
  *
- * @see SignSendEvent
  * @see Database
  */
 public class SignListener extends SimpleChanger {
 
+    private final Database statsDatabase;
     private final String variable;
 
-    public SignListener(Plugin plugin, String key) {
-        super(plugin, key, "scoreboardstats.sign");
+    public SignListener(Plugin plugin, String key, Database statsDatabase) {
+        super(plugin, key, plugin.getName().toLowerCase() + ".sign");
 
         this.variable = key.replace("[", "").replace("]", "");
+        this.statsDatabase = statsDatabase;
     }
 
     @Override
     public String getValue(Player player, Location lctn, String string) {
-        final PlayerStats playerCache = Database.getCachedStats(player);
+        final PlayerStats playerCache = statsDatabase.getCachedStats(player);
         if (playerCache == null) {
             //The stats aren't loaded yet
             return "Not loaded";

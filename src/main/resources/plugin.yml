@@ -28,7 +28,6 @@ commands:
 
 permissions:
   scoreboardstats.admin:
-    default: op
     children:
       scoreboardstats.reload: true
       scoreboardstats.sign: true

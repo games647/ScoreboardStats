@@ -120,7 +120,7 @@ public class ReplaceEvent {
     /**
      * Set the score of this scoreboard item
      *
-     * @param newScore
+     * @param newScore new item score
      */
     public void setScore(int newScore) {
 //        if (score != newScore) {

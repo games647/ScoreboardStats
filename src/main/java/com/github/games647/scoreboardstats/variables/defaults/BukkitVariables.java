@@ -96,7 +96,7 @@ public class BukkitVariables implements VariableReplacer, Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerQuitEvent quitEvent) {
+    public void onQuit(PlayerQuitEvent quitEvent) {
         replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length - 1);
     }
 

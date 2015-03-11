@@ -25,6 +25,7 @@ public class PlayerPointsVariables extends VariableReplaceAdapter<PlayerPoints> 
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         if ("points".equals(variable)) {
             final int balance = getPlugin().getAPI().look(player.getUniqueId());
+            replaceEvent.setScore(balance);
         }
     }
 

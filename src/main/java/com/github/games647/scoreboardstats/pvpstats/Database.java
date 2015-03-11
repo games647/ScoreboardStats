@@ -7,11 +7,12 @@ import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.Settings;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -29,31 +30,38 @@ import org.bukkit.metadata.MetadataValue;
  */
 public class Database {
 
-    //TODO remove this static stuff
-
     private static final String METAKEY = "player_stats";
-    private static final ScheduledExecutorService EXECUTOR = Executors
-            //SQL transactions are mainly blocking so there is no need to update them smooth
-            .newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
-                    //Give the thread a name so we can find them
-                    .setNameFormat("ScoreboardStats-Database").build());
 
-    private static boolean uuidUse;
+    private final ScoreboardStats plugin;
 
-    private static ScoreboardStats instance;
+    private final ScheduledExecutorService executor;
 
-    private static final Map<String, Integer> TOPLIST = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+    private final Map<String, Integer> TOPLIST = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
-    private static EbeanServer databaseInstance;
-    private static DatabaseConfiguration dbConfiguration;
+    private final DatabaseConfiguration dbConfig;
+    private EbeanServer databaseInstance;
+
+    public Database(ScoreboardStats plugin) {
+        this.plugin = plugin;
+        this.dbConfig = new DatabaseConfiguration(plugin);
+
+        //SQL transactions are mainly blocking so there is no need to update them smooth
+        executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
+                //Give the thread a name so we can find them
+                .setNameFormat(plugin.getName() + "-Database").build());
+    }
 
     /**
      * Get the database instance.
      *
      * @return the database instance
      */
-    public static EbeanServer getDatabaseInstance() {
+    public EbeanServer getDatabaseInstance() {
         return databaseInstance;
+    }
+
+    public List<Class<?>> getDatabaseClasses() {
+        return dbConfig.getDatabaseClasses();
     }
 
     /**
@@ -62,8 +70,8 @@ public class Database {
      * @param request the associated player
      * @return the stats if they are in the cache
      */
-    public static PlayerStats getCachedStats(Player request) {
-        if (Settings.isPvpStats() && request != null) {
+    public PlayerStats getCachedStats(Player request) {
+        if (request != null) {
             for (MetadataValue metadata : request.getMetadata(METAKEY)) {
                 if (metadata.value() instanceof PlayerStats) {
                     return (PlayerStats) metadata.value();
@@ -79,9 +87,9 @@ public class Database {
      *
      * @param player the associated player
      */
-    public static void loadAccountAsync(Player player) {
+    public void loadAccountAsync(Player player) {
         if (getCachedStats(player) == null && databaseInstance != null) {
-            EXECUTOR.execute(new StatsLoader(instance, uuidUse, player));
+            executor.execute(new StatsLoader(plugin, dbConfig.isUuidUse(), player, this));
         }
     }
 
@@ -91,15 +99,15 @@ public class Database {
      * @param uniqueId the associated playername or uuid
      * @return the loaded stats
      */
-    public static PlayerStats loadAccount(Object uniqueId) {
+    public PlayerStats loadAccount(Object uniqueId) {
         if (uniqueId == null || databaseInstance == null) {
             return null;
         } else {
             PlayerStats stats = databaseInstance.find(PlayerStats.class)
-                    .where().eq(uuidUse ? "uuid" : "playername", uniqueId).findUnique();
+                    .where().eq(dbConfig.isUuidUse() ? "uuid" : "playername", uniqueId).findUnique();
 
-            //If there are no existing stat create a new cache object with empty stuff
             if (stats == null) {
+                //If there are no existing stat create a new object with empty stats
                 stats = new PlayerStats();
             }
 
@@ -112,8 +120,8 @@ public class Database {
      *
      * @param stats PlayerStats data
      */
-    public static void saveAsync(PlayerStats stats) {
-        EXECUTOR.submit(new StatsSaver(stats));
+    public void saveAsync(PlayerStats stats) {
+        executor.submit(new StatsSaver(stats, this));
     }
 
     /**
@@ -121,7 +129,7 @@ public class Database {
      *
      * @param stats PlayerStats data
      */
-    public static void save(PlayerStats stats) {
+    public void save(PlayerStats stats) {
         if (stats != null && databaseInstance != null) {
             //Save the stats to the database
             databaseInstance.save(stats);
@@ -131,78 +139,70 @@ public class Database {
     /**
      * Starts saving all cache player stats and then clears the cache.
      */
-    public static void saveAll() {
-        if (Settings.isPvpStats()) {
-            try {
-                instance.getLogger().info(Lang.get("savingStats"));
-                //If pvpstats are enabled save all stats that are in the cache
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    //maybe batch this
-                    for (MetadataValue metadata : player.getMetadata(METAKEY)) {
-                        if (metadata.value() instanceof PlayerStats) {
-                            //just remove our metadata
-                            save((PlayerStats) metadata.value());
-                        }
+    public void saveAll() {
+        try {
+            plugin.getLogger().info(Lang.get("savingStats"));
+            //If pvpstats are enabled save all stats that are in the cache
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                //maybe batch this
+                for (MetadataValue metadata : player.getMetadata(METAKEY)) {
+                    if (metadata.value() instanceof PlayerStats) {
+                        //just remove our metadata
+                        save((PlayerStats) metadata.value());
                     }
                 }
+            }
 
-                EXECUTOR.shutdown();
+            executor.shutdown();
 
-                EXECUTOR.awaitTermination(15, TimeUnit.MINUTES);
-            } catch (InterruptedException ex) {
-                instance.getLogger().log(Level.SEVERE, null, ex);
-            } finally {
-                //Make rally sure we remove all even on error
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.removeMetadata(METAKEY, instance);
-                }
+            executor.awaitTermination(15, TimeUnit.MINUTES);
+        } catch (InterruptedException ex) {
+            plugin.getLogger().log(Level.SEVERE, null, ex);
+        } finally {
+            //Make rally sure we remove all even on error
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.removeMetadata(METAKEY, plugin);
             }
         }
     }
 
     /**
      * Initialize a components and checking for an existing database
-     *
-     * @param plugin the ScoreboardStats instance
      */
-    public static void setupDatabase(ScoreboardStats plugin) {
-        instance = plugin;
-
+    public void setupDatabase() {
         //Check if pvpstats should be enabled
-        if (Settings.isPvpStats()) {
-            dbConfiguration = new DatabaseConfiguration(plugin);
-            dbConfiguration.loadConfiguration();
-            uuidUse = dbConfiguration.isUuidUse();
+        dbConfig.loadConfiguration();
 
-            final ClassLoader previous = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
+        final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
 
-            //Disable the class caching temporialy, because after a reload
-            //(with plugin file replacement) it still reference to the old file
-            ReloadFixLoader.changeClassCache(false);
+        //Disable the class caching temporialy, because after a reload
+        //(with plugin file replacement) it still reference to the old file
+        ReloadFixLoader.changeClassCache(false);
 
-            try {
-                final EbeanServer database = EbeanServerFactory.create(dbConfiguration.getServerConfig());
-                final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-                //only create the table if it doesn't exist
-                gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
+        try {
+            final EbeanServer database = EbeanServerFactory.create(dbConfig.getServerConfig());
+            final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+            //only create the table if it doesn't exist
+            gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
 
-                databaseInstance = database;
-            } catch (Exception ex) {
-                instance.getLogger().log(Level.WARNING, "Error creating database", ex);
-            } finally {
-                Thread.currentThread().setContextClassLoader(previous);
-                ReloadFixLoader.changeClassCache(true);
-            }
-
-            EXECUTOR.scheduleWithFixedDelay(new Runnable() {
-
-                @Override
-                public void run() {
-                    updateTopList();
-                }
-            }, 0, 5, TimeUnit.MINUTES);
+            databaseInstance = database;
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.WARNING, "Error creating database", ex);
+        } finally {
+            Thread.currentThread().setContextClassLoader(previous);
+            ReloadFixLoader.changeClassCache(true);
         }
+
+        executor.scheduleWithFixedDelay(new Runnable() {
+
+            @Override
+            public void run() {
+                updateTopList();
+            }
+        }, 1, 5, TimeUnit.MINUTES);
+
+        registerEvents();
     }
 
     /**
@@ -210,13 +210,13 @@ public class Database {
      *
      * @return a iterable of the entries
      */
-    public static Iterable<Map.Entry<String, Integer>> getTop() {
+    public Iterable<Map.Entry<String, Integer>> getTop() {
         synchronized (TOPLIST) {
             return TOPLIST.entrySet();
         }
     }
 
-    private static void updateTopList() {
+    private void updateTopList() {
         final String type = Settings.getTopType();
         final Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
         if ("%killstreak%".equals(type)) {
@@ -239,7 +239,7 @@ public class Database {
         }
     }
 
-    private static Iterable<PlayerStats> getTopList(String type) {
+    private Iterable<PlayerStats> getTopList(String type) {
         if (databaseInstance == null) {
             return Collections.emptyList();
         }
@@ -254,7 +254,17 @@ public class Database {
                 .findList();
     }
 
-    private Database() {
-        //Singleton
+    private void registerEvents() {
+        if (Bukkit.getPluginManager().isPluginEnabled("InSigns")) {
+            //Register this listerner if InSigns is available
+            new SignListener(plugin, "[Kill]", this);
+            new SignListener(plugin, "[Death]", this);
+            new SignListener(plugin, "[KDR]", this);
+            new SignListener(plugin, "[Streak]", this);
+            new SignListener(plugin, "[Mob]", this);
+        }
+
+        plugin.getReplaceManager().register(new StatsVariables(plugin, this), plugin.getName());
+        Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
     }
 }

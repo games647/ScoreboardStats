@@ -4,8 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.Settings;
-import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
@@ -13,7 +12,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -95,10 +93,6 @@ public class PacketSbManager extends SbManager {
         scheduleShowTask(player, true);
     }
 
-    /**
-     *
-     * @param player who will receive the scoreboard
-     */
     @Override
     public void createTopListScoreboard(Player player) {
         final PlayerScoreboard scoreboard = getScoreboard(player);
@@ -122,7 +116,7 @@ public class PacketSbManager extends SbManager {
         objective = scoreboard.createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle(), true);
 
         //Colorize and send all elements
-        for (Map.Entry<String, Integer> entry : Database.getTop()) {
+        for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
             final String color = Settings.getTempColor();
             final String scoreName = color + entry.getKey();
             sendScore(objective, scoreName, entry.getValue());
@@ -169,10 +163,9 @@ public class PacketSbManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value) {
-        final String name = stripLength(ChatColor.translateAlternateColorCodes('&', title));
-        final Item item = objective.getItem(name);
+        final Item item = objective.getItem(title);
         if (item == null) {
-            objective.registerItem(name, value);
+            objective.registerItem(title, value);
         } else {
             item.setScore(value);
         }

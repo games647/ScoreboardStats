@@ -77,8 +77,7 @@ public class PacketListener extends PacketAdapter {
         }
 
         //Packet receiving validation
-        if (scoreName.length() > 16
-                || action == State.CREATE && parent.length() > 16) {
+        if (action == State.CREATE && parent.length() > 16) {
             //Invalid packet
             return;
         }

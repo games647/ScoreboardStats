@@ -149,7 +149,8 @@ public class Updater {
             public void run() {
                 runUpdater();
             }
-        });
+            //Recognize our updater
+        }, plugin.getName() + "-Updater");
 
         this.thread.start();
     }

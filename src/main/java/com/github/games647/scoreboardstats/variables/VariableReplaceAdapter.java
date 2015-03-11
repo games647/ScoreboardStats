@@ -1,5 +1,8 @@
 package com.github.games647.scoreboardstats.variables;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.plugin.Plugin;
 
@@ -14,17 +17,20 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
 
     private final boolean global;
     private final boolean async;
+    private final String description;
 
-    private String description;
+    private final String[] variables;
+    
     private boolean enabled;
 
     /**
      * Initialize the replacer with the default values
      *
      * @param plugin associated plugin instance
+     * @param variables to replaced variables
      */
-    public VariableReplaceAdapter(T plugin) {
-        this(false, false, "No description", plugin);
+    public VariableReplaceAdapter(T plugin, String... variables) {
+        this(false, false, "No description", plugin, variables);
     }
 
     /**
@@ -34,13 +40,19 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      * @param async is this plugin thread safe
      * @param description description of all variables of this plugin
      * @param plugin associated plugin instance
+     * @param variables to replaced variables
      */
-    public VariableReplaceAdapter(boolean global, boolean async, String description, T plugin) {
+    public VariableReplaceAdapter(boolean global, boolean async, String description, T plugin, String... variables) {
         this.global = global;
         this.async = async;
         this.description = description;
+        this.variables = variables;
 
         this.plugin = plugin;
+    }
+
+    public List<String> getVariables() {
+        return Arrays.asList(variables);
     }
 
     /**
@@ -71,14 +83,6 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
         return description;
     }
 
-    /**
-     * Get the replacer description
-     *
-     * @param newDescription
-     */
-    public void setDescription(String newDescription) {
-        this.description = newDescription;
-    }
 
     /**
      * Get the plugin associated to this replacer

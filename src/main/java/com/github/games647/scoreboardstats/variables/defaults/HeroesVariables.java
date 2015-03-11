@@ -28,7 +28,7 @@ public class HeroesVariables implements VariableReplacer, Listener {
     /**
      * Creates a new heroes replacer
      *
-     * @param replaceManager
+     * @param replaceManager the replace manager from ScoreboardStats
      */
     public HeroesVariables(ReplaceManager replaceManager) {
         this.replaceManager = replaceManager;

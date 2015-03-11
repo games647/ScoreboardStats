@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import org.bukkit.Bukkit;
@@ -14,9 +14,13 @@ public abstract class SbManager {
     protected final ScoreboardStats plugin;
     protected final ReplaceManager replaceManager;
 
+    private final String permission;
+
     public SbManager(ScoreboardStats plugin) {
         this.plugin = plugin;
         this.replaceManager = new ReplaceManager(this, plugin);
+
+        this.permission = plugin.getName().toLowerCase() + ".use";
     }
 
     /**
@@ -29,6 +33,11 @@ public abstract class SbManager {
         return replaceManager;
     }
 
+    /**
+     * Creates a new scoreboard based on the configuration.
+     *
+     * @param player for who should the scoreboard be set.
+     */
     public abstract void createScoreboard(Player player);
 
     public abstract void createTopListScoreboard(Player player);
@@ -47,7 +56,7 @@ public abstract class SbManager {
                 if (ispvpstats) {
                     //maybe batch this
                     player.removeMetadata("player_stats", plugin);
-                    Database.loadAccountAsync(player);
+                    plugin.getStatsDatabase().loadAccountAsync(player);
                 }
 
                 plugin.getRefreshTask().addToQueue(player);
@@ -64,8 +73,18 @@ public abstract class SbManager {
         }
     }
 
+    /**
+     * Unregister ScoreboardStats from the player
+     *
+     * @param player who owns the scoreboard
+     */
     public abstract void unregister(Player player);
 
+    /**
+     * Called if the scoreboard should be updated.
+     *
+     * @param player for who should the scoreboard be set.
+     */
     protected abstract void sendUpdate(Player player, boolean complete);
 
     protected void scheduleShowTask(Player player, boolean action) {
@@ -92,7 +111,7 @@ public abstract class SbManager {
     }
 
     protected boolean isValid(Player player) {
-        return player.hasPermission("scoreboardstats.use") && player.isOnline()
+        return player.hasPermission(permission) && player.isOnline()
                 && Settings.isActiveWorld(player.getWorld().getName());
     }
 }

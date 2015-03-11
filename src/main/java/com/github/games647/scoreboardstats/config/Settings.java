@@ -1,45 +1,57 @@
-package com.github.games647.scoreboardstats;
+package com.github.games647.scoreboardstats.config;
 
-import com.google.common.base.Charsets;
+import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import com.google.common.io.Files;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * Managing all general configurations of this plugin.
  */
-public class Settings {
+public class Settings extends CommentedYaml<ScoreboardStats> {
 
-    private static boolean updateEnabled;
+    private static boolean pluginUpdate;
     private static boolean compatibilityMode;
+
+    @ConfigNode(path = "enable-pvpstats")
     private static boolean pvpStats;
+
+    @ConfigNode(path = "Temp-Scoreboard-enabled")
     private static boolean tempScoreboard;
+
+    @ConfigNode(path = "hide-vanished")
     private static boolean hideVanished;
 
+    @ConfigNode(path = "Scoreboard.Title")
     private static String title;
+
+    @ConfigNode(path = "Temp-Scoreboard.Title")
     private static String tempTitle;
+
+    @ConfigNode(path = "Temp-Scoreboard.Color")
     private static String tempColor;
+
+    @ConfigNode(path = "Temp-Scoreboard.Type")
     private static String topType;
 
+    @ConfigNode(path = "Scoreboard.Update-delay")
     private static int intervall;
-    private static int topitems;
+
+    @ConfigNode(path = "Temp-Scoreboard.Items")
+    private static int topItems;
+
+    @ConfigNode(path = "Temp-Scoreboard.Intervall-show")
     private static int tempShow;
+
+    @ConfigNode(path = "Temp-Scoreboard.Intervall-disappear")
     private static int tempDisapper;
 
     //properly a memory leak
@@ -60,8 +72,8 @@ public class Settings {
     /**
      * Get the display name for the score item
      *
-     * @param variable
-     * @return
+     * @param variable the variable
+     * @return the display name
      */
     public static String getItemName(String variable) {
         return ITEM_NAMES.get(variable);
@@ -120,7 +132,7 @@ public class Settings {
      * @return if update checking is enabled
      */
     public static boolean isUpdateEnabled() {
-        return updateEnabled;
+        return pluginUpdate;
     }
 
     /**
@@ -174,7 +186,7 @@ public class Settings {
      * @return how many items the temp-scoreboard should have
      */
     public static int getTopitems() {
-        return topitems;
+        return topItems;
     }
 
     /**
@@ -195,10 +207,8 @@ public class Settings {
         return tempDisapper;
     }
 
-    private final ScoreboardStats plugin;
-
-    Settings(ScoreboardStats instance) {
-        this.plugin = instance;
+    public Settings(ScoreboardStats instance) {
+        super(instance);
 
         plugin.saveDefaultConfig();
     }
@@ -206,77 +216,25 @@ public class Settings {
     /**
      * Load the configuration file in memory and convert it into simple variables
      */
+    @Override
     public void loadConfig() {
-        final FileConfiguration config = getConfigFromDisk();
+        super.loadConfig();
 
         //check if compatibilityMode can be activated
-        compatibilityMode = isCompatibilityMode(config);
-
-        updateEnabled = config.getBoolean("pluginUpdate");
-        hideVanished = config.getBoolean("hide-vanished");
-        pvpStats = config.getBoolean("enable-pvpstats");
+        compatibilityMode = isCompatibilityMode(compatibilityMode);
 
         //This set only changes after another call to loadConfig so this set can be immutable
         disabledWorlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
-        intervall = config.getInt("Scoreboard.Update-delay");
-        title = ChatColor.translateAlternateColorCodes('&', trimLength(config.getString("Scoreboard.Title"), 32));
+
+        title = trimLength(title, 32);
+        tempTitle = trimLength(tempTitle, 32);
 
         //Load all normal scoreboard variables
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
 
         //temp-scoreboard
-        tempScoreboard = config.getBoolean("Temp-Scoreboard-enabled") && pvpStats;
-
-        topitems = checkItems(config.getInt("Temp-Scoreboard.Items"));
-
-        tempShow = config.getInt("Temp-Scoreboard.Intervall-show");
-        tempDisapper = config.getInt("Temp-Scoreboard.Intervall-disappear");
-
-        topType = config.getString("Temp-Scoreboard.Type");
-
-        tempColor = ChatColor.translateAlternateColorCodes('&', config.getString("Temp-Scoreboard.Color"));
-        tempTitle = ChatColor.translateAlternateColorCodes('&',
-                trimLength(config.getString("Temp-Scoreboard.Title"), 32));
-    }
-
-    /**
-     * Gets the YAML file configuration from the disk while loading it
-     * explicit with UTF-8. This allows umlauts and other UTF-8 characters
-     * for all Bukkit versions.
-     *
-     * Bukkit add also this feature since
-     * https://github.com/Bukkit/Bukkit/commit/24883a61704f78a952e948c429f63c4a2ab39912
-     * To be allow the same feature for all Bukkit version, this method was
-     * created.
-     *
-     * @return the loaded file configuration
-     */
-    public FileConfiguration getConfigFromDisk() {
-        final File file = new File(plugin.getDataFolder(), "config.yml");
-
-        final YamlConfiguration newConf = new YamlConfiguration();
-        newConf.setDefaults(getDefaults());
-
-        try {
-            //UTF-8 should be available on all java running systems
-            final List<String> lines = Files.readLines(file, Charsets.UTF_8);
-
-            final StringBuilder builder = new StringBuilder();
-            for (String line : lines) {
-                builder.append(line);
-                //indicates a new line
-                builder.append('\n');
-            }
-
-            newConf.loadFromString(builder.toString());
-            return newConf;
-        } catch (InvalidConfigurationException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
-        } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
-        }
-
-        return newConf;
+        tempScoreboard = tempScoreboard && pvpStats;
+        topItems = checkItems(topItems);
     }
 
     private String trimLength(String check, int limit) {
@@ -322,7 +280,7 @@ public class Settings {
 
             final String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
-            final String variable = config.getString(key).toLowerCase(Locale.ENGLISH);
+            final String variable = config.getString(key).toLowerCase();
             if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
                 //indicates a variable
                 ITEMS.put(name, variable.replace("%", ""));
@@ -339,33 +297,32 @@ public class Settings {
         }
     }
 
-    private boolean isCompatibilityMode(ConfigurationSection config) {
-        final boolean active = config.getBoolean("compatibilityMode");
+    //Inform the user that he should use compatibility modus to be compatible with some plugins
+    private boolean isCompatibilityMode(boolean active) {
         if (active) {
-            //Check only if it was activated by the administrator
-            if (plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
-                return true;
-            } else {
+            if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
                 //we cannot active compatibilityMode without ProtocolLib
                 plugin.getLogger().info(Lang.get("missingProtocolLib"));
+                return false;
+            }
+        } else {
+            //Thise plugins won't work without compatibilityMode, but do with it, so suggest it
+            final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
+            for (String name : plugins) {
+                if (plugin.getServer().getPluginManager().getPlugin(name) == null) {
+                    //just check if the plugin is available not if it's active
+                    continue;
+                }
+
+                //Found minimum one plugin. Inform the adminstrator
+                plugin.getLogger().info("You are using plugins that requires to activate compatibilityMode");
+                plugin.getLogger().info("Otherwise the plugins won't work");
+                plugin.getLogger().log(Level.INFO, "Enable it in the {0} config compatibilityMode", plugin.getName());
+                plugin.getLogger().info("Then this plugin will send raw packets and be compatible with other plugins");
+                break;
             }
         }
 
-        return false;
-    }
-
-    /**
-     * Get the default configuration located in the plugin jar
-     *
-     * @return the default configuration
-     */
-    private FileConfiguration getDefaults() {
-        final InputStream defConfigStream = plugin.getResource("config.yml");
-        if (defConfigStream != null) {
-            //stream will be closed in this method
-            return YamlConfiguration.loadConfiguration(defConfigStream);
-        }
-
-        return new YamlConfiguration();
+        return active;
     }
 }

@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -38,11 +37,6 @@ public class BukkitScoreboardManager extends SbManager {
         oldBukkit = isOldBukkit();
     }
 
-    /**
-     * Creates a new scoreboard based on the configuration.
-     *
-     * @param player for who should the scoreboard be set.
-     */
     @Override
     public void createScoreboard(Player player) {
         final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
@@ -69,11 +63,6 @@ public class BukkitScoreboardManager extends SbManager {
         scheduleShowTask(player, true);
     }
 
-    /**
-     * Unregister ScoreboardStats from the player
-     *
-     * @param player who owns the scoreboard
-     */
     @Override
     public void unregister(Player player) {
         if (player.isOnline()) {
@@ -86,11 +75,6 @@ public class BukkitScoreboardManager extends SbManager {
         }
     }
 
-    /**
-     * Called if the scoreboard should be updated.
-     *
-     * @param player for who should the scoreboard be set.
-     */
     @Override
     public void sendUpdate(Player player) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
@@ -129,7 +113,7 @@ public class BukkitScoreboardManager extends SbManager {
         }
 
         //Colorize and send all elements
-        for (Map.Entry<String, Integer> entry : Database.getTop()) {
+        for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
             final String color = Settings.getTempColor();
             final String scoreName = stripLength(String.format("%s%s", color, entry.getKey()));
             sendScore(objective, scoreName, entry.getValue(), true);
@@ -176,8 +160,7 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        String scoreName = ChatColor.translateAlternateColorCodes('&', title);
-        scoreName = expandScore(scoreName, objective);
+        final String scoreName = expandScore(title, objective);
 
         Score score;
         if (oldBukkit) {

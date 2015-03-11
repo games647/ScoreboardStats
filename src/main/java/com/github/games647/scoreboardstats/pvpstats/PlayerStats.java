@@ -16,7 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.util.NumberConversions;
@@ -36,7 +35,6 @@ import org.bukkit.util.NumberConversions;
 public class PlayerStats {
 
     @Id
-    @NotNull
     @GeneratedValue
     private int id;
 
@@ -75,7 +73,6 @@ public class PlayerStats {
     //ebean currently defines this column as not null
     private Timestamp lastOnline;
 
-    @Transient
     private transient int laststreak;
 
     /**
