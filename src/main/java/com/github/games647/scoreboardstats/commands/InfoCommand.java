@@ -5,18 +5,21 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+/**
+ * Show plugin informations like version number
+ */
 public class InfoCommand extends CommandHandler {
 
     private static final String PREFIX = ChatColor.WHITE + "["
             + ChatColor.GOLD + "%name%"
-            + ChatColor.WHITE + "]" + ChatColor.RESET;
+            + ChatColor.WHITE + ']' + ChatColor.RESET;
 
     public InfoCommand(ScoreboardStats plugin) {
         super("info", plugin);
     }
 
     @Override
-    public void onCommand(CommandSender sender, String subCommand, String[] args) {
+    public void onCommand(CommandSender sender, String subCommand, String... args) {
         final String pluginVersion = plugin.getDescription().getVersion();
 
         final ChatColor color = ChatColor.DARK_AQUA;

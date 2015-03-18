@@ -3,6 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.games647</groupId>
+    <!--This have to be in lowercase because it's used by plugin.yml-->
     <artifactId>scoreboardstats</artifactId>
     <packaging>jar</packaging>
 
@@ -14,7 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.6.1</powermock.version>
+        <powermock.version>1.6.2</powermock.version>
     </properties>
 
     <issueManagement>
@@ -81,6 +82,14 @@
             <resource>
                 <directory>src/main/java</directory>
             </resource>
+
+            <!--Add the license to jar to see in the final jar-->
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 
@@ -118,6 +127,7 @@
     </repositories>
 
     <dependencies>
+        <!--Server API-->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
@@ -149,7 +159,7 @@
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>2.5.1</version>
+            <version>2.5.3</version>
             <optional>true</optional>
         </dependency>
 
@@ -243,9 +253,8 @@
 
     <profiles>
         <profile>
-            <id>release-sign-artifacts</id>
             <activation>
-                <!--Only run on JDK higher 1.6-->
+                <!--Only run on JDK higher than 1.6-->
                 <jdk>[1.7,)</jdk>
             </activation>
             <build>

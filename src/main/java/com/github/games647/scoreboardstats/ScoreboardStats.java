@@ -72,6 +72,11 @@ public class ScoreboardStats extends JavaPlugin {
         return refreshTask;
     }
 
+    /**
+     * The database manager for pvp stats
+     *
+     * @return pvp stats database manager
+     */
     public Database getStatsDatabase() {
         return database;
     }
@@ -149,9 +154,9 @@ public class ScoreboardStats extends JavaPlugin {
         getCommand("sidebar").setExecutor(new SidebarCommands(this));
 
         //start tracking the ticks
-        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 20L * 5, 20L);
+        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 5 * 20L, 20L);
         //Start the refresh task; it should run on every tick, because it's smoothly update the variables with limit
-        getServer().getScheduler().runTaskTimer(this, refreshTask, 20L * 5, 1L);
+        getServer().getScheduler().runTaskTimer(this, refreshTask, 5 * 20L, 1L);
 
         if (Settings.isCompatibilityMode()) {
             scoreboardManager = new PacketSbManager(this);

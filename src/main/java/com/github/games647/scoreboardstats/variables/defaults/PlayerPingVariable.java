@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.VariableReplacer;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,20 +9,23 @@ import java.lang.reflect.Modifier;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Replace the ping variable.
  */
-public class PlayerPingVariable implements VariableReplacer {
+public class PlayerPingVariable extends VariableReplaceAdapter<Plugin> {
 
     private Method getHandleMethod;
     private Field pingField;
 
+    public PlayerPingVariable() {
+        super(null, "ping");
+    }
+
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        if ("ping".equals(variable)) {
-            replaceEvent.setScore(getReflectionPing(player));
-        }
+        replaceEvent.setScore(getReflectionPing(player));
     }
 
     private int getReflectionPing(Player player) {

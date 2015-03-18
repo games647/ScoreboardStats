@@ -1,88 +1,78 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
-import com.github.games647.scoreboardstats.TicksPerSecondTask;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplacer;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 
 /**
- * Replace all Bukkit and general variables
+ * Replace all Bukkit variables
  */
-public class BukkitVariables implements VariableReplacer, Listener {
+public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements Listener {
 
-    private final ReplaceManager replaceManager;
-
-    public BukkitVariables(ReplaceManager replaceManager) {
-        this.replaceManager = replaceManager;
+    public BukkitVariables() {
+        super(null, "health", "lifetime", "exp", "no_domage_ticks", "xp_to_Level", "last_damage"
+                , "helmet", "boots", "leggings", "chestplate", "time");
     }
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        if ("tps".equals(variable)) {
-            replaceEvent.setScore(NumberConversions.round(TicksPerSecondTask.getLastTicks()));
-        }
-
         if ("health".equals(variable)) {
             replaceEvent.setScore(NumberConversions.round(player.getHealth()));
-        }
-
-        if ("online".equals(variable)) {
-            replaceEvent.setScore(Bukkit.getOnlinePlayers().length);
-            replaceEvent.setConstant(true);
+            return;
         }
 
         if ("lifetime".equals(variable)) {
             // --> Minutes
             replaceEvent.setScore(player.getTicksLived() / (20 * 60));
+            return;
         }
 
         if ("exp".equals(variable)) {
             replaceEvent.setScore(player.getTotalExperience());
+            return;
         }
 
         if ("no_damage_ticks".equals(variable)) {
             // --> Minutes
             replaceEvent.setScore(player.getNoDamageTicks() / (20 * 60));
+            return;
         }
 
         if ("xp_to_level".equals(variable)) {
             replaceEvent.setScore(player.getExpToLevel());
+            return;
         }
 
         if ("last_damage".equals(variable)) {
             //casting should be made after division
             // --> Minutes
             replaceEvent.setScore((int) (player.getLastDamage() / (20 * 60)));
-        }
-
-        if ("max_player".equals(variable)) {
-            replaceEvent.setScore(Bukkit.getMaxPlayers());
-            replaceEvent.setConstant(true);
+            return;
         }
 
         if ("helmet".equals(variable)) {
             replaceEvent.setScore(calculateDurability(player.getInventory().getHelmet()));
+            return;
         }
 
         if ("boots".equals(variable)) {
             replaceEvent.setScore(calculateDurability(player.getInventory().getBoots()));
+            return;
         }
 
         if ("leggings".equals(variable)) {
             replaceEvent.setScore(calculateDurability(player.getInventory().getLeggings()));
+            return;
         }
 
         if ("chestplate".equals(variable)) {
             replaceEvent.setScore(calculateDurability(player.getInventory().getChestplate()));
+            return;
         }
 
         if ("time".equals(variable)) {
@@ -90,21 +80,12 @@ public class BukkitVariables implements VariableReplacer, Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onJoin(PlayerJoinEvent joinEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length + 1);
-    }
-
-    @EventHandler
-    public void onQuit(PlayerQuitEvent quitEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length - 1);
-    }
-
     private int calculateDurability(ItemStack item) {
         //Check if the user have an item on the slot and if the item isn't a stone block or something
         if (item == null || item.getType().getMaxDurability() == 0) {
             return -2;
         } else {
+            //calculate in percent
             return item.getDurability() * 100 / item.getType().getMaxDurability();
         }
     }

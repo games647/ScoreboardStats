@@ -33,5 +33,4 @@ public class DelayedShowTask implements Runnable {
             scoreboardManager.createScoreboard(player);
         }
     }
-
 }

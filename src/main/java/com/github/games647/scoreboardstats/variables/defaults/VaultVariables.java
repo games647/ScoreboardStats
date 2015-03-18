@@ -3,12 +3,13 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplacer;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.util.NumberConversions;
 
@@ -17,7 +18,7 @@ import org.bukkit.util.NumberConversions;
  *
  * @see Economy
  */
-public class VaultVariables implements VariableReplacer {
+public class VaultVariables extends VariableReplaceAdapter<Plugin> {
 
     private final Economy economy;
 
@@ -25,6 +26,8 @@ public class VaultVariables implements VariableReplacer {
      * Creates a new vault replacer
      */
     public VaultVariables() {
+        super(Bukkit.getPluginManager().getPlugin("Vault"), "money");
+
         checkVersion();
 
         final RegisteredServiceProvider<Economy> economyProvider = Bukkit
@@ -39,9 +42,7 @@ public class VaultVariables implements VariableReplacer {
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        if ("money".equals(variable)) {
-            replaceEvent.setScore(NumberConversions.round(economy.getBalance(player, player.getWorld().getName())));
-        }
+        replaceEvent.setScore(NumberConversions.round(economy.getBalance(player, player.getWorld().getName())));
     }
 
     /**
@@ -52,7 +53,7 @@ public class VaultVariables implements VariableReplacer {
      * @see Economy#getBalance(org.bukkit.OfflinePlayer)
      */
     private void checkVersion() {
-        final String version = Bukkit.getPluginManager().getPlugin("Vault").getDescription().getVersion();
+        final String version = getPlugin().getDescription().getVersion();
         final int end = version.indexOf('-');
         final String cleanVersion = version.substring(0, end == -1 ? version.length() : end);
         if (Version.compare("1.4.1", cleanVersion) < 0) {

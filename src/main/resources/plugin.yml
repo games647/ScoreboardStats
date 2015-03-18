@@ -1,3 +1,5 @@
+# project informations for Bukkit in order to register our plugin with all it components
+# ${project.name} are variables from Maven (pom.xml) which will be replaced after the build
 name: ${project.name}
 version: ${project.version}
 main: ${project.groupId}.${project.artifactId}.${project.name}
@@ -9,7 +11,7 @@ description: |
 website: ${project.url}
 dev-url: ${project.url}
 
-# depending on them
+# depending on them - load after them to make sure they are initialized
 softdepend:
     - ProtocolLib
     - mcMMO
@@ -21,28 +23,30 @@ softdepend:
     - uSkyBlock
     - PlayerPoints
 
+# Root commands to register automatically to Bukkit
 commands:
   sidebar:
-    description: 'Root command for all commands in ScoreboardStats'
-    aliases: [scoreboardstats, side, ss, sb, board]
+    description: 'Root command for all commands in ${project.name}'
+    aliases: [${project.artifactId}, side, ss, sb, board]
 
+# Permission managment
 permissions:
-  scoreboardstats.admin:
+  ${project.artifactId}.admin:
     children:
-      scoreboardstats.reload: true
-      scoreboardstats.sign: true
-      scoreboardstats.use: true
-      scoreboardstats.hide: true
-  scoreboardstats.member:
+      ${project.artifactId}.reload: true
+      ${project.artifactId}.sign: true
+      ${project.artifactId}.use: true
+      ${project.artifactId}.hide: true
+  ${project.artifactId}.member:
     default: true
     children:
-      scoreboardstats.use: true
-      scoreboardstats.hide: true
-  scoreboardstats.use:
+      ${project.artifactId}.use: true
+      ${project.artifactId}.hide: true
+  ${project.artifactId}.use:
     description: 'Sender is allowed to see the scoreboard'
-  scoreboardstats.sign:
+  ${project.artifactId}.sign:
     description: 'Sender can make signs with variables on it'
-  scoreboardstats.reload:
+  ${project.artifactId}.reload:
     description: 'Sender can perform a plugin reload'
-  scoreboardstats.hide:
+  ${project.artifactId}.hide:
     description: 'Sender can toggle the scoreboard'

@@ -12,6 +12,10 @@ import org.bukkit.util.ChatPaginator;
 import org.bukkit.util.ChatPaginator.ChatPage;
 import org.bukkit.util.StringUtil;
 
+/**
+ * Shows a help for all commands with their descriptions, usages, aliases
+ * and permissions.
+ */
 public class HelpCommand extends CommandHandler {
 
     private final SidebarCommands commandManager;
@@ -24,7 +28,7 @@ public class HelpCommand extends CommandHandler {
     }
 
     @Override
-    public void onCommand(CommandSender sender, String subCommand, String[] args) {
+    public void onCommand(CommandSender sender, String subCommand, String... args) {
         if (args.length == 0) {
             showHelpPage(sender, 1);
         }
@@ -40,7 +44,7 @@ public class HelpCommand extends CommandHandler {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, String subCommand, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, String subCommand, String... args) {
         if (args.length == 1) {
             final List<String> suggestion = Lists.newArrayList();
             for (String command : commandManager.getSubCommands()) {
@@ -86,13 +90,13 @@ public class HelpCommand extends CommandHandler {
         header.append(ChatColor.YELLOW)
                 .append("------ ")
                 .append(ChatColor.WHITE).append("Help: ")
-                .append(plugin.getName()).append(" ").append("Page ")
+                .append(plugin.getName()).append(" Page ")
                 .append(ChatColor.RED).append("{page} ")
                 .append(ChatColor.GOLD).append("/ ")
                 .append(ChatColor.RED).append("{total} ")
                 .append(ChatColor.YELLOW);
         for (int i = header.length(); i < ChatPaginator.AVERAGE_CHAT_PAGE_WIDTH; i++) {
-            header.append("-");
+            header.append('-');
         }
 
         return header.toString();

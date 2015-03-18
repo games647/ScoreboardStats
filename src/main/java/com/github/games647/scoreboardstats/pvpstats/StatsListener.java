@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
 
 import org.bukkit.entity.EntityType;
@@ -11,18 +12,16 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
 
 /**
  * If enabled this class counts the kills.
  */
 public class StatsListener implements Listener {
 
-    private final Plugin plugin;
+    private final ScoreboardStats plugin;
     private final Database database;
 
-    public StatsListener(Plugin plugin, Database database) {
+    public StatsListener(ScoreboardStats plugin, Database database) {
         this.plugin = plugin;
         this.database = database;
     }
@@ -51,11 +50,10 @@ public class StatsListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
         final Player player = quitEvent.getPlayer();
-        for (MetadataValue metadataValue : player.getMetadata("player_stats")) {
-            //just remove our metadata
-            database.saveAsync((PlayerStats) metadataValue.value());
-        }
 
+        database.saveAsync(database.getCachedStats(player));
+
+        //just remove our metadata
         player.removeMetadata("player_stats", plugin);
     }
 
@@ -63,7 +61,6 @@ public class StatsListener implements Listener {
      * Tracks the mob kills.
      *
      * @param event the death event
-     * @see PlayerListener#onDeath(org.bukkit.event.entity.PlayerDeathEvent)
      */
     @EventHandler
     public void onMobDeath(EntityDeathEvent event) {
@@ -78,6 +75,7 @@ public class StatsListener implements Listener {
             if (killercache != null) {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
                 killercache.incrementMobKills();
+                plugin.getReplaceManager().updateScore(killer, "mob", killercache.getMobkills());
             }
         }
     }
@@ -96,11 +94,18 @@ public class StatsListener implements Listener {
             final PlayerStats killedcache = database.getCachedStats(killed);
             if (killedcache != null) {
                 killedcache.incrementDeaths();
+                plugin.getReplaceManager().updateScore(killed, "deaths", killedcache.getDeaths());
+                plugin.getReplaceManager().updateScore(killed, "kdr", killedcache.getKdr());
+                plugin.getReplaceManager().updateScore(killed, "current_streak", killedcache.getLaststreak());
             }
 
             final PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.incrementKills();
+                plugin.getReplaceManager().updateScore(killed, "deaths", killercache.getKills());
+                plugin.getReplaceManager().updateScore(killed, "kdr", killercache.getKdr());
+                plugin.getReplaceManager().updateScore(killed, "killstreak", killercache.getKillstreak());
+                plugin.getReplaceManager().updateScore(killed, "current_streak", killercache.getLaststreak());
             }
         }
     }

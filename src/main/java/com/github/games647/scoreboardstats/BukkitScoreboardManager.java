@@ -114,8 +114,7 @@ public class BukkitScoreboardManager extends SbManager {
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
-            final String color = Settings.getTempColor();
-            final String scoreName = stripLength(String.format("%s%s", color, entry.getKey()));
+            final String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue(), true);
         }
 
@@ -129,7 +128,7 @@ public class BukkitScoreboardManager extends SbManager {
         if (scoreboard != null) {
             final Objective objective = scoreboard.getObjective(SB_NAME);
             if (objective != null) {
-                sendScore(objective, itemName, newScore, true);
+                sendScore(objective, itemName, newScore, false);
             }
         }
     }
@@ -182,33 +181,34 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     private String expandScore(String scoreName, Objective objective) {
-        final int titleLength = scoreName.length();
+        String cleanScoreName = scoreName;
+        final int titleLength = cleanScoreName.length();
         if (titleLength > 16) {
             final Scoreboard scoreboard = objective.getScoreboard();
             //Could maybe cause conflicts but .substring could also make conflicts if they have the same beginning
-            final String teamId = String.valueOf(scoreName.hashCode());
+            final String teamId = String.valueOf(cleanScoreName.hashCode());
 
             Team team = scoreboard.getTeam(teamId);
             if (team == null) {
                 team = scoreboard.registerNewTeam(teamId);
-                team.setPrefix(scoreName.substring(0, 16));
+                team.setPrefix(cleanScoreName.substring(0, 16));
                 if (titleLength > 32) {
                     //we already validated that this one can only be 48 characters long in the Settings class
-                    team.setSuffix(scoreName.substring(32));
-                    scoreName = scoreName.substring(16, 32);
+                    team.setSuffix(cleanScoreName.substring(32));
+                    cleanScoreName = cleanScoreName.substring(16, 32);
                 } else {
-                    scoreName = scoreName.substring(16);
+                    cleanScoreName = cleanScoreName.substring(16);
                 }
 
-                team.setDisplayName(scoreName);
+                team.setDisplayName(cleanScoreName);
                 //Bukkit.getOfflinePlayer performance work around
-                team.addPlayer(new FastOfflinePlayer(scoreName));
+                team.addPlayer(new FastOfflinePlayer(cleanScoreName));
             } else {
-                scoreName = team.getDisplayName();
+                cleanScoreName = team.getDisplayName();
             }
         }
 
-        return scoreName;
+        return cleanScoreName;
     }
 
     private boolean isOldBukkit() {

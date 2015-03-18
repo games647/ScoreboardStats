@@ -24,6 +24,8 @@ public class RefreshTask implements Runnable {
     //Prevent duplicate entries and is faster than the delay queue
     private final Map<Player, MutableInt> queue = Maps.newHashMapWithExpectedSize(100);
 
+    private int nextGlobalUpdate = 20 * Settings.getIntervall();
+
     /**
      * Initialize refresh task
      *
@@ -37,7 +39,7 @@ public class RefreshTask implements Runnable {
     public void run() {
         //let the players update smoother
         final Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
-        int nextUpdates = getNextUpdates();
+        int remainingUpdates = getNextUpdates();
         for (final Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
             final Map.Entry<Player, MutableInt> entry = it.next();
 
@@ -47,15 +49,22 @@ public class RefreshTask implements Runnable {
                 //We will check if the player is online and remove it from queue if not so we can prevent memory leaks
                 if (player == null || !player.isOnline()) {
                     it.remove();
-                } else if (nextUpdates != 0) {
+                } else if (remainingUpdates != 0) {
                     //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().sendUpdate(player);
                     remanigTicks.setValue(20 * Settings.getIntervall());
-                    nextUpdates--;
+                    remainingUpdates--;
                 }
             } else {
                 remanigTicks.decrement();
             }
+        }
+
+        nextGlobalUpdate--;
+        if (nextGlobalUpdate == 0) {
+            nextGlobalUpdate = 20 * Settings.getIntervall();
+            //update globals
+            plugin.getReplaceManager().updateGlobals();
         }
     }
 

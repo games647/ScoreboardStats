@@ -29,36 +29,45 @@ public class SidebarCommands implements TabExecutor {
     public SidebarCommands(ScoreboardStats plugin) {
         this.plugin = plugin;
 
-        registerCommands();
+        registerSubCommands();
     }
 
+    /**
+     * Get all command handlers
+     *
+     * @return all command handlers
+     */
     public Collection<CommandHandler> getHandlers() {
         return commands.values();
     }
 
+    /**
+     * Get the command handler for a specific command
+     *
+     * @param subCommand for searched subCommand
+     * @return the commandhandler or null if not found
+     */
     public CommandHandler getHandler(String subCommand) {
         return commands.get(subCommand);
     }
 
+    /**
+     * List all subCommands that this plugin has
+     *
+     * @return the subcommands
+     */
     public List<String> getSubCommands() {
         return Collections.unmodifiableList(subCommands);
     }
 
-    /**
-     * Executes the given command, returning its success
-     *
-     * @param sender Source of the command
-     * @param cmd Command which was executed
-     * @param label Alias of the command which was used
-     * @param args Passed command arguments
-     * @return true if a valid command, otherwise false
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        //default subcommand
         String subCommand = "toggle";
         String[] newArgs = args;
         if (args.length != 0) {
             subCommand = args[0];
+            //remove the subcommand from the args list
             newArgs = Arrays.copyOfRange(args, 1, args.length);
         }
 
@@ -97,8 +106,10 @@ public class SidebarCommands implements TabExecutor {
         final String subCommand = args[0];
         final CommandHandler commandHandler = commands.get(subCommand);
         if (commandHandler != null) {
+            //remove the subcommand from the args list
             suggestion = commandHandler.onTabComplete(sender, subCommand, Arrays.copyOfRange(args, 1, args.length));
             if (suggestion != null) {
+                //Prevent NPEs and the usage of this method in nearly every handler
                 Collections.sort(suggestion, String.CASE_INSENSITIVE_ORDER);
             }
 
@@ -108,7 +119,7 @@ public class SidebarCommands implements TabExecutor {
         return null;
     }
 
-    private void registerCommands() {
+    private void registerSubCommands() {
         register(new ToggleCommand(plugin));
         register(new InfoCommand(plugin));
         register(new HelpCommand(plugin, this));

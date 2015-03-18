@@ -6,25 +6,35 @@ import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelChangeEvent;
-import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.player.UserManager;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 
+import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Replace all variables that are associated with the mcMMO plugin
  */
-public class McmmoVariables extends VariableReplaceAdapter<mcMMO> implements Listener {
+public class McmmoVariables extends VariableReplaceAdapter<Plugin> implements Listener {
+
+    private static String[] getSkillVariables() {
+        final List<String> skills = Lists.newArrayList();
+        for (SkillType type : SkillType.values()) {
+            final String skillName = type.name().toLowerCase(Locale.ENGLISH);
+            skills.add(skillName);
+        }
+
+        skills.add("powlvl");
+        return skills.toArray(new String[skills.size()]);
+    }
 
     private final ReplaceManager replaceManager;
-    private final Set<String> skillTypes;
 
     /**
      * Creates a new mcMMO replacer. This also validates if all variables are available
@@ -33,40 +43,24 @@ public class McmmoVariables extends VariableReplaceAdapter<mcMMO> implements Lis
      * @param replaceManager to update the variables by event
      */
     public McmmoVariables(ReplaceManager replaceManager) {
-        super((mcMMO) Bukkit.getPluginManager().getPlugin("mcMMO"));
+        super(Bukkit.getPluginManager().getPlugin("mcMMO"), getSkillVariables());
 
         this.replaceManager = replaceManager;
-
-        final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        //goes through all available skill types
-        for (SkillType type : SkillType.values()) {
-            final String skillName = type.name().toLowerCase(Locale.ENGLISH);
-            builder.add(skillName);
-        }
-
-        skillTypes = builder.build();
     }
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        if ("powlvl".equals(variable)) {
+        replaceEvent.setConstant(true);
+        if (!UserManager.hasPlayerDataKey(player)) {
             //check if player is loaded
-            if (UserManager.hasPlayerDataKey(player)) {
-                replaceEvent.setScore(ExperienceAPI.getPowerLevel(player));
-                replaceEvent.setConstant(true);
-            } else {
-                replaceEvent.touch();
-            }
+            return;
         }
 
-        if (skillTypes.contains(variable)) {
-            if (UserManager.hasPlayerDataKey(player)) {
-                final String type = variable.toUpperCase(Locale.ENGLISH);
-                replaceEvent.setScore(ExperienceAPI.getLevel(player, type));
-                replaceEvent.setConstant(true);
-            } else {
-                replaceEvent.touch();
-            }
+        if ("powlvl".equals(variable)) {
+            replaceEvent.setScore(ExperienceAPI.getPowerLevel(player));
+        } else {
+            final String type = variable.toUpperCase(Locale.ENGLISH);
+            replaceEvent.setScore(ExperienceAPI.getLevel(player, type));
         }
     }
 

@@ -7,7 +7,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.Plugin;
 
+/**
+ * Keeps track of plugin disables and enables. It will register default replacers
+ * back again or removes replacers of disabled plugins.
+ */
 public class PluginListener implements Listener {
 
     private final ReplaceManager replaceManager;
@@ -25,7 +30,7 @@ public class PluginListener implements Listener {
     public void onPluginEnable(PluginEnableEvent enableEvent) {
         //Register the listener back again if the plugin is available
         final String enablePluginName = enableEvent.getPlugin().getName();
-        for (Map.Entry<Class<? extends VariableReplacer>, String> entry : replaceManager.getDefaults().entrySet()) {
+        for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : replaceManager.getDefaults().entrySet()) {
             final String pluginName = entry.getValue();
             if (enablePluginName.equals(entry.getValue())) {
                 replaceManager.registerDefault(entry.getKey(), pluginName);
@@ -43,19 +48,11 @@ public class PluginListener implements Listener {
         //Remove the listener if the associated plugin was disabled
         final String disablePluginName = disableEvent.getPlugin().getName();
 
-        final Iterator<Map.Entry<VariableReplacer, String>> iter = replaceManager.getReplacers().entrySet().iterator();
-        while (iter.hasNext()) {
-            final Map.Entry<VariableReplacer, String> element = iter.next();
-            final String pluginName = element.getValue();
-            if (disablePluginName.equals(pluginName)) {
-                iter.remove();
-                final VariableReplacer toRemove = element.getKey();
-                final Iterator<VariableReplacer> iterator = replaceManager.getSpecificReplacers().values().iterator();
-                while (iterator.hasNext()) {
-                    if (iter.next().equals(toRemove)) {
-                        iterator.remove();
-                    }
-                }
+        final Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = replaceManager.getSpecificReplacers().values().iterator();
+        while (iterator.hasNext()) {
+            final Plugin plugin = iterator.next().getPlugin();
+            if (plugin != null && plugin.getName().equals(disablePluginName)) {
+                iterator.remove();
             }
         }
     }

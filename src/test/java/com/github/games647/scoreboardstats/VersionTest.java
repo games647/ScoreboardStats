@@ -19,6 +19,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 public class VersionTest {
 
+    private static final String DEFAULT_VERSION = "git-Bukkit-1.5.2-R1.0-1-gf46bd58-b2793jnks (MC: 1.7.9)";
+
     /**
      * Test version parsing
      */
@@ -29,7 +31,7 @@ public class VersionTest {
         final Server server = Mockito.mock(Server.class);
         Mockito.when(Bukkit.getServer()).thenReturn(server);
 
-        Mockito.when(Bukkit.getVersion()).thenReturn("git-Bukkit-1.5.2-R1.0-1-gf46bd58-b2793jnks (MC: 1.7.9)");
+        Mockito.when(Bukkit.getVersion()).thenReturn(DEFAULT_VERSION);
         Version version = Version.getMinecraftVersion();
 
         Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
@@ -47,12 +49,12 @@ public class VersionTest {
         //Glowstone
         Mockito.when(Bukkit.getVersion()).thenReturn("1.8-36-gbbc3960-dev");
         Mockito.when(server.toString()).thenReturn("GlowServer{name=" + "Glowstone"
-                + ",version=" + "1.8-36-gbbc3960-dev" + ",minecraftVersion=" + "1.8" + "}");
+                + ",version=" + "1.8-36-gbbc3960-dev" + ",minecraftVersion=" + "1.8" + '}');
         version = Version.getMinecraftVersion();
 
         Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
 
-        //Plugin Parsing; shouldn't fail
+        //Plugin Parsing of FactionsUUID; shouldn't fail
         Version.parse("1.6.9.5-U0.1.12-SNAPSHOT");
     }
 
@@ -66,7 +68,7 @@ public class VersionTest {
         final Server server = Mockito.mock(Server.class);
         Mockito.when(Bukkit.getServer()).thenReturn(server);
 
-        Mockito.when(Bukkit.getVersion()).thenReturn("git-Bukkit-1.5.2-R1.0-1-gf46bd58-b2793jnks (MC: 1.7.9)");
+        Mockito.when(Bukkit.getVersion()).thenReturn(DEFAULT_VERSION);
 
         final Version low = new Version(1, 5, 4);
         final Version high = new Version(1, 8, 5);

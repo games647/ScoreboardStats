@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
  * scoreboard team isn't yet modified for methods, which can be called just
  * with a string.
  *
- * Servers below 1.7 with use of this class doesn't need to search for the
+ * Servers <b>below 1.7</b> with use of this class doesn't need to search for the
  * player.
  *
  * @see org.bukkit.Bukkit#getOfflinePlayer(java.lang.String)
@@ -128,7 +128,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public boolean equals(Object obj) {
-        //checks for null too
+        //check for null too
         if (!(obj instanceof FastOfflinePlayer)) {
             return false;
         }

@@ -12,6 +12,8 @@ import org.bukkit.plugin.Plugin;
  */
 public class UpdaterFix extends Updater {
 
+    private static final int CURSE_PROJECTID = 55148;
+
     /**
      * Initialize the updater.
      *
@@ -32,7 +34,7 @@ public class UpdaterFix extends Updater {
      * @param callback  The callback instance to notify when the Updater has finished
      */
     public UpdaterFix(Plugin plugin, File file, boolean download, UpdateCallback callback) {
-        super(plugin, 55148, file, download, callback);
+        super(plugin, CURSE_PROJECTID, file, download, callback);
     }
 
     @Override

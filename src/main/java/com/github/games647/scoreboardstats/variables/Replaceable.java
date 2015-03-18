@@ -16,15 +16,8 @@ public interface Replaceable {
      *
      * @deprecated Magic value
      */
+    @Deprecated
     int UNKOWN_VARIABLE = -1337;
-
-    /**
-     * If the variable can be updated based on a event. Then the getScoreValue
-     * method will be called only on the first replace event
-     *
-     * @deprecated Magic value
-     */
-    int ON_EVENT = Integer.MIN_VALUE - 1;
 
     /**
      * Get the score for specific variable
@@ -33,5 +26,6 @@ public interface Replaceable {
      * @param variable the variable
      * @return the score
      */
+    @Deprecated
     int getScoreValue(Player player, String variable);
 }

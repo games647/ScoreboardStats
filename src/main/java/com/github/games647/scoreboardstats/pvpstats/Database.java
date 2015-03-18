@@ -60,6 +60,11 @@ public class Database {
         return databaseInstance;
     }
 
+    /**
+     * Get the bean classes for the database schema
+     *
+     * @return the classes for the database
+     */
     public List<Class<?>> getDatabaseClasses() {
         return dbConfig.getDatabaseClasses();
     }
@@ -144,13 +149,8 @@ public class Database {
             plugin.getLogger().info(Lang.get("savingStats"));
             //If pvpstats are enabled save all stats that are in the cache
             for (Player player : Bukkit.getOnlinePlayers()) {
-                //maybe batch this
-                for (MetadataValue metadata : player.getMetadata(METAKEY)) {
-                    if (metadata.value() instanceof PlayerStats) {
-                        //just remove our metadata
-                        save((PlayerStats) metadata.value());
-                    }
-                }
+                //maybe sql batch this
+                save(getCachedStats(player));
             }
 
             executor.shutdown();
@@ -264,7 +264,7 @@ public class Database {
             new SignListener(plugin, "[Mob]", this);
         }
 
-        plugin.getReplaceManager().register(new StatsVariables(plugin, this), plugin.getName());
+        plugin.getReplaceManager().register(new StatsVariables(plugin, this));
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
     }
 }

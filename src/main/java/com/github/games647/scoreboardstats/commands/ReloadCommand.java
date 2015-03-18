@@ -5,6 +5,9 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import org.bukkit.command.CommandSender;
 
+/**
+ * Reload the plugin and the components
+ */
 public class ReloadCommand extends CommandHandler {
 
     public ReloadCommand(ScoreboardStats plugin) {
@@ -12,7 +15,7 @@ public class ReloadCommand extends CommandHandler {
     }
 
     @Override
-    public void onCommand(CommandSender sender, String subCommand, String[] args) {
+    public void onCommand(CommandSender sender, String subCommand, String... args) {
         plugin.onReload();
         sender.sendMessage(Lang.get("onReload"));
     }

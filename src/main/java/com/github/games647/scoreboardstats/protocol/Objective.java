@@ -20,8 +20,10 @@ import org.bukkit.entity.Player;
  */
 public class Objective {
 
+    private static final int MAX_ITEM_SIZE = 15;
+
     //A scoreboard can't have more than 15 items
-    final Map<String, Item> items = Maps.newHashMapWithExpectedSize(15);
+    protected final Map<String, Item> items = Maps.newHashMapWithExpectedSize(MAX_ITEM_SIZE);
 
     private final PlayerScoreboard scoreboard;
 
@@ -169,7 +171,7 @@ public class Objective {
         //Since 1.8 the name can be up to 40 characters long. UUID in the future?
         Preconditions.checkArgument(name.length() <= 16);
 
-        Preconditions.checkState(items.size() <= 15);
+        Preconditions.checkState(items.size() <= MAX_ITEM_SIZE);
 
         final Item scoreItem = new Item(this, name, score, send);
         items.put(name, scoreItem);

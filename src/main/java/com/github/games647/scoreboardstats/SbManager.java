@@ -6,10 +6,15 @@ import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+/**
+ * Manage the scoreboard access.
+ */
 public abstract class SbManager {
 
     protected static final String SB_NAME = "Stats";
     protected static final String TEMP_SB_NAME = SB_NAME + 'T';
+
+    private static final int MAX_ITEM_LENTH = 16;
 
     protected final ScoreboardStats plugin;
     protected final ReplaceManager replaceManager;
@@ -25,6 +30,10 @@ public abstract class SbManager {
 
     /**
      * Get the replace manager.
+     *
+     * Warning: The replace manger is bounded to this scoreboard manager.
+     * Every time the built-in reload command is executed it will create also
+     * a new instance of replace manager.
      *
      * @return the replace manager
      * @deprecated Use ScoreboardStats.getReplaceManager
@@ -84,6 +93,7 @@ public abstract class SbManager {
      * Called if the scoreboard should be updated.
      *
      * @param player for who should the scoreboard be set.
+     * @param complete if the scoreboard was created
      */
     protected abstract void sendUpdate(Player player, boolean complete);
 
@@ -103,8 +113,8 @@ public abstract class SbManager {
     }
 
     protected String stripLength(String check) {
-        if (check.length() > 16) {
-            return check.substring(0, 16);
+        if (check.length() > MAX_ITEM_LENTH) {
+            return check.substring(0, MAX_ITEM_LENTH);
         }
 
         return check;

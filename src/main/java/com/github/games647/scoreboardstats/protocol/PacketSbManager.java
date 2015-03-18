@@ -117,8 +117,7 @@ public class PacketSbManager extends SbManager {
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
-            final String color = Settings.getTempColor();
-            final String scoreName = color + entry.getKey();
+            final String scoreName = Settings.getTempColor() + entry.getKey();
             sendScore(objective, scoreName, entry.getValue());
         }
 

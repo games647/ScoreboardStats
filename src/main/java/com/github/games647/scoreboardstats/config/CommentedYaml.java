@@ -7,6 +7,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -18,6 +19,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Represents an easy way to load and save to yaml configs. Furthermore support
+ * this class UTF-8 even before Bukkit introduced it and will also support comments
+ * soon.
+ *
+ * @param <T> the plugin type
+ */
 public class CommentedYaml<T extends Plugin> {
 
     private static final String COMMENT_PREFIX = "# ";
@@ -127,7 +135,7 @@ public class CommentedYaml<T extends Plugin> {
         final InputStream defConfigStream = plugin.getResource(FILE_NAME);
         if (defConfigStream != null) {
             //stream will be closed in this method
-            return YamlConfiguration.loadConfiguration(defConfigStream);
+            return YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8));
         }
 
         return new YamlConfiguration();

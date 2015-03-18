@@ -10,7 +10,6 @@ import com.google.common.base.Objects;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -38,7 +37,6 @@ public class PlayerStats {
     @GeneratedValue
     private int id;
 
-    @Nullable
     //is null in non-uuid compatible servers or isn't updated yet
     @Column(unique = true)
     private UUID uuid;

@@ -85,6 +85,11 @@ public class DatabaseConfiguration {
         serverConfig = databaseConfig;
     }
 
+    /**
+     * Get the bean classes for the database schema
+     *
+     * @return the classes for the database
+     */
     public List<Class<?>> getDatabaseClasses() {
         final List<Class<?>> classes = Lists.newArrayList();
         classes.add(PlayerStats.class);

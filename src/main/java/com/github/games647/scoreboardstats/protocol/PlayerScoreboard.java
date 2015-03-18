@@ -97,22 +97,22 @@ public class PlayerScoreboard {
         return player;
     }
 
-    void addObjective(String objectiveName, String displayName) {
+    protected void addObjective(String objectiveName, String displayName) {
         objectivesByName.put(objectiveName, new Objective(this, objectiveName, displayName, false));
     }
 
-    Objective getObjective(String name) {
+    protected Objective getObjective(String name) {
         return objectivesByName.get(name);
     }
 
-    void removeObjective(String objectiveName) {
+    protected void removeObjective(String objectiveName) {
         objectivesByName.remove(objectiveName);
         if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
             clearSidebarObjective();
         }
     }
 
-    void setSidebarObjective(String objectiveName) {
+    protected void setSidebarObjective(String objectiveName) {
         if (objectiveName.isEmpty()) {
             clearSidebarObjective();
         } else {
@@ -120,11 +120,11 @@ public class PlayerScoreboard {
         }
     }
 
-    void clearSidebarObjective() {
+    protected void clearSidebarObjective() {
         sidebarObjective = null;
     }
 
-    void resetScore(String scoreName) {
+    protected void resetScore(String scoreName) {
         /*
          * Very weird that minecraft always ignore the name of the parent objective and
          * will remove the score from the complete scoreboard
@@ -134,7 +134,7 @@ public class PlayerScoreboard {
         }
     }
 
-    void createOrUpdateScore(String scoreName, String parent, int score) {
+    protected void createOrUpdateScore(String scoreName, String parent, int score) {
         final Objective objective = objectivesByName.get(parent);
         if (objective != null) {
             final Item item = new Item(objective, scoreName, score, false);

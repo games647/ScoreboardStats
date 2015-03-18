@@ -28,7 +28,8 @@ public class ReplaceEvent {
      * @param displayText the scoreboard item name
      * @param score the scoreboard item score
      */
-    public ReplaceEvent(String variable, boolean textVariable, boolean async, boolean constant, String displayText, int score) {
+    public ReplaceEvent(String variable, boolean textVariable, boolean async, boolean constant
+            , String displayText, int score) {
         this.variable = variable;
         this.textVariable = textVariable;
         this.async = async;
@@ -39,14 +40,14 @@ public class ReplaceEvent {
 //        this.updateInterval = interval;
     }
 
-    //TODO: Writer GETTER AND SETTER for global and interval
-
     /**
      * Get whether the replaceEvent will be called async
      *
      * @return whether the replaceEvent will be called async
      */
     public boolean isAsync() {
+        //this shouldn't be modifiable because it can be set on replacer register
+        //otherwise it could happen that we call it async on a not thread-safe replacer
         return async;
     }
 
@@ -81,7 +82,6 @@ public class ReplaceEvent {
      * Set the constant status of the variable
      *
      * @param constant whether it will be update with an event handler
-     * @deprecated Could be removed
      */
     public void setConstant(boolean constant) {
         this.constant = constant;
@@ -149,6 +149,8 @@ public class ReplaceEvent {
      */
     public void setScoreOrText(String replacedVariable) {
         if (textVariable) {
+            //StringUtil.replace is fater because it doesn't create a pattern in the background
+            //and we need the performance as the replace method is called often
             setDisplayText(StringUtils.replace(displayText, variable, replacedVariable, 1));
         } else {
             final Integer parsedInt = Integer.getInteger(variable);

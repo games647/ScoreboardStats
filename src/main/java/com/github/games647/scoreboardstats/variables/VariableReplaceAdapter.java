@@ -15,12 +15,13 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
 
     private final T plugin;
 
-    private final boolean global;
     private final boolean async;
+    private final boolean global;
+    private final boolean constant;
     private final String description;
 
     private final String[] variables;
-    
+
     private boolean enabled;
 
     /**
@@ -30,7 +31,7 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      * @param variables to replaced variables
      */
     public VariableReplaceAdapter(T plugin, String... variables) {
-        this(false, false, "No description", plugin, variables);
+        this(plugin, "&cNo description", false, false, false, variables);
     }
 
     /**
@@ -38,30 +39,29 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      *
      * @param global is the value the same for all players or does the replacer needs a specific player
      * @param async is this plugin thread safe
+     * @param constant if the variable is updated based on events
      * @param description description of all variables of this plugin
      * @param plugin associated plugin instance
-     * @param variables to replaced variables
+     * @param variables to replaced variables <b>without the variable identifiers (%)</b>
      */
-    public VariableReplaceAdapter(boolean global, boolean async, String description, T plugin, String... variables) {
-        this.global = global;
-        this.async = async;
-        this.description = description;
-        this.variables = variables;
-
+    public VariableReplaceAdapter(T plugin, String description, boolean global, boolean async, boolean constant, String... variables) {
         this.plugin = plugin;
-    }
+        this.async = async;
+        this.global = global;
+        this.constant = constant;
 
-    public List<String> getVariables() {
-        return Arrays.asList(variables);
+        this.description = description;
+
+        this.variables = variables;
     }
 
     /**
-     * Check whether the replacer
+     * Get all variables from this replacer
      *
-     * @return whether the variable values are the same for all players
+     * @return all variables which can be replaced
      */
-    public boolean isGlobal() {
-        return global;
+    public List<String> getVariables() {
+        return Arrays.asList(variables);
     }
 
     /**
@@ -75,6 +75,25 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
     }
 
     /**
+     * Check whether the variables of this replacer have the same results for all
+     * players
+     *
+     * @return whether the variable values are the same for all players
+     */
+    public boolean isGlobal() {
+        return global;
+    }
+
+    /**
+     * Check whether the variables of this replacer are updated based on events
+     *
+     * @return whether the variables of this replacer are updated based on events
+     */
+    public boolean isConstant() {
+        return constant;
+    }
+
+    /**
      * Get the default variable descriptions of all variables
      *
      * @return description of all variables of this plugin
@@ -82,7 +101,6 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
     public String getDescription() {
         return description;
     }
-
 
     /**
      * Get the plugin associated to this replacer

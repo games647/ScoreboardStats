@@ -1,6 +1,9 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-public class StatsSaver implements Runnable{
+/**
+ * Saves the player stats to the database system.
+ */
+public class StatsSaver implements Runnable {
 
     private final PlayerStats stats;
     private final Database statsDatabase;

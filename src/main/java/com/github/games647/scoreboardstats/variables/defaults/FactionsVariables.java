@@ -3,7 +3,7 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplacer;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.entity.MPlayer;
@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Replace all variables that are associated with the faction plugin
  */
-public class FactionsVariables implements VariableReplacer {
+public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
 
     private final boolean newVersion;
 
@@ -23,8 +23,10 @@ public class FactionsVariables implements VariableReplacer {
      * Creates a new faction replacer
      */
     public FactionsVariables() {
-        final Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
-        final String version = factionsPlugin.getDescription().getVersion();
+        super(Bukkit.getPluginManager().getPlugin("Factions")
+                , "power", "f_power", "members_online", "members");
+
+        final String version = getPlugin().getDescription().getVersion();
         newVersion = Version.compare("2", version) >= 0;
 
         //Version is between 2.0 and 2.7
@@ -49,21 +51,25 @@ public class FactionsVariables implements VariableReplacer {
     private void getNewFactionScore(Player player, String variable, ReplaceEvent replaceEvent) {
         //If factions doesn't track the player yet return -1
         final MPlayer mplayer = MPlayer.get(player);
+        if (mplayer == null) {
+            return;
+        }
+
         if ("power".equals(variable)) {
-            replaceEvent.setScore(mplayer == null ? -1 : mplayer.getPowerRounded());
-        }
+            replaceEvent.setScore(mplayer.getPowerRounded());
+        } else {
+            final com.massivecraft.factions.entity.Faction faction = mplayer.getFaction();
+            if (faction == null) {
+                return;
+            }
 
-        final com.massivecraft.factions.entity.Faction faction = mplayer == null ? null : mplayer.getFaction();
-        if ("f_power".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getPowerRounded());
-        }
-
-        if ("members".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getMPlayers().size());
-        }
-
-        if ("members_online".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getOnlinePlayers().size());
+            if ("f_power".equals(variable)) {
+                replaceEvent.setScore(faction.getPowerRounded());
+            } else if ("members".equals(variable)) {
+                replaceEvent.setScore(faction.getMPlayers().size());
+            } else if ("members_online".equals(variable)) {
+                replaceEvent.setScore(faction.getOnlinePlayers().size());
+            }
         }
     }
 
@@ -71,21 +77,25 @@ public class FactionsVariables implements VariableReplacer {
     private void getOldFactionScore(Player player, String variable, ReplaceEvent replaceEvent) {
         //If factions doesn't track the player yet return -1
         final FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
+        if (fPlayer == null) {
+            return;
+        }
+
         if ("power".equals(variable)) {
-            replaceEvent.setScore(fPlayer == null ? -1 : fPlayer.getPowerRounded());
-        }
+            replaceEvent.setScore(fPlayer.getPowerRounded());
+        } else {
+            final com.massivecraft.factions.Faction faction = fPlayer.getFaction();
+            if (faction == null) {
+                return;
+            }
 
-        final com.massivecraft.factions.Faction faction = fPlayer == null ? null : fPlayer.getFaction();
-        if ("f_power".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getPowerRounded());
-        }
-
-        if ("members".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getFPlayers().size());
-        }
-
-        if ("members_online".equals(variable)) {
-            replaceEvent.setScore(faction == null ? -1 : faction.getOnlinePlayers().size());
+            if ("f_power".equals(variable)) {
+                replaceEvent.setScore(faction.getPowerRounded());
+            } else if ("members".equals(variable)) {
+                replaceEvent.setScore(faction.getFPlayers().size());
+            } else if ("members_online".equals(variable)) {
+                replaceEvent.setScore(faction.getOnlinePlayers().size());
+            }
         }
     }
 }

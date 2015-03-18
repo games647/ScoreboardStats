@@ -9,6 +9,9 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+/**
+ * Represents a handler for sub commands
+ */
 public abstract class CommandHandler {
 
     protected final ScoreboardStats plugin;
@@ -26,28 +29,56 @@ public abstract class CommandHandler {
     public CommandHandler(String command, String description, ScoreboardStats plugin, String... aliases) {
         this.plugin = plugin;
         this.description = ChatColor.translateAlternateColorCodes('&', description);
-        this.permission = plugin.getName().toLowerCase() + ".commands." + command;
+        this.permission = plugin.getName().toLowerCase() + ".command." + command;
         this.subCommand = command;
 
         this.aliases = Arrays.asList(aliases);
     }
 
+    /**
+     * Get the main sub command
+     *
+     * @return the main sub command
+     */
     public String getSubCommand() {
         return subCommand;
     }
 
+    /**
+     * Get all aliases of this command. All strings in this list can invoke this
+     * command
+     *
+     * @return all aliases
+     */
     public List<String> getAliases() {
         return aliases;
     }
 
+    /**
+     * Get the description of this command
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Get the permission of this command
+     *
+     * @return the permission
+     */
     public String getPermission() {
         return permission;
     }
 
+    /**
+     * Check if the player has enough permissions to execute this command. It
+     * will send a no permission if he doesn't have it.
+     *
+     * @param sender the executor
+     * @return whether the sender has enough permissions
+     */
     public boolean hasPermission(CommandSender sender) {
         if (sender.hasPermission(permission)) {
             return true;
@@ -57,9 +88,25 @@ public abstract class CommandHandler {
         return false;
     }
 
-    public abstract void onCommand(CommandSender sender, String subCommand, String[] args);
+    /**
+     * Executes the given subcommand
+     *
+     * @param sender Source of the command
+     * @param subCommand Command which was executed
+     * @param args The arguments passed to the command, including final partial argument to be completed and command label
+     */
+    public abstract void onCommand(CommandSender sender, String subCommand, String... args);
 
-    public List<String> onTabComplete(CommandSender sender, String subCommand, String[] args) {
+    /**
+     * Requests a list of possible completions for a command argument.
+     *
+     * @param sender Source of the command
+     * @param subCommand Command which was executed
+     * @param args The arguments passed to the command, including final partial argument to be completed and command label
+     *
+     * @return A List of possible completions for the final argument, or null to default to the command executor
+     */
+    public List<String> onTabComplete(CommandSender sender, String subCommand, String... args) {
         return null;
     }
 }

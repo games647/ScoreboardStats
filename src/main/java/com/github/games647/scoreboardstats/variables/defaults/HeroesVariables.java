@@ -2,7 +2,7 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplacer;
+import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
@@ -20,7 +20,7 @@ import org.bukkit.event.Listener;
 /**
  * Replace all variables that are associated with the heroes plugin
  */
-public class HeroesVariables implements VariableReplacer, Listener {
+public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements Listener {
 
     private final ReplaceManager replaceManager;
     private final CharacterManager characterManager;
@@ -31,28 +31,22 @@ public class HeroesVariables implements VariableReplacer, Listener {
      * @param replaceManager the replace manager from ScoreboardStats
      */
     public HeroesVariables(ReplaceManager replaceManager) {
-        this.replaceManager = replaceManager;
+        super((Heroes) Bukkit.getPluginManager().getPlugin("Heroes"), "mana", "level", "max_mana");
 
-        final Heroes heroesPlugin = (Heroes) Bukkit.getPluginManager().getPlugin("Heroes");
-        characterManager = heroesPlugin.getCharacterManager();
+        this.replaceManager = replaceManager;
+        characterManager = getPlugin().getCharacterManager();
     }
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         final Hero hero = characterManager.getHero(player);
+        replaceEvent.setConstant(true);
         if ("mana".equals(variable)) {
             replaceEvent.setScore(hero.getMana());
-            replaceEvent.setConstant(true);
-        }
-
-        if ("level".equals(variable)) {
+        } else if ("level".equals(variable)) {
             replaceEvent.setScore(hero.getLevel());
-            replaceEvent.setConstant(true);
-        }
-
-        if ("max_mana".equals(variable)) {
+        } else if ("max_mana".equals(variable)) {
             replaceEvent.setScore(hero.getMaxMana());
-            replaceEvent.setConstant(true);
         }
     }
 

@@ -136,9 +136,9 @@ public class Updater {
 
         try {
             this.url = new URL(Updater.QUERY + this.id);
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException malformedURLEx) {
             //This can only happend if we modified the url. Just an int cannot make it malformed
-            this.plugin.getLogger().log(Level.SEVERE, "Invalid URL", e);
+            this.plugin.getLogger().log(Level.SEVERE, "Invalid URL", malformedURLEx);
             this.result = UpdateResult.FAIL_BADID;
             return;
         }

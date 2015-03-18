@@ -77,6 +77,7 @@ public class Version implements Comparable<Version> {
         //exludes spaces which could be added by mistake and exclude build suffixes
         final String trimedVersion = version.trim().split("\\-")[0];
         if (!trimedVersion.matches("\\d+(\\.\\d+){0,5}")) {
+            //check if it's a format like '1.5'
             throw new IllegalArgumentException("Invalid format: " + version);
         }
 

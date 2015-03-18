@@ -8,6 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
+/**
+ * Change the visibility of the scoreboard
+ */
 public class ToggleCommand extends CommandHandler {
 
     public ToggleCommand(ScoreboardStats plugin) {
@@ -15,9 +18,9 @@ public class ToggleCommand extends CommandHandler {
     }
 
     @Override
-    public void onCommand(CommandSender sender, String subCommand, String[] args) {
+    public void onCommand(CommandSender sender, String subCommand, String... args) {
         if (!(sender instanceof Player)) {
-            //the console can't have a scoreboard
+            //the console cannot have a scoreboard
             sender.sendMessage(Lang.get("noConsole"));
             return;
         }

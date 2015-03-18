@@ -25,6 +25,7 @@ public class StatsVariables extends VariableReplaceAdapter<ScoreboardStats> {
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         final PlayerStats stats = statsDatabase.getCachedStats(player);
+        replaceEvent.setConstant(true);
         if (stats == null) {
             //Null if the stats aren't loaded yet
             return;
@@ -32,25 +33,15 @@ public class StatsVariables extends VariableReplaceAdapter<ScoreboardStats> {
 
         if ("kills".equals(variable)) {
             replaceEvent.setScore(stats.getKills());
-        }
-
-        if ("deaths".equals(variable)) {
+        } else if ("deaths".equals(variable)) {
             replaceEvent.setScore(stats.getDeaths());
-        }
-
-        if ("mob".equals(variable)) {
+        } else if ("mob".equals(variable)) {
             replaceEvent.setScore(stats.getMobkills());
-        }
-
-        if ("kdr".equals(variable)) {
+        } else if ("kdr".equals(variable)) {
             replaceEvent.setScore(stats.getKdr());
-        }
-
-        if ("killstreak".equals(variable)) {
+        } else if ("killstreak".equals(variable)) {
             replaceEvent.setScore(stats.getKillstreak());
-        }
-
-        if ("current_streak".equals(variable)) {
+        } else if ("current_streak".equals(variable)) {
             replaceEvent.setScore(stats.getLaststreak());
         }
     }
