@@ -29,6 +29,14 @@
         <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
     </scm>
 
+    <ciManagement>
+
+    </ciManagement>
+    
+    <distributionManagement>
+
+    </distributionManagement>
+
     <build>
         <defaultGoal>install</defaultGoal>
         <!--Just use the project name to replace an old version of the plugin if the user does only copy-paste-->
@@ -78,12 +86,8 @@
                 <!--Replace variables-->
                 <filtering>true</filtering>
             </resource>
-            <!--Include source in the main jar-->
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
 
-            <!--Add the license to jar to see in the final jar-->
+            <!--Add the license to jar in order to see it in the final jar-->
             <resource>
                 <directory>${basedir}</directory>
                 <includes>

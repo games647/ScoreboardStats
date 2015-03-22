@@ -14,6 +14,8 @@ import org.bukkit.util.NumberConversions;
  */
 public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements Listener {
 
+    private static final int MINUTE_TO_SECOND = 60;
+
     public BukkitVariables() {
         super(null, "health", "lifetime", "exp", "no_domage_ticks", "xp_to_Level", "last_damage"
                 , "helmet", "boots", "leggings", "chestplate", "time");
@@ -28,7 +30,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
 
         if ("lifetime".equals(variable)) {
             // --> Minutes
-            replaceEvent.setScore(player.getTicksLived() / (20 * 60));
+            replaceEvent.setScore(player.getTicksLived() / (20 * MINUTE_TO_SECOND));
             return;
         }
 
@@ -39,7 +41,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
 
         if ("no_damage_ticks".equals(variable)) {
             // --> Minutes
-            replaceEvent.setScore(player.getNoDamageTicks() / (20 * 60));
+            replaceEvent.setScore(player.getNoDamageTicks() / (20 * MINUTE_TO_SECOND));
             return;
         }
 
@@ -51,7 +53,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
         if ("last_damage".equals(variable)) {
             //casting should be made after division
             // --> Minutes
-            replaceEvent.setScore((int) (player.getLastDamage() / (20 * 60)));
+            replaceEvent.setScore((int) (player.getLastDamage() / (20 * MINUTE_TO_SECOND)));
             return;
         }
 
@@ -83,7 +85,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
     private int calculateDurability(ItemStack item) {
         //Check if the user have an item on the slot and if the item isn't a stone block or something
         if (item == null || item.getType().getMaxDurability() == 0) {
-            return -2;
+            return 0;
         } else {
             //calculate in percent
             return item.getDurability() * 100 / item.getType().getMaxDurability();

@@ -1,5 +1,9 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -9,11 +13,17 @@ import org.bukkit.plugin.Plugin;
 public class LegacyReplaceWrapper extends VariableReplaceAdapter<Plugin> {
 
     private final Replaceable oldReplacer;
+    private List<String> variables = Lists.newArrayList();
 
     public LegacyReplaceWrapper(Plugin plugin, @SuppressWarnings("deprecation") Replaceable oldReplacer) {
         super(plugin);
 
         this.oldReplacer = oldReplacer;
+    }
+
+    @Override
+    public List<String> getVariables() {
+        return variables;
     }
 
     @Override
@@ -39,6 +49,6 @@ public class LegacyReplaceWrapper extends VariableReplaceAdapter<Plugin> {
 
     @Override
     public String toString() {
-        return "LegacyReplaceWrapper{" + "oldReplacer=" + oldReplacer + '}';
+        return oldReplacer.toString();
     }
 }

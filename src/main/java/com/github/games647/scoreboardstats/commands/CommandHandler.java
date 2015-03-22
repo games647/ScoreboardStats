@@ -93,7 +93,7 @@ public abstract class CommandHandler {
      *
      * @param sender Source of the command
      * @param subCommand Command which was executed
-     * @param args The arguments passed to the command, including final partial argument to be completed and command label
+     * @param args The arguments passed to the command, including final partial argument to be completed
      */
     public abstract void onCommand(CommandSender sender, String subCommand, String... args);
 
@@ -102,7 +102,7 @@ public abstract class CommandHandler {
      *
      * @param sender Source of the command
      * @param subCommand Command which was executed
-     * @param args The arguments passed to the command, including final partial argument to be completed and command label
+     * @param args The arguments passed to the command, including final partial argument to be completed
      *
      * @return A List of possible completions for the final argument, or null to default to the command executor
      */

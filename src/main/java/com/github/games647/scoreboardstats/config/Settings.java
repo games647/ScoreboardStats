@@ -280,10 +280,11 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
 
             final String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
-            final String variable = config.getString(key).toLowerCase();
+            String variable = config.getString(key).toLowerCase();
             if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
-                //indicates a variable
-                ITEMS.put(name, variable.replace("%", ""));
+                //% indicates a variable
+                variable = variable.replace("%", "");
+                ITEMS.put(name, variable);
                 ITEM_NAMES.put(variable, name);
             } else {
                 //Prevent user mistakes

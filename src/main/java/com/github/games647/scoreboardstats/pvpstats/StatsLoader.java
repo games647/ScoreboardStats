@@ -25,6 +25,7 @@ public class StatsLoader implements Runnable {
      * @param plugin the owning plugin to reschedule
      * @param uuidSearch should it be searched by uuid
      * @param player player instance
+     * @param statsDatabase the pvp database
      */
     public StatsLoader(Plugin plugin, boolean uuidSearch, Player player, Database statsDatabase) {
         this.plugin = plugin;
@@ -40,7 +41,7 @@ public class StatsLoader implements Runnable {
         final Player player = weakPlayer.get();
         final Database statsDatabase = weakDatabase.get();
         if (player != null && statsDatabase != null) {
-            final PlayerStats stats = statsDatabase.loadAccount(uuidSearch ? player.getUniqueId() : player.getName());
+            final PlayerStats stats = statsDatabase.loadAccount(player);
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
             if (uuidSearch) {

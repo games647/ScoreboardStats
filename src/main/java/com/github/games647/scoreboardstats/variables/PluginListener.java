@@ -30,7 +30,8 @@ public class PluginListener implements Listener {
     public void onPluginEnable(PluginEnableEvent enableEvent) {
         //Register the listener back again if the plugin is available
         final String enablePluginName = enableEvent.getPlugin().getName();
-        for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : replaceManager.getDefaults().entrySet()) {
+        final Map<Class<? extends VariableReplaceAdapter<?>>, String> defaults = replaceManager.getDefaults();
+        for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : defaults.entrySet()) {
             final String pluginName = entry.getValue();
             if (enablePluginName.equals(entry.getValue())) {
                 replaceManager.registerDefault(entry.getKey(), pluginName);
@@ -48,7 +49,8 @@ public class PluginListener implements Listener {
         //Remove the listener if the associated plugin was disabled
         final String disablePluginName = disableEvent.getPlugin().getName();
 
-        final Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = replaceManager.getSpecificReplacers().values().iterator();
+        final Map<String, VariableReplaceAdapter<? extends Plugin>> specificReplacers = replaceManager.getReplacers();
+        final Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = specificReplacers.values().iterator();
         while (iterator.hasNext()) {
             final Plugin plugin = iterator.next().getPlugin();
             if (plugin != null && plugin.getName().equals(disablePluginName)) {

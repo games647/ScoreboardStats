@@ -8,6 +8,9 @@ import java.util.Calendar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Reprents a replacer for non Minecraft related variables
+ */
 public class GeneralVariables extends VariableReplaceAdapter<Plugin> {
 
     //From bytes to mega bytes

@@ -9,7 +9,6 @@ public class ReplaceEvent {
 
     private final String variable;
     private final boolean textVariable;
-    private final boolean async;
 
     private boolean constant;
     private boolean modified;
@@ -23,32 +22,18 @@ public class ReplaceEvent {
      *
      * @param variable the to replaced variable
      * @param textVariable whether it should return an String or Integer
-     * @param async whether the replaceEvent should be called async
      * @param constant whether it will be updated with an event handler
      * @param displayText the scoreboard item name
      * @param score the scoreboard item score
      */
-    public ReplaceEvent(String variable, boolean textVariable, boolean async, boolean constant
-            , String displayText, int score) {
+    public ReplaceEvent(String variable, boolean textVariable, boolean constant, String displayText, int score) {
         this.variable = variable;
         this.textVariable = textVariable;
-        this.async = async;
         this.constant = constant;
         this.displayText = displayText;
         this.score = score;
 //        this.global = global;
 //        this.updateInterval = interval;
-    }
-
-    /**
-     * Get whether the replaceEvent will be called async
-     *
-     * @return whether the replaceEvent will be called async
-     */
-    public boolean isAsync() {
-        //this shouldn't be modifiable because it can be set on replacer register
-        //otherwise it could happen that we call it async on a not thread-safe replacer
-        return async;
     }
 
     /**

@@ -35,6 +35,7 @@ public class StatsListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent joinEvent) {
         final Player player = joinEvent.getPlayer();
+        //removing old metadata which wasn't removed (which can lead to memory leaks)
         player.removeMetadata("player_stats", plugin);
 
         //load the pvpstats if activated
@@ -53,7 +54,7 @@ public class StatsListener implements Listener {
 
         database.saveAsync(database.getCachedStats(player));
 
-        //just remove our metadata
+        //just remove our metadata to prevent memory leaks
         player.removeMetadata("player_stats", plugin);
     }
 
@@ -96,6 +97,7 @@ public class StatsListener implements Listener {
                 killedcache.incrementDeaths();
                 plugin.getReplaceManager().updateScore(killed, "deaths", killedcache.getDeaths());
                 plugin.getReplaceManager().updateScore(killed, "kdr", killedcache.getKdr());
+                //will reset
                 plugin.getReplaceManager().updateScore(killed, "current_streak", killedcache.getLaststreak());
             }
 
@@ -104,6 +106,7 @@ public class StatsListener implements Listener {
                 killercache.incrementKills();
                 plugin.getReplaceManager().updateScore(killed, "deaths", killercache.getKills());
                 plugin.getReplaceManager().updateScore(killed, "kdr", killercache.getKdr());
+                //maybe the player reaches a new high score
                 plugin.getReplaceManager().updateScore(killed, "killstreak", killercache.getKillstreak());
                 plugin.getReplaceManager().updateScore(killed, "current_streak", killercache.getLaststreak());
             }

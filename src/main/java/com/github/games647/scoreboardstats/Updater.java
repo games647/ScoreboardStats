@@ -40,7 +40,7 @@ public class Updater {
     // Used for locating version numbers in file names
     private static final String DELIMETER = "^v|[\\s_-]v";
     // If the version number contains one of these, don't update.
-    private static final String[] NO_UPDATE_TAG = { "-DEV", "-PRE", "-SNAPSHOT" };
+    private static final String[] NO_UPDATE_TAG = {"-DEV", "-PRE", "-SNAPSHOT"};
 
     /* User-provided variables */
 
@@ -226,7 +226,8 @@ public class Updater {
 
             ByteStreams.copy(inputstream, fout);
         } catch (Exception ex) {
-            this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
+            this.plugin.getLogger().log(Level.WARNING
+                    , "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             if (fout != null) {
@@ -248,7 +249,8 @@ public class Updater {
     }
 
     /**
-     * Check to see if the program should continue by evaluating whether the plugin is already updated, or shouldn't be updated.
+     * Check to see if the program should continue by evaluating whether the plugin is already updated, or shouldn't be
+     * updated.
      *
      * @return true if the version was located and is not the same as the remote's newest.
      */
@@ -348,7 +350,8 @@ public class Updater {
 
             final JSONArray array = (JSONArray) JSONValue.parse(streamReader);
             if (array.isEmpty()) {
-                this.plugin.getLogger().log(Level.WARNING, "The updater could not find any file for the project id: {0}", this.id);
+                this.plugin.getLogger().log(Level.WARNING
+                        , "The updater could not find any file for the project id: {0}", this.id);
                 this.result = UpdateResult.FAIL_BADID;
                 return false;
             }

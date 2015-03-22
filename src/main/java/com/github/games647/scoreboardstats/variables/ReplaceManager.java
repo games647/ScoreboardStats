@@ -100,7 +100,6 @@ public class ReplaceManager implements Listener {
      */
     public void register(VariableReplaceAdapter<? extends Plugin> replacer) {
         for (String variable : replacer.getVariables()) {
-            System.out.println("REGISTERED: " + variable + "  : " + replacer);
             specificReplacer.put(variable, replacer);
             if (replacer.isConstant() || replacer.isGlobal()) {
                 skipList.add(variable);
@@ -122,10 +121,10 @@ public class ReplaceManager implements Listener {
     public boolean unregister(Replaceable replacer) {
         boolean found = false;
 
-        final Iterator<Map.Entry<String, VariableReplaceAdapter<?>>> iterator = specificReplacer.entrySet().iterator();
+        final Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
         while (iterator.hasNext()) {
-            final Map.Entry<String, VariableReplaceAdapter<?>> next = iterator.next();
-            if (next.getValue().equals(replacer)) {
+            final VariableReplaceAdapter<?> next = iterator.next();
+            if (next.equals(replacer)) {
                 iterator.remove();
                 found = true;
             }
@@ -147,10 +146,10 @@ public class ReplaceManager implements Listener {
     public boolean unregister(VariableReplacer replacer) {
         boolean found = false;
 
-        final Iterator<Map.Entry<String, VariableReplaceAdapter<?>>> iterator = specificReplacer.entrySet().iterator();
+        final Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
         while (iterator.hasNext()) {
-            final Map.Entry<String, VariableReplaceAdapter<?>> next = iterator.next();
-            if (next.getValue().equals(replacer)) {
+            final VariableReplaceAdapter<?> next = iterator.next();
+            if (next.equals(replacer)) {
                 iterator.remove();
                 found = true;
             }
@@ -200,7 +199,7 @@ public class ReplaceManager implements Listener {
      */
     public ReplaceEvent getScore(Player player, String variable, String displayName, int oldScore, boolean complete)
             throws UnknownVariableException {
-        final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, false, displayName, oldScore);
+        final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, displayName, oldScore);
         if (!complete && skipList.contains(variable)) {
             //Check if the variable can be updated with event handlers or is global
             //therefore we just need a initial value
@@ -245,8 +244,10 @@ public class ReplaceManager implements Listener {
     public void updateGlobals() {
         for (Map.Entry<String, VariableReplaceAdapter<?>> entrySet : globals.entrySet()) {
             final String variable = entrySet.getKey();
+            final String displayName = Settings.getItemName(variable);
+            final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, displayName, -1);
+
             final VariableReplaceAdapter<? extends Plugin> globalReplacer = entrySet.getValue();
-            final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, false, Settings.getItemName(variable), -1);
             globalReplacer.onReplace(null, variable, replaceEvent);
             if (replaceEvent.isModified()) {
                 updateScore(variable, replaceEvent.getScore());
@@ -258,7 +259,7 @@ public class ReplaceManager implements Listener {
         return DEFAULTS;
     }
 
-    protected Map<String, VariableReplaceAdapter<? extends Plugin>> getSpecificReplacers() {
+    protected Map<String, VariableReplaceAdapter<? extends Plugin>> getReplacers() {
         return specificReplacer;
     }
 
@@ -306,6 +307,7 @@ public class ReplaceManager implements Listener {
 
             if (replaceEvent.isModified()) {
                 specificReplacer.put(variable, legacyReplacer);
+                legacyReplacer.getVariables().add(variable);
                 break;
             }
         }

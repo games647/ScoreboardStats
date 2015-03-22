@@ -44,7 +44,8 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      * @param plugin associated plugin instance
      * @param variables to replaced variables <b>without the variable identifiers (%)</b>
      */
-    public VariableReplaceAdapter(T plugin, String description, boolean global, boolean async, boolean constant, String... variables) {
+    public VariableReplaceAdapter(T plugin, String description, boolean global, boolean async, boolean constant
+            , String... variables) {
         this.plugin = plugin;
         this.async = async;
         this.global = global;

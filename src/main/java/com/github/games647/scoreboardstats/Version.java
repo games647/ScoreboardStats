@@ -17,7 +17,15 @@ public class Version implements Comparable<Version> {
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
-    private static final boolean UUID_COMPATIBLE = compare("1.7", getMinecraftVersionString()) >= 0;
+    private static boolean UUID_COMPATIBLE;
+
+    static {
+        try {
+            UUID_COMPATIBLE = compare("1.7", getMinecraftVersionString()) >= 0;
+        } catch (Exception ex) {
+            UUID_COMPATIBLE = false;
+        }
+    }
 
     /**
      * Gets whether server supports UUIDs
@@ -86,9 +94,10 @@ public class Version implements Comparable<Version> {
         //escape regEx and split by dots
         final String[] split = trimedVersion.split("\\.");
         //We check if the length has min 1 entry.
-        versionParts[0] = Integer.parseInt(split[0]);
-        versionParts[1] = split.length > 1 ? Integer.parseInt(split[1]) : 0;
-        versionParts[2] = split.length > 2 ? Integer.parseInt(split[2]) : 0;
+        for (int i = 0; i < split.length && i < versionParts.length; i++) {
+            versionParts[i] = Integer.parseInt(split[i]);
+        }
+
         return versionParts;
     }
 

@@ -36,10 +36,10 @@ public class Database {
 
     private final ScheduledExecutorService executor;
 
-    private final Map<String, Integer> TOPLIST = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+    private final Map<String, Integer> toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
     private final DatabaseConfiguration dbConfig;
-    private EbeanServer databaseInstance;
+    private EbeanServer ebeanConnection;
 
     public Database(ScoreboardStats plugin) {
         this.plugin = plugin;
@@ -57,7 +57,7 @@ public class Database {
      * @return the database instance
      */
     public EbeanServer getDatabaseInstance() {
-        return databaseInstance;
+        return ebeanConnection;
     }
 
     /**
@@ -93,7 +93,7 @@ public class Database {
      * @param player the associated player
      */
     public void loadAccountAsync(Player player) {
-        if (getCachedStats(player) == null && databaseInstance != null) {
+        if (getCachedStats(player) == null && ebeanConnection != null) {
             executor.execute(new StatsLoader(plugin, dbConfig.isUuidUse(), player, this));
         }
     }
@@ -105,10 +105,10 @@ public class Database {
      * @return the loaded stats
      */
     public PlayerStats loadAccount(Object uniqueId) {
-        if (uniqueId == null || databaseInstance == null) {
+        if (uniqueId == null || ebeanConnection == null) {
             return null;
         } else {
-            PlayerStats stats = databaseInstance.find(PlayerStats.class)
+            PlayerStats stats = ebeanConnection.find(PlayerStats.class)
                     .where().eq(dbConfig.isUuidUse() ? "uuid" : "playername", uniqueId).findUnique();
 
             if (stats == null) {
@@ -117,6 +117,24 @@ public class Database {
             }
 
             return stats;
+        }
+    }
+
+    /**
+     * Starts loading the stats for a specific player sync
+     *
+     * @param player the associated player
+     * @return the loaded stats
+     */
+    public PlayerStats loadAccount(Player player) {
+        if (player == null || ebeanConnection == null) {
+            return null;
+        } else {
+            if (dbConfig.isUuidUse()) {
+                return loadAccount(player.getUniqueId());
+            } else {
+                return loadAccount(player.getName());
+            }
         }
     }
 
@@ -135,9 +153,9 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void save(PlayerStats stats) {
-        if (stats != null && databaseInstance != null) {
+        if (stats != null && ebeanConnection != null) {
             //Save the stats to the database
-            databaseInstance.save(stats);
+            ebeanConnection.save(stats);
         }
     }
 
@@ -186,7 +204,7 @@ public class Database {
             //only create the table if it doesn't exist
             gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
 
-            databaseInstance = database;
+            ebeanConnection = database;
         } catch (Exception ex) {
             plugin.getLogger().log(Level.WARNING, "Error creating database", ex);
         } finally {
@@ -211,8 +229,8 @@ public class Database {
      * @return a iterable of the entries
      */
     public Iterable<Map.Entry<String, Integer>> getTop() {
-        synchronized (TOPLIST) {
-            return TOPLIST.entrySet();
+        synchronized (toplist) {
+            return toplist.entrySet();
         }
     }
 
@@ -233,18 +251,18 @@ public class Database {
             }
         }
 
-        synchronized (TOPLIST) {
-            TOPLIST.clear();
-            TOPLIST.putAll(newToplist);
+        synchronized (toplist) {
+            toplist.clear();
+            toplist.putAll(newToplist);
         }
     }
 
     private Iterable<PlayerStats> getTopList(String type) {
-        if (databaseInstance == null) {
+        if (ebeanConnection == null) {
             return Collections.emptyList();
         }
 
-        return databaseInstance.find(PlayerStats.class)
+        return ebeanConnection.find(PlayerStats.class)
                 .order(type + " desc")
                 //we only need the name
                 .select("playername")

@@ -54,8 +54,12 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
      */
     private void checkVersion() {
         final String version = getPlugin().getDescription().getVersion();
-        final int end = version.indexOf('-');
-        final String cleanVersion = version.substring(0, end == -1 ? version.length() : end);
+        int end = version.indexOf('-');
+        if (end == -1) {
+            end = version.length();
+        }
+
+        final String cleanVersion = version.substring(0, end);
         if (Version.compare("1.4.1", cleanVersion) < 0) {
             throw new UnsupportedPluginException("You have an outdated version of Vault. Please update it");
         }

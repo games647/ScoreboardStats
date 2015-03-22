@@ -134,7 +134,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
         }
 
         final FastOfflinePlayer other = (FastOfflinePlayer) obj;
-        return this.playerName == null ? other.playerName == null : this.playerName.equals(other.playerName);
+        return Objects.equal(playerName, other.playerName);
     }
 
     @Override

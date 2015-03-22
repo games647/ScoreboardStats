@@ -63,13 +63,6 @@ public class VersionTest {
      */
     @Test
     public void testComparison() {
-        //Bukkit version parsing. Can be found here: META-INF
-        PowerMockito.mockStatic(Bukkit.class);
-        final Server server = Mockito.mock(Server.class);
-        Mockito.when(Bukkit.getServer()).thenReturn(server);
-
-        Mockito.when(Bukkit.getVersion()).thenReturn(DEFAULT_VERSION);
-
         final Version low = new Version(1, 5, 4);
         final Version high = new Version(1, 8, 5);
 
