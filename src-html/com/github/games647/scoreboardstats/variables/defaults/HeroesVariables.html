@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="de">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package com.github.games647.scoreboardstats.variables.defaults;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import com.github.games647.scoreboardstats.variables.ReplaceEvent;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import com.github.games647.scoreboardstats.variables.ReplaceManager;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import com.herocraftonline.heroes.Heroes;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import com.herocraftonline.heroes.api.events.ClassChangeEvent;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import com.herocraftonline.heroes.api.events.HeroRegainManaEvent;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import com.herocraftonline.heroes.api.events.SkillUseEvent;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import com.herocraftonline.heroes.characters.CharacterManager;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import com.herocraftonline.heroes.characters.Hero;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import com.herocraftonline.heroes.characters.classes.HeroClass;<a name="line.13"></a>
+<span class="sourceLineNo">014</span><a name="line.14"></a>
+<span class="sourceLineNo">015</span>import org.bukkit.Bukkit;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import org.bukkit.entity.Player;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import org.bukkit.event.EventHandler;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import org.bukkit.event.Listener;<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>/**<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * Replace all variables that are associated with the heroes plugin<a name="line.21"></a>
+<span class="sourceLineNo">022</span> */<a name="line.22"></a>
+<span class="sourceLineNo">023</span>public class HeroesVariables extends VariableReplaceAdapter&lt;Heroes&gt; implements Listener {<a name="line.23"></a>
+<span class="sourceLineNo">024</span><a name="line.24"></a>
+<span class="sourceLineNo">025</span>    private final ReplaceManager replaceManager;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>    private final CharacterManager characterManager;<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>    /**<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     * Creates a new heroes replacer<a name="line.29"></a>
+<span class="sourceLineNo">030</span>     *<a name="line.30"></a>
+<span class="sourceLineNo">031</span>     * @param replaceManager the replace manager from ScoreboardStats<a name="line.31"></a>
+<span class="sourceLineNo">032</span>     */<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    public HeroesVariables(ReplaceManager replaceManager) {<a name="line.33"></a>
+<span class="sourceLineNo">034</span>        super((Heroes) Bukkit.getPluginManager().getPlugin("Heroes"), "mana", "level", "max_mana");<a name="line.34"></a>
+<span class="sourceLineNo">035</span><a name="line.35"></a>
+<span class="sourceLineNo">036</span>        this.replaceManager = replaceManager;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        characterManager = getPlugin().getCharacterManager();<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    }<a name="line.38"></a>
+<span class="sourceLineNo">039</span><a name="line.39"></a>
+<span class="sourceLineNo">040</span>    @Override<a name="line.40"></a>
+<span class="sourceLineNo">041</span>    public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        final Hero hero = characterManager.getHero(player);<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        replaceEvent.setConstant(true);<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        if ("mana".equals(variable)) {<a name="line.44"></a>
+<span class="sourceLineNo">045</span>            replaceEvent.setScore(hero.getMana());<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        } else if ("level".equals(variable)) {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>            replaceEvent.setScore(hero.getLevel());<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        } else if ("max_mana".equals(variable)) {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>            replaceEvent.setScore(hero.getMaxMana());<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        }<a name="line.50"></a>
+<span class="sourceLineNo">051</span>    }<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>    @EventHandler(ignoreCancelled = true)<a name="line.53"></a>
+<span class="sourceLineNo">054</span>    public void onLevelChange(HeroChangeLevelEvent levelChangeEvent) {<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        final Player player = levelChangeEvent.getHero().getPlayer();<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        final HeroClass heroClass = levelChangeEvent.getHeroClass();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        final int newLevel = levelChangeEvent.getTo();<a name="line.57"></a>
+<span class="sourceLineNo">058</span><a name="line.58"></a>
+<span class="sourceLineNo">059</span>        replaceManager.updateScore(player, "level", newLevel);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        replaceManager.updateScore(player, "max_mana", (int) heroClass.getMaxManaPerLevel() * newLevel);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>    }<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>    @EventHandler(ignoreCancelled = true)<a name="line.63"></a>
+<span class="sourceLineNo">064</span>    public void onManaRegain(HeroRegainManaEvent regainManaEvent) {<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        final Hero hero = regainManaEvent.getHero();<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        replaceManager.updateScore(hero.getPlayer(), "mana", hero.getMana());<a name="line.66"></a>
+<span class="sourceLineNo">067</span>    }<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>    @EventHandler(ignoreCancelled = true)<a name="line.69"></a>
+<span class="sourceLineNo">070</span>    public void onSkillUse(SkillUseEvent skillUseEvent) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        final Hero hero = skillUseEvent.getHero();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>        replaceManager.updateScore(hero.getPlayer(), "mana", hero.getMana() - skillUseEvent.getManaCost());<a name="line.72"></a>
+<span class="sourceLineNo">073</span>    }<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>    @EventHandler(ignoreCancelled = true)<a name="line.75"></a>
+<span class="sourceLineNo">076</span>    public void onClassChange(ClassChangeEvent classChangeEvent) {<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        final Hero hero = classChangeEvent.getHero();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        final int maxMana = (int) classChangeEvent.getTo().getMaxManaPerLevel();<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        replaceManager.updateScore(hero.getPlayer(), "max_mana", maxMana);<a name="line.79"></a>
+<span class="sourceLineNo">080</span>    }<a name="line.80"></a>
+<span class="sourceLineNo">081</span>}<a name="line.81"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
