@@ -1,4 +1,4 @@
-#ScoreboardStats
+# ScoreboardStats
 
 ScoreboardStats is a [Bukkit](https://github.com/Bukkit/Bukkit) plugin
     that uses the sidebar from scoreboard feature which was introduced into
@@ -9,12 +9,19 @@ This plugin simplifies, adds many new features and possible ways to improve
 
 Project page:
     http://dev.bukkit.org/bukkit-mods/scoreboardstats/
+
     http://www.curse.com/bukkit-plugins/minecraft/scoreboardstats
 
 Build status:
-    [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg)](https://travis-ci.org/games647/ScoreboardStats/)
+    [![Build Status](http://travis-ci.org/games647/ScoreboardStats.svg)](http://travis-ci.org/games647/ScoreboardStats/)
 
-###Compatibility
+### For Plugin Developers
+
+https://github.com/games647/ScoreboardStats/wiki
+
+Feel free to contribute there too
+
+### Compatibility
 
 This plugin is compatible with all Minecraft versions above 1.5, where the
     scoreboard feature was introduced by [Mojang](https://mojang.com/).
@@ -31,7 +38,7 @@ These plugins are (tested) compatible (just activate comaptibilityMode):
 * GhostPlayer (http://dev.bukkit.org/bukkit-plugins/ghost-player/)
 * McCombatLevel (http://dev.bukkit.org/bukkit-plugins/mccombatlevel/)
 
-###Building
+### Building
 
 ScoreboardStats uses Maven 3 to manage building configurations,
     general project informations and dependencies.
