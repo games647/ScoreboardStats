@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.config;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 
 import java.io.File;
@@ -60,16 +61,7 @@ public class CommentedYaml<T extends Plugin> {
             //UTF-8 should be available on all java running systems
             final List<String> lines = Files.readLines(file, Charsets.UTF_8);
 
-            final StringBuilder builder = new StringBuilder();
-            for (String line : lines) {
-                //remove the silly tab error from yaml
-                builder.append(line.replace("\t", "    "));
-                //indicates a new line
-                builder.append('\n');
-            }
-
-            newConf.loadFromString(builder.toString());
-            return newConf;
+            load(lines, newConf);
         } catch (InvalidConfigurationException ex) {
             plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
         } catch (IOException ex) {
@@ -126,18 +118,40 @@ public class CommentedYaml<T extends Plugin> {
         }
     }
 
+    private void load(List<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
+        final StringBuilder builder = new StringBuilder();
+        for (String line : lines) {
+            //remove the silly tab error from yaml
+            builder.append(line.replace("\t", "    "));
+            //indicates a new line
+            builder.append('\n');
+        }
+
+        newConf.loadFromString(builder.toString());
+    }
+
     /**
      * Get the default configuration located in the plugin jar
      *
      * @return the default configuration
      */
     private FileConfiguration getDefaults() {
+        final YamlConfiguration defaults = new YamlConfiguration();
         final InputStream defConfigStream = plugin.getResource(FILE_NAME);
         if (defConfigStream != null) {
-            //stream will be closed in this method
-            return YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8));
+            try {
+                final InputStreamReader reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
+                //stream will be closed in this method
+                final List<String> lines = CharStreams.readLines(reader);
+                load(lines, defaults);
+                return defaults;
+            } catch (InvalidConfigurationException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
+            } catch (IOException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
+            }
         }
 
-        return new YamlConfiguration();
+        return defaults;
     }
 }
