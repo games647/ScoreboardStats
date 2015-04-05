@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.config;
 
-import com.github.games647.scoreboardstats.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -58,7 +57,9 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     //Sidebar objective can't have more than 15 items
     private static final Map<String, String> ITEMS = Maps.newHashMapWithExpectedSize(15);
     private static final Map<String, String> ITEM_NAMES = Maps.newHashMapWithExpectedSize(15);
-    private static Set<String> disabledWorlds;
+
+    private static Set<String> worlds;
+    private static transient boolean isWhitelist;
 
     /**
      * Get an iterator of all items in the main scoreboard
@@ -86,7 +87,11 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
      * @return if the world is disabled
      */
     public static boolean isActiveWorld(String worldName) {
-        return !disabledWorlds.contains(worldName);
+        if (isWhitelist) {
+            return worlds.contains(worldName);
+        }
+
+        return !worlds.contains(worldName);
     }
 
     /**
@@ -224,7 +229,9 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         compatibilityMode = isCompatibilityMode(compatibilityMode);
 
         //This set only changes after another call to loadConfig so this set can be immutable
-        disabledWorlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
+        worlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
+
+        isWhitelist = config.getBoolean("disabled-worlds-whitelist", false);
 
         title = trimLength(title, 32);
         tempTitle = trimLength(tempTitle, 32);
@@ -235,6 +242,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         //temp-scoreboard
         tempScoreboard = tempScoreboard && pvpStats;
         topItems = checkItems(topItems);
+        topType = topType.replace("%", "");
     }
 
     private String trimLength(String check, int limit) {
@@ -320,6 +328,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 plugin.getLogger().info("Otherwise the plugins won't work");
                 plugin.getLogger().log(Level.INFO, "Enable it in the {0} config compatibilityMode", plugin.getName());
                 plugin.getLogger().info("Then this plugin will send raw packets and be compatible with other plugins");
+                //one plugin is enough
                 break;
             }
         }

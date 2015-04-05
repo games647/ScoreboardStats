@@ -62,6 +62,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setBanned(boolean banned) {
         //ignore
     }

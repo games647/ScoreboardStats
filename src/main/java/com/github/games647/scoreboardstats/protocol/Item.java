@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.bukkit.entity.Player;
 
 /**
  * Represents a scoreboard item with ProtocolLib.
@@ -32,15 +31,6 @@ public class Item implements Comparable<Item> {
         if (send) {
             update();
         }
-    }
-
-    /**
-     * Check if this item is shown to the player.
-     *
-     * @return whether this item is shown to the player
-     */
-    public boolean isShown() {
-        return exists() && parent.isShown();
     }
 
     /**
@@ -91,7 +81,7 @@ public class Item implements Comparable<Item> {
      */
     public void unregister() {
         if (exists()) {
-            getScoreboard().resetScore(scoreName);
+            parent.getScoreboard().resetScore(scoreName);
             PacketFactory.sendPacket(this, State.REMOVE);
         }
     }
@@ -105,24 +95,6 @@ public class Item implements Comparable<Item> {
         return this.parent;
     }
 
-    /**
-     * Gets the owner of this item and objective.
-     *
-     * @return the tracking player
-     */
-    public Player getOwner() {
-        return parent.getOwner();
-    }
-
-    /**
-     * Get the scoreboard instance.
-     *
-     * @return the scoreboard
-     */
-    public PlayerScoreboard getScoreboard() {
-        return parent.getScoreboard();
-    }
-
     @Override
     public int compareTo(Item other) {
         //Reverse order - first the highest element like the scoreboard ingame
@@ -131,7 +103,7 @@ public class Item implements Comparable<Item> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(scoreName, score);
+        return Objects.hashCode(scoreName);
     }
 
     @Override
@@ -139,11 +111,10 @@ public class Item implements Comparable<Item> {
         //ignores also null
         if (obj instanceof Item) {
             final Item other = (Item) obj;
-            return Objects.equal(scoreName, other.scoreName)
-                    && score == other.score;
-        } else {
-            return false;
+            return Objects.equal(scoreName, other.scoreName);
         }
+
+        return false;
     }
 
     @Override

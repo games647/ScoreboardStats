@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.avaje.ebean.EbeanServer;
@@ -8,7 +9,9 @@ import com.github.games647.scoreboardstats.Updater.UpdateCallback;
 import com.github.games647.scoreboardstats.Updater.UpdateResult;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,13 +20,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents the main class of this plugin.
- *
- * Take a look here to see newest source files and contribute to the project
- * https://github.com/games647/ScoreboardStats
  */
 public class ScoreboardStats extends JavaPlugin {
 
-    //don't create instances here that accesses the bukkit API
+    //don't create instances here that accesses the bukkit API - it will be incomptible with older mc versions
     private RefreshTask refreshTask;
     private Settings settings;
     private ReloadFixLoader classLoader;
@@ -84,7 +84,7 @@ public class ScoreboardStats extends JavaPlugin {
     @Override
     public EbeanServer getDatabase() {
         if (database == null) {
-            return null;
+            return super.getDatabase();
         }
 
         //this method exists to make it easier access from another plugin
@@ -93,11 +93,9 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        if (database == null) {
-            return null;
-        }
-
-        return database.getDatabaseClasses();
+        final List<Class<?>> classes = Lists.newArrayList();
+        classes.add(PlayerStats.class);
+        return classes;
     }
 
     /**
@@ -188,7 +186,7 @@ public class ScoreboardStats extends JavaPlugin {
             database.saveAll();
         }
 
-        if (Settings.isCompatibilityMode()) {
+        if (getServer().getPluginManager().isPluginEnabled("ProtcolLib")) {
             //the plugin should disable all listeners including protocollibs
             ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         }

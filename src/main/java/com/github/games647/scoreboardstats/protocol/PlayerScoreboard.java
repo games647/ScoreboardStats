@@ -93,7 +93,7 @@ public class PlayerScoreboard {
      *
      * @return the owner of the scoreboard
      */
-    public Player getPlayer() {
+    public Player getOwner() {
         return player;
     }
 

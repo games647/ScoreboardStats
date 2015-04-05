@@ -140,6 +140,7 @@ public class Updater {
             //This can only happend if we modified the url. Just an int cannot make it malformed
             this.plugin.getLogger().log(Level.SEVERE, "Invalid URL", malformedURLEx);
             this.result = UpdateResult.FAIL_BADID;
+            //cancel
             return;
         }
 

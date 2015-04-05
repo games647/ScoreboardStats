@@ -10,12 +10,13 @@ import org.bukkit.plugin.Plugin;
 /**
  * Represents a wrapper in order to support the usage of the old Replaceable
  */
+@SuppressWarnings("deprecation")
 public class LegacyReplaceWrapper extends VariableReplaceAdapter<Plugin> {
 
     private final Replaceable oldReplacer;
     private List<String> variables = Lists.newArrayList();
 
-    public LegacyReplaceWrapper(Plugin plugin, @SuppressWarnings("deprecation") Replaceable oldReplacer) {
+    public LegacyReplaceWrapper(Plugin plugin, Replaceable oldReplacer) {
         super(plugin);
 
         this.oldReplacer = oldReplacer;

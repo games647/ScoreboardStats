@@ -55,7 +55,7 @@ public class PacketFactory {
 
         try {
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(item.getOwner(), scorePacket, false);
+            PROTOCOL_MANAGER.sendServerPacket(item.getParent().getScoreboard().getOwner(), scorePacket, false);
         } catch (InvocationTargetException ex) {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
@@ -88,7 +88,7 @@ public class PacketFactory {
 
         try {
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(objective.getOwner(), objectivePacket, false);
+            PROTOCOL_MANAGER.sendServerPacket(objective.getScoreboard().getOwner(), objectivePacket, false);
             sendDisplayPacket(objective);
         } catch (InvocationTargetException ex) {
             //just log it for now.
@@ -112,7 +112,7 @@ public class PacketFactory {
 
         try {
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(objective.getOwner(), displayPacket, false);
+            PROTOCOL_MANAGER.sendServerPacket(objective.getScoreboard().getOwner(), displayPacket, false);
         } catch (InvocationTargetException ex) {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);

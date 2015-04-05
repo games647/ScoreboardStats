@@ -75,7 +75,7 @@ public class StatsListener implements Listener {
             final PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
-                killercache.incrementMobKills();
+                killercache.onMobKill();
                 plugin.getReplaceManager().updateScore(killer, "mob", killercache.getMobkills());
             }
         }
@@ -94,7 +94,7 @@ public class StatsListener implements Listener {
         if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld().getName())) {
             final PlayerStats killedcache = database.getCachedStats(killed);
             if (killedcache != null) {
-                killedcache.incrementDeaths();
+                killedcache.onDeath();
                 plugin.getReplaceManager().updateScore(killed, "deaths", killedcache.getDeaths());
                 plugin.getReplaceManager().updateScore(killed, "kdr", killedcache.getKdr());
                 //will reset
@@ -103,12 +103,12 @@ public class StatsListener implements Listener {
 
             final PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
-                killercache.incrementKills();
-                plugin.getReplaceManager().updateScore(killed, "deaths", killercache.getKills());
-                plugin.getReplaceManager().updateScore(killed, "kdr", killercache.getKdr());
+                killercache.onKill();
+                plugin.getReplaceManager().updateScore(killer, "deaths", killercache.getKills());
+                plugin.getReplaceManager().updateScore(killer, "kdr", killercache.getKdr());
                 //maybe the player reaches a new high score
-                plugin.getReplaceManager().updateScore(killed, "killstreak", killercache.getKillstreak());
-                plugin.getReplaceManager().updateScore(killed, "current_streak", killercache.getLaststreak());
+                plugin.getReplaceManager().updateScore(killer, "killstreak", killercache.getKillstreak());
+                plugin.getReplaceManager().updateScore(killer, "current_streak", killercache.getLaststreak());
             }
         }
     }

@@ -72,13 +72,11 @@ public class CommentedYaml<T extends Plugin> {
     }
 
     protected void loadConfig() {
-        if (config == null) {
-            config = getConfigFromDisk();
-        }
+        config = getConfigFromDisk();
 
         for (Field field : getClass().getDeclaredFields()) {
             if (Modifier.isTransient(field.getModifiers())
-                    || (!field.getType().isPrimitive() && field.getType() != String.class)) {
+                    || !field.getType().isPrimitive() && field.getType() != String.class) {
                 continue;
             }
 

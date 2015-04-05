@@ -2,9 +2,11 @@ package com.github.games647.scoreboardstats.commands;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +24,7 @@ public class HelpCommand extends CommandHandler {
 //    private final boolean permissionCheck = false;
 
     public HelpCommand(ScoreboardStats plugin, SidebarCommands commandManager) {
-        super("help", plugin, "h");
+        super("help", "&aShows a help of all commands", plugin, "h");
 
         this.commandManager = commandManager;
     }
@@ -105,7 +107,9 @@ public class HelpCommand extends CommandHandler {
 
     private String buildContent(String mainCommand) {
         final StringBuilder builder = new StringBuilder();
-        for (CommandHandler handler : commandManager.getHandlers()) {
+        //prevent duplicates
+        Set<CommandHandler> handlers = Sets.newHashSet(commandManager.getHandlers());
+        for (CommandHandler handler : handlers) {
             builder.append(ChatColor.AQUA)
                     .append('/').append(mainCommand).append(' ')
                     .append(handler.getSubCommand()).append(' ')

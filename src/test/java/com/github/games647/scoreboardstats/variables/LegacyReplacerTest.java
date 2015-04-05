@@ -1,8 +1,4 @@
-package com.github.games647.scoreboardstats;
-
-import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.Replaceable;
-import com.github.games647.scoreboardstats.variables.UnknownVariableException;
+package com.github.games647.scoreboardstats.variables;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

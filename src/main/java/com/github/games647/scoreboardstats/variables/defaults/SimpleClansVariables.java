@@ -17,6 +17,8 @@ import org.bukkit.util.NumberConversions;
 /**
  * Replace all variables that are associated with the SimpleClans plugin
  *
+ * http://dev.bukkit.org/bukkit-plugins/simpleclans/
+ *
  * @see SimpleClans
  * @see ClanPlayer
  * @see Clan

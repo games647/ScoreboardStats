@@ -19,6 +19,8 @@ import org.bukkit.event.Listener;
 
 /**
  * Replace all variables that are associated with the heroes plugin
+ *
+ * http://dev.bukkit.org/bukkit-plugins/heroes/
  */
 public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements Listener {
 

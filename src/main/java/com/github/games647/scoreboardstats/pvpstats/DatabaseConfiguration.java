@@ -5,13 +5,11 @@ import com.avaje.ebean.config.GlobalProperties;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.SQLitePlatform;
 import com.avaje.ebeaninternal.server.lib.sql.TransactionIsolation;
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.Version;
-import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -83,17 +81,6 @@ public class DatabaseConfiguration {
         }
 
         serverConfig = databaseConfig;
-    }
-
-    /**
-     * Get the bean classes for the database schema
-     *
-     * @return the classes for the database
-     */
-    public List<Class<?>> getDatabaseClasses() {
-        final List<Class<?>> classes = Lists.newArrayList();
-        classes.add(PlayerStats.class);
-        return classes;
     }
 
     private DataSourceConfig getSqlConfig(ServerConfig serverConfig) {

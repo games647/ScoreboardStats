@@ -3,6 +3,9 @@
 # Compatible mode with other plugins like HealthBar, ColoredTags, GhostPlayer or McCombatLevel
 compatibilityMode: false
 
+# Should be the node disabled-worlds handled as whitelist or blacklist
+disabled-worlds-whitelist: false
+
 disabled-worlds:
   - city
 

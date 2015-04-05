@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.RefreshTask;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
@@ -14,7 +14,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 public class ToggleCommand extends CommandHandler {
 
     public ToggleCommand(ScoreboardStats plugin) {
-        super("toggle", plugin, "hide", "show");
+        super("toggle", "&aToggles the sidebar", plugin, "hide", "show");
     }
 
     @Override

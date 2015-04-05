@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public class ReloadCommand extends CommandHandler {
 
     public ReloadCommand(ScoreboardStats plugin) {
-        super("reload", plugin);
+        super("reload", "&aReloads the config", plugin);
     }
 
     @Override

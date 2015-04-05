@@ -1,11 +1,12 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import com.github.games647.scoreboardstats.ScoreboardStats;
+
 import java.lang.ref.WeakReference;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -13,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class StatsLoader implements Runnable {
 
-    protected final Plugin plugin;
+    protected final ScoreboardStats plugin;
 
     private final boolean uuidSearch;
     private final WeakReference<Player> weakPlayer;
@@ -27,7 +28,7 @@ public class StatsLoader implements Runnable {
      * @param player player instance
      * @param statsDatabase the pvp database
      */
-    public StatsLoader(Plugin plugin, boolean uuidSearch, Player player, Database statsDatabase) {
+    public StatsLoader(ScoreboardStats plugin, boolean uuidSearch, Player player, Database statsDatabase) {
         this.plugin = plugin;
         this.uuidSearch = uuidSearch;
 
@@ -57,6 +58,12 @@ public class StatsLoader implements Runnable {
                     if (player.isOnline()) {
                         //sets it only if the player is only
                         player.setMetadata("player_stats", new FixedMetadataValue(plugin, stats));
+                        plugin.getReplaceManager().updateScore(player, "deaths", stats.getDeaths());
+                        plugin.getReplaceManager().updateScore(player, "kdr", stats.getKdr());
+                        plugin.getReplaceManager().updateScore(player, "kills", stats.getKills());
+                        plugin.getReplaceManager().updateScore(player, "killstreak", stats.getKillstreak());
+                        plugin.getReplaceManager().updateScore(player, "current_streak", stats.getLaststreak());
+                        plugin.getReplaceManager().updateScore(player, "mobkills", stats.getMobkills());
                     }
                 }
             }.runTask(plugin);

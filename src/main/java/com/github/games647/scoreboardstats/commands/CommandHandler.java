@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.util.Arrays;
@@ -107,6 +107,7 @@ public abstract class CommandHandler {
      * @return A List of possible completions for the final argument, or null to default to the command executor
      */
     public List<String> onTabComplete(CommandSender sender, String subCommand, String... args) {
+        //default null -> bukkit will handle this with a list of only players
         return null;
     }
 }

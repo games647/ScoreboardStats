@@ -4,7 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
@@ -12,7 +12,6 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -58,15 +57,6 @@ public class Database {
      */
     public EbeanServer getDatabaseInstance() {
         return ebeanConnection;
-    }
-
-    /**
-     * Get the bean classes for the database schema
-     *
-     * @return the classes for the database
-     */
-    public List<Class<?>> getDatabaseClasses() {
-        return dbConfig.getDatabaseClasses();
     }
 
     /**
@@ -175,7 +165,7 @@ public class Database {
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
         } catch (InterruptedException ex) {
-            plugin.getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLogger().log(Level.SEVERE, "Couldn't save the stats to the database", ex);
         } finally {
             //Make rally sure we remove all even on error
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -196,7 +186,7 @@ public class Database {
 
         //Disable the class caching temporialy, because after a reload
         //(with plugin file replacement) it still reference to the old file
-        ReloadFixLoader.changeClassCache(false);
+        ReloadFixLoader.setClassCache(false);
 
         try {
             final EbeanServer database = EbeanServerFactory.create(dbConfig.getServerConfig());
@@ -209,7 +199,7 @@ public class Database {
             plugin.getLogger().log(Level.WARNING, "Error creating database", ex);
         } finally {
             Thread.currentThread().setContextClassLoader(previous);
-            ReloadFixLoader.changeClassCache(true);
+            ReloadFixLoader.setClassCache(true);
         }
 
         executor.scheduleWithFixedDelay(new Runnable() {
@@ -234,14 +224,17 @@ public class Database {
         }
     }
 
-    private void updateTopList() {
+    /**
+     * Updates the toplist
+     */
+    public void updateTopList() {
         final String type = Settings.getTopType();
         final Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
-        if ("%killstreak%".equals(type)) {
+        if ("killstreak".equals(type)) {
             for (PlayerStats stats : getTopList("killstreak")) {
                 newToplist.put(stats.getPlayername(), stats.getKillstreak());
             }
-        } else if ("%mob%".equals(type)) {
+        } else if ("mob".equals(type)) {
             for (PlayerStats stats : getTopList("mobkills")) {
                 newToplist.put(stats.getPlayername(), stats.getMobkills());
             }
@@ -252,6 +245,7 @@ public class Database {
         }
 
         synchronized (toplist) {
+            //set it after fetching so it's only blocking for a short time
             toplist.clear();
             toplist.putAll(newToplist);
         }

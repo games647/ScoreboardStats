@@ -5,14 +5,14 @@ package com.github.games647.scoreboardstats;
  */
 public class TicksPerSecondTask implements Runnable {
 
-    private static double lastTicks = 20.0D;
+    private static float lastTicks = 20.0F;
 
     /**
      * Get the ticks count of the last check. 20 Ticks should pass per second
      *
      * @return the ticks count of the last check
      */
-    public static double getLastTicks() {
+    public static float getLastTicks() {
         return lastTicks;
     }
 
@@ -21,14 +21,15 @@ public class TicksPerSecondTask implements Runnable {
 
     @Override
     public void run() {
-        final long currentTime = System.currentTimeMillis();
+        //nanoTime is more accurate
+        final long currentTime = System.nanoTime() * 1000;
         final long timeSpent = currentTime - lastCheck;
         //update the last check
         lastCheck = currentTime;
 
         //how many ticks passed since the last check * 1000 to convert to seconds
-        final double tps = 20 * 1000.0D / timeSpent;
-        if (tps >= 0.0D && tps < 25.0D) {
+        final float tps = 20 * 1000.0F / timeSpent;
+        if (tps >= 0.0D && tps < 25.0F) {
             //Prevent all invalid values
             lastTicks = tps;
         }

@@ -14,7 +14,7 @@ public abstract class SbManager {
     protected static final String SB_NAME = "Stats";
     protected static final String TEMP_SB_NAME = SB_NAME + 'T';
 
-    private static final int MAX_ITEM_LENTH = 16;
+    private static final int MAX_ITEM_LENGTH = 16;
 
     protected final ScoreboardStats plugin;
     protected final ReplaceManager replaceManager;
@@ -51,7 +51,7 @@ public abstract class SbManager {
 
     public abstract void createTopListScoreboard(Player player);
 
-    public abstract void sendUpdate(Player player);
+    public abstract void onUpdate(Player player);
 
     public abstract void update(Player player, String variable, int newScore);
 
@@ -113,8 +113,8 @@ public abstract class SbManager {
     }
 
     protected String stripLength(String check) {
-        if (check.length() > MAX_ITEM_LENTH) {
-            return check.substring(0, MAX_ITEM_LENTH);
+        if (check.length() > MAX_ITEM_LENGTH) {
+            return check.substring(0, MAX_ITEM_LENGTH);
         }
 
         return check;

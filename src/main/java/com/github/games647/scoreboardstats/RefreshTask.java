@@ -40,7 +40,7 @@ public class RefreshTask implements Runnable {
         //let the players update smoother
         final Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
         int remainingUpdates = getNextUpdates();
-        for (final Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
+        for (Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
             final Map.Entry<Player, MutableInt> entry = it.next();
 
             final Player player = entry.getKey();
@@ -51,7 +51,7 @@ public class RefreshTask implements Runnable {
                     it.remove();
                 } else if (remainingUpdates != 0) {
                     //Smoother refreshing; limit the updates
-                    plugin.getScoreboardManager().sendUpdate(player);
+                    plugin.getScoreboardManager().onUpdate(player);
                     remanigTicks.setValue(20 * Settings.getIntervall());
                     remainingUpdates--;
                 }

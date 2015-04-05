@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.variables.defaults.*;
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.ImmutableMap;
@@ -68,7 +68,7 @@ public class ReplaceManager implements Listener {
         this.sbManager = scoreboardManager;
 
         Bukkit.getPluginManager().registerEvents(new PluginListener(this), plugin);
-        addDefaultReplacer();
+        addDefaultReplacers();
     }
 
     /**
@@ -90,7 +90,23 @@ public class ReplaceManager implements Listener {
      * @param variables all variables which this replacer can replace <b>without the variable identifiers (%)</b>
      */
     public void register(VariableReplacer replacer, Plugin plugin, String... variables) {
-        register(new ReplaceWrapper(plugin, replacer, variables));
+        register(new ReplaceWrapper(replacer, plugin, variables));
+    }
+
+    /**
+     * Register a new replacer
+     *
+     * @param replacer the variable replacer
+     * @param global is the value the same for all players or does the replacer needs a specific player
+     * @param async is this plugin thread safe
+     * @param constant if the variable is updated based on events
+     * @param description description of all variables of this plugin
+     * @param plugin associated plugin instance
+     * @param variables to replaced variables <b>without the variable identifiers (%)</b>
+     */
+    public void register(VariableReplacer replacer, Plugin plugin
+            , String description, boolean global, boolean async, boolean constant, String... variables) {
+        register(new ReplaceWrapper(replacer, plugin, description, global, async, constant, variables));
     }
 
     /**
@@ -159,7 +175,7 @@ public class ReplaceManager implements Listener {
     }
 
     /**
-     * Notifies that a scoreboard has changed. This should be called from an
+     * Notifies that a scoreboard value has changed. This should be called from an
      * event listener.
      *
      * @param player who receives the update
@@ -174,7 +190,7 @@ public class ReplaceManager implements Listener {
     }
 
     /**
-     * Notifies that a scoreboard has changed. This should be called from an
+     * Notifies that a scoreboard  value has changed. This should be called from an
      * event listener. This method will update the variable for all players
      *
      * @param variable what variable is going to be updated
@@ -185,6 +201,14 @@ public class ReplaceManager implements Listener {
             updateScore(player, variable, newScore);
         }
     }
+
+//    public void updateVariableLater(String variable) {
+//
+//    }
+//
+//    public void updateVariableLater(Player player, String variable) {
+//
+//    }
 
     /**
      * Get the score for a specific variable.
@@ -229,7 +253,7 @@ public class ReplaceManager implements Listener {
             }
         }
 
-        if (replaceEvent.isConstant()) {
+        if (complete && replaceEvent.isConstant()) {
             skipList.add(variable);
             //they are updated with events so we don't need to update it manually
             globals.remove(variable);
@@ -314,7 +338,7 @@ public class ReplaceManager implements Listener {
     }
 
     //add all replacers that are in the defaults map
-    private void addDefaultReplacer() {
+    private void addDefaultReplacers() {
         final Set<String> replacersName = Sets.newHashSet();
         for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : DEFAULTS.entrySet()) {
             final String pluginName = entry.getValue();

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.bukkit.entity.Player;
 
 /**
  * Represents a sidebar objective
@@ -169,7 +168,8 @@ public class Objective {
 
         Preconditions.checkNotNull(name);
         //Since 1.8 the name can be up to 40 characters long. UUID in the future?
-        Preconditions.checkArgument(name.length() <= 16);
+        ////newer minecraft versions support longer names - TODO: version specific check
+//        Preconditions.checkArgument(name.length() <= 16);
 
         Preconditions.checkState(items.size() <= MAX_ITEM_SIZE);
 
@@ -214,7 +214,8 @@ public class Objective {
         Preconditions.checkState(exists(), "the client doesn't know this objective");
 
         Preconditions.checkNotNull(name, "name cannot be null");
-        Preconditions.checkArgument(name.length() <= 16, "a scoreboard item cannot be longer than 16 characters");
+        //newer minecraft versions support longer names - TODO: version specific check
+//        Preconditions.checkArgument(name.length() <= 16, "a scoreboard item cannot be longer than 16 characters");
 
         final Item item = items.remove(name);
         if (item != null) {
@@ -248,15 +249,6 @@ public class Objective {
     }
 
     /**
-     * Get the owner of this objective.
-     *
-     * @return the tracking player
-     */
-    public Player getOwner() {
-        return scoreboard.getPlayer();
-    }
-
-    /**
      * Get the scoreboard instance.
      *
      * @return the scoreboard
@@ -267,7 +259,7 @@ public class Objective {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(objectiveName, displayName);
+        return Objects.hashCode(objectiveName);
     }
 
     @Override
@@ -275,11 +267,10 @@ public class Objective {
         //ignores also null
         if (obj instanceof Objective) {
             final Objective other = (Objective) obj;
-            return Objects.equal(objectiveName, other.objectiveName)
-                    && Objects.equal(displayName, other.displayName);
-        } else {
-            return false;
+            return Objects.equal(objectiveName, other.objectiveName);
         }
+
+        return false;
     }
 
     @Override

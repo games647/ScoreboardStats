@@ -9,11 +9,11 @@ import org.bukkit.plugin.Plugin;
 /**
  * Represents a variable replacer as an abstract class.
  *
- * @param <T> the type of your plugin
+ * @param <P> the type of your plugin
  */
-public abstract class VariableReplaceAdapter<T extends Plugin> implements VariableReplacer {
+public abstract class VariableReplaceAdapter<P extends Plugin> implements VariableReplacer {
 
-    private final T plugin;
+    private final P plugin;
 
     private final boolean async;
     private final boolean global;
@@ -30,7 +30,7 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      * @param plugin associated plugin instance
      * @param variables to replaced variables
      */
-    public VariableReplaceAdapter(T plugin, String... variables) {
+    public VariableReplaceAdapter(P plugin, String... variables) {
         this(plugin, "&cNo description", false, false, false, variables);
     }
 
@@ -44,7 +44,7 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      * @param plugin associated plugin instance
      * @param variables to replaced variables <b>without the variable identifiers (%)</b>
      */
-    public VariableReplaceAdapter(T plugin, String description, boolean global, boolean async, boolean constant
+    public VariableReplaceAdapter(P plugin, String description, boolean global, boolean async, boolean constant
             , String... variables) {
         this.plugin = plugin;
         this.async = async;
@@ -108,7 +108,7 @@ public abstract class VariableReplaceAdapter<T extends Plugin> implements Variab
      *
      * @return the associated plugin
      */
-    public T getPlugin() {
+    public P getPlugin() {
         return plugin;
     }
 

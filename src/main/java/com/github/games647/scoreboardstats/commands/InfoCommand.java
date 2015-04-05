@@ -15,7 +15,7 @@ public class InfoCommand extends CommandHandler {
             + ChatColor.WHITE + ']' + ChatColor.RESET;
 
     public InfoCommand(ScoreboardStats plugin) {
-        super("info", plugin);
+        super("info", "&aDisplay plugin version", plugin);
     }
 
     @Override

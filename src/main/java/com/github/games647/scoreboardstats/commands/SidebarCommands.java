@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.ChatColor;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -73,7 +74,7 @@ public class SidebarCommands implements TabExecutor {
 
         final CommandHandler commandHandler = commands.get(subCommand);
         if (commandHandler == null) {
-            sender.sendMessage("Command not found");
+            sender.sendMessage(ChatColor.DARK_RED + "Command not found");
         } else {
             if (commandHandler.hasPermission(sender)) {
                 commandHandler.onCommand(sender, subCommand, newArgs);
@@ -123,7 +124,7 @@ public class SidebarCommands implements TabExecutor {
         register(new ToggleCommand(plugin));
         register(new InfoCommand(plugin));
         register(new HelpCommand(plugin, this));
-        register(new ToggleCommand(plugin));
+        register(new ReloadCommand(plugin));
     }
 
     private void register(CommandHandler handler) {

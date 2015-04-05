@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
@@ -34,7 +35,7 @@ public class BukkitScoreboardManager extends SbManager {
     public BukkitScoreboardManager(ScoreboardStats pluginInstance) {
         super(pluginInstance);
 
-        oldBukkit = isOldBukkit();
+        oldBukkit = isOldScoreboardAPI();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BukkitScoreboardManager extends SbManager {
             return;
         }
 
-        //Creates a new scoreboard and a new objective
+        //Creates a new personal scoreboard and a new objective
         final Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
@@ -55,6 +56,8 @@ public class BukkitScoreboardManager extends SbManager {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
             //the player logged out - fail silently
+            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/
+            //CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
             return;
         }
 
@@ -76,7 +79,7 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     @Override
-    public void sendUpdate(Player player) {
+    public void onUpdate(Player player) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (objective == null) {
             //The player has no scoreboard so create one
@@ -109,6 +112,8 @@ public class BukkitScoreboardManager extends SbManager {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
             //the player logged out - fail silently
+            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/
+            //CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
             return;
         }
 
@@ -211,20 +216,16 @@ public class BukkitScoreboardManager extends SbManager {
         return cleanScoreName;
     }
 
-    private boolean isOldBukkit() {
-        final int compare = Version.compare("1.7.8", Version.getMinecraftVersionString());
-        if (compare >= 0) {
-            try {
-                Objective.class.getDeclaredMethod("getScore", String.class);
-                //We have access to the new method
-                return false;
-            } catch (NoSuchMethodException noSuchMethodEx) {
-                //since we have an extra class for it (FastOfflinePlayer)
-                //we can fail silently
-            }
+    private boolean isOldScoreboardAPI() {
+        try {
+            Objective.class.getDeclaredMethod("getScore", String.class);
+        } catch (NoSuchMethodException noSuchMethodEx) {
+            //since we have an extra class for it (FastOfflinePlayer)
+            //we can fail silently
+            return true;
         }
 
-        //The version is under 1.7.8 so the method doesn't exist
-        return true;
+        //We have access to the new method
+        return false;
     }
 }

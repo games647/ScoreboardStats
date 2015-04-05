@@ -25,9 +25,9 @@ softdepend:
 
 # Root commands to register automatically to Bukkit
 commands:
-  sidebar:
+  ${project.artifactId}:
     description: 'Root command for all commands in ${project.name}'
-    aliases: [${project.artifactId}, side, ss, sb, board]
+    aliases: [side, ss, sb, board, sidebar]
 
 # Permission managment
 permissions:

@@ -17,6 +17,8 @@ import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
 /**
  * Replace all variables that are associated with the uSkyBlock plugin
+ *
+ * http://dev.bukkit.org/bukkit-plugins/uskyblock/
  */
 public class SkyblockVariables extends VariableReplaceAdapter<uSkyBlockAPI> implements Listener {
 

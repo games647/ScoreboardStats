@@ -11,8 +11,16 @@ public class ReplaceWrapper extends VariableReplaceAdapter<Plugin> {
 
     private final VariableReplacer replacer;
 
-    public ReplaceWrapper(Plugin plugin, VariableReplacer replacer, String... variables) {
+    public ReplaceWrapper(VariableReplacer replacer, Plugin plugin, String... variables) {
         super(plugin, variables);
+
+        this.replacer = replacer;
+    }
+
+    public ReplaceWrapper(VariableReplacer replacer, Plugin plugin
+            , String description, boolean global, boolean async, boolean constant
+            , String... variables) {
+        super(plugin, description, global, async, constant, variables);
 
         this.replacer = replacer;
     }
@@ -24,13 +32,13 @@ public class ReplaceWrapper extends VariableReplaceAdapter<Plugin> {
 
     @Override
     public int hashCode() {
-        //make it possible to remove them using the Replaceable instance
+        //make it possible to remove them using the VariableReplacer instance
         return replacer.hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
-        //make it possible to remove them using the Replaceable instance
+        //make it possible to remove them using the VariableReplacer instance
         return replacer.equals(other);
     }
 

@@ -226,37 +226,6 @@ public class PlayerStats {
     }
 
     /**
-     * Increment the kills
-     */
-    public void incrementKills() {
-        //We need to use this to trigger ebean
-        setKills(kills + 1);
-
-        laststreak++;
-        if (laststreak > killstreak) {
-            //triggers a change for ebean
-            setKillstreak(laststreak);
-        }
-    }
-
-    /**
-     * Increment the mob kills
-     */
-    public void incrementMobKills() {
-        //triggers a change for ebean
-        setMobkills(mobkills + 1);
-    }
-
-    /**
-     * Increment the deaths
-     */
-    public void incrementDeaths() {
-        laststreak = 0;
-        //triggers a change for ebean
-        setDeaths(deaths + 1);
-    }
-
-    /**
      * Get the UNIX timestamp where this entry was last updated. This implies
      * the last online value with a difference of a couple of minutes from
      * the cache.
@@ -277,10 +246,40 @@ public class PlayerStats {
         this.lastOnline = lastOnline;
     }
 
+    /**
+     * Increment the kills
+     */
+    public void onKill() {
+        //We need to use this to trigger ebean
+        setKills(kills + 1);
+
+        laststreak++;
+        if (laststreak > killstreak) {
+            //triggers a change for ebean
+            setKillstreak(laststreak);
+        }
+    }
+
+    /**
+     * Increment the mob kills
+     */
+    public void onMobKill() {
+        //triggers a change for ebean
+        setMobkills(mobkills + 1);
+    }
+
+    /**
+     * Increment the deaths
+     */
+    public void onDeath() {
+        laststreak = 0;
+        //triggers a change for ebean
+        setDeaths(deaths + 1);
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, uuid, playername, lastOnline
-                , kills, deaths, killstreak, laststreak, mobkills);
+        return Objects.hashCode(id, uuid, playername);
     }
 
     @Override
@@ -290,17 +289,10 @@ public class PlayerStats {
             final PlayerStats other = (PlayerStats) obj;
             return id == other.id
                     && Objects.equal(uuid, other.uuid)
-                    && Objects.equal(playername, other.playername)
-                    && Objects.equal(lastOnline, other.lastOnline)
-                    //don't wrap to primitive wrappers objects
-                    && kills == other.kills
-                    && deaths == other.deaths
-                    && killstreak == other.killstreak
-                    && laststreak == other.laststreak
-                    && mobkills == other.mobkills;
-        } else {
-            return false;
+                    && Objects.equal(playername, other.playername);
         }
+
+        return false;
     }
 
     @Override

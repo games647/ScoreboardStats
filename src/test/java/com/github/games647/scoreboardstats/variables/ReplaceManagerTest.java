@@ -29,13 +29,13 @@ public class ReplaceManagerTest {
         Mockito.when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
 
         final ReplaceManager replaceManager = new ReplaceManager(null, plugin);
-        
+
         testLegacy(replaceManager);
         testInterface(replaceManager, plugin);
         testAbstract(plugin, replaceManager);
     }
 
-    private void testAbstract(final Plugin plugin, final ReplaceManager replaceManager) {
+    private void testAbstract(Plugin plugin, ReplaceManager replaceManager) {
         VariableReplaceAdapter<?> replaceAdapter = new VariableReplaceAdapter<Plugin>(plugin, SAMPLE_VARIABLE) {
 
             @Override
@@ -48,7 +48,7 @@ public class ReplaceManagerTest {
         Assert.assertTrue(replaceManager.unregister(replaceAdapter));
     }
 
-    private void testInterface(final ReplaceManager replaceManager, final Plugin plugin) {
+    private void testInterface(ReplaceManager replaceManager, Plugin plugin) {
         VariableReplacer replacerInterface = new VariableReplacer() {
 
             @Override
@@ -60,7 +60,8 @@ public class ReplaceManagerTest {
         Assert.assertTrue(replaceManager.unregister(replacerInterface));
     }
 
-    private void testLegacy(final ReplaceManager replaceManager) {
+    @SuppressWarnings("deprecation")
+    private void testLegacy(ReplaceManager replaceManager) {
         Replaceable legacyReplaceable = new Replaceable() {
 
             @Override

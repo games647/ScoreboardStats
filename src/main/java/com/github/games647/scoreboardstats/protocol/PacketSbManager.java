@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.protocol;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.github.games647.scoreboardstats.Lang;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
@@ -50,7 +50,7 @@ public class PacketSbManager extends SbManager {
     }
 
     @Override
-    public void sendUpdate(Player player) {
+    public void onUpdate(Player player) {
         final Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (sidebar == null) {
             createScoreboard(player);
@@ -117,7 +117,7 @@ public class PacketSbManager extends SbManager {
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
-            final String scoreName = Settings.getTempColor() + entry.getKey();
+            final String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue());
         }
 

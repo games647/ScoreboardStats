@@ -1,4 +1,6 @@
-package com.github.games647.scoreboardstats;
+package com.github.games647.scoreboardstats.config;
+
+import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -36,23 +38,22 @@ public class Lang {
         return INSTANCE.getFormatted(key, arguments);
     }
 
-    private final ResourceBundle defaultMessages;
+    private final ResourceBundle messages;
 
     /**
      * Initialize localization manager
      */
     public Lang() {
-        //Warning this can be null. - ToDo check it
         //JavaPlugin.getPlugin isn't available in 1.5
         final ScoreboardStats plugin = (ScoreboardStats) Bukkit.getPluginManager().getPlugin("ScoreboardStats");
         final ClassLoader classLoader = plugin.getClassLoaderBypass();
 
-        defaultMessages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
+        messages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
     }
 
     private String getFormatted(String key, Object... arguments) {
-        if (defaultMessages.containsKey(key)) {
-            String result = defaultMessages.getString(key);
+        if (messages.containsKey(key)) {
+            String result = messages.getString(key);
             if (arguments.length != 0) {
                 //If there are arguments use messageformat to replace
                 //proparly cache the formatting instance

@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats;
 
+import com.github.games647.scoreboardstats.config.Lang;
+
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLConnection;
@@ -24,7 +26,7 @@ public class ReloadFixLoader extends ClassLoader {
      * @param status should the cache be activated
      * @return if the process succeed.
      */
-    public static boolean changeClassCache(boolean status) {
+    public static boolean setClassCache(boolean status) {
         try {
             final Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
             cacheField.setAccessible(true);

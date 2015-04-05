@@ -201,9 +201,9 @@ public class Version implements Comparable<Version> {
             return major == other.major
                     && minor == other.minor
                     && build == other.build;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     @Override
