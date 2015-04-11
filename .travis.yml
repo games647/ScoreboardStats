@@ -13,8 +13,9 @@ jdk: [openjdk6]
 matrix:
   fast_finish: true
 
-# Cache maven dependencies
-sudo: false
-cache:
-  directories:
-    - '$HOME/.m2/repository'
+# Disable caching in order to get notified if there are some repo/dependency issues
+## Cache maven dependencies
+#sudo: false
+#cache:
+#  directories:
+#    - '$HOME/.m2/repository'

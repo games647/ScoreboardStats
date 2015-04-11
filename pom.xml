@@ -120,12 +120,6 @@
             <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
         </repository>
 
-        <!--Repo for simpleclans-->
-        <repository>
-            <id>simpleclans-repo</id>
-            <url>http://repo.sacredlabyrinth.net/artifactory/plugins-release-local</url>
-        </repository>
-
         <!--Vault and Heroes-->
         <repository>
             <id>vault-repo</id>
@@ -143,6 +137,12 @@
             <id>dakani</id>
             <name>Dakani Nexus Repo</name>
             <url>http://repo.dakanilabs.com/content/repositories/public</url>
+        </repository>
+
+        <!--Repo for simpleclans-->
+        <repository>
+            <id>simpleclans-repo</id>
+            <url>http://repo.sacredlabyrinth.net/artifactory/plugins-release-local</url>
         </repository>
     </repositories>
 
@@ -192,7 +192,14 @@
         <dependency>
             <groupId>com.herocraftonline.heroes</groupId>
             <artifactId>Heroes</artifactId>
-            <version>1.5.5.4-SNAPSHOT</version>
+            <version>1.5.5</version>
+            <!--Exclude herochat because it's not public available-->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.dthielke.herochat</groupId>
+                    <artifactId>HeroChat</artifactId>
+                </exclusion>
+            </exclusions>
             <optional>true</optional>
         </dependency>
 
