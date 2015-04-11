@@ -31,7 +31,7 @@ public class PlayerListener implements Listener {
      * @see com.github.games647.scoreboardstats.RefreshTask
      */
     @EventHandler
-    public void onJoin(PlayerJoinEvent joinEvent) {
+    public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         //add it to the refresh queue
         plugin.getRefreshTask().addToQueue(joinEvent.getPlayer());
     }
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
      */
     //ignore cancelled events
     @EventHandler(ignoreCancelled = true)
-    public void onChange(PlayerChangedWorldEvent worldChange) {
+    public void onWorldChange(PlayerChangedWorldEvent worldChange) {
         final Player player = worldChange.getPlayer();
         //new world
         if (Settings.isActiveWorld(player.getWorld().getName())) {

@@ -152,7 +152,7 @@ public class ScoreboardStats extends JavaPlugin {
         getCommand("sidebar").setExecutor(new SidebarCommands(this));
 
         //start tracking the ticks
-        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 5 * 20L, 20L);
+        getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 5 * 20L, 3 * 20L);
         //Start the refresh task; it should run on every tick, because it's smoothly update the variables with limit
         getServer().getScheduler().runTaskTimer(this, refreshTask, 5 * 20L, 1L);
 
