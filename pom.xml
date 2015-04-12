@@ -199,6 +199,11 @@
                     <groupId>com.dthielke.herochat</groupId>
                     <artifactId>HeroChat</artifactId>
                 </exclusion>
+                <!--and spigot because it's not needed-->
+                <exclusion>
+                    <groupId>org.spigotmc</groupId>
+                    <artifactId>spigot</artifactId>
+                </exclusion>
             </exclusions>
             <optional>true</optional>
         </dependency>
