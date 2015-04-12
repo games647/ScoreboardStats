@@ -104,7 +104,7 @@ public class StatsListener implements Listener {
             final PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.onKill();
-                plugin.getReplaceManager().updateScore(killer, "deaths", killercache.getKills());
+                plugin.getReplaceManager().updateScore(killer, "kills", killercache.getKills());
                 plugin.getReplaceManager().updateScore(killer, "kdr", killercache.getKdr());
                 //maybe the player reaches a new high score
                 plugin.getReplaceManager().updateScore(killer, "killstreak", killercache.getKillstreak());
