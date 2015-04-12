@@ -117,7 +117,9 @@
         <!--ProtocolLib-->
         <repository>
             <id>shadowvolt-repo</id>
-            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
+            <!--The repo is currently down-->
+            <url>http://repo.comphenix.net/content/repositories/releases/</url>
+            <!--<url>http://ci.shadowvolt.com/plugin/repository/everything/</url>-->
         </repository>
 
         <!--Vault and Heroes-->
@@ -164,7 +166,8 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <!--Later version aren't backwards compatible-->
-            <version>3.6.2-SNAPSHOT</version>
+            <!--<version>3.6.2-SNAPSHOT</version>-->
+            <version>3.4.0</version>
             <optional>true</optional>
         </dependency>
 
