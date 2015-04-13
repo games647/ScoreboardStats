@@ -247,6 +247,15 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>BukkitGames</groupId>
+            <artifactId>BukkitGames</artifactId>
+            <version>2.3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/BukkitGames-2.3.2.jar</systemPath>
+            <optional>true</optional>
+        </dependency>
+
         <!--Factions:-->
         <dependency>
             <groupId>com.massivecraft</groupId>

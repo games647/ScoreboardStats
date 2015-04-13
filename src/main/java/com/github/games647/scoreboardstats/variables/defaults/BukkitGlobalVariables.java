@@ -47,7 +47,6 @@ public class BukkitGlobalVariables extends VariableReplaceAdapter<Plugin> implem
         }
     }
 
-
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent joinEvent) {
         replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length + 1);

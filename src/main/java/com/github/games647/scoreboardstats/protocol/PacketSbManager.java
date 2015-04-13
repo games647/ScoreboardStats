@@ -69,10 +69,12 @@ public class PacketSbManager extends SbManager {
     @Override
     public void unregister(Player player) {
         final PlayerScoreboard scoreboard = scoreboards.get(player);
-        for (Objective objective : scoreboard.getObjectives()) {
-            final String objectiveName = objective.getName();
-            if (objectiveName.startsWith(SB_NAME)) {
-                objective.unregister();
+        if (scoreboard != null) {
+            for (Objective objective : scoreboard.getObjectives()) {
+                final String objectiveName = objective.getName();
+                if (objectiveName.startsWith(SB_NAME)) {
+                    objective.unregister();
+                }
             }
         }
     }
@@ -127,7 +129,7 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void update(Player player, String itemName, int newScore) {
-        final PlayerScoreboard scoreboard = scoreboards.get(player);
+        final PlayerScoreboard scoreboard = getScoreboard(player);
         if (scoreboard != null) {
             final Objective objective = scoreboard.getObjective(SB_NAME);
             if (objective != null) {
