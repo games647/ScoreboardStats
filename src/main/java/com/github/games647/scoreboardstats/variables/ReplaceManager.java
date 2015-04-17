@@ -52,7 +52,7 @@ public class ReplaceManager implements Listener {
     }
 
     private final Set<String> skipList = Sets.newHashSet();
-    private final Set<LegacyReplaceWrapper> legacyReplacers = Sets.newHashSet();
+    private final Set<VariableReplaceAdapter<?>> legacyReplacers = Sets.newHashSet();
     private final Map<String, VariableReplaceAdapter<?>> globals = Maps.newHashMap();
     private final Map<String, VariableReplaceAdapter<?>> specificReplacer = Maps.newHashMap();
 
@@ -118,6 +118,11 @@ public class ReplaceManager implements Listener {
      */
     public void register(VariableReplaceAdapter<? extends Plugin> replacer) {
         for (String variable : replacer.getVariables()) {
+            if (variable.contains("*")) {
+                //contains wildcard
+                legacyReplacers.add(replacer);
+            }
+
             specificReplacer.put(variable, replacer);
             if (replacer.isConstant() || replacer.isGlobal()) {
                 skipList.add(variable);
@@ -236,10 +241,6 @@ public class ReplaceManager implements Listener {
         final VariableReplacer replacer = specificReplacer.get(variable);
         if (replacer == null) {
             getScoreLegacy(player, variable, replaceEvent);
-
-            if (!replaceEvent.isModified()) {
-                throw new UnknownVariableException("Variable '" + variable + "' not found");
-            }
         } else {
             try {
                 replacer.onReplace(player, variable, replaceEvent);
@@ -317,9 +318,10 @@ public class ReplaceManager implements Listener {
         return false;
     }
 
-    private void getScoreLegacy(Player player, String variable, ReplaceEvent replaceEvent) {
-        for (Iterator<LegacyReplaceWrapper> iterator = legacyReplacers.iterator(); iterator.hasNext();) {
-            final LegacyReplaceWrapper legacyReplacer = iterator.next();
+    private void getScoreLegacy(Player player, String variable, ReplaceEvent replaceEvent)
+            throws UnknownVariableException {
+        for (Iterator<VariableReplaceAdapter<?>> iterator = legacyReplacers.iterator(); iterator.hasNext();) {
+            final VariableReplaceAdapter<?> legacyReplacer = iterator.next();
 
             try {
                 legacyReplacer.onReplace(player, variable, replaceEvent);
@@ -334,8 +336,13 @@ public class ReplaceManager implements Listener {
             if (replaceEvent.isModified()) {
                 specificReplacer.put(variable, legacyReplacer);
                 legacyReplacer.getVariables().add(variable);
-                break;
+                //fast return
+                return;
             }
+        }
+
+        if (!replaceEvent.isModified()) {
+            throw new UnknownVariableException("Variable '" + variable + "' not found");
         }
     }
 

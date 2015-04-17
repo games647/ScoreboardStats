@@ -5,6 +5,7 @@ import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
 import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -23,12 +24,13 @@ import org.bukkit.util.NumberConversions;
 public class VaultVariables extends VariableReplaceAdapter<Plugin> {
 
     private final Economy economy;
+    private final Chat chat;
 
     /**
      * Creates a new vault replacer
      */
     public VaultVariables() {
-        super(Bukkit.getPluginManager().getPlugin("Vault"), "money");
+        super(Bukkit.getPluginManager().getPlugin("Vault"), "money", "playerInfo_*");
 
         checkVersion();
 
@@ -40,11 +42,24 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
         } else {
             economy = economyProvider.getProvider();
         }
+
+        final RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
+        if (chatProvider == null) {
+            chat = null;
+        } else {
+            chat = chatProvider.getProvider();
+        }
     }
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        replaceEvent.setScore(NumberConversions.round(economy.getBalance(player, player.getWorld().getName())));
+        if ("money".equals(variable)) {
+            final double balance = economy.getBalance(player, player.getWorld().getName());
+            replaceEvent.setScore(NumberConversions.round(balance));
+        } else if (variable.startsWith("playerInfo_") && chat != null) {
+            final int playerInfo = chat.getPlayerInfoInteger(player, variable.replace("playerInfo_", ""), -1);
+            replaceEvent.setScore(playerInfo);
+        }
     }
 
     /**

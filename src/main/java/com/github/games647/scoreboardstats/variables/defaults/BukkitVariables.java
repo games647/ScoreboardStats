@@ -18,7 +18,8 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
 
     public BukkitVariables() {
         super(null, "health", "lifetime", "exp", "no_domage_ticks", "xp_to_Level", "last_damage"
-                , "helmet", "boots", "leggings", "chestplate", "time");
+                , "helmet", "boots", "leggings", "chestplate", "time"
+                , "meta_*");
     }
 
     @Override
@@ -79,6 +80,16 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
 
         if ("time".equals(variable)) {
             replaceEvent.setScore((int) player.getWorld().getTime());
+        }
+
+        if (variable.startsWith("meta_")) {
+            final String key = variable.replace("meta_", "");
+            //assumimg this key is unique
+            if (player.hasMetadata(key)) {
+                replaceEvent.setScore(player.getMetadata(key).get(0).asInt());
+            } else {
+                replaceEvent.setScore(-1);
+            }
         }
     }
 
