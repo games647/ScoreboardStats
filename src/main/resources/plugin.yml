@@ -22,6 +22,7 @@ softdepend:
     - Heroes
     - uSkyBlock
     - PlayerPoints
+    - Craftconomy3
 
 # Root commands to register automatically to Bukkit
 commands:

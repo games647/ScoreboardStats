@@ -190,6 +190,21 @@
             <groupId>org.black_ixx</groupId>
             <artifactId>PlayerPoints</artifactId>
             <version>2.1.3</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.greatmancode</groupId>
+            <artifactId>craftconomy3</artifactId>
+            <version>3.2.1</version>
+            <!--Exclude because the repo is down-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.spongepowered</groupId>
+                    <artifactId>spongeapi</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
