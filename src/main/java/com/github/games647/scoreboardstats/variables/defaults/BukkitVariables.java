@@ -52,9 +52,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
         }
 
         if ("last_damage".equals(variable)) {
-            //casting should be made after division
-            // --> Minutes
-            replaceEvent.setScore((int) (player.getLastDamage() / (20 * MINUTE_TO_SECOND)));
+            replaceEvent.setScore((int) (player.getLastDamage()));
             return;
         }
 

@@ -5,7 +5,8 @@ import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.datatypes.skills.SkillType;
-import com.gmail.nossr50.events.experience.McMMOPlayerLevelChangeEvent;
+import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
+import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
 import com.gmail.nossr50.util.player.UserManager;
 import com.google.common.collect.Lists;
 
@@ -67,11 +68,24 @@ public class McmmoVariables extends VariableReplaceAdapter<Plugin> implements Li
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onLevelUp(McMMOPlayerLevelChangeEvent levelChangeEvent) {
-        final Player player = levelChangeEvent.getPlayer();
-        final SkillType skill = levelChangeEvent.getSkill();
-        final int newSkillLevel = levelChangeEvent.getSkillLevel();
+    public void onLevelUp(McMMOPlayerLevelUpEvent levelUpEvent) {
+        final Player player = levelUpEvent.getPlayer();
+        final SkillType skill = levelUpEvent.getSkill();
+        final int newSkillLevel = levelUpEvent.getSkillLevel();
 
+        onLevelChange(player, skill, newSkillLevel);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onLevelDown(McMMOPlayerLevelDownEvent levelDownEvent) {
+        final Player player = levelDownEvent.getPlayer();
+        final SkillType skill = levelDownEvent.getSkill();
+        final int newSkillLevel = levelDownEvent.getSkillLevel();
+
+        onLevelChange(player, skill, newSkillLevel);
+    }
+
+    private void onLevelChange(Player player, SkillType skill, int newSkillLevel) {
         replaceManager.updateScore(player, skill.getName(), newSkillLevel);
         replaceManager.updateScore(player, "powlvl", ExperienceAPI.getPowerLevel(player));
     }

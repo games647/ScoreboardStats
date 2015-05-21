@@ -34,7 +34,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
     public SimpleClansVariables() {
         super((SimpleClans) Bukkit.getPluginManager().getPlugin("SimpleClans")
                 , "kills", "deaths", "kdr"
-                , "member", "clan_kdr", "rivals", "allies"
+                , "members", "clan_kdr", "rivals", "allies"
                 , "clan_money", "clan_kills", "allies_total", "members_online");
 
         final String version = getPlugin().getDescription().getVersion();
@@ -72,7 +72,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
                 return;
             }
 
-            if ("member".equals(variable)) {
+            if ("members".equals(variable)) {
                 replaceEvent.setScore(clan.getMembers().size());
             } else if ("clan_kdr".equals(variable)) {
                 replaceEvent.setScore(Math.round(clan.getTotalKDR()));

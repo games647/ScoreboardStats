@@ -56,14 +56,14 @@ public class McPrisonVariables extends VariableReplaceAdapter<Plugin> {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onBalanceChange(RankupEvent balanceChangeEvent) {
-        final Player player = balanceChangeEvent.getPlayer();
+    public void onRankup(RankupEvent rankupEvent) {
+        final Player player = rankupEvent.getPlayer();
         replaceManager.updateScore(player, "moneyNeeded", getMoneyNeeded(player));
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onBalanceChange(DemoteEvent balanceChangeEvent) {
-        final Player player = balanceChangeEvent.getPlayer();
+    public void onDemoteEvent(DemoteEvent demoteEvent) {
+        final Player player = demoteEvent.getPlayer();
         replaceManager.updateScore(player, "moneyNeeded", getMoneyNeeded(player));
     }
 
