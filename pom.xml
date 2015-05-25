@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -114,12 +114,10 @@
     </build>
 
     <repositories>
-        <!--ProtocolLib-->
+        <!--for mcMMO and Bukkit API-->
         <repository>
-            <id>shadowvolt-repo</id>
-            <!--The repo is currently down-->
-            <url>http://repo.comphenix.net/content/repositories/releases/</url>
-            <!--<url>http://ci.shadowvolt.com/plugin/repository/everything/</url>-->
+            <id>md_5-releases</id>
+            <url>http://repo.md-5.net/content/groups/public/</url>
         </repository>
 
         <!--Vault and Heroes-->
@@ -128,10 +126,10 @@
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
         </repository>
 
-        <!--for mcMMO and Bukkit API-->
+        <!--ProtocolLib-->
         <repository>
-            <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
+            <id>shadowvolt-repo</id>
+            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
         </repository>
 
         <!--Player points-->
@@ -182,7 +180,7 @@
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>2.5.3</version>
+            <version>2.5.4</version>
             <optional>true</optional>
         </dependency>
 

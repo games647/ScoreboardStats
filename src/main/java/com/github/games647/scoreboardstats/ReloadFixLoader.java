@@ -65,7 +65,7 @@ public class ReloadFixLoader extends ClassLoader {
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         //temporialy fix
-        if (name.startsWith("org.joda.time.")) {
+        if (name.startsWith("org.joda.time.") || name.startsWith("scala.")) {
             //Bukkits Classloader --> default Classloader
             //Bukkits ClassLoader doens't load it
             return getParent().getParent().loadClass(name);
