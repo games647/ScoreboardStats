@@ -129,7 +129,7 @@
         <!--ProtocolLib-->
         <repository>
             <id>shadowvolt-repo</id>
-            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
+            <url>http://repo.comphenix.net/content/groups/public/</url>
         </repository>
 
         <!--Player points-->
