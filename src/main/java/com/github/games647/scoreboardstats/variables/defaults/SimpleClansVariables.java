@@ -63,7 +63,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
         } else if ("deaths".equals(variable)) {
             replaceEvent.setScore(clanPlayer.getDeaths());
         } else if ("kdr".equals(variable)) {
-            replaceEvent.setScore(Math.round(clanPlayer.getKDR() * 100.0) / 100.0);
+            replaceEvent.setScore(Math.round(clanPlayer.getKDR() * 100));
         } else {
             //Check if the player has a clan
             final Clan clan = clanPlayer.getClan();
@@ -75,7 +75,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
             if ("members".equals(variable)) {
                 replaceEvent.setScore(clan.getMembers().size());
             } else if ("clan_kdr".equals(variable)) {
-                replaceEvent.setScore(Math.round(clan.getTotalKDR() * 100.0) / 100.0);
+                replaceEvent.setScore(Math.round(clan.getTotalKDR() * 100));
             }
             if ("clan_money".equals(variable)) {
                 replaceEvent.setScore(NumberConversions.round(clan.getBalance()));
