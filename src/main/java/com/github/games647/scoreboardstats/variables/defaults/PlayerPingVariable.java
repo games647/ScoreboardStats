@@ -39,7 +39,7 @@ public class PlayerPingVariable extends VariableReplaceAdapter<Plugin> {
             final Object entityPlayer = getHandleMethod.invoke(player);
 
             if (pingField == null) {
-                if (Bukkit.getVersion().contains("MCPC")) {
+                if (Bukkit.getVersion().contains("MCPC") || Bukkit.getVersion().contains("Cauldron")) {
                     //MCPC has a remapper, but it doesn't work if we get the class dynamic
                     setMCPCPing(entityPlayer);
                 } else {
