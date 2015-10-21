@@ -142,7 +142,7 @@ public class BukkitScoreboardManager extends SbManager {
     protected void sendUpdate(Player player, boolean complete) {
         final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         //don't override other scoreboards
-        if (SB_NAME.equals(objective.getName())) {
+        if (objective != null && SB_NAME.equals(objective.getName())) {
             final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
             while (iter.hasNext()) {
                 final Map.Entry<String, String> entry = iter.next();
