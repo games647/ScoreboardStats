@@ -15,7 +15,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <powermock.version>1.6.2</powermock.version>
+        <powermock.version>1.6.4</powermock.version>
     </properties>
 
     <issueManagement>
@@ -37,22 +37,6 @@
         </license>
     </licenses>
 
-    <ciManagement>
-        <system>Jenkins</system>
-        <!--Not my server; not final-->
-        <url>http://ci.nixium.com/job/ScoreboardStats/</url>
-    </ciManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>nixium-repo</id>
-            <name>nixium maven repo</name>
-            <url>http://ci.nixium.com/plugin/repository/everything/</url>
-            <!--Replace every time with the newest version-->
-            <uniqueVersion>false</uniqueVersion>
-        </repository>
-    </distributionManagement>
-
     <build>
         <defaultGoal>install</defaultGoal>
         <!--Just use the project name to replace an old version of the plugin if the user does only copy-paste-->
@@ -62,7 +46,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.3</version>
                 <configuration>
                     <!--So many people still use Java 6 ;( http://mcstats.org/global/#Java+Version-->
                     <source>1.6</source>
@@ -129,7 +113,7 @@
         <!--ProtocolLib-->
         <repository>
             <id>shadowvolt-repo</id>
-            <url>http://repo.comphenix.net/content/groups/public/</url>
+            <url>http://repo.dmulloy2.net//content/groups/public/</url>
         </repository>
 
         <!--Player points-->
@@ -142,7 +126,7 @@
         <!--Repo for simpleclans-->
         <repository>
             <id>simpleclans-repo</id>
-            <url>http://repo.sacredlabyrinth.net/artifactory/plugins-release-local</url>
+            <url>http://107.170.92.11/artifactory/plugins-release-local</url>
         </repository>
     </repositories>
 
