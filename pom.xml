@@ -147,9 +147,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <!--Later version aren't backwards compatible-->
-            <!--<version>3.6.2-SNAPSHOT</version>-->
-            <version>3.4.0</version>
+            <version>3.6.5-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
 
