@@ -24,7 +24,7 @@ public class HelpCommand extends CommandHandler {
 //    private final boolean permissionCheck = false;
 
     public HelpCommand(ScoreboardStats plugin, SidebarCommands commandManager) {
-        super("help", "&aShows a help of all commands", plugin, "h");
+        super("help", "&aShows a help of all commands azaza", plugin, "h");
 
         this.commandManager = commandManager;
     }
