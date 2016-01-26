@@ -77,7 +77,13 @@
     </build>
 
     <repositories>
-        <!--for mcMMO and Bukkit API-->
+        <!--Bukkit API-->
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <!--mcmmo-->
         <repository>
             <id>md_5-releases</id>
             <url>http://repo.md-5.net/content/groups/public/</url>
