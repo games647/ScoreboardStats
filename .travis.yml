@@ -3,11 +3,11 @@
 # This is a java project
 language: java
 
-script: mvn compile test
+script: mvn compile test -U
 
-# So many servers still have Java 6. So test if the code is Java 6 compatible.
+# So many servers still have Java 7. So test if the code is Java 6 compatible.
 # http://mcstats.org/global/#Java+Version
-jdk: [openjdk6]
+jdk: [openjdk7]
 
 # if one build failed, exit testing
 matrix:

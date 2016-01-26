@@ -230,18 +230,25 @@ public class Database {
     public void updateTopList() {
         String type = Settings.getTopType();
         Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
-        if ("killstreak".equals(type)) {
-            for (PlayerStats stats : getTopList("killstreak")) {
-                newToplist.put(stats.getPlayername(), stats.getKillstreak());
-            }
-        } else if ("mob".equals(type)) {
-            for (PlayerStats stats : getTopList("mobkills")) {
-                newToplist.put(stats.getPlayername(), stats.getMobkills());
-            }
-        } else {
-            for (PlayerStats stats : getTopList("kills")) {
-                newToplist.put(stats.getPlayername(), stats.getKills());
-            }
+        switch (type) {
+            case "killstreak":
+                for (PlayerStats stats : getTopList("killstreak")) {
+                    newToplist.put(stats.getPlayername(), stats.getKillstreak());
+                }
+
+                break;
+            case "mob":
+                for (PlayerStats stats : getTopList("mobkills")) {
+                    newToplist.put(stats.getPlayername(), stats.getMobkills());
+                }
+
+                break;
+            default:
+                for (PlayerStats stats : getTopList("kills")) {
+                    newToplist.put(stats.getPlayername(), stats.getKills());
+                }
+                
+                break;
         }
 
         synchronized (toplist) {

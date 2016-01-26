@@ -32,14 +32,15 @@ public class SignListener extends SimpleChanger {
             return "Not loaded";
         }
 
-        if ("Kill".equals(variable)) {
-            return Integer.toString(playerCache.getKills());
-        } else if ("Death".equals(variable)) {
-            return Integer.toString(playerCache.getDeaths());
-        } else if ("KDR".equals(variable)) {
-            return Integer.toString(playerCache.getKdr());
-        } else if ("Streak".equals(variable)) {
-            return Integer.toString(playerCache.getKillstreak());
+        switch (variable) {
+            case "Kill":
+                return Integer.toString(playerCache.getKills());
+            case "Death":
+                return Integer.toString(playerCache.getDeaths());
+            case "KDR":
+                return Integer.toString(playerCache.getKdr());
+            case "Streak":
+                return Integer.toString(playerCache.getKillstreak());
         }
 
         return Integer.toString(playerCache.getMobkills());

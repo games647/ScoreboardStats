@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  */
 public class PacketSbManager extends SbManager {
 
-    private final Map<Player, PlayerScoreboard> scoreboards = new WeakHashMap<Player, PlayerScoreboard>(50);
+    private final Map<Player, PlayerScoreboard> scoreboards = new WeakHashMap<>(50);
 
     /**
      * Creates a new scoreboard manager for the packet system.
