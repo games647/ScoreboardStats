@@ -26,7 +26,7 @@ public class SignListener extends SimpleChanger {
 
     @Override
     public String getValue(Player player, Location lctn, String string) {
-        final PlayerStats playerCache = statsDatabase.getCachedStats(player);
+        PlayerStats playerCache = statsDatabase.getCachedStats(player);
         if (playerCache == null) {
             //The stats aren't loaded yet
             return "Not loaded";

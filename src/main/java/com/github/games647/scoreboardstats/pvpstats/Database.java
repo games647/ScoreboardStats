@@ -181,7 +181,7 @@ public class Database {
         //Check if pvpstats should be enabled
         dbConfig.loadConfiguration();
 
-        final ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
 
         //Disable the class caching temporialy, because after a reload
@@ -189,8 +189,8 @@ public class Database {
         ReloadFixLoader.setClassCache(false);
 
         try {
-            final EbeanServer database = EbeanServerFactory.create(dbConfig.getServerConfig());
-            final DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
+            EbeanServer database = EbeanServerFactory.create(dbConfig.getServerConfig());
+            DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
             //only create the table if it doesn't exist
             gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
 
@@ -208,7 +208,7 @@ public class Database {
             public void run() {
                 updateTopList();
             }
-        }, 1, 5, TimeUnit.MINUTES);
+        }, 0, 5, TimeUnit.MINUTES);
 
         registerEvents();
     }
@@ -228,8 +228,8 @@ public class Database {
      * Updates the toplist
      */
     public void updateTopList() {
-        final String type = Settings.getTopType();
-        final Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+        String type = Settings.getTopType();
+        Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
         if ("killstreak".equals(type)) {
             for (PlayerStats stats : getTopList("killstreak")) {
                 newToplist.put(stats.getPlayername(), stats.getKillstreak());

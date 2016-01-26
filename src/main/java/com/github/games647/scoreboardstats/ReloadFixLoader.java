@@ -28,7 +28,7 @@ public class ReloadFixLoader extends ClassLoader {
      */
     public static boolean setClassCache(boolean status) {
         try {
-            final Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
+            Field cacheField = URLConnection.class.getDeclaredField("defaultUseCaches");
             cacheField.setAccessible(true);
             cacheField.setBoolean(null, status);
             return true;

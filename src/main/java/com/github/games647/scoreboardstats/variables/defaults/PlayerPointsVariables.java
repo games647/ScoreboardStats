@@ -29,14 +29,14 @@ public class PlayerPointsVariables extends VariableReplaceAdapter<PlayerPoints> 
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        final int balance = getPlugin().getAPI().look(player.getUniqueId());
+        int balance = getPlugin().getAPI().look(player.getUniqueId());
         replaceEvent.setScore(balance);
         replaceEvent.setConstant(true);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPointsReset(PlayerPointsResetEvent resetEvent) {
-        final Player player = Bukkit.getPlayer(resetEvent.getPlayerId());
+        Player player = Bukkit.getPlayer(resetEvent.getPlayerId());
         if (player != null) {
             replaceManager.updateScore(player, "points", 0);
         }
@@ -44,9 +44,9 @@ public class PlayerPointsVariables extends VariableReplaceAdapter<PlayerPoints> 
 
     @EventHandler(ignoreCancelled = true)
     public void onPoints(PlayerPointsChangeEvent changeEvent) {
-        final Player player = Bukkit.getPlayer(changeEvent.getPlayerId());
+        Player player = Bukkit.getPlayer(changeEvent.getPlayerId());
         if (player != null) {
-            final int lastBal = getPlugin().getAPI().look(changeEvent.getPlayerId());
+            int lastBal = getPlugin().getAPI().look(changeEvent.getPlayerId());
             replaceManager.updateScore(player, "points", lastBal + changeEvent.getChange());
         }
     }

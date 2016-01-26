@@ -33,14 +33,14 @@ public class StatsLoader implements Runnable {
         this.uuidSearch = uuidSearch;
 
         //don't prevent the garbage collection of this player if he logs out
-        this.weakPlayer = new WeakReference<Player>(player);
-        this.weakDatabase = new WeakReference<Database>(statsDatabase);
+        this.weakPlayer = new WeakReference<>(player);
+        this.weakDatabase = new WeakReference<>(statsDatabase);
     }
 
     @Override
     public void run() {
         final Player player = weakPlayer.get();
-        final Database statsDatabase = weakDatabase.get();
+        Database statsDatabase = weakDatabase.get();
         if (player != null && statsDatabase != null) {
             final PlayerStats stats = statsDatabase.loadAccount(player);
             //update player name on every load, because it's changeable

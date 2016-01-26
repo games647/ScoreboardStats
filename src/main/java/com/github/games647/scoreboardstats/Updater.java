@@ -205,7 +205,7 @@ public class Updater {
      * Save an update from dev.bukkit.org into the server's update folder.
      */
     private void saveFile() {
-        final File folder = new File(plugin.getDataFolder().getParent(), plugin.getServer().getUpdateFolder());
+        File folder = new File(plugin.getDataFolder().getParent(), plugin.getServer().getUpdateFolder());
         if (!folder.exists() && !folder.mkdir()) {
             plugin.getLogger().warning("Couldn't create update folder");
             return;
@@ -221,12 +221,12 @@ public class Updater {
         BufferedInputStream inputstream = null;
         FileOutputStream fout = null;
         try {
-            final URL fileUrl = new URL(this.versionLink);
+            URL fileUrl = new URL(this.versionLink);
             inputstream = new BufferedInputStream(fileUrl.openStream());
             fout = new FileOutputStream(new File(this.updateFolder, file.getName()));
 
             ByteStreams.copy(inputstream, fout);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             this.plugin.getLogger().log(Level.WARNING
                     , "The auto-updater tried to download a new update, but was unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
@@ -256,12 +256,12 @@ public class Updater {
      * @return true if the version was located and is not the same as the remote's newest.
      */
     private boolean versionCheck() {
-        final String title = this.versionName;
-        final String localVersion = this.plugin.getDescription().getVersion();
-        final String[] split = title.split(DELIMETER);
+        String title = this.versionName;
+        String localVersion = this.plugin.getDescription().getVersion();
+        String[] split = title.split(DELIMETER);
         if (split.length == 2) {
             // Get the newest file's version number
-            final String remoteVersion = split[1].split(" ")[0];
+            String remoteVersion = split[1].split(" ")[0];
 
             if (this.hasTag(localVersion) || !this.shouldUpdate(localVersion, remoteVersion)) {
                 // We already have the latest version, or this build is tagged for no-update
@@ -337,19 +337,19 @@ public class Updater {
         }
 
         try {
-            final URLConnection conn = this.url.openConnection();
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(10000);
+            URLConnection conn = this.url.openConnection();
+            conn.setConnectTimeout(5_000);
+            conn.setReadTimeout(10_000);
 
-            final String userAgent = String.format("%s/v%s (by %s)"
+            String userAgent = String.format("%s/v%s (by %s)"
                     , plugin.getName()
                     , plugin.getDescription().getVersion()
                     , plugin.getDescription().getAuthors());
             conn.addRequestProperty("User-Agent", userAgent);
 
-            final InputStreamReader streamReader = new InputStreamReader(conn.getInputStream(), Charsets.UTF_8);
+            InputStreamReader streamReader = new InputStreamReader(conn.getInputStream(), Charsets.UTF_8);
 
-            final JSONArray array = (JSONArray) JSONValue.parse(streamReader);
+            JSONArray array = (JSONArray) JSONValue.parse(streamReader);
             if (array.isEmpty()) {
                 this.plugin.getLogger().log(Level.WARNING
                         , "The updater could not find any file for the project id: {0}", this.id);
@@ -358,7 +358,7 @@ public class Updater {
             }
 
             //gets the last entry
-            final JSONObject latestUpdate = (JSONObject) array.get(array.size() - 1);
+            JSONObject latestUpdate = (JSONObject) array.get(array.size() - 1);
             this.versionName = (String) latestUpdate.get(Updater.TITLE_VALUE);
             this.versionLink = (String) latestUpdate.get(Updater.LINK_VALUE);
 

@@ -38,13 +38,13 @@ public class RefreshTask implements Runnable {
     @Override
     public void run() {
         //let the players update smoother
-        final Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
+        Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
         int remainingUpdates = getNextUpdates();
         for (Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
-            final Map.Entry<Player, MutableInt> entry = it.next();
+            Map.Entry<Player, MutableInt> entry = it.next();
 
-            final Player player = entry.getKey();
-            final MutableInt remanigTicks = entry.getValue();
+            Player player = entry.getKey();
+            MutableInt remanigTicks = entry.getValue();
             if (remanigTicks.intValue() == 0) {
                 //We will check if the player is online and remove it from queue if not so we can prevent memory leaks
                 if (player == null || !player.isOnline()) {
@@ -75,7 +75,7 @@ public class RefreshTask implements Runnable {
      * @return true if it was successfully queued
      */
     public boolean addToQueue(Player request) {
-        final boolean alreadyQueued = queue.containsKey(request);
+        boolean alreadyQueued = queue.containsKey(request);
         if (!alreadyQueued) {
             //check if it isn't already in the queue
             queue.put(request, new MutableInt(20 * Settings.getIntervall()));
@@ -112,7 +112,7 @@ public class RefreshTask implements Runnable {
     }
 
     private int getNextUpdates() {
-        final int nextUpdates = queue.size() / 20;
+        int nextUpdates = queue.size() / 20;
         if (nextUpdates <= 0) {
             //just update minimum one player per tick. Otherwise servers with not much players
             //won't receive any updates

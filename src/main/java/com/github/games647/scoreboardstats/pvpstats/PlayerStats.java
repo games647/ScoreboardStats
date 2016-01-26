@@ -286,7 +286,7 @@ public class PlayerStats {
     public boolean equals(Object obj) {
         //ignores also null
         if (obj instanceof PlayerStats) {
-            final PlayerStats other = (PlayerStats) obj;
+            PlayerStats other = (PlayerStats) obj;
             return id == other.id
                     && Objects.equal(uuid, other.uuid)
                     && Objects.equal(playername, other.playername);

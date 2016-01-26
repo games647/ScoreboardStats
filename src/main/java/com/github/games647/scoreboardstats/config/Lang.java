@@ -45,8 +45,8 @@ public class Lang {
      */
     public Lang() {
         //JavaPlugin.getPlugin isn't available in 1.5
-        final ScoreboardStats plugin = (ScoreboardStats) Bukkit.getPluginManager().getPlugin("ScoreboardStats");
-        final ClassLoader classLoader = plugin.getClassLoaderBypass();
+        ScoreboardStats plugin = (ScoreboardStats) Bukkit.getPluginManager().getPlugin("ScoreboardStats");
+        ClassLoader classLoader = plugin.getClassLoaderBypass();
 
         messages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
     }

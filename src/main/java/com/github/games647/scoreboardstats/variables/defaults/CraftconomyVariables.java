@@ -25,8 +25,8 @@ public class CraftconomyVariables extends VariableReplaceAdapter<Plugin> {
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         if (variable.startsWith("money_") && Common.isInitialized()) {
-            final Currency currency = currencyManager.getCurrency(variable.replace("money_", ""));
-            final double balance = accountManager.getAccount(player.getName(), false)
+            Currency currency = currencyManager.getCurrency(variable.replace("money_", ""));
+            double balance = accountManager.getAccount(player.getName(), false)
                     .getBalance(player.getWorld().getName(), currency.getName());
             replaceEvent.setScore(NumberConversions.round(balance));
         }

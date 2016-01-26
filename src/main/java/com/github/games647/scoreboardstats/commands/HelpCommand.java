@@ -33,10 +33,8 @@ public class HelpCommand extends CommandHandler {
     public void onCommand(CommandSender sender, String subCommand, String... args) {
         if (args.length == 0) {
             showHelpPage(sender, 1);
-        }
-
-        if (args.length != 0) {
-            final Integer pageNumber = Integer.getInteger(args[0]);
+        } else {
+            Integer pageNumber = Integer.getInteger(args[0]);
             if (pageNumber == null) {
                 showCommandHelp(sender, args[0]);
             } else {
@@ -48,7 +46,7 @@ public class HelpCommand extends CommandHandler {
     @Override
     public List<String> onTabComplete(CommandSender sender, String subCommand, String... args) {
         if (args.length == 1) {
-            final List<String> suggestion = Lists.newArrayList();
+            List<String> suggestion = Lists.newArrayList();
             for (String command : commandManager.getSubCommands()) {
                 if (StringUtil.startsWithIgnoreCase(command, args[0])) {
                     suggestion.add(command);
@@ -63,23 +61,23 @@ public class HelpCommand extends CommandHandler {
 
 
     private void showCommandHelp(CommandSender sender, String command) {
-        final CommandHandler handler = commandManager.getHandler(command);
+        CommandHandler handler = commandManager.getHandler(command);
         if (handler == null) {
             sender.sendMessage(ChatColor.DARK_RED + "Command not known");
             return;
         }
 
         sender.sendMessage(ChatColor.GOLD + "Help for: " + command);
-        //todo colorize
+
         sender.sendMessage(ChatColor.DARK_AQUA + "Aliases: " + handler.getAliases());
         sender.sendMessage(ChatColor.DARK_AQUA + "Permission: " + handler.getPermission());
         sender.sendMessage(ChatColor.DARK_AQUA + "Description: " + handler.getDescription());
     }
 
     private void showHelpPage(CommandSender sender, int pageNumber) {
-        final ChatPage page = paginate(buildContent("sb"), pageNumber
+        ChatPage page = paginate(buildContent("sb"), pageNumber
                 , ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH, ChatPaginator.CLOSED_CHAT_PAGE_HEIGHT);
-        final String header = buildHeader()
+        String header = buildHeader()
                 .replace("{page}", Integer.toString(pageNumber))
                 .replace("{total}", Integer.toString(page.getTotalPages()));
 
@@ -88,7 +86,7 @@ public class HelpCommand extends CommandHandler {
     }
 
     private String buildHeader() {
-        final StringBuilder header = new StringBuilder();
+        StringBuilder header = new StringBuilder();
         header.append(ChatColor.YELLOW)
                 .append("------ ")
                 .append(ChatColor.WHITE).append("Help: ")
@@ -106,7 +104,7 @@ public class HelpCommand extends CommandHandler {
 
 
     private String buildContent(String mainCommand) {
-        final StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         //prevent duplicates
         Set<CommandHandler> handlers = Sets.newHashSet(commandManager.getHandlers());
         for (CommandHandler handler : handlers) {
@@ -121,14 +119,14 @@ public class HelpCommand extends CommandHandler {
     }
 
     private ChatPage paginate(String unpaginatedString, int pageNumber, int lineLength, int pageHeight) {
-        final String[] lines = ChatPaginator.wordWrap(unpaginatedString, lineLength);
+        String[] lines = ChatPaginator.wordWrap(unpaginatedString, lineLength);
 
-        final int totalPages = lines.length / pageHeight + (lines.length % pageHeight == 0 ? 0 : 1);
-        final int actualPageNumber = pageNumber <= totalPages ? pageNumber : totalPages;
+        int totalPages = lines.length / pageHeight + (lines.length % pageHeight == 0 ? 0 : 1);
+        int actualPageNumber = pageNumber <= totalPages ? pageNumber : totalPages;
 
-        final int from = (actualPageNumber - 1) * pageHeight;
-        final int to = from + pageHeight <= lines.length ? from + pageHeight : lines.length;
-        final String[] selectedLines = Arrays.copyOfRange(lines, from, to);
+        int from = (actualPageNumber - 1) * pageHeight;
+        int to = from + pageHeight <= lines.length ? from + pageHeight : lines.length;
+        String[] selectedLines = Arrays.copyOfRange(lines, from, to);
 
         return new ChatPage(selectedLines, actualPageNumber, totalPages);
     }

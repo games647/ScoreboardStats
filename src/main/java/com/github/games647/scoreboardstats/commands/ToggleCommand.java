@@ -26,8 +26,8 @@ public class ToggleCommand extends CommandHandler {
         }
 
          //We checked that it can only be players
-        final Player player = (Player) sender;
-        final RefreshTask refreshTask = plugin.getRefreshTask();
+        Player player = (Player) sender;
+        RefreshTask refreshTask = plugin.getRefreshTask();
         if (refreshTask.contains(player)) {
             if ("hide".equals(subCommand) || "toggle".equals(subCommand)) {
                 refreshTask.remove(player);

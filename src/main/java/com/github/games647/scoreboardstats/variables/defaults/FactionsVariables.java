@@ -28,7 +28,7 @@ public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
         super(Bukkit.getPluginManager().getPlugin("Factions")
                 , "power", "f_power", "members_online", "members");
 
-        final String version = getPlugin().getDescription().getVersion();
+        String version = getPlugin().getDescription().getVersion();
         newVersion = Version.compare("2", version) >= 0;
 
         //Version is between 2.0 and 2.7
@@ -60,7 +60,7 @@ public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
         if ("power".equals(variable)) {
             replaceEvent.setScore(mplayer.getPowerRounded());
         } else {
-            final com.massivecraft.factions.entity.Faction faction = mplayer.getFaction();
+            com.massivecraft.factions.entity.Faction faction = mplayer.getFaction();
             if (faction == null) {
                 return;
             }
@@ -78,7 +78,7 @@ public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
     //factions 1.6.9 and 1.8.2
     private void getOldFactionScore(Player player, String variable, ReplaceEvent replaceEvent) {
         //If factions doesn't track the player yet return -1
-        final FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
+        FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
         if (fPlayer == null) {
             return;
         }
@@ -86,7 +86,7 @@ public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
         if ("power".equals(variable)) {
             replaceEvent.setScore(fPlayer.getPowerRounded());
         } else {
-            final com.massivecraft.factions.Faction faction = fPlayer.getFaction();
+            com.massivecraft.factions.Faction faction = fPlayer.getFaction();
             if (faction == null) {
                 return;
             }

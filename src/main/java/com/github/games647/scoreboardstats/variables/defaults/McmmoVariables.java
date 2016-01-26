@@ -27,9 +27,9 @@ import org.bukkit.plugin.Plugin;
 public class McmmoVariables extends VariableReplaceAdapter<Plugin> implements Listener {
 
     private static String[] getSkillVariables() {
-        final List<String> skills = Lists.newArrayList();
+        List<String> skills = Lists.newArrayList();
         for (SkillType type : SkillType.values()) {
-            final String skillName = type.name().toLowerCase(Locale.ENGLISH);
+            String skillName = type.name().toLowerCase(Locale.ENGLISH);
             skills.add(skillName);
         }
 
@@ -62,25 +62,25 @@ public class McmmoVariables extends VariableReplaceAdapter<Plugin> implements Li
         if ("powlvl".equals(variable)) {
             replaceEvent.setScore(ExperienceAPI.getPowerLevel(player));
         } else {
-            final String type = variable.toUpperCase(Locale.ENGLISH);
+            String type = variable.toUpperCase(Locale.ENGLISH);
             replaceEvent.setScore(ExperienceAPI.getLevel(player, type));
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onLevelUp(McMMOPlayerLevelUpEvent levelUpEvent) {
-        final Player player = levelUpEvent.getPlayer();
-        final SkillType skill = levelUpEvent.getSkill();
-        final int newSkillLevel = levelUpEvent.getSkillLevel();
+        Player player = levelUpEvent.getPlayer();
+        SkillType skill = levelUpEvent.getSkill();
+        int newSkillLevel = levelUpEvent.getSkillLevel();
 
         onLevelChange(player, skill, newSkillLevel);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onLevelDown(McMMOPlayerLevelDownEvent levelDownEvent) {
-        final Player player = levelDownEvent.getPlayer();
-        final SkillType skill = levelDownEvent.getSkill();
-        final int newSkillLevel = levelDownEvent.getSkillLevel();
+        Player player = levelDownEvent.getPlayer();
+        SkillType skill = levelDownEvent.getSkill();
+        int newSkillLevel = levelDownEvent.getSkillLevel();
 
         onLevelChange(player, skill, newSkillLevel);
     }

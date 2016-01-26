@@ -5,7 +5,7 @@ version: ${project.version}
 main: ${project.groupId}.${project.artifactId}.${project.name}
 
 # meta informations for plugin managers
-author: [games647, 'https://github.com/games647/ScoreboardStats/graphs/contributors']
+authors: [games647, 'https://github.com/games647/ScoreboardStats/graphs/contributors']
 description: |
     ${project.description}
 website: ${project.url}
@@ -14,10 +14,11 @@ dev-url: ${project.url}
 # depending on them - load after them to make sure they are initialized
 softdepend:
     - ProtocolLib
+    - InSigns
+    # Variable dependencies
     - mcMMO
     - Vault
     - SimpleClans
-    - InSigns
     - Factions
     - Heroes
     - uSkyBlock
@@ -26,6 +27,7 @@ softdepend:
 
 # Root commands to register automatically to Bukkit
 commands:
+  # choose a unique name in order to register it successfully
   ${project.artifactId}:
     description: 'Root command for all commands in ${project.name}'
     aliases: [side, ss, sb, board, sidebar]

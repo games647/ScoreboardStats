@@ -30,7 +30,7 @@ public class LegacyReplaceWrapper extends VariableReplaceAdapter<Plugin> {
     @Override
     @SuppressWarnings("deprecation")
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        final int scoreValue = oldReplacer.getScoreValue(player, '%' + variable + '%');
+        int scoreValue = oldReplacer.getScoreValue(player, '%' + variable + '%');
         if (scoreValue != Replaceable.UNKOWN_VARIABLE) {
             replaceEvent.setScore(scoreValue);
         }

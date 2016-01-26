@@ -34,7 +34,7 @@ public class StatsListener implements Listener {
      */
     @EventHandler
     public void onJoin(PlayerJoinEvent joinEvent) {
-        final Player player = joinEvent.getPlayer();
+        Player player = joinEvent.getPlayer();
         //removing old metadata which wasn't removed (which can lead to memory leaks)
         player.removeMetadata("player_stats", plugin);
 
@@ -50,7 +50,7 @@ public class StatsListener implements Listener {
      */
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        final Player player = quitEvent.getPlayer();
+        Player player = quitEvent.getPlayer();
 
         database.saveAsync(database.getCachedStats(player));
 
@@ -65,14 +65,14 @@ public class StatsListener implements Listener {
      */
     @EventHandler
     public void onMobDeath(EntityDeathEvent event) {
-        final LivingEntity entity = event.getEntity();
+        LivingEntity entity = event.getEntity();
         //killer is null if it's not a player
-        final Player killer = entity.getKiller();
+        Player killer = entity.getKiller();
 
         //Check if it's not player because we are already handling it
         if (entity.getType() != EntityType.PLAYER && Settings.isPvpStats()
                 && Settings.isActiveWorld(entity.getWorld().getName())) {
-            final PlayerStats killercache = database.getCachedStats(killer);
+            PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
                 killercache.onMobKill();
@@ -88,11 +88,11 @@ public class StatsListener implements Listener {
      */
     @EventHandler
     public void onDeath(PlayerDeathEvent deathEvent) {
-        final Player killed = deathEvent.getEntity();
+        Player killed = deathEvent.getEntity();
         //killer is null if it's not a player
-        final Player killer = killed.getKiller();
+        Player killer = killed.getKiller();
         if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld().getName())) {
-            final PlayerStats killedcache = database.getCachedStats(killed);
+            PlayerStats killedcache = database.getCachedStats(killed);
             if (killedcache != null) {
                 killedcache.onDeath();
                 plugin.getReplaceManager().updateScore(killed, "deaths", killedcache.getDeaths());
@@ -101,7 +101,7 @@ public class StatsListener implements Listener {
                 plugin.getReplaceManager().updateScore(killed, "current_streak", killedcache.getLaststreak());
             }
 
-            final PlayerStats killercache = database.getCachedStats(killer);
+            PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.onKill();
                 plugin.getReplaceManager().updateScore(killer, "kills", killercache.getKills());

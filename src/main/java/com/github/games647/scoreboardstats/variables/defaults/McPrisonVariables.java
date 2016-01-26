@@ -35,7 +35,7 @@ public class McPrisonVariables extends VariableReplaceAdapter<Plugin> {
 
         this.replaceManager = replaceManager;
 
-        final RegisteredServiceProvider<Economy> economyProvider = Bukkit
+        RegisteredServiceProvider<Economy> economyProvider = Bukkit
                 .getServicesManager().getRegistration(Economy.class);
         if (economyProvider == null) {
             throw new UnsupportedPluginException("Couldn't find an economy plugin");
@@ -51,24 +51,24 @@ public class McPrisonVariables extends VariableReplaceAdapter<Plugin> {
 
     @EventHandler(ignoreCancelled = true)
     public void onBalanceChange(BalanceChangeEvent balanceChangeEvent) {
-        final Player player = balanceChangeEvent.getPlayer();
+        Player player = balanceChangeEvent.getPlayer();
         replaceManager.updateScore(player, "moneyNeeded", getMoneyNeeded(player));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onRankup(RankupEvent rankupEvent) {
-        final Player player = rankupEvent.getPlayer();
+        Player player = rankupEvent.getPlayer();
         replaceManager.updateScore(player, "moneyNeeded", getMoneyNeeded(player));
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onDemoteEvent(DemoteEvent demoteEvent) {
-        final Player player = demoteEvent.getPlayer();
+        Player player = demoteEvent.getPlayer();
         replaceManager.updateScore(player, "moneyNeeded", getMoneyNeeded(player));
     }
 
     private int getMoneyNeeded(Player player) {
-        final UserInfo userInfo = Ranks.i.getUserInfo(player.getName());
+        UserInfo userInfo = Ranks.i.getUserInfo(player.getName());
         return (int) (userInfo.getNextRank().getPrice() - eco.getBalance(player));
     }
 }

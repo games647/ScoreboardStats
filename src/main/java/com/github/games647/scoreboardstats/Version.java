@@ -64,8 +64,8 @@ public class Version implements Comparable<Version> {
      *          is less than, equal to, or greater than the specified object.
      */
     public static int compare(String expected, String version) {
-        final int[] expectedParts = parse(version);
-        final int[] versionParts = parse(expected);
+        int[] expectedParts = parse(version);
+        int[] versionParts = parse(expected);
 
         return ComparisonChain.start()
                 .compare(expectedParts[0], versionParts[0])
@@ -83,16 +83,16 @@ public class Version implements Comparable<Version> {
      */
     public static int[] parse(String version) throws IllegalArgumentException {
         //exludes spaces which could be added by mistake and exclude build suffixes
-        final String trimedVersion = version.trim().split("\\-")[0];
+        String trimedVersion = version.trim().split("\\-")[0];
         if (!trimedVersion.matches("\\d+(\\.\\d+){0,5}")) {
             //check if it's a format like '1.5'
             throw new IllegalArgumentException("Invalid format: " + version);
         }
 
-        final int[] versionParts = new int[3];
+        int[] versionParts = new int[3];
 
         //escape regEx and split by dots
-        final String[] split = trimedVersion.split("\\.");
+        String[] split = trimedVersion.split("\\.");
         //We check if the length has min 1 entry.
         for (int i = 0; i < split.length && i < versionParts.length; i++) {
             versionParts[i] = Integer.parseInt(split[i]);
@@ -102,11 +102,11 @@ public class Version implements Comparable<Version> {
     }
 
     private static String getVersionStringFromServer(String versionString) {
-        final Pattern versionPattern = Pattern.compile(VERSION_REGEX);
-        final Matcher versionMatche = versionPattern.matcher(versionString);
+        Pattern versionPattern = Pattern.compile(VERSION_REGEX);
+        Matcher versionMatcher = versionPattern.matcher(versionString);
 
-        if (versionMatche.matches() && versionMatche.group(1) != null) {
-            return versionMatche.group(1);
+        if (versionMatcher.matches() && versionMatcher.group(1) != null) {
+            return versionMatcher.group(1);
         } else {
             //fallback to the toString() method
             final String[] split = Bukkit.getServer().toString().split("[,}]");
@@ -132,7 +132,7 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the string doesn't match a version format
      */
     public Version(String version) throws IllegalArgumentException {
-        final int[] versionParts = parse(version);
+        int[] versionParts = parse(version);
 
         major = versionParts[0];
         minor = versionParts[1];
@@ -197,10 +197,8 @@ public class Version implements Comparable<Version> {
     public boolean equals(Object obj) {
         //ignores also null
         if (obj instanceof Version) {
-            final Version other = (Version) obj;
-            return major == other.major
-                    && minor == other.minor
-                    && build == other.build;
+            Version other = (Version) obj;
+            return major == other.major && minor == other.minor && build == other.build;
         }
 
         return false;

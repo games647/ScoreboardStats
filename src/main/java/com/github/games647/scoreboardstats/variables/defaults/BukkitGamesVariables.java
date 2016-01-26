@@ -32,8 +32,8 @@ public class BukkitGamesVariables extends VariableReplaceAdapter<Plugin> impleme
 
     @EventHandler(ignoreCancelled = true)
     public void onKitBuy(PlayerBuyKitEvent buyKitEvent) {
-        final Player player = buyKitEvent.getPlayer();
-        final int newBalance = bukkitGamesAPI.getPlayerBalance(player) - buyKitEvent.getKitCost();
+        Player player = buyKitEvent.getPlayer();
+        int newBalance = bukkitGamesAPI.getPlayerBalance(player) - buyKitEvent.getKitCost();
         replaceManager.updateScore(player, "coins", newBalance);
     }
 }

@@ -43,7 +43,7 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
             economy = economyProvider.getProvider();
         }
 
-        final RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
+        RegisteredServiceProvider<Chat> chatProvider = Bukkit.getServicesManager().getRegistration(Chat.class);
         if (chatProvider == null) {
             chat = null;
         } else {
@@ -54,10 +54,10 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         if ("money".equals(variable)) {
-            final double balance = economy.getBalance(player, player.getWorld().getName());
+            double balance = economy.getBalance(player, player.getWorld().getName());
             replaceEvent.setScore(NumberConversions.round(balance));
         } else if (variable.startsWith("playerInfo_") && chat != null) {
-            final int playerInfo = chat.getPlayerInfoInteger(player, variable.replace("playerInfo_", ""), -1);
+            int playerInfo = chat.getPlayerInfoInteger(player, variable.replace("playerInfo_", ""), -1);
             replaceEvent.setScore(playerInfo);
         }
     }
@@ -70,13 +70,13 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
      * @see Economy#getBalance(org.bukkit.OfflinePlayer)
      */
     private void checkVersion() {
-        final String version = getPlugin().getDescription().getVersion();
+        String version = getPlugin().getDescription().getVersion();
         int end = version.indexOf('-');
         if (end == -1) {
             end = version.length();
         }
 
-        final String cleanVersion = version.substring(0, end);
+        String cleanVersion = version.substring(0, end);
         if (Version.compare("1.4.1", cleanVersion) < 0) {
             throw new UnsupportedPluginException("You have an outdated version of Vault. Please update it");
         }

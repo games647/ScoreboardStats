@@ -37,7 +37,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
                 , "members", "clan_kdr", "rivals", "allies"
                 , "clan_money", "clan_kills", "allies_total", "members_online");
 
-        final String version = getPlugin().getDescription().getVersion();
+        String version = getPlugin().getDescription().getVersion();
         if (Version.compare("2.5", version) >= 0) {
             clanManager = getPlugin().getClanManager();
         } else {
@@ -48,16 +48,16 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         //If simpleclans doesn't track the player yet return -1
-        final ClanPlayer clanPlayer = clanManager.getClanPlayer(player);
+        ClanPlayer clanPlayer = clanManager.getClanPlayer(player);
         if (clanPlayer == null) {
             replaceEvent.setScore(-1);
             return;
         }
 
         if ("kills".equals(variable)) {
-            final int civilianKills = clanPlayer.getCivilianKills();
-            final int neutralKills = clanPlayer.getNeutralKills();
-            final int rivalKills = clanPlayer.getRivalKills();
+            int civilianKills = clanPlayer.getCivilianKills();
+            int neutralKills = clanPlayer.getNeutralKills();
+            int rivalKills = clanPlayer.getRivalKills();
             //count all kill types
             replaceEvent.setScore(civilianKills + neutralKills + rivalKills);
         } else if ("deaths".equals(variable)) {
@@ -66,7 +66,7 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
             replaceEvent.setScore(Math.round(clanPlayer.getKDR() * 100));
         } else {
             //Check if the player has a clan
-            final Clan clan = clanPlayer.getClan();
+            Clan clan = clanPlayer.getClan();
             if (clan == null) {
                 replaceEvent.setScore(-1);
                 return;
@@ -88,9 +88,9 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
             } else if ("allies_total".equals(variable)) {
                 replaceEvent.setScore(clan.getAllAllyMembers().size());
             } else if ("clan_kills".equals(variable)) {
-                final int civilianKills = clan.getTotalCivilian();
-                final int neutralKills = clan.getTotalNeutral();
-                final int rivalKills = clan.getTotalNeutral();
+                int civilianKills = clan.getTotalCivilian();
+                int neutralKills = clan.getTotalNeutral();
+                int rivalKills = clan.getTotalNeutral();
                 //count all kill types
                 replaceEvent.setScore(civilianKills + neutralKills + rivalKills);
             }

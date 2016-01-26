@@ -72,7 +72,7 @@ public class SidebarCommands implements TabExecutor {
             newArgs = Arrays.copyOfRange(args, 1, args.length);
         }
 
-        final CommandHandler commandHandler = commands.get(subCommand);
+        CommandHandler commandHandler = commands.get(subCommand);
         if (commandHandler == null) {
             sender.sendMessage(ChatColor.DARK_RED + "Command not found");
         } else {
@@ -90,7 +90,7 @@ public class SidebarCommands implements TabExecutor {
             return ImmutableList.of();
         }
 
-        final String lastWord = args[args.length - 1];
+        String lastWord = args[args.length - 1];
         List<String> suggestion;
         if (args.length == 1) {
             suggestion = Lists.newArrayList();
@@ -104,8 +104,8 @@ public class SidebarCommands implements TabExecutor {
             return suggestion;
         }
 
-        final String subCommand = args[0];
-        final CommandHandler commandHandler = commands.get(subCommand);
+        String subCommand = args[0];
+        CommandHandler commandHandler = commands.get(subCommand);
         if (commandHandler != null) {
             //remove the subcommand from the args list
             suggestion = commandHandler.onTabComplete(sender, subCommand, Arrays.copyOfRange(args, 1, args.length));
@@ -122,7 +122,6 @@ public class SidebarCommands implements TabExecutor {
 
     private void registerSubCommands() {
         register(new ToggleCommand(plugin));
-        register(new InfoCommand(plugin));
         register(new HelpCommand(plugin, this));
         register(new ReloadCommand(plugin));
     }
@@ -133,7 +132,7 @@ public class SidebarCommands implements TabExecutor {
             subCommands.add(alias);
         }
 
-        final String subCommand = handler.getSubCommand();
+        String subCommand = handler.getSubCommand();
         commands.put(subCommand, handler);
         subCommands.add(subCommand);
     }

@@ -59,7 +59,7 @@ public abstract class SbManager {
      * Adding all players to the refresh queue and loading the player stats if enabled
      */
     public void registerAll() {
-        final boolean ispvpstats = Settings.isPvpStats();
+        boolean ispvpstats = Settings.isPvpStats();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isOnline()) {
                 if (ispvpstats) {

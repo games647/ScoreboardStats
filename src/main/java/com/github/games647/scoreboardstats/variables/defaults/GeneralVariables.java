@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 public class GeneralVariables extends VariableReplaceAdapter<Plugin> {
 
     //From bytes to mega bytes
-    private static final int MB_CONVERSION = 1024 * 1024;
+    private static final int MB_CONVERSION = 1_024 * 1_024;
 
     public GeneralVariables() {
         super(null, "", true, true, false, "free_ram", "max_ram", "used_ram", "usedram", "date");
@@ -29,13 +29,13 @@ public class GeneralVariables extends VariableReplaceAdapter<Plugin> {
             //casting should be made after division
             replaceEvent.setScore((int) (Runtime.getRuntime().maxMemory() / MB_CONVERSION));
         } else if ("used_ram".equals(variable)) {
-            final long usedRam = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
+            long usedRam = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory();
             //casting should be made after division
             replaceEvent.setScore((int) (usedRam / MB_CONVERSION));
             //convert to megabytes
         } else if ("usedram".equals(variable)) {
             //casting should be made after division
-            final Runtime runtime = Runtime.getRuntime();
+            Runtime runtime = Runtime.getRuntime();
             //percent calculation
             replaceEvent.setScore((int) ((runtime.maxMemory() - runtime.freeMemory()) * 100 / runtime.maxMemory()));
         } else if ("date".equals(variable)) {

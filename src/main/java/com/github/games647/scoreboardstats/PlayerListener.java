@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
     //ignore cancelled events
     @EventHandler(ignoreCancelled = true)
     public void onWorldChange(PlayerChangedWorldEvent worldChange) {
-        final Player player = worldChange.getPlayer();
+        Player player = worldChange.getPlayer();
         //new world
         if (Settings.isActiveWorld(player.getWorld().getName())) {
             //old world

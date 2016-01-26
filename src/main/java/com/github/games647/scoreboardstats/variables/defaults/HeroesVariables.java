@@ -41,7 +41,7 @@ public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements L
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        final Hero hero = characterManager.getHero(player);
+        Hero hero = characterManager.getHero(player);
         replaceEvent.setConstant(true);
         if ("mana".equals(variable)) {
             replaceEvent.setScore(hero.getMana());
@@ -54,9 +54,9 @@ public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements L
 
     @EventHandler(ignoreCancelled = true)
     public void onLevelChange(HeroChangeLevelEvent levelChangeEvent) {
-        final Player player = levelChangeEvent.getHero().getPlayer();
-        final HeroClass heroClass = levelChangeEvent.getHeroClass();
-        final int newLevel = levelChangeEvent.getTo();
+        Player player = levelChangeEvent.getHero().getPlayer();
+        HeroClass heroClass = levelChangeEvent.getHeroClass();
+        int newLevel = levelChangeEvent.getTo();
 
         replaceManager.updateScore(player, "level", newLevel);
         replaceManager.updateScore(player, "max_mana", (int) heroClass.getMaxManaPerLevel() * newLevel);
@@ -64,20 +64,20 @@ public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements L
 
     @EventHandler(ignoreCancelled = true)
     public void onManaRegain(HeroRegainManaEvent regainManaEvent) {
-        final Hero hero = regainManaEvent.getHero();
+        Hero hero = regainManaEvent.getHero();
         replaceManager.updateScore(hero.getPlayer(), "mana", hero.getMana());
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onSkillUse(SkillUseEvent skillUseEvent) {
-        final Hero hero = skillUseEvent.getHero();
+        Hero hero = skillUseEvent.getHero();
         replaceManager.updateScore(hero.getPlayer(), "mana", hero.getMana() - skillUseEvent.getManaCost());
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onClassChange(ClassChangeEvent classChangeEvent) {
-        final Hero hero = classChangeEvent.getHero();
-        final int maxMana = (int) classChangeEvent.getTo().getMaxManaPerLevel();
+        Hero hero = classChangeEvent.getHero();
+        int maxMana = (int) classChangeEvent.getTo().getMaxManaPerLevel();
         replaceManager.updateScore(hero.getPlayer(), "max_mana", maxMana);
     }
 }

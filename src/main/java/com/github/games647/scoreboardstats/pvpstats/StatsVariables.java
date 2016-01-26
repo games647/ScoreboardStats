@@ -24,7 +24,7 @@ public class StatsVariables extends VariableReplaceAdapter<ScoreboardStats> {
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        final PlayerStats stats = statsDatabase.getCachedStats(player);
+        PlayerStats stats = statsDatabase.getCachedStats(player);
         replaceEvent.setConstant(true);
         if (stats == null) {
             //Null if the stats aren't loaded yet

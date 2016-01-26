@@ -32,7 +32,7 @@ public class CommentedYaml<T extends Plugin> {
     private static final String COMMENT_PREFIX = "# ";
     private static final String FILE_NAME = "config.yml";
 
-    protected transient final T plugin;
+    protected final transient T plugin;
     protected transient FileConfiguration config;
 
     public CommentedYaml(T plugin) {
@@ -52,14 +52,14 @@ public class CommentedYaml<T extends Plugin> {
      * @return the loaded file configuration
      */
     public FileConfiguration getConfigFromDisk() {
-        final File file = new File(plugin.getDataFolder(), FILE_NAME);
+        File file = new File(plugin.getDataFolder(), FILE_NAME);
 
-        final YamlConfiguration newConf = new YamlConfiguration();
+        YamlConfiguration newConf = new YamlConfiguration();
         newConf.setDefaults(getDefaults());
 
         try {
             //UTF-8 should be available on all java running systems
-            final List<String> lines = Files.readLines(file, Charsets.UTF_8);
+            List<String> lines = Files.readLines(file, Charsets.UTF_8);
 
             load(lines, newConf);
         } catch (InvalidConfigurationException ex) {
@@ -80,26 +80,14 @@ public class CommentedYaml<T extends Plugin> {
                 continue;
             }
 
-            final ConfigNode node = field.getAnnotation(ConfigNode.class);
+            ConfigNode node = field.getAnnotation(ConfigNode.class);
             String path = field.getName();
             if (node != null && !Strings.isNullOrEmpty(path)) {
                 path = node.path();
             }
 
             field.setAccessible(true);
-            if (config.isSet(path)) {
-                try {
-                    if (config.isString(path)) {
-                        field.set(this, ChatColor.translateAlternateColorCodes('&', config.getString(path)));
-                    } else {
-                        field.set(this, config.get(path));
-                    }
-                } catch (IllegalAccessException ex) {
-                    plugin.getLogger().log(Level.SEVERE, null, ex);
-                }
-            } else {
-                plugin.getLogger().log(Level.INFO, "Path not fond {0}", path);
-            }
+            setField(path, field);
         }
     }
 
@@ -116,8 +104,24 @@ public class CommentedYaml<T extends Plugin> {
         }
     }
 
+    private void setField(String path, Field field) throws IllegalArgumentException {
+        if (config.isSet(path)) {
+            try {
+                if (config.isString(path)) {
+                    field.set(this, ChatColor.translateAlternateColorCodes('&', config.getString(path)));
+                } else {
+                    field.set(this, config.get(path));
+                }
+            } catch (IllegalAccessException ex) {
+                plugin.getLogger().log(Level.SEVERE, null, ex);
+            }
+        } else {
+            plugin.getLogger().log(Level.INFO, "Path not fond {0}", path);
+        }
+    }
+
     private void load(List<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
-        final StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             //remove the silly tab error from yaml
             builder.append(line.replace("\t", "    "));
@@ -134,13 +138,13 @@ public class CommentedYaml<T extends Plugin> {
      * @return the default configuration
      */
     private FileConfiguration getDefaults() {
-        final YamlConfiguration defaults = new YamlConfiguration();
-        final InputStream defConfigStream = plugin.getResource(FILE_NAME);
+        YamlConfiguration defaults = new YamlConfiguration();
+        InputStream defConfigStream = plugin.getResource(FILE_NAME);
         if (defConfigStream != null) {
             try {
-                final InputStreamReader reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
+                InputStreamReader reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
                 //stream will be closed in this method
-                final List<String> lines = CharStreams.readLines(reader);
+                List<String> lines = CharStreams.readLines(reader);
                 load(lines, defaults);
                 return defaults;
             } catch (InvalidConfigurationException ex) {

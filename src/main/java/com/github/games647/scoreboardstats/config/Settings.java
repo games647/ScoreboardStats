@@ -7,7 +7,6 @@ import com.google.common.collect.Maps;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -326,7 +325,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 //Found minimum one plugin. Inform the adminstrator
                 plugin.getLogger().info("You are using plugins that requires to activate compatibilityMode");
                 plugin.getLogger().info("Otherwise the plugins won't work");
-                plugin.getLogger().log(Level.INFO, "Enable it in the {0} config compatibilityMode", plugin.getName());
+                plugin.getLogger().info("Enable it in the config of this plugin: compatibilityMode");
                 plugin.getLogger().info("Then this plugin will send raw packets and be compatible with other plugins");
                 //one plugin is enough
                 break;

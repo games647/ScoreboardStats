@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 @Deprecated
 public interface Replaceable {
 
-    //todo find another method to prevent conflicts
     /**
      * Represents an unknown variable
      *

@@ -46,8 +46,8 @@ public class SkyblockVariables extends VariableReplaceAdapter<uSkyBlockAPI> impl
 
     @EventHandler(ignoreCancelled = true)
     public void onLevelUp(uSkyBlockScoreChangedEvent scoreChangeEvent) {
-        final Player player = scoreChangeEvent.getPlayer();
-        final int newLevel = NumberConversions.round(scoreChangeEvent.getScore().getScore());
+        Player player = scoreChangeEvent.getPlayer();
+        int newLevel = NumberConversions.round(scoreChangeEvent.getScore().getScore());
 
         replaceManager.updateScore(player, "island_level", newLevel);
     }

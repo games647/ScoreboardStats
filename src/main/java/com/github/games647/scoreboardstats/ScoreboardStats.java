@@ -1,12 +1,11 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.config.Lang;
-import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.avaje.ebean.EbeanServer;
-import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.Updater.UpdateCallback;
 import com.github.games647.scoreboardstats.Updater.UpdateResult;
+import com.github.games647.scoreboardstats.commands.SidebarCommands;
+import com.github.games647.scoreboardstats.config.Lang;
+import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
@@ -93,7 +92,7 @@ public class ScoreboardStats extends JavaPlugin {
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-        final List<Class<?>> classes = Lists.newArrayList();
+        List<Class<?>> classes = Lists.newArrayList();
         classes.add(PlayerStats.class);
         return classes;
     }
@@ -106,9 +105,6 @@ public class ScoreboardStats extends JavaPlugin {
         //Create a logger that is available by just the plugin name
         //have to be peformed before the first logging message by this plugin, so it prints it correctly
         Logger.getLogger(getName()).setParent(getLogger());
-
-        //Check if server can display scoreboards; the version can only be with a complete shutdown
-        checkScoreboardCompatibility();
 
         //this is needed by settings (for localized messages)
         classLoader = new ReloadFixLoader(this, getClassLoader());
@@ -148,8 +144,8 @@ public class ScoreboardStats extends JavaPlugin {
         //Register all events
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 
-        //register all commands
-        getCommand("sidebar").setExecutor(new SidebarCommands(this));
+        //register all commands based on the root command of this plugin
+        getCommand(getName().toLowerCase()).setExecutor(new SidebarCommands(this));
 
         //start tracking the ticks
         getServer().getScheduler().runTaskTimer(this, new TicksPerSecondTask(), 5 * 20L, 3 * 20L);
@@ -185,11 +181,6 @@ public class ScoreboardStats extends JavaPlugin {
             //flush the cache to the database
             database.saveAll();
         }
-
-        if (getServer().getPluginManager().isPluginEnabled("ProtcolLib")) {
-            //the plugin should disable all listeners including protocollibs
-            ProtocolLibrary.getProtocolManager().removePacketListeners(this);
-        }
     }
 
     /**
@@ -219,18 +210,5 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         scoreboardManager.registerAll();
-    }
-
-    private void checkScoreboardCompatibility() {
-        //Scoreboards are introduced in minecraft 1.5
-        final int compare = Version.compare("1.5", Version.getMinecraftVersionString());
-        if (compare >= 0) {
-            //The minecraft version is higher or equal the minimum scoreboard version
-            return;
-        }
-
-        getLogger().warning(Lang.get("noCompatibleVersion"));
-        //This plugin isn't compatible with the server version so we disabling it
-        getPluginLoader().disablePlugin(this);
     }
 }

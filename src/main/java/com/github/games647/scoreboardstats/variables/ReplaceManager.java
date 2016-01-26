@@ -27,7 +27,7 @@ public class ReplaceManager implements Listener {
     private static final Map<Class<? extends VariableReplaceAdapter<?>>, String> DEFAULTS;
 
     static {
-        final Map<Class<? extends VariableReplaceAdapter<?>>, String> tempMap = Maps.newHashMap();
+        Map<Class<? extends VariableReplaceAdapter<?>>, String> tempMap = Maps.newHashMap();
         //empty value means this plugin
         tempMap.put(BukkitVariables.class, "");
         tempMap.put(BukkitGlobalVariables.class, "");
@@ -145,9 +145,9 @@ public class ReplaceManager implements Listener {
     public boolean unregister(Replaceable replacer) {
         boolean found = false;
 
-        final Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
+        Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
         while (iterator.hasNext()) {
-            final VariableReplaceAdapter<?> next = iterator.next();
+            VariableReplaceAdapter<?> next = iterator.next();
             if (next.equals(replacer)) {
                 iterator.remove();
                 found = true;
@@ -170,9 +170,9 @@ public class ReplaceManager implements Listener {
     public boolean unregister(VariableReplacer replacer) {
         boolean found = false;
 
-        final Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
+        Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
         while (iterator.hasNext()) {
-            final VariableReplaceAdapter<?> next = iterator.next();
+            VariableReplaceAdapter<?> next = iterator.next();
             if (next.equals(replacer)) {
                 iterator.remove();
                 found = true;
@@ -191,7 +191,7 @@ public class ReplaceManager implements Listener {
      * @param newScore what should be the new score
      */
     public void updateScore(Player player, String variable, int newScore) {
-        final String itemName = Settings.getItemName(variable);
+        String itemName = Settings.getItemName(variable);
         if (itemName != null) {
             sbManager.update(player, itemName, newScore);
         }
@@ -210,14 +210,6 @@ public class ReplaceManager implements Listener {
         }
     }
 
-//    public void updateVariableLater(String variable) {
-//
-//    }
-//
-//    public void updateVariableLater(Player player, String variable) {
-//
-//    }
-
     /**
      * Get the score for a specific variable.
      *
@@ -231,7 +223,7 @@ public class ReplaceManager implements Listener {
      */
     public ReplaceEvent getScore(Player player, String variable, String displayName, int oldScore, boolean complete)
             throws UnknownVariableException {
-        final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, displayName, oldScore);
+        ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, displayName, oldScore);
         if (!complete && skipList.contains(variable)) {
             //Check if the variable can be updated with event handlers or is global
             //therefore we just need a initial value
@@ -239,20 +231,16 @@ public class ReplaceManager implements Listener {
         }
 
         //cache found variables
-        final VariableReplacer replacer = specificReplacer.get(variable);
+        VariableReplacer replacer = specificReplacer.get(variable);
         if (replacer == null) {
             getScoreLegacy(player, variable, replaceEvent);
         } else {
             try {
                 replacer.onReplace(player, variable, replaceEvent);
-            } catch (LinkageError linkageError) {
+            } catch (LinkageError | Exception replacerException) {
                 //remove the replacer if it throws exceptions, to prevent future ones
                 //Maybe we need to catch compiler "errors"
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", replacer), linkageError);
-                unregister(replacer);
-            } catch (Exception exception) {
-                //remove the replacer if it throws exceptions, to prevent future ones
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", replacer), exception);
+                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", replacer), replacerException);
                 unregister(replacer);
             }
         }
@@ -271,11 +259,11 @@ public class ReplaceManager implements Listener {
      */
     public void updateGlobals() {
         for (Map.Entry<String, VariableReplaceAdapter<?>> entrySet : globals.entrySet()) {
-            final String variable = entrySet.getKey();
-            final String displayName = Settings.getItemName(variable);
-            final ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, false, displayName, -1);
+            String variable = entrySet.getKey();
+            String displayName = Settings.getItemName(variable);
+            ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, displayName, -1);
 
-            final VariableReplaceAdapter<? extends Plugin> globalReplacer = entrySet.getValue();
+            VariableReplaceAdapter<? extends Plugin> globalReplacer = entrySet.getValue();
             globalReplacer.onReplace(null, variable, replaceEvent);
             if (replaceEvent.isModified()) {
                 updateScore(variable, replaceEvent.getScore());
@@ -293,7 +281,7 @@ public class ReplaceManager implements Listener {
 
     protected boolean registerDefault(Class<? extends VariableReplaceAdapter<?>> replacerClass, String pluginName) {
         try {
-            final VariableReplaceAdapter<?> instance = createInstance(replacerClass);
+            VariableReplaceAdapter<?> instance = createInstance(replacerClass);
             register(instance);
             if (instance instanceof Listener) {
                 Plugin replacerPlugin = Bukkit.getPluginManager().getPlugin(pluginName);
@@ -308,12 +296,9 @@ public class ReplaceManager implements Listener {
         } catch (UnsupportedPluginException ex) {
             plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
                     , replacerClass.getSimpleName(), ex.getMessage()));
-        } catch (Exception ex) {
-            //We can't use mulit catches because we need still be compatible with java 6
-            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), ex);
-        } catch (LinkageError linkageError) {
+        } catch (Exception | LinkageError replacerException) {
             //only catch these throwables, because they could probably happend
-            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), linkageError);
+            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), replacerException);
         }
 
         return false;
@@ -322,15 +307,12 @@ public class ReplaceManager implements Listener {
     private void getScoreLegacy(Player player, String variable, ReplaceEvent replaceEvent)
             throws UnknownVariableException {
         for (Iterator<VariableReplaceAdapter<?>> iterator = legacyReplacers.iterator(); iterator.hasNext();) {
-            final VariableReplaceAdapter<?> legacyReplacer = iterator.next();
+            VariableReplaceAdapter<?> legacyReplacer = iterator.next();
 
             try {
                 legacyReplacer.onReplace(player, variable, replaceEvent);
-            } catch (LinkageError linkageError) {
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", legacyReplacer), linkageError);
-                iterator.remove();
-            } catch (Exception exception) {
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", legacyReplacer), exception);
+            } catch (LinkageError | Exception replacerException) {
+                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", legacyReplacer), replacerException);
                 iterator.remove();
             }
 
@@ -349,12 +331,12 @@ public class ReplaceManager implements Listener {
 
     //add all replacers that are in the defaults map
     private void addDefaultReplacers() {
-        final Set<String> replacersName = Sets.newHashSet();
+        Set<String> replacersName = Sets.newHashSet();
         for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : DEFAULTS.entrySet()) {
-            final String pluginName = entry.getValue();
+            String pluginName = entry.getValue();
             //Check if the plugin is available and active
             if (pluginName.isEmpty() || Bukkit.getPluginManager().isPluginEnabled(pluginName)) {
-                final Class<? extends VariableReplaceAdapter<?>> clazz = entry.getKey();
+                Class<? extends VariableReplaceAdapter<?>> clazz = entry.getKey();
                 if (registerDefault(clazz, pluginName)) {
                     //just add it if it was succesfull
                     replacersName.add(clazz.getSimpleName());

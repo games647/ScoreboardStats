@@ -29,10 +29,10 @@ public class PluginListener implements Listener {
     @EventHandler
     public void onPluginEnable(PluginEnableEvent enableEvent) {
         //Register the listener back again if the plugin is available
-        final String enablePluginName = enableEvent.getPlugin().getName();
-        final Map<Class<? extends VariableReplaceAdapter<?>>, String> defaults = replaceManager.getDefaults();
+        String enablePluginName = enableEvent.getPlugin().getName();
+        Map<Class<? extends VariableReplaceAdapter<?>>, String> defaults = replaceManager.getDefaults();
         for (Map.Entry<Class<? extends VariableReplaceAdapter<?>>, String> entry : defaults.entrySet()) {
-            final String pluginName = entry.getValue();
+            String pluginName = entry.getValue();
             if (enablePluginName.equals(entry.getValue())) {
                 replaceManager.registerDefault(entry.getKey(), pluginName);
             }
@@ -47,12 +47,12 @@ public class PluginListener implements Listener {
     @EventHandler
     public void onPluginDisable(PluginDisableEvent disableEvent) {
         //Remove the listener if the associated plugin was disabled
-        final String disablePluginName = disableEvent.getPlugin().getName();
+        String disablePluginName = disableEvent.getPlugin().getName();
 
-        final Map<String, VariableReplaceAdapter<? extends Plugin>> specificReplacers = replaceManager.getReplacers();
-        final Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = specificReplacers.values().iterator();
+        Map<String, VariableReplaceAdapter<? extends Plugin>> specificReplacers = replaceManager.getReplacers();
+        Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = specificReplacers.values().iterator();
         while (iterator.hasNext()) {
-            final Plugin plugin = iterator.next().getPlugin();
+            Plugin plugin = iterator.next().getPlugin();
             if (plugin != null && plugin.getName().equals(disablePluginName)) {
                 iterator.remove();
             }

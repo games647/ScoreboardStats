@@ -81,7 +81,7 @@ public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements L
         }
 
         if (variable.startsWith("meta_")) {
-            final String key = variable.replace("meta_", "");
+            String key = variable.replace("meta_", "");
             //assumimg this key is unique
             if (player.hasMetadata(key)) {
                 replaceEvent.setScore(player.getMetadata(key).get(0).asInt());

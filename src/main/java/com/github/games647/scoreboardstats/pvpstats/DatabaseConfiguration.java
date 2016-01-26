@@ -58,7 +58,7 @@ public class DatabaseConfiguration {
         //If the server path contains non-latin characters, ebean will fail because of the old version, so use this
         GlobalProperties.put("ebean.classpathreader", PathReader.class.getName());
 
-        final ServerConfig databaseConfig = new ServerConfig();
+        ServerConfig databaseConfig = new ServerConfig();
         databaseConfig.addClass(PlayerStats.class);
         //we will replace it on every reload. As we cannot unregister the server easier, we choose this
         databaseConfig.setRegister(false);
@@ -67,7 +67,7 @@ public class DatabaseConfiguration {
         //don't put invalid values to the database
         databaseConfig.setValidateOnSave(true);
 
-        final DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
+        DataSourceConfig sqlConfig = getSqlConfig(databaseConfig);
         //set a correct path
         sqlConfig.setUrl(replaceUrlString(sqlConfig.getUrl()));
         //choose a heartbeat that just respond with a minimum of cpu usage
@@ -87,7 +87,7 @@ public class DatabaseConfiguration {
         FileConfiguration sqlConfig;
         DataSourceConfig config;
 
-        final File file = new File(plugin.getDataFolder(), "sql.yml");
+        File file = new File(plugin.getDataFolder(), "sql.yml");
         //Check if the file exists. If so load the settings form there
         if (file.exists()) {
             sqlConfig = YamlConfiguration.loadConfiguration(file);
@@ -105,7 +105,7 @@ public class DatabaseConfiguration {
                 }
             }
 
-            final ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
+            ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
             config.setUsername(sqlSettingSection.getString("Username"));
             config.setPassword(sqlSettingSection.getString("Password"));
             config.setIsolationLevel(TransactionIsolation.getLevel(sqlSettingSection.getString("Isolation")));
@@ -122,7 +122,7 @@ public class DatabaseConfiguration {
             config = serverConfig.getDataSourceConfig();
 
             sqlConfig = YamlConfiguration.loadConfiguration(file);
-            final ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
+            ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
             sqlSettingSection.set("Username", config.getUsername());
             sqlSettingSection.set("Password", config.getPassword());
             sqlSettingSection.set("Isolation", TransactionIsolation.getLevelDescription(config.getIsolationLevel()));

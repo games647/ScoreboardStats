@@ -12,28 +12,23 @@ public class ReplaceEvent {
 
     private boolean constant;
     private boolean modified;
-//    private boolean global;
     private String displayText;
     private int score;
-//    private int updateInterval;
 
     /**
      * Creates a replace event
      *
      * @param variable the to replaced variable
      * @param textVariable whether it should return an String or Integer
-     * @param constant whether it will be updated with an event handler
      * @param displayText the scoreboard item name
      * @param score the scoreboard item score
      */
-    public ReplaceEvent(String variable, boolean textVariable, boolean constant, String displayText, int score) {
+    public ReplaceEvent(String variable, boolean textVariable, String displayText, int score) {
         this.variable = variable;
         this.textVariable = textVariable;
         this.constant = constant;
         this.displayText = displayText;
         this.score = score;
-//        this.global = global;
-//        this.updateInterval = interval;
     }
 
     /**

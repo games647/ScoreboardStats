@@ -10,12 +10,14 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.9.3</version>
+    <version>0.9.3-SNAPSHOT</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.6.4</powermock.version>
+        <!--Possibility to deploy directly to the plugins folder-->
+        <outputDir>${basedir}/target</outputDir>
     </properties>
 
     <issueManagement>
@@ -48,34 +50,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <!--So many people still use Java 6 ;( http://mcstats.org/global/#Java+Version-->
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <!--So many people still use Java 7 ;( http://mcstats.org/global/#Java+Version-->
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
-                    <!--false means actual true http://jira.codehaus.org/browse/MCOMPILER-209-->
-                    <useIncrementalCompilation>false</useIncrementalCompilation>
-                </configuration>
-            </plugin>
-
-            <!--Add meta data not only in the plugin.yml-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <Url>${project.url}</Url>
-                            <Source>${project.scm.url}</Source>
-                            <Issue>${project.issueManagement.url}</Issue>
-                            <Description>${project.description}</Description>
-                        </manifestEntries>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>
@@ -141,6 +120,15 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--This new version let us access to the new features in bukkit-->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <!--Name it different in order to work around that maven will always use the newest version-->
+            <artifactId>spigot-api</artifactId>
+            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--Library for listening and sending Minecraft packets to workaround
         the Bukkit API, so we can make scoreboard compatible with other
         scoreboard plugins -->
@@ -162,7 +150,7 @@
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>2.5.4</version>
+            <version>2.5.5</version>
             <optional>true</optional>
         </dependency>
 
@@ -176,7 +164,7 @@
         <dependency>
             <groupId>com.greatmancode</groupId>
             <artifactId>craftconomy3</artifactId>
-            <version>3.2.1</version>
+            <version>3.3</version>
             <!--Exclude because the repo is down-->
             <exclusions>
                 <exclusion>
@@ -298,39 +286,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <activation>
-                <!--Only run on JDK higher than 1.6-->
-                <jdk>[1.7,)</jdk>
-            </activation>
-            <build>
-                <plugins>
-                    <!--Check if this project is really Java 6 compatible-->
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>animal-sniffer-maven-plugin</artifactId>
-                        <version>1.14</version>
-                        <configuration>
-                            <signature>
-                                <groupId>org.codehaus.mojo.signature</groupId>
-                                <artifactId>java16</artifactId>
-                                <version>1.0</version>
-                            </signature>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>animal-sniffer</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

@@ -22,13 +22,13 @@ public class TicksPerSecondTask implements Runnable {
     @Override
     public void run() {
         //nanoTime is more accurate
-        final long currentTime = System.nanoTime() ;
-        final long timeSpent = currentTime - lastCheck;
+        long currentTime = System.nanoTime() ;
+        long timeSpent = currentTime - lastCheck;
         //update the last check
         lastCheck = currentTime;
 
         //how many ticks passed since the last check * 1000 to convert to seconds
-        final float tps = 3 * 20 * 1000.0F / (timeSpent / (1000 * 1000));
+        float tps = 3 * 20 * 1000.0F / (timeSpent / (1_000 * 1_000));
         if (tps >= 0.0F && tps < 25.0F) {
             //Prevent all invalid values
             lastTicks = tps;
