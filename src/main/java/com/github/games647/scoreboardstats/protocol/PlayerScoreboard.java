@@ -58,13 +58,13 @@ public class PlayerScoreboard {
         if (objectivesByName.containsKey(objectiveName)) {
             //the objecive already exits. I assume that no other use this unique name
             //so we expect that a other sidebar was showing
-            final Objective objective = objectivesByName.get(objectiveName);
+            Objective objective = objectivesByName.get(objectiveName);
             PacketFactory.sendDisplayPacket(objective);
             sidebarObjective = objective;
             return objective;
         }
 
-        final Objective objective = new Objective(this, objectiveName, displayName);
+        Objective objective = new Objective(this, objectiveName, displayName);
         sidebarObjective = objective;
         objectivesByName.put(objectiveName, objective);
         return objective;
@@ -135,9 +135,9 @@ public class PlayerScoreboard {
     }
 
     protected void createOrUpdateScore(String scoreName, String parent, int score) {
-        final Objective objective = objectivesByName.get(parent);
+        Objective objective = objectivesByName.get(parent);
         if (objective != null) {
-            final Item item = new Item(objective, scoreName, score, false);
+            Item item = new Item(objective, scoreName, score, false);
             //This automatically replace the old one
             objective.items.put(scoreName, item);
         }

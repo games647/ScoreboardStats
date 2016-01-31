@@ -9,9 +9,6 @@ disabled-worlds-whitelist: false
 disabled-worlds:
   - city
 
-# This will not count vanished players in the online value
-hide-vanished: false
-
 Scoreboard:
   Title: '&a&lStats'
   # seconds

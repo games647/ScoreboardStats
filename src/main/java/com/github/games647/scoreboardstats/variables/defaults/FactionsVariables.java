@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.entity.MPlayer;
@@ -17,7 +16,7 @@ import org.bukkit.plugin.Plugin;
  *
  * http://dev.bukkit.org/bukkit-plugins/factions/
 */
-public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
+public class FactionsVariables extends DefaultReplaceAdapter<Plugin> {
 
     private final boolean newVersion;
 
@@ -52,7 +51,7 @@ public class FactionsVariables extends VariableReplaceAdapter<Plugin> {
     //faction 2.7+
     private void getNewFactionScore(Player player, String variable, ReplaceEvent replaceEvent) {
         //If factions doesn't track the player yet return -1
-        final MPlayer mplayer = MPlayer.get(player);
+        MPlayer mplayer = MPlayer.get(player);
         if (mplayer == null) {
             return;
         }

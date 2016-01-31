@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.herocraftonline.heroes.Heroes;
 import com.herocraftonline.heroes.api.events.ClassChangeEvent;
 import com.herocraftonline.heroes.api.events.HeroChangeLevelEvent;
@@ -22,7 +21,7 @@ import org.bukkit.event.Listener;
  *
  * http://dev.bukkit.org/bukkit-plugins/heroes/
  */
-public class HeroesVariables extends VariableReplaceAdapter<Heroes> implements Listener {
+public class HeroesVariables extends DefaultReplaceAdapter<Heroes> implements Listener {
 
     private final ReplaceManager replaceManager;
     private final CharacterManager characterManager;

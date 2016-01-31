@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
@@ -24,7 +23,7 @@ import org.bukkit.plugin.Plugin;
  *
  * http://dev.bukkit.org/bukkit-plugins/mcmmo/
  */
-public class McmmoVariables extends VariableReplaceAdapter<Plugin> implements Listener {
+public class McmmoVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private static String[] getSkillVariables() {
         List<String> skills = Lists.newArrayList();

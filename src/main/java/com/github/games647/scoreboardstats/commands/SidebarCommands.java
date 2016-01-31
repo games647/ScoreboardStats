@@ -6,12 +6,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.bukkit.ChatColor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -31,34 +30,6 @@ public class SidebarCommands implements TabExecutor {
         this.plugin = plugin;
 
         registerSubCommands();
-    }
-
-    /**
-     * Get all command handlers
-     *
-     * @return all command handlers
-     */
-    public Collection<CommandHandler> getHandlers() {
-        return commands.values();
-    }
-
-    /**
-     * Get the command handler for a specific command
-     *
-     * @param subCommand for searched subCommand
-     * @return the commandhandler or null if not found
-     */
-    public CommandHandler getHandler(String subCommand) {
-        return commands.get(subCommand);
-    }
-
-    /**
-     * List all subCommands that this plugin has
-     *
-     * @return the subcommands
-     */
-    public List<String> getSubCommands() {
-        return Collections.unmodifiableList(subCommands);
     }
 
     @Override
@@ -122,7 +93,6 @@ public class SidebarCommands implements TabExecutor {
 
     private void registerSubCommands() {
         register(new ToggleCommand(plugin));
-        register(new HelpCommand(plugin, this));
         register(new ReloadCommand(plugin));
     }
 

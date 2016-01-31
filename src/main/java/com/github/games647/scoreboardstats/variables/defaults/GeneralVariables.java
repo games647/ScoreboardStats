@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import java.util.Calendar;
 
@@ -11,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Reprents a replacer for non Minecraft related variables
  */
-public class GeneralVariables extends VariableReplaceAdapter<Plugin> {
+public class GeneralVariables extends DefaultReplaceAdapter<Plugin> {
 
     //From bytes to mega bytes
     private static final int MB_CONVERSION = 1_024 * 1_024;

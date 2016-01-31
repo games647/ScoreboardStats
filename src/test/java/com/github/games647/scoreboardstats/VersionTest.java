@@ -28,7 +28,7 @@ public class VersionTest {
     public void testParsing() {
         //Bukkit version parsing. Can be found here: META-INF
         PowerMockito.mockStatic(Bukkit.class);
-        final Server server = Mockito.mock(Server.class);
+        Server server = Mockito.mock(Server.class);
         Mockito.when(Bukkit.getServer()).thenReturn(server);
 
         Mockito.when(Bukkit.getVersion()).thenReturn(DEFAULT_VERSION);
@@ -46,12 +46,6 @@ public class VersionTest {
         Assert.assertEquals("Minor version exception: " + version, 7, version.getMinor());
         Assert.assertEquals("Build version exception: " + version, 9, version.getBuild());
 
-        //Glowstone
-        Mockito.when(Bukkit.getVersion()).thenReturn("1.8-36-gbbc3960-dev");
-        Mockito.when(server.toString()).thenReturn("GlowServer{name=" + "Glowstone"
-                + ",version=" + "1.8-36-gbbc3960-dev" + ",minecraftVersion=" + "1.8" + '}');
-        version = Version.getMinecraftVersion();
-
         Assert.assertEquals("Major version exception: " + version, 1, version.getMajor());
 
         //Plugin Parsing of FactionsUUID; shouldn't fail
@@ -63,18 +57,18 @@ public class VersionTest {
      */
     @Test
     public void testComparison() {
-        final Version low = new Version(1, 5, 4);
-        final Version high = new Version(1, 8, 5);
+        Version low = new Version(1, 5, 4);
+        Version high = new Version(1, 8, 5);
 
         Assert.assertSame("Higher Compare: " + high + ' ' + low, high.compareTo(low), 1);
         Assert.assertSame("Lower Compare: " + low + ' ' + high, low.compareTo(high), -1);
 
-        final Version higher = new Version(1, 5, 5);
+        Version higher = new Version(1, 5, 5);
         Assert.assertSame("Higher Compare: " + higher + ' ' + low, higher.compareTo(low), 1);
         Assert.assertSame("Lower Compare: " + low + ' ' + higher, low.compareTo(higher), -1);
 
-        final Version equal = new Version(1, 2, 3);
-        final Version equal1 = new Version(1, 2, 3);
+        Version equal = new Version(1, 2, 3);
+        Version equal1 = new Version(1, 2, 3);
         Assert.assertSame("Equal Compare: " + equal + ' ' + equal1, equal.compareTo(equal1), 0);
         Assert.assertSame("Equal Compare: " + equal1 + ' ' + equal, equal1.compareTo(equal1), 0);
     }

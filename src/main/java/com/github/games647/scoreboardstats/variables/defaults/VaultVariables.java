@@ -1,9 +1,7 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
-import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
@@ -21,7 +19,7 @@ import org.bukkit.util.NumberConversions;
  *
  * @see Economy
  */
-public class VaultVariables extends VariableReplaceAdapter<Plugin> {
+public class VaultVariables extends DefaultReplaceAdapter<Plugin> {
 
     private final Economy economy;
     private final Chat chat;
@@ -32,10 +30,10 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
     public VaultVariables() {
         super(Bukkit.getPluginManager().getPlugin("Vault"), "money", "playerInfo_*");
 
-        checkVersion();
+        //Check if the server has Vault above 1.4.1 installed, because there they introduced UUID support
+        checkVersionException("1.4.1");
 
-        final RegisteredServiceProvider<Economy> economyProvider = Bukkit
-                .getServicesManager().getRegistration(Economy.class);
+        RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(Economy.class);
         if (economyProvider == null) {
             //check if an economy plugin is installed otherwise it would throw a exception if the want to replace
             throw new UnsupportedPluginException("Cannot find an economy plugin");
@@ -59,26 +57,6 @@ public class VaultVariables extends VariableReplaceAdapter<Plugin> {
         } else if (variable.startsWith("playerInfo_") && chat != null) {
             int playerInfo = chat.getPlayerInfoInteger(player, variable.replace("playerInfo_", ""), -1);
             replaceEvent.setScore(playerInfo);
-        }
-    }
-
-    /**
-     * Check if the server has Vault above 1.4.1 installed, because there they
-     * introduced UUID support, but this doesn't make Vault incompatible with
-     * older Minecraft versions
-     *
-     * @see Economy#getBalance(org.bukkit.OfflinePlayer)
-     */
-    private void checkVersion() {
-        String version = getPlugin().getDescription().getVersion();
-        int end = version.indexOf('-');
-        if (end == -1) {
-            end = version.length();
-        }
-
-        String cleanVersion = version.substring(0, end);
-        if (Version.compare("1.4.1", cleanVersion) < 0) {
-            throw new UnsupportedPluginException("You have an outdated version of Vault. Please update it");
         }
     }
 }

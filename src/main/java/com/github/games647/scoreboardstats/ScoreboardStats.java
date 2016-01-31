@@ -115,11 +115,6 @@ public class ScoreboardStats extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        if (!this.isEnabled()) {
-            //cancel initialization if the already disabled it
-            return;
-        }
-
         //Load the config + needs to be initialised to get the configurated value for update-checking
         settings = new Settings(this);
         settings.loadConfig();
@@ -205,7 +200,10 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager = new BukkitScoreboardManager(this);
         }
 
-        if (database != null) {
+        if (database == null) {
+            database = new Database(this);
+            database.setupDatabase();
+        } else {
             database.setupDatabase();
         }
 

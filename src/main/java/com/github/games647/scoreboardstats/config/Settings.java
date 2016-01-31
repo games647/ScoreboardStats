@@ -25,9 +25,6 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     @ConfigNode(path = "Temp-Scoreboard-enabled")
     private static boolean tempScoreboard;
 
-    @ConfigNode(path = "hide-vanished")
-    private static boolean hideVanished;
-
     @ConfigNode(path = "Scoreboard.Title")
     private static String title;
 
@@ -119,15 +116,6 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
      */
     public static boolean isTempScoreboard() {
         return tempScoreboard;
-    }
-
-    /**
-     * Check if the plugin should ignore vanished player for online counting
-     *
-     * @return if the plugin should ignore vanished player for online counting
-     */
-    public static boolean isHideVanished() {
-        return hideVanished;
     }
 
     /**
@@ -248,7 +236,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         //Check if the string is longer, so we don't end up with a indexoutofboundex
         if (check.length() > limit) {
             //If the string check is longer cut it down
-            final String cut = check.substring(0, limit);
+            String cut = check.substring(0, limit);
             plugin.getLogger().warning(Lang.get("tooLongName", cut, limit));
 
             return cut;
@@ -277,7 +265,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         ITEMS.clear();
 
         //not implemented yet in compatibility mode
-        final int maxLength = compatibilityMode ? 16 : 48;
+        int maxLength = compatibilityMode ? 16 : 48;
         for (String key : config.getKeys(false)) {
             if (ITEMS.size() == 16 - 1) {
                 //Only 15 items per sidebar objective are allowed
@@ -285,7 +273,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 break;
             }
 
-            final String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
+            String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
             String variable = config.getString(key).toLowerCase();
             if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
@@ -314,8 +302,8 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 return false;
             }
         } else {
-            //Thise plugins won't work without compatibilityMode, but do with it, so suggest it
-            final String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
+            //These plugins won't work without compatibilityMode, but do with it, so suggest it
+            String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
             for (String name : plugins) {
                 if (plugin.getServer().getPluginManager().getPlugin(name) == null) {
                     //just check if the plugin is available not if it's active
@@ -326,7 +314,6 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 plugin.getLogger().info("You are using plugins that requires to activate compatibilityMode");
                 plugin.getLogger().info("Otherwise the plugins won't work");
                 plugin.getLogger().info("Enable it in the config of this plugin: compatibilityMode");
-                plugin.getLogger().info("Then this plugin will send raw packets and be compatible with other plugins");
                 //one plugin is enough
                 break;
             }

@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.event.PlayerPointsChangeEvent;
@@ -17,7 +16,7 @@ import org.bukkit.event.Listener;
  *
  * http://dev.bukkit.org/bukkit-plugins/playerpoints/
  */
-public class PlayerPointsVariables extends VariableReplaceAdapter<PlayerPoints> implements Listener {
+public class PlayerPointsVariables extends DefaultReplaceAdapter<PlayerPoints> implements Listener {
 
     private final ReplaceManager replaceManager;
 

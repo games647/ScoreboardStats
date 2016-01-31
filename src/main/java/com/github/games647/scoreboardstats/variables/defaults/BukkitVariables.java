@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -12,7 +11,7 @@ import org.bukkit.util.NumberConversions;
 /**
  * Replace all Bukkit variables
  */
-public class BukkitVariables extends VariableReplaceAdapter<Plugin> implements Listener {
+public class BukkitVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private static final int MINUTE_TO_SECOND = 60;
 

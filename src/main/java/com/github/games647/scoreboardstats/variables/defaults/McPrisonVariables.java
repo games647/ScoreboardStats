@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import me.sirfaizdat.prison.ranks.Ranks;
 import me.sirfaizdat.prison.ranks.UserInfo;
@@ -24,7 +23,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  *
  * http://dev.bukkit.org/bukkit-plugins/mcprison/
  */
-public class McPrisonVariables extends VariableReplaceAdapter<Plugin> {
+public class McPrisonVariables extends DefaultReplaceAdapter<Plugin> {
 
     private final ReplaceManager replaceManager;
 

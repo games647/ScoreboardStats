@@ -110,7 +110,7 @@ public class Item implements Comparable<Item> {
     public boolean equals(Object obj) {
         //ignores also null
         if (obj instanceof Item) {
-            final Item other = (Item) obj;
+            Item other = (Item) obj;
             return Objects.equal(scoreName, other.scoreName);
         }
 

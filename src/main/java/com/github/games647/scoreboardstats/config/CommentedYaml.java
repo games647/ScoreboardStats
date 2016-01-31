@@ -62,9 +62,7 @@ public class CommentedYaml<T extends Plugin> {
             List<String> lines = Files.readLines(file, Charsets.UTF_8);
 
             load(lines, newConf);
-        } catch (InvalidConfigurationException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
-        } catch (IOException ex) {
+        } catch (InvalidConfigurationException | IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
         }
 

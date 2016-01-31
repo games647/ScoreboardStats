@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import de.ftbastler.bukkitgames.api.BukkitGamesAPI;
 import de.ftbastler.bukkitgames.api.PlayerBuyKitEvent;
@@ -13,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-public class BukkitGamesVariables extends VariableReplaceAdapter<Plugin> implements Listener {
+public class BukkitGamesVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private final ReplaceManager replaceManager;
     private final BukkitGamesAPI bukkitGamesAPI = BukkitGamesAPI.getApi();

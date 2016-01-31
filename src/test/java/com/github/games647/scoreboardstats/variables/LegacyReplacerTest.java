@@ -28,10 +28,10 @@ public class LegacyReplacerTest {
        PowerMockito.mockStatic(Bukkit.class);
        Mockito.when(Bukkit.getPluginManager()).thenReturn(PowerMockito.mock(SimplePluginManager.class));
 
-       final Plugin plugin = PowerMockito.mock(Plugin.class);
+       Plugin plugin = PowerMockito.mock(Plugin.class);
        Mockito.when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
 
-       final ReplaceManager replaceManager = new ReplaceManager(null, plugin);
+       ReplaceManager replaceManager = new ReplaceManager(null, plugin);
        replaceManager.register(new Replaceable() {
 
            @Override

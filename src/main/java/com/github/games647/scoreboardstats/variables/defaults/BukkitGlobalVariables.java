@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.TicksPerSecondTask;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,7 +17,7 @@ import org.bukkit.util.NumberConversions;
  * Replace all Bukkit variables which are the same for players. Currently
  * there is no good way to mark variables as global
  */
-public class BukkitGlobalVariables extends VariableReplaceAdapter<Plugin> implements Listener {
+public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private final ReplaceManager replaceManager;
 

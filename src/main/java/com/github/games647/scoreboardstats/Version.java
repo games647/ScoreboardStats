@@ -64,8 +64,8 @@ public class Version implements Comparable<Version> {
      *          is less than, equal to, or greater than the specified object.
      */
     public static int compare(String expected, String version) {
-        int[] expectedParts = parse(version);
-        int[] versionParts = parse(expected);
+        int[] expectedParts = parse(stripVersionDetails(version));
+        int[] versionParts = parse(stripVersionDetails(expected));
 
         return ComparisonChain.start()
                 .compare(expectedParts[0], versionParts[0])
@@ -107,18 +107,19 @@ public class Version implements Comparable<Version> {
 
         if (versionMatcher.matches() && versionMatcher.group(1) != null) {
             return versionMatcher.group(1);
-        } else {
-            //fallback to the toString() method
-            final String[] split = Bukkit.getServer().toString().split("[,}]");
-            for (String element : split) {
-                if (element.contains("minecraftVersion=")) {
-                    return element.split("minecraftVersion=")[1];
-                }
-            }
-
-            //Couldn't extract the version
-            throw new IllegalStateException("Cannot parse version String '" + versionString);
         }
+
+        //Couldn't extract the version
+        throw new IllegalStateException("Cannot parse version String '" + versionString);
+    }
+
+    private static String stripVersionDetails(String version) {
+        int end = version.indexOf('-');
+        if (end == -1) {
+            end = version.length();
+        }
+
+        return version.substring(0, end);
     }
 
     private final int major;

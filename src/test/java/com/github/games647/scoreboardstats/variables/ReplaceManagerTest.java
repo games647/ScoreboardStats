@@ -25,13 +25,12 @@ public class ReplaceManagerTest {
         PowerMockito.mockStatic(Bukkit.class);
         Mockito.when(Bukkit.getPluginManager()).thenReturn(PowerMockito.mock(SimplePluginManager.class));
 
-        final Plugin plugin = PowerMockito.mock(Plugin.class);
+        Plugin plugin = PowerMockito.mock(Plugin.class);
         Mockito.when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
 
-        final ReplaceManager replaceManager = new ReplaceManager(null, plugin);
+        ReplaceManager replaceManager = new ReplaceManager(null, plugin);
 
         testLegacy(replaceManager);
-        testInterface(replaceManager, plugin);
         testAbstract(plugin, replaceManager);
     }
 
@@ -48,18 +47,6 @@ public class ReplaceManagerTest {
         Assert.assertTrue(replaceManager.unregister(replaceAdapter));
     }
 
-    private void testInterface(ReplaceManager replaceManager, Plugin plugin) {
-        VariableReplacer replacerInterface = new VariableReplacer() {
-
-            @Override
-            public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-                throw new UnsupportedOperationException("Not supported yet");
-            }
-        };
-        replaceManager.register(replacerInterface, plugin, SAMPLE_VARIABLE);
-        Assert.assertTrue(replaceManager.unregister(replacerInterface));
-    }
-
     @SuppressWarnings("deprecation")
     private void testLegacy(ReplaceManager replaceManager) {
         Replaceable legacyReplaceable = new Replaceable() {
@@ -69,7 +56,7 @@ public class ReplaceManagerTest {
                 throw new UnsupportedOperationException("Not supported yet");
             }
         };
-        final LegacyReplaceWrapper legacyWrapper = new LegacyReplaceWrapper(Bukkit
+        LegacyReplaceWrapper legacyWrapper = new LegacyReplaceWrapper(Bukkit
                 .getPluginManager().getPlugin("pluginName"), legacyReplaceable);
         legacyWrapper.getVariables().add(SAMPLE_VARIABLE);
         replaceManager.register(legacyWrapper);

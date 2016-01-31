@@ -1,9 +1,6 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
-import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
@@ -24,7 +21,7 @@ import org.bukkit.util.NumberConversions;
  * @see Clan
  * @see ClanManager
  */
-public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
+public class SimpleClansVariables extends DefaultReplaceAdapter<SimpleClans> {
 
     private final ClanManager clanManager;
 
@@ -37,12 +34,9 @@ public class SimpleClansVariables extends VariableReplaceAdapter<SimpleClans> {
                 , "members", "clan_kdr", "rivals", "allies"
                 , "clan_money", "clan_kills", "allies_total", "members_online");
 
-        String version = getPlugin().getDescription().getVersion();
-        if (Version.compare("2.5", version) >= 0) {
-            clanManager = getPlugin().getClanManager();
-        } else {
-            throw new UnsupportedPluginException("SimpleClans under version 2.5 are not supported");
-        }
+        checkVersionException("2.5");
+
+        clanManager = getPlugin().getClanManager();
     }
 
     @Override

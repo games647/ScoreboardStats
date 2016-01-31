@@ -40,15 +40,15 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     public void createScoreboard(Player player) {
-        final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
         }
 
         //Creates a new personal scoreboard and a new objective
-        final Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        final Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
+        Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+        Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTitle());
 
@@ -70,7 +70,7 @@ public class BukkitScoreboardManager extends SbManager {
     public void unregister(Player player) {
         if (player.isOnline()) {
             for (Objective objective : player.getScoreboard().getObjectives()) {
-                final String objectiveName = objective.getName();
+                String objectiveName = objective.getName();
                 if (objectiveName.startsWith(SB_NAME)) {
                     objective.unregister();
                 }
@@ -80,7 +80,7 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     public void onUpdate(Player player) {
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (objective == null) {
             //The player has no scoreboard so create one
             createScoreboard(player);
@@ -91,7 +91,7 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     public void createTopListScoreboard(Player player) {
-        final Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         if (!isValid(player) || oldObjective == null
                 || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
@@ -103,8 +103,8 @@ public class BukkitScoreboardManager extends SbManager {
             oldObjective.unregister();
         }
 
-        final Scoreboard board = player.getScoreboard();
-        final Objective objective = board.registerNewObjective(TEMP_SB_NAME, CRITERIA);
+        Scoreboard board = player.getScoreboard();
+        Objective objective = board.registerNewObjective(TEMP_SB_NAME, CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTempTitle());
 
@@ -119,7 +119,7 @@ public class BukkitScoreboardManager extends SbManager {
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
-            final String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
+            String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue(), true);
         }
 
@@ -129,9 +129,9 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     public void update(Player player, String itemName, int newScore) {
-        final Scoreboard scoreboard = player.getScoreboard();
+        Scoreboard scoreboard = player.getScoreboard();
         if (scoreboard != null) {
-            final Objective objective = scoreboard.getObjective(SB_NAME);
+            Objective objective = scoreboard.getObjective(SB_NAME);
             if (objective != null) {
                 sendScore(objective, itemName, newScore, false);
             }
@@ -140,17 +140,17 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     protected void sendUpdate(Player player, boolean complete) {
-        final Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+        Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         //don't override other scoreboards
         if (objective != null && SB_NAME.equals(objective.getName())) {
-            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            Iterator<Map.Entry<String, String>> iter = Settings.getItems();
             while (iter.hasNext()) {
-                final Map.Entry<String, String> entry = iter.next();
-                final String title = entry.getKey();
-                final String variable = entry.getValue();
+                Map.Entry<String, String> entry = iter.next();
+                String title = entry.getKey();
+                String variable = entry.getValue();
 
                 try {
-                    final ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
                     if (replaceEvent.isModified()) {
                         sendScore(objective, title, replaceEvent.getScore(), complete);
                     }
@@ -164,7 +164,7 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        final String scoreName = expandScore(title, objective);
+        String scoreName = expandScore(title, objective);
 
         Score score;
         if (oldBukkit) {
@@ -187,11 +187,11 @@ public class BukkitScoreboardManager extends SbManager {
 
     private String expandScore(String scoreName, Objective objective) {
         String cleanScoreName = scoreName;
-        final int titleLength = cleanScoreName.length();
+        int titleLength = cleanScoreName.length();
         if (titleLength > 16) {
-            final Scoreboard scoreboard = objective.getScoreboard();
+            Scoreboard scoreboard = objective.getScoreboard();
             //Could maybe cause conflicts but .substring could also make conflicts if they have the same beginning
-            final String teamId = String.valueOf(cleanScoreName.hashCode());
+            String teamId = String.valueOf(cleanScoreName.hashCode());
 
             Team team = scoreboard.getTeam(teamId);
             if (team == null) {

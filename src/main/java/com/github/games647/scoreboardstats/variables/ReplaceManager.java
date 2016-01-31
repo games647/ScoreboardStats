@@ -89,33 +89,6 @@ public class ReplaceManager implements Listener {
      * Register a new replacer
      *
      * @param replacer the variable replacer
-     * @param plugin the associated plugin
-     * @param variables all variables which this replacer can replace <b>without the variable identifiers (%)</b>
-     */
-    public void register(VariableReplacer replacer, Plugin plugin, String... variables) {
-        register(new ReplaceWrapper(replacer, plugin, variables));
-    }
-
-    /**
-     * Register a new replacer
-     *
-     * @param replacer the variable replacer
-     * @param global is the value the same for all players or does the replacer needs a specific player
-     * @param async is this plugin thread safe
-     * @param constant if the variable is updated based on events
-     * @param description description of all variables of this plugin
-     * @param plugin associated plugin instance
-     * @param variables to replaced variables <b>without the variable identifiers (%)</b>
-     */
-    public void register(VariableReplacer replacer, Plugin plugin
-            , String description, boolean global, boolean async, boolean constant, String... variables) {
-        register(new ReplaceWrapper(replacer, plugin, description, global, async, constant, variables));
-    }
-
-    /**
-     * Register a new replacer
-     *
-     * @param replacer the variable replacer
      */
     public void register(VariableReplaceAdapter<? extends Plugin> replacer) {
         for (String variable : replacer.getVariables()) {

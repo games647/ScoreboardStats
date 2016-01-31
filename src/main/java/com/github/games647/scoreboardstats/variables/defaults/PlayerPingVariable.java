@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 import com.google.common.collect.Lists;
 
 import java.lang.reflect.Field;
@@ -17,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Replace the ping variable.
  */
-public class PlayerPingVariable extends VariableReplaceAdapter<Plugin> {
+public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
 
     private Method getHandleMethod;
     private Field pingField;

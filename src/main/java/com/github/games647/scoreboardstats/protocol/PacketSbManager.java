@@ -51,7 +51,7 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void onUpdate(Player player) {
-        final Objective sidebar = getScoreboard(player).getSidebarObjective();
+        Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (sidebar == null) {
             createScoreboard(player);
         } else {
@@ -68,10 +68,10 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void unregister(Player player) {
-        final PlayerScoreboard scoreboard = scoreboards.get(player);
+        PlayerScoreboard scoreboard = scoreboards.get(player);
         if (scoreboard != null) {
             for (Objective objective : scoreboard.getObjectives()) {
-                final String objectiveName = objective.getName();
+                String objectiveName = objective.getName();
                 if (objectiveName.startsWith(SB_NAME)) {
                     objective.unregister();
                 }
@@ -81,8 +81,8 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void createScoreboard(Player player) {
-        final PlayerScoreboard scoreboard = getScoreboard(player);
-        final Objective oldObjective = scoreboard.getSidebarObjective();
+        PlayerScoreboard scoreboard = getScoreboard(player);
+        Objective oldObjective = scoreboard.getSidebarObjective();
         if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
@@ -97,8 +97,8 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void createTopListScoreboard(Player player) {
-        final PlayerScoreboard scoreboard = getScoreboard(player);
-        final Objective oldObjective = scoreboard.getSidebarObjective();
+        PlayerScoreboard scoreboard = getScoreboard(player);
+        Objective oldObjective = scoreboard.getSidebarObjective();
         if (!isValid(player) || oldObjective == null
                 || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
@@ -119,7 +119,7 @@ public class PacketSbManager extends SbManager {
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
-            final String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
+            String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue());
         }
 
@@ -129,9 +129,9 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void update(Player player, String itemName, int newScore) {
-        final PlayerScoreboard scoreboard = getScoreboard(player);
+        PlayerScoreboard scoreboard = getScoreboard(player);
         if (scoreboard != null) {
-            final Objective objective = scoreboard.getObjective(SB_NAME);
+            Objective objective = scoreboard.getObjective(SB_NAME);
             if (objective != null) {
                 sendScore(objective, itemName, newScore);
             }
@@ -140,16 +140,16 @@ public class PacketSbManager extends SbManager {
 
     @Override
     protected void sendUpdate(Player player, boolean complete) {
-        final Objective sidebar = getScoreboard(player).getSidebarObjective();
+        Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (SB_NAME.equals(sidebar.getName())) {
-            final Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            Iterator<Map.Entry<String, String>> iter = Settings.getItems();
             while (iter.hasNext()) {
-                final Map.Entry<String, String> entry = iter.next();
-                final String title = entry.getKey();
-                final String variable = entry.getValue();
+                Map.Entry<String, String> entry = iter.next();
+                String title = entry.getKey();
+                String variable = entry.getValue();
 
                 try {
-                    final ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
                     if (replaceEvent.isModified()) {
                         sendScore(sidebar, title, replaceEvent.getScore());
                     }
@@ -164,7 +164,7 @@ public class PacketSbManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value) {
-        final Item item = objective.getItem(title);
+        Item item = objective.getItem(title);
         if (item == null) {
             objective.registerItem(title, value);
         } else {

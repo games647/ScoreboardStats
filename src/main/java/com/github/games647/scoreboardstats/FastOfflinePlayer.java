@@ -114,7 +114,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public Map<String, Object> serialize() {
-        final Map<String, Object> result = Maps.newLinkedHashMap();
+        Map<String, Object> result = Maps.newLinkedHashMap();
 
         result.put("UUID", getUniqueId().toString());
         result.put("name", playerName);
@@ -134,7 +134,7 @@ public class FastOfflinePlayer implements OfflinePlayer {
             return false;
         }
 
-        final FastOfflinePlayer other = (FastOfflinePlayer) obj;
+        FastOfflinePlayer other = (FastOfflinePlayer) obj;
         return Objects.equal(playerName, other.playerName);
     }
 

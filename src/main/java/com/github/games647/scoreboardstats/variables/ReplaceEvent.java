@@ -26,7 +26,6 @@ public class ReplaceEvent {
     public ReplaceEvent(String variable, boolean textVariable, String displayText, int score) {
         this.variable = variable;
         this.textVariable = textVariable;
-        this.constant = constant;
         this.displayText = displayText;
         this.score = score;
     }
@@ -133,7 +132,7 @@ public class ReplaceEvent {
             //and we need the performance as the replace method is called often
             setDisplayText(StringUtils.replace(displayText, variable, replacedVariable, 1));
         } else {
-            final Integer parsedInt = Integer.getInteger(variable);
+            Integer parsedInt = Integer.getInteger(variable);
             if (parsedInt != null) {
                 setScore(parsedInt);
             }

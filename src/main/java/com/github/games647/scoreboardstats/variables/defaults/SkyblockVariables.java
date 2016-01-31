@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
-import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,7 +19,7 @@ import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
  *
  * http://dev.bukkit.org/bukkit-plugins/uskyblock/
  */
-public class SkyblockVariables extends VariableReplaceAdapter<uSkyBlockAPI> implements Listener {
+public class SkyblockVariables extends DefaultReplaceAdapter<uSkyBlockAPI> implements Listener {
 
     private static uSkyBlockAPI getCheckVersion(Plugin plugin) throws UnsupportedPluginException {
         if (plugin instanceof uSkyBlockAPI) {

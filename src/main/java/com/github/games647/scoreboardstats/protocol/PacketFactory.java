@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
@@ -31,8 +31,7 @@ public class PacketFactory {
      * @param state whether the item should be send as removed or created/updated
      */
     public static void sendPacket(Item item, State state) {
-        final PacketContainer scorePacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_SCORE, true);
+        PacketContainer scorePacket = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE, true);
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         scorePacket.getStrings().write(0, item.getScoreName());
         scorePacket.getStrings().write(1, item.getParent().getName());
@@ -43,14 +42,12 @@ public class PacketFactory {
         }
 
         //state id
-        final StructureModifier<Enum> enumModifier = scorePacket.getSpecificModifier(Enum.class);
-        final Enum<?> scoreboardActions = enumModifier.readSafely(0);
+        ScoreboardAction scoreboardActions = scorePacket.getScoreboardActions().readSafely(0);
         if (scoreboardActions == null) {
             //old system
             scorePacket.getIntegers().write(1, state.ordinal());
         } else {
-            final Enum action = scoreboardActions.getClass().getEnumConstants()[state.ordinal()];
-            enumModifier.write(0, action);
+            scorePacket.getScoreboardActions().write(0, ScoreboardAction.values()[state.ordinal()]);
         }
 
         try {
@@ -70,9 +67,8 @@ public class PacketFactory {
      * @param state whether the objective was created, updated (displayname) or removed
      */
     public static void sendPacket(Objective objective, State state) {
-        final PacketContainer objectivePacket = PROTOCOL_MANAGER
+        PacketContainer objectivePacket = PROTOCOL_MANAGER
                 .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
-//        max length 16 and since 1.7 UTF-8 instead of UTF-16
         objectivePacket.getStrings().write(0, objective.getName());
 
         if (state != State.REMOVE) {
@@ -102,7 +98,7 @@ public class PacketFactory {
      * @param objective the displayed objective, if getName() is empty it will just clear the sidebar
      */
     public static void sendDisplayPacket(Objective objective) {
-        final PacketContainer displayPacket = PROTOCOL_MANAGER
+        PacketContainer displayPacket = PROTOCOL_MANAGER
                 .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE, true);
         //Can be empty to clear the sidebar slot
         //max length 16 and since 1.7 UTF-8 instead of UTF-16

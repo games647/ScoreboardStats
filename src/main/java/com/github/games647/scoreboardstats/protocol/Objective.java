@@ -173,7 +173,7 @@ public class Objective {
 
         Preconditions.checkState(items.size() <= MAX_ITEM_SIZE);
 
-        final Item scoreItem = new Item(this, name, score, send);
+        Item scoreItem = new Item(this, name, score, send);
         items.put(name, scoreItem);
 
         return scoreItem;
@@ -196,7 +196,7 @@ public class Objective {
      * @return all items for this objective
      */
     public List<Item> getItems() {
-        final List<Item> values = Lists.newArrayList(items.values());
+        List<Item> values = Lists.newArrayList(items.values());
         Collections.sort(values);
         return ImmutableList.copyOf(values);
     }
@@ -217,7 +217,7 @@ public class Objective {
         //newer minecraft versions support longer names - TODO: version specific check
 //        Preconditions.checkArgument(name.length() <= 16, "a scoreboard item cannot be longer than 16 characters");
 
-        final Item item = items.remove(name);
+        Item item = items.remove(name);
         if (item != null) {
             item.unregister();
         }
@@ -266,7 +266,7 @@ public class Objective {
     public boolean equals(Object obj) {
         //ignores also null
         if (obj instanceof Objective) {
-            final Objective other = (Objective) obj;
+            Objective other = (Objective) obj;
             return Objects.equal(objectiveName, other.objectiveName);
         }
 
