@@ -19,12 +19,12 @@ public abstract class DefaultReplaceAdapter<P extends Plugin> extends VariableRe
 
     public boolean isNewer(String minVersion) {
         String version = getPlugin().getDescription().getVersion();
-        return Version.compare(version, minVersion) >= 0;
+        return Version.compare(minVersion, version) >= 0;
     }
 
     public void checkVersionException(String minVersion) {
         String version = getPlugin().getDescription().getVersion();
-        if (Version.compare(version, minVersion) < 0) {
+        if (Version.compare(minVersion, version) < 0) {
             throw new UnsupportedPluginException("You have an outdated version of " + getPlugin().getName()
                 + "Please update it");
         }
