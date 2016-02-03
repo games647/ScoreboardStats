@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.9.3-SNAPSHOT</version>
+    <version>0.9.4-SNAPSHOT</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -101,7 +101,17 @@
         <!--Vault and Heroes-->
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+        </repository>
+
+        <repository>
+            <id>heroes-repo</id>
+            <url>http://nexus.theyeticave.net/content/repositories/pub_snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>sonatype-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
 
         <!--ProtocolLib-->
@@ -179,7 +189,7 @@
         <dependency>
             <groupId>com.greatmancode</groupId>
             <artifactId>craftconomy3</artifactId>
-            <version>3.3</version>
+            <version>3.3.1-SNAPSHOT</version>
             <!--Exclude because the repo is down-->
             <exclusions>
                 <exclusion>
@@ -204,6 +214,10 @@
                 <exclusion>
                     <groupId>org.spigotmc</groupId>
                     <artifactId>spigot</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>me.desht</groupId>
+                    <artifactId>scrollingmenusign</artifactId>
                 </exclusion>
             </exclusions>
             <optional>true</optional>
