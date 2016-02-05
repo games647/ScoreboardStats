@@ -263,13 +263,6 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.drtshock</groupId>
-            <artifactId>Factions</artifactId>
-            <version>1.6.x-eb93c21</version>
-            <optional>true</optional>
-        </dependency>
-
         <!--dependencies in /lib-->
         <dependency>
             <groupId>BukkitGames</groupId>
