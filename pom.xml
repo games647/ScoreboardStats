@@ -132,6 +132,17 @@
             <id>simpleclans-repo</id>
             <url>http://107.170.92.11/artifactory/plugins-release-local</url>
         </repository>
+
+        <repository>
+            <id>uSkyBlock-mvn-repo</id>
+            <url>https://raw.github.com/rlf/uSkyBlock/mvn-repo/</url>
+        </repository>
+
+        <!--Github releases automatic maven repo-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -229,36 +240,37 @@
             <version>1.5.01-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
-        <!--dependencies in /lib-->
-
-        <!--stats on signs-->
-        <dependency>
-            <groupId>de.blablubbabc</groupId>
-            <artifactId>insigns</artifactId>
-            <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/IndividualSigns_v2.0.jar</systemPath>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>me.sirfaizdat.prison</groupId>
-            <artifactId>Prison</artifactId>
-            <version>2.1.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mcPrison-2.1.1.jar</systemPath>
-            <optional>true</optional>
-        </dependency>
 
         <dependency>
             <groupId>uSkyBlock</groupId>
             <artifactId>uSkyBlock</artifactId>
-            <version>2.1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/uSkyBlock-api.jar</systemPath>
+            <version>2.4.5</version>
             <optional>true</optional>
         </dependency>
 
+        <!--stats on signs-->
+        <dependency>
+            <groupId>com.github.blablubbabc</groupId>
+            <artifactId>IndividualSigns</artifactId>
+            <version>91ea396307</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.SirFaizdat</groupId>
+            <artifactId>Prison</artifactId>
+            <version>v2.1.6</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.drtshock</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.x-eb93c21</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!--dependencies in /lib-->
         <dependency>
             <groupId>BukkitGames</groupId>
             <artifactId>BukkitGames</artifactId>
