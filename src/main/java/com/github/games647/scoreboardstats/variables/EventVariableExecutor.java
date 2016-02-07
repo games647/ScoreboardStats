@@ -10,10 +10,14 @@ import org.bukkit.plugin.EventExecutor;
 
 public class EventVariableExecutor implements EventExecutor {
 
-    private final ScoreboardStats plugin;
+    protected final ScoreboardStats plugin;
+    protected final VariableReplacer replacer;
+    protected final String variable;
 
-    public EventVariableExecutor(ScoreboardStats plugin) {
+    public EventVariableExecutor(ScoreboardStats plugin, VariableReplacer replacer, String variable) {
         this.plugin = plugin;
+        this.replacer = replacer;
+        this.variable = variable;
     }
 
     @Override
@@ -21,7 +25,10 @@ public class EventVariableExecutor implements EventExecutor {
         Bukkit.getScheduler().runTask(plugin, new Runnable() {
             @Override
             public void run() {
-                //update by event
+                ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, "", 0);
+                replacer.onReplace(null, variable, replaceEvent);
+
+                plugin.getReplaceManager().updateScore(variable, replaceEvent.getScore());
             }
         });
     }

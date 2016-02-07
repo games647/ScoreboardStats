@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables;
 
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,31 +19,32 @@ import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * Tests if old replacers can still be registered and executed
  */
-@PrepareForTest({Bukkit.class, SimplePluginManager.class})
+@PrepareForTest({Bukkit.class, SimplePluginManager.class, Plugin.class, ScoreboardStats.class})
 @RunWith(PowerMockRunner.class)
 @SuppressWarnings("deprecation")
 public class LegacyReplacerTest {
 
-   @Test
-   public void getVariable() throws UnknownVariableException {
-       PowerMockito.mockStatic(Bukkit.class);
-       Mockito.when(Bukkit.getPluginManager()).thenReturn(PowerMockito.mock(SimplePluginManager.class));
+    @Test
+    public void getVariable() throws UnknownVariableException {
+        PowerMockito.mockStatic(Bukkit.class);
+        Mockito.when(Bukkit.getPluginManager()).thenReturn(PowerMockito.mock(SimplePluginManager.class));
 
-       Plugin plugin = PowerMockito.mock(Plugin.class);
-       Mockito.when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
+        ScoreboardStats plugin = PowerMockito.mock(ScoreboardStats.class);
+        PowerMockito.when(plugin.getLogger()).thenReturn(Logger.getGlobal());
+        Mockito.when(plugin.getLogger()).thenReturn(Logger.getAnonymousLogger());
 
-       ReplaceManager replaceManager = new ReplaceManager(null, plugin);
-       replaceManager.register(new Replaceable() {
+        ReplaceManager replaceManager = new ReplaceManager(null, plugin);
+        replaceManager.register(new Replaceable() {
 
-           @Override
-           public int getScoreValue(Player player, String variable) {
-               Logger.getAnonymousLogger().log(Level.INFO, "Replaced variable: {0}", variable);
-               Assert.assertTrue(variable.charAt(0) == '%');
-               Assert.assertTrue(variable.endsWith("%"));
-               return 0;
-           }
-       }, "pluginName");
+            @Override
+            public int getScoreValue(Player player, String variable) {
+                Logger.getAnonymousLogger().log(Level.INFO, "Replaced variable: {0}", variable);
+                Assert.assertTrue(variable.charAt(0) == '%');
+                Assert.assertTrue(variable.endsWith("%"));
+                return 0;
+            }
+        }, "pluginName");
 
-       replaceManager.getScore(null, "variableName", "test", -1, true);
-   }
+        replaceManager.getScore(null, "variableName", "test", -1, true);
+    }
 }

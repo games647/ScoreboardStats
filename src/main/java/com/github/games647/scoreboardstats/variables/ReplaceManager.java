@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.variables;
 import com.github.games647.scoreboardstats.variables.defaults.*;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -16,6 +17,8 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -57,7 +60,7 @@ public class ReplaceManager implements Listener {
     private final Map<String, VariableReplaceAdapter<?>> globals = Maps.newHashMap();
     private final Map<String, VariableReplaceAdapter<?>> specificReplacer = Maps.newHashMap();
 
-    private final Plugin plugin;
+    private final ScoreboardStats plugin;
     private final SbManager sbManager;
 
     /**
@@ -66,7 +69,7 @@ public class ReplaceManager implements Listener {
      * @param scoreboardManager to manage the scoreboards
      * @param plugin ScoreboardStats plugin
      */
-    public ReplaceManager(SbManager scoreboardManager, Plugin plugin) {
+    public ReplaceManager(SbManager scoreboardManager, ScoreboardStats plugin) {
         this.plugin = plugin;
         this.sbManager = scoreboardManager;
 
@@ -180,6 +183,13 @@ public class ReplaceManager implements Listener {
         }
 
         return found;
+    }
+
+    public void addUpdateOnEvent(VariableReplacer replacer, Plugin plugin
+            , String variable, Class<? extends Event> eventClass) {
+        EventVariableExecutor eventVariableExecutor = new EventVariableExecutor(this.plugin, replacer, variable);
+        Bukkit.getPluginManager().registerEvent(eventClass, new Listener() {}, EventPriority.MONITOR
+                , eventVariableExecutor, plugin, true);
     }
 
     /**

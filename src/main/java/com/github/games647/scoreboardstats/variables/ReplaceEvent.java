@@ -62,6 +62,7 @@ public class ReplaceEvent {
      *
      * @param constant whether it will be update with an event handler
      */
+    @Deprecated
     public void setConstant(boolean constant) {
         this.constant = constant;
     }
