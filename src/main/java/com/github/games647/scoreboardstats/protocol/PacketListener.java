@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -65,14 +64,15 @@ public class PacketListener extends PacketAdapter {
         int score = packet.getIntegers().read(0);
 
         //state id
-        ScoreboardAction scoreboardActions = packet.getScoreboardActions().readSafely(0);
+        Integer stateId = packet.getIntegers().readSafely(1);
 
         State action;
-        if (scoreboardActions == null) {
-            //old system
-            action = State.fromId(packet.getIntegers().read(1));
+        if (stateId == null) {
+            //an enum is used instead of an integer
+            action = State.fromId(packet.getScoreboardActions().read(0).ordinal());
         } else {
-            action = State.fromId(scoreboardActions.ordinal());
+            //old system no enum -> 1.5-1.7
+            action = State.fromId(stateId);
         }
 
         //Packet receiving validation

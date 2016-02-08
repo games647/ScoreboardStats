@@ -246,6 +246,12 @@
             <artifactId>uSkyBlock</artifactId>
             <version>2.4.5</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--stats on signs-->

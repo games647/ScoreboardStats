@@ -42,12 +42,13 @@ public class PacketFactory {
         }
 
         //state id
-        ScoreboardAction scoreboardActions = scorePacket.getScoreboardActions().readSafely(0);
-        if (scoreboardActions == null) {
-            //old system
-            scorePacket.getIntegers().write(1, state.ordinal());
-        } else {
+        Integer stateId = scorePacket.getIntegers().readSafely(1);
+        if (stateId == null) {
+            //an enum is used instead of an integer
             scorePacket.getScoreboardActions().write(0, ScoreboardAction.values()[state.ordinal()]);
+        } else {
+            //old system -> no enum -> 1.5-1.7
+            scorePacket.getIntegers().write(1, state.ordinal());
         }
 
         try {
