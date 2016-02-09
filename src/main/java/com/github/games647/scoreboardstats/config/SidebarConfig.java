@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.config;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
+
 import org.bukkit.ChatColor;
 
 public class SidebarConfig {
@@ -25,8 +26,10 @@ public class SidebarConfig {
     }
 
     public void addItem(String displayName, int score) {
-        VariableItem variableItem = new VariableItem(false, null, displayName, score);
-        itemsByName.put(displayName, variableItem);
+        String colorName = ChatColor.translateAlternateColorCodes('&', displayName);
+
+        VariableItem variableItem = new VariableItem(false, null, colorName, score);
+        itemsByName.put(colorName, variableItem);
     }
 
     public void addVariableItem(boolean textVariable, String variable, String displayText, int defaultScore) {

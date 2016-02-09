@@ -1,7 +1,5 @@
 package com.github.games647.scoreboardstats.config;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class VariableItem {
 
     private final boolean textVariable;
@@ -19,7 +17,7 @@ public class VariableItem {
     public VariableItem(boolean textVariable, String variable, String displayText) {
         this.textVariable = textVariable;
         this.variable = variable;
-        this.displayText = ChatColor.translateAlternateColorCodes('&', displayText);
+        this.displayText = displayText;
     }
 
     public String getDisplayText() {

@@ -90,7 +90,7 @@ public class PacketSbManager extends SbManager {
         }
 
         Objective objective = scoreboard.createSidebarObjective(SB_NAME, Settings.getMainScoreboard().getTitle(), true);
-                Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByName().values().iterator();
+        Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByName().values().iterator();
         while (iter.hasNext()) {
             VariableItem scoreItem = iter.next();
 
@@ -108,7 +108,9 @@ public class PacketSbManager extends SbManager {
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
-                    Settings.getMainScoreboard().remove(scoreItem);
+                    iter.remove();
+                    Settings.getMainScoreboard().getItemsByVariable().remove(scoreItem.getVariable());
+
                     plugin.getLogger().info(Lang.get("unknownVariable", scoreItem));
                 }
             }
@@ -178,7 +180,8 @@ public class PacketSbManager extends SbManager {
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
-                    Settings.getMainScoreboard().remove(variableItem);
+                    iter.remove();
+                    Settings.getMainScoreboard().getItemsByName().remove(variableItem.getDisplayText());
 
                     plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
                 }
