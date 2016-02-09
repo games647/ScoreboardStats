@@ -1,5 +1,7 @@
-package com.github.games647.scoreboardstats;
+package com.github.games647.scoreboardstats.scoreboard.bukkit;
 
+import com.github.games647.scoreboardstats.SbManager;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
@@ -8,7 +10,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +17,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 /**
  * Managing the scoreboard access.
@@ -27,7 +27,7 @@ public class BukkitScoreboardManager extends SbManager {
 
     private static final String CRITERIA = "dummy";
 
-    private final boolean oldBukkit;
+    private final boolean oldBukkit = isOldScoreboardAPI();
 
     /**
      * Initialize scoreboard manager.
@@ -36,46 +36,65 @@ public class BukkitScoreboardManager extends SbManager {
      */
     public BukkitScoreboardManager(ScoreboardStats pluginInstance) {
         super(pluginInstance);
-
-        oldBukkit = isOldScoreboardAPI();
     }
 
     @Override
     public void createScoreboard(Player player) {
         Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        if (!isAllowed(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
         }
 
         //Creates a new personal scoreboard and a new objective
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(Settings.getMainScoreboard().getTitle());
 
         try {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
             //the player logged out - fail silently
-            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/
-            //CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
+            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
             return;
         }
 
-        sendUpdate(player, true);
+        Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.setDisplayName(Settings.getMainScoreboard().getTitle());
+
+        Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByName().values().iterator();
+        while (iter.hasNext()) {
+            VariableItem scoreItem = iter.next();
+
+            String displayText = scoreItem.getDisplayText();
+            int defScore = scoreItem.getScore();
+
+            String variable = scoreItem.getVariable();
+            if (variable == null) {
+                update(player, displayText, defScore);
+            } else {
+                try {
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, defScore, true);
+                    if (replaceEvent.isModified()) {
+                        sendScore(objective, displayText, replaceEvent.getScore(), true);
+                    }
+                } catch (UnknownVariableException ex) {
+                    //Remove the variable becaue we can't replace it
+                    Settings.getMainScoreboard().remove(scoreItem);
+                    plugin.getLogger().info(Lang.get("unknownVariable", scoreItem));
+                }
+            }
+        }
+
         //Schedule the next tempscoreboard show
         scheduleShowTask(player, true);
     }
 
     @Override
     public void unregister(Player player) {
-        if (player.isOnline()) {
-            for (Objective objective : player.getScoreboard().getObjectives()) {
-                String objectiveName = objective.getName();
-                if (objectiveName.startsWith(SB_NAME)) {
-                    objective.unregister();
-                }
+        for (Objective objective : player.getScoreboard().getObjectives()) {
+            String objectiveName = objective.getName();
+            if (objectiveName.startsWith(SB_NAME)) {
+                objective.unregister();
             }
         }
     }
@@ -87,15 +106,14 @@ public class BukkitScoreboardManager extends SbManager {
             //The player has no scoreboard so create one
             createScoreboard(player);
         } else {
-            sendUpdate(player, false);
+            sendUpdate(player);
         }
     }
 
     @Override
     public void createTopListScoreboard(Player player) {
         Objective oldObjective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-        if (!isValid(player) || oldObjective == null
-                || !oldObjective.getName().startsWith(SB_NAME)) {
+        if (!isAllowed(player) || oldObjective == null || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
             return;
         }
@@ -106,18 +124,10 @@ public class BukkitScoreboardManager extends SbManager {
         }
 
         Scoreboard board = player.getScoreboard();
+
         Objective objective = board.registerNewObjective(TEMP_SB_NAME, CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName(Settings.getTempTitle());
-
-        try {
-            player.setScoreboard(board);
-        } catch (IllegalStateException stateEx) {
-            //the player logged out - fail silently
-            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/
-            //CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
-            return;
-        }
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
@@ -141,25 +151,26 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     @Override
-    protected void sendUpdate(Player player, boolean complete) {
+    protected void sendUpdate(Player player) {
         Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         //don't override other scoreboards
         if (objective != null && SB_NAME.equals(objective.getName())) {
-            Iterator<Entry<String, VariableItem>> iter = Settings.getMainScoreboard().getItemsByVariable()
-                    .entrySet().iterator();
+            Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByVariable().values().iterator();
             while (iter.hasNext()) {
-                Entry<String, VariableItem> entry = iter.next();
-                String title = entry.getKey();
-                VariableItem variableItem = entry.getValue();
+                VariableItem variableItem = iter.next();
+
+                String variable = variableItem.getVariable();
+                String displayText = variableItem.getDisplayText();
+                int score = variableItem.getScore();
 
                 try {
-                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variableItem.getDisplayText(), title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, score, false);
                     if (replaceEvent.isModified()) {
-                        sendScore(objective, title, replaceEvent.getScore(), complete);
+                        sendScore(objective, displayText, replaceEvent.getScore(), false);
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
-                    iter.remove();
+                    Settings.getMainScoreboard().remove(variableItem);
                     plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
                 }
             }
@@ -167,14 +178,12 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        String scoreName = expandScore(title, objective);
-
         Score score;
         if (oldBukkit) {
             //Bukkit.getOfflinePlayer performance work around
-            score = objective.getScore(new FastOfflinePlayer(scoreName));
+            score = objective.getScore(new FastOfflinePlayer(title));
         } else {
-            score = objective.getScore(scoreName);
+            score = objective.getScore(title);
         }
 
         if (complete && value == 0) {
@@ -186,37 +195,6 @@ public class BukkitScoreboardManager extends SbManager {
         }
 
         score.setScore(value);
-    }
-
-    private String expandScore(String scoreName, Objective objective) {
-        String cleanScoreName = scoreName;
-        int titleLength = cleanScoreName.length();
-        if (titleLength > 16) {
-            Scoreboard scoreboard = objective.getScoreboard();
-            //Could maybe cause conflicts but .substring could also make conflicts if they have the same beginning
-            String teamId = String.valueOf(cleanScoreName.hashCode());
-
-            Team team = scoreboard.getTeam(teamId);
-            if (team == null) {
-                team = scoreboard.registerNewTeam(teamId);
-                team.setPrefix(cleanScoreName.substring(0, 16));
-                if (titleLength > 32) {
-                    //we already validated that this one can only be 48 characters long in the Settings class
-                    team.setSuffix(cleanScoreName.substring(32));
-                    cleanScoreName = cleanScoreName.substring(16, 32);
-                } else {
-                    cleanScoreName = cleanScoreName.substring(16);
-                }
-
-                team.setDisplayName(cleanScoreName);
-                //Bukkit.getOfflinePlayer performance work around
-                team.addPlayer(new FastOfflinePlayer(cleanScoreName));
-            } else {
-                cleanScoreName = team.getDisplayName();
-            }
-        }
-
-        return cleanScoreName;
     }
 
     private boolean isOldScoreboardAPI() {

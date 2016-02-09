@@ -1,4 +1,6 @@
-package com.github.games647.scoreboardstats;
+package com.github.games647.scoreboardstats.scoreboard;
+
+import com.github.games647.scoreboardstats.SbManager;
 
 import org.bukkit.entity.Player;
 

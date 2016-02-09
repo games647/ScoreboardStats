@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.protocol;
+package com.github.games647.scoreboardstats.scoreboard.protocol;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;

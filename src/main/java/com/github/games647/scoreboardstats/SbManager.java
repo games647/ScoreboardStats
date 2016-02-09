@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.scoreboard.DelayedShowTask;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import org.bukkit.Bukkit;
@@ -93,9 +94,8 @@ public abstract class SbManager {
      * Called if the scoreboard should be updated.
      *
      * @param player for who should the scoreboard be set.
-     * @param complete if the scoreboard was created
      */
-    protected abstract void sendUpdate(Player player, boolean complete);
+    protected abstract void sendUpdate(Player player);
 
     protected void scheduleShowTask(Player player, boolean action) {
         if (!Settings.isTempScoreboard()) {
@@ -120,8 +120,7 @@ public abstract class SbManager {
         return check;
     }
 
-    protected boolean isValid(Player player) {
-        return player.hasPermission(permission) && player.isOnline()
-                && Settings.isActiveWorld(player.getWorld().getName());
+    protected boolean isAllowed(Player player) {
+        return player.hasPermission(permission) && Settings.isActiveWorld(player.getWorld().getName());
     }
 }

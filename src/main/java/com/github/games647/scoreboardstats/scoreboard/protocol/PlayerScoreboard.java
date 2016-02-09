@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.protocol;
+package com.github.games647.scoreboardstats.scoreboard.protocol;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;

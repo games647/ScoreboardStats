@@ -4,6 +4,7 @@ import com.github.games647.scoreboardstats.config.Settings;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,10 +31,13 @@ public class PlayerListener implements Listener {
      * @param joinEvent the join event
      * @see com.github.games647.scoreboardstats.RefreshTask
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerJoin(PlayerJoinEvent joinEvent) {
-        //add it to the refresh queue
-        plugin.getRefreshTask().addToQueue(joinEvent.getPlayer());
+        Player player = joinEvent.getPlayer();
+        if (Settings.isActiveWorld(player.getWorld().getName())) {
+            //add it to the refresh queue
+            plugin.getRefreshTask().addToQueue(joinEvent.getPlayer());
+        }
     }
 
     /**
@@ -43,7 +47,7 @@ public class PlayerListener implements Listener {
      * @see com.github.games647.scoreboardstats.RefreshTask
      */
     //ignore cancelled events
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onWorldChange(PlayerChangedWorldEvent worldChange) {
         Player player = worldChange.getPlayer();
         //new world

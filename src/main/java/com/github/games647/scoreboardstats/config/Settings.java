@@ -3,10 +3,8 @@ package com.github.games647.scoreboardstats.config;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -218,34 +216,37 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     }
 
     private void loaditems(ConfigurationSection config) {
-        Map<String, VariableItem> itemsByVariable = mainScoreboard.getItemsByVariable();
         //clear all existing items
-        itemsByVariable.clear();
+        mainScoreboard.clear();
 
         //not implemented yet in compatibility mode
         int maxLength = compatibilityMode ? 16 : 48;
         for (String key : config.getKeys(false)) {
-            if (itemsByVariable.size() == 15) {
+            if (mainScoreboard.size() == 15) {
                 //Only 15 items per sidebar objective are allowed
                 plugin.getLogger().warning(Lang.get("tooManyItems"));
                 break;
             }
 
-            String displayName = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
+            String displayName = trimLength(key, maxLength);
             //Prevent case-sensitive mistakes
             String variable = config.getString(key).toLowerCase();
             if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
                 //% indicates a variable
                 variable = variable.replace("%", "");
-                VariableItem item = new VariableItem(false, variable, displayName);
-                itemsByVariable.put(variable, item);
+                mainScoreboard.addVariableItem(false, variable, displayName, 0);
             } else {
-                //Prevent user mistakes
-                plugin.getLogger().info(Lang.get("missingVariableSymbol", displayName));
+                try {
+                    int score = Integer.parseInt(variable);
+                    mainScoreboard.addItem(displayName, score);
+                } catch (NumberFormatException numberFormatException) {
+                    //Prevent user mistakes
+                    plugin.getLogger().info(Lang.get("missingVariableSymbol", displayName));
+                }
             }
         }
 
-        if (itemsByVariable.isEmpty()) {
+        if (mainScoreboard.size() == 0) {
             //It won't show up if there isn't at least one item
             plugin.getLogger().info(Lang.get("notEnoughItems", "scoreboard"));
         }

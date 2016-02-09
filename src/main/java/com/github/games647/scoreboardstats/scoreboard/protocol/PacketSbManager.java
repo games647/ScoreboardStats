@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.protocol;
+package com.github.games647.scoreboardstats.scoreboard.protocol;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.config.Lang;
@@ -11,7 +11,6 @@ import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
 import org.bukkit.entity.Player;
@@ -57,7 +56,7 @@ public class PacketSbManager extends SbManager {
         if (sidebar == null) {
             createScoreboard(player);
         } else {
-            sendUpdate(player, false);
+            sendUpdate(player);
         }
     }
 
@@ -85,13 +84,35 @@ public class PacketSbManager extends SbManager {
     public void createScoreboard(Player player) {
         PlayerScoreboard scoreboard = getScoreboard(player);
         Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isValid(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        if (!isAllowed(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
             //Check if another scoreboard is showing
             return;
         }
 
-        scoreboard.createSidebarObjective(SB_NAME, Settings.getMainScoreboard().getTitle(), true);
-        sendUpdate(player, true);
+        Objective objective = scoreboard.createSidebarObjective(SB_NAME, Settings.getMainScoreboard().getTitle(), true);
+                Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByName().values().iterator();
+        while (iter.hasNext()) {
+            VariableItem scoreItem = iter.next();
+
+            String displayText = scoreItem.getDisplayText();
+            int defScore = scoreItem.getScore();
+
+            String variable = scoreItem.getVariable();
+            if (variable == null) {
+                update(player, displayText, defScore);
+            } else {
+                try {
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, defScore, true);
+                    if (replaceEvent.isModified()) {
+                        sendScore(objective, displayText, replaceEvent.getScore());
+                    }
+                } catch (UnknownVariableException ex) {
+                    //Remove the variable becaue we can't replace it
+                    Settings.getMainScoreboard().remove(scoreItem);
+                    plugin.getLogger().info(Lang.get("unknownVariable", scoreItem));
+                }
+            }
+        }
 
         //Schedule the next tempscoreboard show
         scheduleShowTask(player, true);
@@ -101,7 +122,7 @@ public class PacketSbManager extends SbManager {
     public void createTopListScoreboard(Player player) {
         PlayerScoreboard scoreboard = getScoreboard(player);
         Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isValid(player) || oldObjective == null
+        if (!isAllowed(player) || oldObjective == null
                 || !oldObjective.getName().startsWith(SB_NAME)) {
             //Check if another scoreboard is showing
             return;
@@ -132,33 +153,32 @@ public class PacketSbManager extends SbManager {
     @Override
     public void update(Player player, String itemName, int newScore) {
         PlayerScoreboard scoreboard = getScoreboard(player);
-        if (scoreboard != null) {
-            Objective objective = scoreboard.getObjective(SB_NAME);
-            if (objective != null) {
-                sendScore(objective, itemName, newScore);
-            }
+        Objective objective = scoreboard.getObjective(SB_NAME);
+        if (objective != null) {
+            sendScore(objective, itemName, newScore);
         }
     }
 
     @Override
-    protected void sendUpdate(Player player, boolean complete) {
+    protected void sendUpdate(Player player) {
         Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (SB_NAME.equals(sidebar.getName())) {
-            Iterator<Entry<String, VariableItem>> iter = Settings.getMainScoreboard().getItemsByVariable()
-                    .entrySet().iterator();
+            Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByVariable().values().iterator();
             while (iter.hasNext()) {
-                Entry<String, VariableItem> entry = iter.next();
-                String title = entry.getKey();
-                VariableItem variableItem = entry.getValue();
+                VariableItem variableItem = iter.next();
+
+                String variable = variableItem.getVariable();
+                String displayText = variableItem.getDisplayText();
+                int score = variableItem.getScore();
 
                 try {
-                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variableItem.getDisplayText(), title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, score, false);
                     if (replaceEvent.isModified()) {
-                        sendScore(sidebar, title, replaceEvent.getScore());
+                        sendScore(sidebar, displayText, replaceEvent.getScore());
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
-                    iter.remove();
+                    Settings.getMainScoreboard().remove(variableItem);
 
                     plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
                 }

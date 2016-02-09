@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.protocol;
+package com.github.games647.scoreboardstats.scoreboard.protocol;
 
 /**
  * Represents the state of a scoreboard packet

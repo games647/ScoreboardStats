@@ -7,6 +7,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -32,7 +33,7 @@ public class StatsListener implements Listener {
      * @param joinEvent the join event
      * @see Database
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
         //removing old metadata which wasn't removed (which can lead to memory leaks)
@@ -48,7 +49,7 @@ public class StatsListener implements Listener {
      * @param quitEvent leave event
      * @see Database
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onQuit(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
 
@@ -63,7 +64,7 @@ public class StatsListener implements Listener {
      *
      * @param event the death event
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onMobDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         //killer is null if it's not a player

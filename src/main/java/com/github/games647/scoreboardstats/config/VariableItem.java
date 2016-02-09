@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats.config;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class VariableItem {
 
     private final boolean textVariable;
@@ -8,17 +10,16 @@ public class VariableItem {
     private String displayText;
     private int score;
 
-    public VariableItem(String displayText, int defaultScore, boolean textVariable, String variable) {
-        this.displayText = displayText;
+    public VariableItem(boolean textVariable, String variable, String displayText, int defaultScore) {
+        this(textVariable, variable, displayText);
+
         this.score = defaultScore;
-        this.textVariable = textVariable;
-        this.variable = variable;
     }
 
     public VariableItem(boolean textVariable, String variable, String displayText) {
         this.textVariable = textVariable;
         this.variable = variable;
-        this.displayText = displayText;
+        this.displayText = ChatColor.translateAlternateColorCodes('&', displayText);
     }
 
     public String getDisplayText() {

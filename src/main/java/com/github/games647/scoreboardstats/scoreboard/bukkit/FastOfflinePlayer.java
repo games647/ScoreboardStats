@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats;
+package com.github.games647.scoreboardstats.scoreboard.bukkit;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
