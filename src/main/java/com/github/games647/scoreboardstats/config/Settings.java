@@ -2,9 +2,7 @@ package com.github.games647.scoreboardstats.config;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +14,10 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class Settings extends CommentedYaml<ScoreboardStats> {
 
+    @ConfigNode(path = "pluginUpdate")
     private static boolean pluginUpdate;
+
+    @ConfigNode(path = "compatibilityMode")
     private static boolean compatibilityMode;
 
     @ConfigNode(path = "enable-pvpstats")
@@ -25,8 +26,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     @ConfigNode(path = "Temp-Scoreboard-enabled")
     private static boolean tempScoreboard;
 
-    @ConfigNode(path = "Scoreboard.Title")
-    private static String title;
+    private static SidebarConfig mainScoreboard;
 
     @ConfigNode(path = "Temp-Scoreboard.Title")
     private static String tempTitle;
@@ -38,7 +38,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     private static String topType;
 
     @ConfigNode(path = "Scoreboard.Update-delay")
-    private static int intervall;
+    private static int interval;
 
     @ConfigNode(path = "Temp-Scoreboard.Items")
     private static int topItems;
@@ -49,35 +49,13 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     @ConfigNode(path = "Temp-Scoreboard.Intervall-disappear")
     private static int tempDisapper;
 
-    //properly a memory leak
-    //Sidebar objective can't have more than 15 items
-    private static final Map<String, String> ITEMS = Maps.newHashMapWithExpectedSize(15);
-    private static final Map<String, String> ITEM_NAMES = Maps.newHashMapWithExpectedSize(15);
-
     private static Set<String> worlds;
+
+    @ConfigNode(path = "disabled-worlds-whitelist")
     private static transient boolean isWhitelist;
 
     /**
-     * Get an iterator of all items in the main scoreboard
-     *
-     * @return an iterator of the configurated items in the main scoreboard
-     */
-    public static Iterator<Map.Entry<String, String>> getItems() {
-        return ITEMS.entrySet().iterator();
-    }
-
-    /**
-     * Get the display name for the score item
-     *
-     * @param variable the variable
-     * @return the display name
-     */
-    public static String getItemName(String variable) {
-        return ITEM_NAMES.get(variable);
-    }
-
-    /**
-     * Check if a world is from ScoreboardStats ignored
+     * Check if a world is from ScoreboardStats active
      *
      * @param worldName the checked world
      * @return if the world is disabled
@@ -118,38 +96,18 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         return tempScoreboard;
     }
 
-    /**
-     * Check if update checking is enabled
-     *
-     * @return if update checking is enabled
-     */
     public static boolean isUpdateEnabled() {
         return pluginUpdate;
     }
 
-    /**
-     * Get the title of the main scoreboard
-     *
-     * @return the title of the main scoreboard
-     */
-    public static String getTitle() {
-        return title;
+    public static SidebarConfig getMainScoreboard() {
+        return mainScoreboard;
     }
 
-    /**
-     * Get the title of the temp-scoreboard
-     *
-     * @return the title of the temp-scoreboard
-     */
     public static String getTempTitle() {
         return tempTitle;
     }
 
-    /**
-     * Get the color for items in the temp-scoreboard
-     *
-     * @return the color for items in the temp-scoreboard
-     */
     public static String getTempColor() {
         return tempColor;
     }
@@ -168,8 +126,8 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
      *
      * @return the interval in which the items being refreshed.
      */
-    public static int getIntervall() {
-        return intervall;
+    public static int getInterval() {
+        return interval;
     }
 
     /**
@@ -218,11 +176,10 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         //This set only changes after another call to loadConfig so this set can be immutable
         worlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
 
-        isWhitelist = config.getBoolean("disabled-worlds-whitelist", false);
-
-        title = trimLength(title, 32);
         tempTitle = trimLength(tempTitle, 32);
 
+        String title = config.getString("Scoreboard.Title");
+        mainScoreboard = new SidebarConfig(trimLength(title, 32));
         //Load all normal scoreboard variables
         loaditems(config.getConfigurationSection("Scoreboard.Items"));
 
@@ -261,33 +218,34 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     }
 
     private void loaditems(ConfigurationSection config) {
+        Map<String, VariableItem> itemsByVariable = mainScoreboard.getItemsByVariable();
         //clear all existing items
-        ITEMS.clear();
+        itemsByVariable.clear();
 
         //not implemented yet in compatibility mode
         int maxLength = compatibilityMode ? 16 : 48;
         for (String key : config.getKeys(false)) {
-            if (ITEMS.size() == 16 - 1) {
+            if (itemsByVariable.size() == 15) {
                 //Only 15 items per sidebar objective are allowed
                 plugin.getLogger().warning(Lang.get("tooManyItems"));
                 break;
             }
 
-            String name = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
+            String displayName = ChatColor.translateAlternateColorCodes('&', trimLength(key, maxLength));
             //Prevent case-sensitive mistakes
             String variable = config.getString(key).toLowerCase();
             if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
                 //% indicates a variable
                 variable = variable.replace("%", "");
-                ITEMS.put(name, variable);
-                ITEM_NAMES.put(variable, name);
+                VariableItem item = new VariableItem(false, variable, displayName);
+                itemsByVariable.put(variable, item);
             } else {
                 //Prevent user mistakes
-                plugin.getLogger().info(Lang.get("missingVariableSymbol", name));
+                plugin.getLogger().info(Lang.get("missingVariableSymbol", displayName));
             }
         }
 
-        if (ITEMS.isEmpty()) {
+        if (itemsByVariable.isEmpty()) {
             //It won't show up if there isn't at least one item
             plugin.getLogger().info(Lang.get("notEnoughItems", "scoreboard"));
         }

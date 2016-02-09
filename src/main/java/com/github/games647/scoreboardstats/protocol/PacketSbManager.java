@@ -5,11 +5,13 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.WeakHashMap;
 
 import org.bukkit.entity.Player;
@@ -88,7 +90,7 @@ public class PacketSbManager extends SbManager {
             return;
         }
 
-        scoreboard.createSidebarObjective(SB_NAME, Settings.getTitle(), true);
+        scoreboard.createSidebarObjective(SB_NAME, Settings.getMainScoreboard().getTitle(), true);
         sendUpdate(player, true);
 
         //Schedule the next tempscoreboard show
@@ -142,14 +144,15 @@ public class PacketSbManager extends SbManager {
     protected void sendUpdate(Player player, boolean complete) {
         Objective sidebar = getScoreboard(player).getSidebarObjective();
         if (SB_NAME.equals(sidebar.getName())) {
-            Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            Iterator<Entry<String, VariableItem>> iter = Settings.getMainScoreboard().getItemsByVariable()
+                    .entrySet().iterator();
             while (iter.hasNext()) {
-                Map.Entry<String, String> entry = iter.next();
+                Entry<String, VariableItem> entry = iter.next();
                 String title = entry.getKey();
-                String variable = entry.getValue();
+                VariableItem variableItem = entry.getValue();
 
                 try {
-                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variableItem.getDisplayText(), title, 0, complete);
                     if (replaceEvent.isModified()) {
                         sendScore(sidebar, title, replaceEvent.getScore());
                     }
@@ -157,7 +160,7 @@ public class PacketSbManager extends SbManager {
                     //Remove the variable becaue we can't replace it
                     iter.remove();
 
-                    plugin.getLogger().info(Lang.get("unknownVariable", variable));
+                    plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
                 }
             }
         }

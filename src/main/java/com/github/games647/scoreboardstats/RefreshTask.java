@@ -24,7 +24,7 @@ public class RefreshTask implements Runnable {
     //Prevent duplicate entries and is faster than the delay queue
     private final Map<Player, MutableInt> queue = Maps.newHashMapWithExpectedSize(100);
 
-    private int nextGlobalUpdate = 20 * Settings.getIntervall();
+    private int nextGlobalUpdate = 20 * Settings.getInterval();
 
     /**
      * Initialize refresh task
@@ -52,7 +52,7 @@ public class RefreshTask implements Runnable {
                 } else if (remainingUpdates != 0) {
                     //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().onUpdate(player);
-                    remanigTicks.setValue(20 * Settings.getIntervall());
+                    remanigTicks.setValue(20 * Settings.getInterval());
                     remainingUpdates--;
                 }
             } else {
@@ -62,7 +62,7 @@ public class RefreshTask implements Runnable {
 
         nextGlobalUpdate--;
         if (nextGlobalUpdate == 0) {
-            nextGlobalUpdate = 20 * Settings.getIntervall();
+            nextGlobalUpdate = 20 * Settings.getInterval();
             //update globals
             plugin.getReplaceManager().updateGlobals();
         }
@@ -78,7 +78,7 @@ public class RefreshTask implements Runnable {
         boolean alreadyQueued = queue.containsKey(request);
         if (!alreadyQueued) {
             //check if it isn't already in the queue
-            queue.put(request, new MutableInt(20 * Settings.getIntervall()));
+            queue.put(request, new MutableInt(20 * Settings.getInterval()));
         }
 
         return !alreadyQueued;

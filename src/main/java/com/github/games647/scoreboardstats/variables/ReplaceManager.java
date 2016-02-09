@@ -5,6 +5,7 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.config.VariableItem;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -110,8 +111,7 @@ public class ReplaceManager implements Listener {
      * @param plugin associated plugin instance
      * @param variables to replaced variables <b>without the variable identifiers (%)</b>
      */
-    public void register(VariableReplacer replacer, Plugin plugin
-            , String description, boolean global, boolean async, boolean constant, String... variables) {
+    public void register(VariableReplacer replacer, Plugin plugin, String description, boolean global, boolean async, boolean constant, String... variables) {
         register(new ReplaceWrapper(replacer, plugin, description, global, async, constant, variables));
     }
 
@@ -185,31 +185,29 @@ public class ReplaceManager implements Listener {
         return found;
     }
 
-    public void addUpdateOnEvent(VariableReplacer replacer, Plugin plugin
-            , String variable, Class<? extends Event> eventClass) {
+    public void addUpdateOnEvent(VariableReplacer replacer, Plugin plugin, String variable, Class<? extends Event> eventClass) {
         EventVariableExecutor eventVariableExecutor = new EventVariableExecutor(this.plugin, replacer, variable);
-        Bukkit.getPluginManager().registerEvent(eventClass, new Listener() {}, EventPriority.MONITOR
-                , eventVariableExecutor, plugin, true);
+        Bukkit.getPluginManager()
+                .registerEvent(eventClass, new Listener() { }, EventPriority.MONITOR, eventVariableExecutor, plugin, true);
     }
 
     /**
-     * Notifies that a scoreboard value has changed. This should be called from an
-     * event listener.
+     * Notifies that a scoreboard value has changed. This should be called from an event listener.
      *
      * @param player who receives the update
      * @param variable what variable is going to be updated <b>without the variable identifier</b>
      * @param newScore what should be the new score
      */
     public void updateScore(Player player, String variable, int newScore) {
-        String itemName = Settings.getItemName(variable);
-        if (itemName != null) {
-            sbManager.update(player, itemName, newScore);
+        VariableItem variableItem = Settings.getMainScoreboard().getItemsByVariable().get(variable);
+        if (variableItem != null) {
+            sbManager.update(player, variableItem.getDisplayText(), newScore);
         }
     }
 
     /**
-     * Notifies that a scoreboard  value has changed. This should be called from an
-     * event listener. This method will update the variable for all players
+     * Notifies that a scoreboard value has changed. This should be called from an event listener. This method will
+     * update the variable for all players
      *
      * @param variable what variable is going to be updated
      * @param newScore what should be the new score
@@ -270,8 +268,12 @@ public class ReplaceManager implements Listener {
     public void updateGlobals() {
         for (Map.Entry<String, VariableReplaceAdapter<?>> entrySet : globals.entrySet()) {
             String variable = entrySet.getKey();
-            String displayName = Settings.getItemName(variable);
-            ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, displayName, -1);
+            VariableItem variableItem = Settings.getMainScoreboard().getItemsByVariable().get(variable);
+            if (variableItem == null) {
+                continue;
+            }
+
+            ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, variableItem.getDisplayText(), -1);
 
             VariableReplaceAdapter<? extends Plugin> globalReplacer = entrySet.getValue();
             globalReplacer.onReplace(null, variable, replaceEvent);
@@ -299,13 +301,13 @@ public class ReplaceManager implements Listener {
                     //If it's empty it's one of our replacers
                     replacerPlugin = plugin;
                 }
+
                 Bukkit.getPluginManager().registerEvents((Listener) instance, replacerPlugin);
             }
 
             return true;
         } catch (UnsupportedPluginException ex) {
-            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
-                    , replacerClass.getSimpleName(), ex.getMessage()));
+            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion", replacerClass.getSimpleName(), ex.getMessage()));
         } catch (Exception | LinkageError replacerException) {
             //only catch these throwables, because they could probably happend
             plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), replacerException);

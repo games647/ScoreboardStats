@@ -2,11 +2,13 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -50,7 +52,7 @@ public class BukkitScoreboardManager extends SbManager {
         Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective = board.registerNewObjective(SB_NAME, CRITERIA);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName(Settings.getTitle());
+        objective.setDisplayName(Settings.getMainScoreboard().getTitle());
 
         try {
             player.setScoreboard(board);
@@ -143,21 +145,22 @@ public class BukkitScoreboardManager extends SbManager {
         Objective objective = player.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
         //don't override other scoreboards
         if (objective != null && SB_NAME.equals(objective.getName())) {
-            Iterator<Map.Entry<String, String>> iter = Settings.getItems();
+            Iterator<Entry<String, VariableItem>> iter = Settings.getMainScoreboard().getItemsByVariable()
+                    .entrySet().iterator();
             while (iter.hasNext()) {
-                Map.Entry<String, String> entry = iter.next();
+                Entry<String, VariableItem> entry = iter.next();
                 String title = entry.getKey();
-                String variable = entry.getValue();
+                VariableItem variableItem = entry.getValue();
 
                 try {
-                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, title, 0, complete);
+                    ReplaceEvent replaceEvent = replaceManager.getScore(player, variableItem.getDisplayText(), title, 0, complete);
                     if (replaceEvent.isModified()) {
                         sendScore(objective, title, replaceEvent.getScore(), complete);
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable becaue we can't replace it
                     iter.remove();
-                    plugin.getLogger().info(Lang.get("unknownVariable", variable));
+                    plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
                 }
             }
         }
