@@ -33,8 +33,10 @@ public class SidebarConfig {
     }
 
     public void addVariableItem(boolean textVariable, String variable, String displayText, int defaultScore) {
-        VariableItem variableItem = new VariableItem(textVariable, variable, displayText, defaultScore);
-        itemsByName.put(displayText, variableItem);
+        String coloredDisplay = ChatColor.translateAlternateColorCodes('&', displayText);
+        
+        VariableItem variableItem = new VariableItem(textVariable, variable, coloredDisplay, defaultScore);
+        itemsByName.put(coloredDisplay, variableItem);
         itemsByVariable.put(variable, variableItem);
     }
 
