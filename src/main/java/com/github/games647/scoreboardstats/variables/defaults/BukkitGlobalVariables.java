@@ -48,11 +48,11 @@ public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> impleme
 
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent joinEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length + 1);
+        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length - 1);
+        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length);
     }
 }
