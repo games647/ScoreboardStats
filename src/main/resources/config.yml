@@ -1,6 +1,9 @@
 # Main configuration
 
-# Compatible mode with other plugins like HealthBar, ColoredTags, GhostPlayer or McCombatLevel
+# Compatible mode for other plugins like HealthBar, ColoredTags, GhostPlayer, McCombatLevel, etc. ......
+# or the vanilla scoreboard
+# In case you miss the log message: this option requires the plugin called ProtocolLib
+# This option will work around the Bukkit API and will send raw packets
 compatibilityMode: false
 
 # Should be the node disabled-worlds handled as whitelist or blacklist
@@ -19,6 +22,8 @@ Scoreboard:
     # Title: Type
     '&9Online': '%online%'
     '&9Money': '%money%'
+    # Your can choose your custom score here
+    '&aHello World': 1337
 
 # Let ScoreboardStats track stats (kills, deaths, mobkills, killstreak) You need no plugin for this
 enable-pvpstats: false

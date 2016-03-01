@@ -25,7 +25,7 @@ import org.json.simple.JSONValue;
  * You can find his project here: https://github.com/gravitylow/Updater/
  *
  * @author Gravity, games647
- * @version 2.2
+ * @version 2.3
  */
 public class Updater {
 

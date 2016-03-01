@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
+import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.TicksPerSecondTask;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
@@ -30,29 +31,29 @@ public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> impleme
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         if ("tps".equals(variable)) {
-            replaceEvent.setScore(NumberConversions.round(TicksPerSecondTask.getLastTicks()));
+            replaceEvent.setScoreOrText(NumberConversions.round(TicksPerSecondTask.getLastTicks()));
             return;
         }
 
         if ("online".equals(variable)) {
-            replaceEvent.setScore(Bukkit.getOnlinePlayers().length);
+            replaceEvent.setScoreOrText(BackwardsCompatibleUtil.getOnlinePlayers().size());
             replaceEvent.setConstant(true);
             return;
         }
 
         if ("max_player".equals(variable)) {
-            replaceEvent.setScore(Bukkit.getMaxPlayers());
+            replaceEvent.setScoreOrText(Bukkit.getMaxPlayers());
             replaceEvent.setConstant(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent joinEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length);
+        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().length);
+        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size());
     }
 }

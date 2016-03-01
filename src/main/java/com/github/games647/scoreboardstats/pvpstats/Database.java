@@ -4,6 +4,7 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
+import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
@@ -156,7 +157,7 @@ public class Database {
         try {
             plugin.getLogger().info(Lang.get("savingStats"));
             //If pvpstats are enabled save all stats that are in the cache
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
                 //maybe sql batch this
                 save(getCachedStats(player));
             }
@@ -168,7 +169,7 @@ public class Database {
             plugin.getLogger().log(Level.SEVERE, "Couldn't save the stats to the database", ex);
         } finally {
             //Make rally sure we remove all even on error
-            for (Player player : Bukkit.getOnlinePlayers()) {
+            for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
                 player.removeMetadata(METAKEY, plugin);
             }
         }
@@ -247,7 +248,7 @@ public class Database {
                 for (PlayerStats stats : getTopList("kills")) {
                     newToplist.put(stats.getPlayername(), stats.getKills());
                 }
-                
+
                 break;
         }
 

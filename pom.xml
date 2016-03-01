@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.9.6</version>
+    <version>1.0</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -48,7 +48,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.5.1</version>
                 <configuration>
                     <!--So many people still use Java 7 ;( http://mcstats.org/global/#Java+Version-->
                     <source>1.7</source>
@@ -150,19 +150,25 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <!--Compile with a low version, because the new getOnlinePlayers() won't be backwards compatibility.-->
-            <!--while the older version still exists-->
-            <version>1.7.9-R0.2</version>
+            <version>1.9-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
-        <!--This new version let us access to the new features in bukkit-->
+        <!--Let us access to the updated javadoc-->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <!--Name it different in order to work around that maven will always use the newest version-->
             <artifactId>spigot-api</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <version>1.9-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <!--We only want to access the new features with checked version compatibility-->
+            <!--but don't do it for libraries added in the new version-->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--Library for listening and sending Minecraft packets to workaround
@@ -198,7 +204,7 @@
         <dependency>
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
-            <version>2.5.5</version>
+            <version>2.5.6</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
