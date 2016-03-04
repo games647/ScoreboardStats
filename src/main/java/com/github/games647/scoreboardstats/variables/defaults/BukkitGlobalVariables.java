@@ -54,6 +54,6 @@ public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> impleme
 
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size());
+        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size() - 1);
     }
 }

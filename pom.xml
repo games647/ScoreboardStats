@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>1.0</version>
+    <version>0.9.8</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
