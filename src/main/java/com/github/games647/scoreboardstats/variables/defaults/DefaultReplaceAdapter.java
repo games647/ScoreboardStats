@@ -4,6 +4,9 @@ import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
 import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.plugin.Plugin;
 
 public abstract class DefaultReplaceAdapter<P extends Plugin> extends VariableReplaceAdapter<P> {
@@ -23,10 +26,15 @@ public abstract class DefaultReplaceAdapter<P extends Plugin> extends VariableRe
     }
 
     public void checkVersionException(String minVersion) {
-        String version = getPlugin().getDescription().getVersion();
-        if (Version.compare(minVersion, version) < 0) {
-            throw new UnsupportedPluginException("You have an outdated version of " + getPlugin().getName()
-                + "Please update it");
+        try {
+            if (!isNewer(minVersion)) {
+                throw new UnsupportedPluginException("You have an outdated version of " + getPlugin().getName()
+                        + "Please update it");
+            }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Logger.getLogger("ScoreboardStats").log(Level.INFO
+                    , "Failed to parse version for {0} - assumming your are using a recent version Reason: {1}",
+                    new Object[]{getPlugin(), illegalArgumentException.getMessage()});
         }
     }
 }
