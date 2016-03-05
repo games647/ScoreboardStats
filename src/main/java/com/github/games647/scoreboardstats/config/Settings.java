@@ -4,6 +4,7 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -12,10 +13,8 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class Settings extends CommentedYaml<ScoreboardStats> {
 
-    @ConfigNode(path = "pluginUpdate")
     private static boolean pluginUpdate;
 
-    @ConfigNode(path = "compatibilityMode")
     private static boolean compatibilityMode;
 
     @ConfigNode(path = "enable-pvpstats")
@@ -50,7 +49,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     private static Set<String> worlds;
 
     @ConfigNode(path = "disabled-worlds-whitelist")
-    private static transient boolean isWhitelist;
+    private static boolean isWhitelist;
 
     /**
      * Check if a world is from ScoreboardStats active
@@ -185,6 +184,8 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         tempScoreboard = tempScoreboard && pvpStats;
         topItems = checkItems(topItems);
         topType = topType.replace("%", "");
+
+        System.out.println("Whitelist " + isWhitelist);
     }
 
     private String trimLength(String check, int limit) {
@@ -229,15 +230,17 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
             }
 
             String displayName = trimLength(key, maxLength);
-            //Prevent case-sensitive mistakes
-            String variable = config.getString(key).toLowerCase();
-            if (variable.charAt(0) == '%' && variable.charAt(variable.length() - 1) == '%') {
-                //% indicates a variable
-                variable = variable.replace("%", "");
+            String value = config.getString(key);
+            if (displayName.contains("%")) {
+                String variable = "";
+//                mainScoreboard.addVariableItem(true, variable, displayName, value);
+            } else if (value.charAt(0) == '%' && value.charAt(value.length() - 1) == '%') {
+                //Prevent case-sensitive mistakes
+                String variable = value.replace("%", "").toLowerCase();
                 mainScoreboard.addVariableItem(false, variable, displayName, 0);
             } else {
                 try {
-                    int score = Integer.parseInt(variable);
+                    int score = Integer.parseInt(value);
                     mainScoreboard.addItem(displayName, score);
                 } catch (NumberFormatException numberFormatException) {
                     //Prevent user mistakes
@@ -262,7 +265,8 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
             }
         } else {
             //These plugins won't work without compatibilityMode, but do with it, so suggest it
-            String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player"};
+            String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player", "TablistPrefix"
+                     ,"ColoredPlayerNames", "PingTest"};
             for (String name : plugins) {
                 if (plugin.getServer().getPluginManager().getPlugin(name) == null) {
                     //just check if the plugin is available not if it's active
@@ -270,6 +274,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 }
 
                 //Found minimum one plugin. Inform the adminstrator
+                plugin.getLogger().log(Level.INFO, "Found plugin: {0}", name);
                 plugin.getLogger().info("You are using plugins that requires to activate compatibilityMode");
                 plugin.getLogger().info("Otherwise the plugins won't work");
                 plugin.getLogger().info("Enable it in the config of this plugin: compatibilityMode");
