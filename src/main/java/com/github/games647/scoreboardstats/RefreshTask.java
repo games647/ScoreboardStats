@@ -46,10 +46,7 @@ public class RefreshTask implements Runnable {
             Player player = entry.getKey();
             MutableInt remanigTicks = entry.getValue();
             if (remanigTicks.intValue() == 0) {
-                //We will check if the player is online and remove it from queue if not so we can prevent memory leaks
-                if (player == null || !player.isOnline()) {
-                    it.remove();
-                } else if (remainingUpdates != 0) {
+                if (remainingUpdates != 0) {
                     //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().onUpdate(player);
                     remanigTicks.setValue(20 * Settings.getInterval());

@@ -184,8 +184,6 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         tempScoreboard = tempScoreboard && pvpStats;
         topItems = checkItems(topItems);
         topType = topType.replace("%", "");
-
-        System.out.println("Whitelist " + isWhitelist);
     }
 
     private String trimLength(String check, int limit) {

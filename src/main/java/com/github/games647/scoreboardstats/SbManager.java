@@ -61,7 +61,7 @@ public abstract class SbManager {
      */
     public void registerAll() {
         boolean ispvpstats = Settings.isPvpStats();
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
             if (player.isOnline()) {
                 if (ispvpstats) {
                     //maybe batch this
@@ -78,7 +78,7 @@ public abstract class SbManager {
      * Clear the scoreboard for all players
      */
     public void unregisterAll() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
             unregister(player);
         }
     }

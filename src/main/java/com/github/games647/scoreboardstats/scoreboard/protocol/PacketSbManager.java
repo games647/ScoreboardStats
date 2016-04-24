@@ -8,10 +8,11 @@ import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
+import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ import org.bukkit.entity.Player;
  */
 public class PacketSbManager extends SbManager {
 
-    private final Map<Player, PlayerScoreboard> scoreboards = new WeakHashMap<>(50);
+    private final Map<UUID, PlayerScoreboard> scoreboards = Maps.newHashMapWithExpectedSize(50);
 
     /**
      * Creates a new scoreboard manager for the packet system.
@@ -40,11 +41,11 @@ public class PacketSbManager extends SbManager {
      * @return the scoreboard instance
      */
     public PlayerScoreboard getScoreboard(Player player) {
-        PlayerScoreboard scoreboard = scoreboards.get(player);
+        PlayerScoreboard scoreboard = scoreboards.get(player.getUniqueId());
         if (scoreboard == null) {
             //lazy loading due potenially performance issues
             scoreboard = new PlayerScoreboard(player);
-            scoreboards.put(player, scoreboard);
+            scoreboards.put(player.getUniqueId(), scoreboard);
         }
 
         return scoreboard;
@@ -69,8 +70,8 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void unregister(Player player) {
-        PlayerScoreboard scoreboard = scoreboards.get(player);
-        if (scoreboard != null) {
+        PlayerScoreboard scoreboard = scoreboards.remove(player.getUniqueId());
+        if (player.isOnline() && scoreboard != null) {
             for (Objective objective : scoreboard.getObjectives()) {
                 String objectiveName = objective.getName();
                 if (objectiveName.startsWith(SB_NAME)) {
