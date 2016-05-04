@@ -2,10 +2,7 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
 import com.avaje.ebean.EbeanServer;
-import com.github.games647.scoreboardstats.Updater.UpdateCallback;
-import com.github.games647.scoreboardstats.Updater.UpdateResult;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
@@ -119,21 +116,6 @@ public class ScoreboardStats extends JavaPlugin {
         //Load the config + needs to be initialised to get the configurated value for update-checking
         settings = new Settings(this);
         settings.loadConfig();
-
-        if (Settings.isUpdateEnabled()) {
-            //start this as early as possible, so it can run async in the background
-            new UpdaterFix(this, this.getFile(), true, new UpdateCallback() {
-
-                @Override
-                public void onFinish(Updater updater) {
-                    //This method will be performed on the main thread after the
-                    //update check finished so this won't block the main thread
-                    if (updater.getResult() == UpdateResult.SUCCESS) {
-                        getLogger().info(Lang.get("onUpdate"));
-                    }
-                }
-            });
-        }
 
         refreshTask = new RefreshTask(this);
 
