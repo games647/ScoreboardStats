@@ -13,8 +13,6 @@ import org.bukkit.configuration.ConfigurationSection;
  */
 public class Settings extends CommentedYaml<ScoreboardStats> {
 
-    private static boolean pluginUpdate;
-
     private static boolean compatibilityMode;
 
     @ConfigNode(path = "enable-pvpstats")
@@ -91,10 +89,6 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
      */
     public static boolean isTempScoreboard() {
         return tempScoreboard;
-    }
-
-    public static boolean isUpdateEnabled() {
-        return pluginUpdate;
     }
 
     public static SidebarConfig getMainScoreboard() {
