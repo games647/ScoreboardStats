@@ -130,7 +130,7 @@
         <!--Repo for simpleclans-->
         <repository>
             <id>simpleclans-repo</id>
-            <url>http://107.170.92.11/artifactory/plugins-release-local</url>
+            <url>http://104.236.246.108:8081/artifactory/plugins-release-local</url>
         </repository>
 
         <repository>
