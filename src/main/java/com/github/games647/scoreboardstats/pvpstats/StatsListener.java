@@ -92,6 +92,10 @@ public class StatsListener implements Listener {
         Player killed = deathEvent.getEntity();
         //killer is null if it's not a player
         Player killer = killed.getKiller();
+        if (killed.equals(killer)) {
+            return;
+        }
+
         if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld().getName())) {
             PlayerStats killedcache = database.getCachedStats(killed);
             if (killedcache != null) {
