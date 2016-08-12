@@ -258,7 +258,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         } else {
             //These plugins won't work without compatibilityMode, but do with it, so suggest it
             String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player", "TablistPrefix"
-                     ,"ColoredPlayerNames", "PingTest", "NovaGuilds"};
+                     ,"ColoredPlayerNames", "PingTest", "NovaGuilds", "sTablist"};
             for (String name : plugins) {
                 if (plugin.getServer().getPluginManager().getPlugin(name) == null) {
                     //just check if the plugin is available not if it's active
