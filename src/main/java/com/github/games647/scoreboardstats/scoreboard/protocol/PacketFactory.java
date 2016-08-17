@@ -8,7 +8,10 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
+import java.util.UUID;
 import java.util.logging.Logger;
+
+import org.bukkit.Bukkit;
 
 /**
  * Creates the specific packets and send it with help of ProtocolLib.
@@ -52,8 +55,9 @@ public class PacketFactory {
         }
 
         try {
+            UUID receiverId = item.getParent().getScoreboard().getOwner().getUniqueId();
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(item.getParent().getScoreboard().getOwner(), scorePacket, false);
+            PROTOCOL_MANAGER.sendServerPacket(Bukkit.getPlayer(receiverId), scorePacket, false);
         } catch (InvocationTargetException ex) {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
@@ -82,10 +86,10 @@ public class PacketFactory {
 
         //state id
         objectivePacket.getIntegers().write(0, state.ordinal());
-
         try {
+            UUID receiverId = objective.getScoreboard().getOwner().getUniqueId();
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(objective.getScoreboard().getOwner(), objectivePacket, false);
+            ProtocolLibrary.getProtocolManager().sendServerPacket(Bukkit.getPlayer(receiverId), objectivePacket, false);
             sendDisplayPacket(objective);
         } catch (InvocationTargetException ex) {
             //just log it for now.
@@ -106,10 +110,10 @@ public class PacketFactory {
         displayPacket.getStrings().write(0, objective.getName());
 
         displayPacket.getIntegers().write(0, SIDEBAR_SLOT);
-
         try {
+            UUID receiverId = objective.getScoreboard().getOwner().getUniqueId();
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(objective.getScoreboard().getOwner(), displayPacket, false);
+            PROTOCOL_MANAGER.sendServerPacket(Bukkit.getPlayer(receiverId), displayPacket, false);
         } catch (InvocationTargetException ex) {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
