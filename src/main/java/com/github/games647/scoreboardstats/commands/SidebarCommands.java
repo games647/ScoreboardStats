@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -64,15 +65,10 @@ public class SidebarCommands implements TabExecutor {
         String lastWord = args[args.length - 1];
         List<String> suggestion;
         if (args.length == 1) {
-            suggestion = Lists.newArrayList();
-            for (String subCommand : subCommands) {
-                if (StringUtil.startsWithIgnoreCase(subCommand, lastWord)) {
-                    suggestion.add(subCommand);
-                }
-            }
-
-            Collections.sort(suggestion, String.CASE_INSENSITIVE_ORDER);
-            return suggestion;
+            return subCommands.stream()
+                    .filter(subCommand -> StringUtil.startsWithIgnoreCase(subCommand, lastWord))
+                    .sorted(String.CASE_INSENSITIVE_ORDER)
+                    .collect(Collectors.toList());
         }
 
         String subCommand = args[0];

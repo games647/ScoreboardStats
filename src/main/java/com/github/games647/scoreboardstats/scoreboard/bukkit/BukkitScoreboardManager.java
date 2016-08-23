@@ -93,12 +93,8 @@ public class BukkitScoreboardManager extends SbManager {
 
     @Override
     public void unregister(Player player) {
-        for (Objective objective : player.getScoreboard().getObjectives()) {
-            String objectiveName = objective.getName();
-            if (objectiveName.startsWith(SB_NAME)) {
-                objective.unregister();
-            }
-        }
+        player.getScoreboard().getObjectives().stream()
+                .filter(obj -> obj.getName().startsWith(SB_NAME)).forEach(Objective::unregister);
     }
 
     @Override

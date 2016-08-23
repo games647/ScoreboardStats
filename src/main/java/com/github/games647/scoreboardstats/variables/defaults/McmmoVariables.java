@@ -7,10 +7,10 @@ import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
 import com.gmail.nossr50.util.player.UserManager;
-import com.google.common.collect.Lists;
-
-import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,14 +26,11 @@ import org.bukkit.plugin.Plugin;
 public class McmmoVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private static String[] getSkillVariables() {
-        List<String> skills = Lists.newArrayList();
-        for (SkillType type : SkillType.values()) {
-            String skillName = type.name().toLowerCase(Locale.ENGLISH);
-            skills.add(skillName);
-        }
+        Set<String> skills = Stream.of(SkillType.values()).map(SkillType::name)
+                .map(String::toLowerCase).collect(Collectors.toSet());
 
         skills.add("powlvl");
-        return skills.toArray(new String[skills.size()]);
+        return skills.stream().toArray(size -> new String[size]);
     }
 
     private final ReplaceManager replaceManager;

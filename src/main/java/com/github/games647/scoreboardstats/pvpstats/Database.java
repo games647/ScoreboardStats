@@ -9,12 +9,10 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.Collection;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -22,6 +20,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -160,12 +160,13 @@ public class Database {
     public void saveAll() {
         try {
             plugin.getLogger().info(Lang.get("savingStats"));
-            //If pvpstats are enabled save all stats that are in the cache
-            for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
-                //maybe sql batch this
-                save(getCachedStats(player));
-            }
 
+            //If pvpstats are enabled save all stats that are in the cache
+            List<PlayerStats> toSave = BackwardsCompatibleUtil.getOnlinePlayers().stream()
+                    .map(player -> getCachedStats(player))
+                    .collect(Collectors.toList());
+
+            ebeanConnection.save(toSave);
             executor.shutdown();
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
@@ -173,9 +174,8 @@ public class Database {
             plugin.getLogger().log(Level.SEVERE, "Couldn't save the stats to the database", ex);
         } finally {
             //Make rally sure we remove all even on error
-            for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
-                player.removeMetadata(METAKEY, plugin);
-            }
+            BackwardsCompatibleUtil.getOnlinePlayers().stream()
+                    .forEach(player -> player.removeMetadata(METAKEY, plugin));
         }
     }
 
@@ -219,16 +219,10 @@ public class Database {
 
             try {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();
-                List<PlayerStats> toSave = Lists.newArrayListWithCapacity(onlinePlayers.size());
 
-                for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
-                    PlayerStats stats = getCachedStats(player);
-                    if (stats == null) {
-                        continue;
-                    }
-
-                    toSave.add(stats);
-                }
+                List<PlayerStats> toSave = onlinePlayers.stream()
+                    .map(player -> getCachedStats(player))
+                    .collect(Collectors.toList());
                 
                 ebeanConnection.save(toSave);
             } catch (Exception ex) {
@@ -244,7 +238,7 @@ public class Database {
      *
      * @return a iterable of the entries
      */
-    public Iterable<Map.Entry<String, Integer>> getTop() {
+    public Collection<Map.Entry<String, Integer>> getTop() {
         synchronized (toplist) {
             return toplist.entrySet();
         }
@@ -255,24 +249,27 @@ public class Database {
      */
     public void updateTopList() {
         String type = Settings.getTopType();
-        Map<String, Integer> newToplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
+        Map<String, Integer> newToplist;
         switch (type) {
             case "killstreak":
-                for (PlayerStats stats : getTopList("killstreak")) {
-                    newToplist.put(stats.getPlayername(), stats.getKillstreak());
-                }
+                newToplist = getTopList("killstreak").collect(Collectors.toMap(
+                        stats -> stats.getPlayername(),
+                        stats -> stats.getKillstreak()
+                ));
 
                 break;
             case "mob":
-                for (PlayerStats stats : getTopList("mobkills")) {
-                    newToplist.put(stats.getPlayername(), stats.getMobkills());
-                }
+                newToplist = getTopList("mobkills").collect(Collectors.toMap(
+                        stats -> stats.getPlayername(),
+                        stats -> stats.getMobkills()
+                ));
 
                 break;
             default:
-                for (PlayerStats stats : getTopList("kills")) {
-                    newToplist.put(stats.getPlayername(), stats.getKills());
-                }
+                newToplist = getTopList("kills").collect(Collectors.toMap(
+                        stats -> stats.getPlayername(),
+                        stats -> stats.getKills()
+                ));
 
                 break;
         }
@@ -284,9 +281,9 @@ public class Database {
         }
     }
 
-    private Iterable<PlayerStats> getTopList(String type) {
+    private Stream<PlayerStats> getTopList(String type) {
         if (ebeanConnection == null) {
-            return Collections.emptyList();
+            return Stream.empty();
         }
 
         return ebeanConnection.find(PlayerStats.class)
@@ -296,7 +293,7 @@ public class Database {
                 .setMaxRows(Settings.getTopitems())
                 //we won't use more of it at once
                 .setBufferFetchSizeHint(Settings.getTopitems())
-                .findList();
+                .findList().stream();
     }
 
     private void registerEvents() {

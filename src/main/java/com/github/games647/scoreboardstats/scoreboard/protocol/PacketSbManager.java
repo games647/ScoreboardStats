@@ -72,12 +72,9 @@ public class PacketSbManager extends SbManager {
     public void unregister(Player player) {
         PlayerScoreboard scoreboard = scoreboards.remove(player.getUniqueId());
         if (player.isOnline() && scoreboard != null) {
-            for (Objective objective : scoreboard.getObjectives()) {
-                String objectiveName = objective.getName();
-                if (objectiveName.startsWith(SB_NAME)) {
-                    objective.unregister();
-                }
-            }
+            scoreboard.getObjectives().stream()
+                    .filter(obj -> obj.getName().startsWith(SB_NAME))
+                    .forEach(Objective::unregister);
         }
     }
 

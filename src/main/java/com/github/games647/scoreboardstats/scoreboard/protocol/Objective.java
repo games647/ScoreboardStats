@@ -231,10 +231,7 @@ public class Objective {
     public void clearItems() throws IllegalStateException {
         Preconditions.checkState(exists(), "the client doesn't know this objective");
 
-        for (Item item : items.values()) {
-            item.unregister();
-        }
-
+        items.values().forEach(Item::unregister);
         items.clear();
     }
 

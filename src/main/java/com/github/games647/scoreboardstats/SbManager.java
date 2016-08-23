@@ -78,9 +78,7 @@ public abstract class SbManager {
      * Clear the scoreboard for all players
      */
     public void unregisterAll() {
-        for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
-            unregister(player);
-        }
+        BackwardsCompatibleUtil.getOnlinePlayers().forEach(this::unregister);
     }
 
     /**
