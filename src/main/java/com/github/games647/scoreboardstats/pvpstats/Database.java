@@ -203,13 +203,7 @@ public class Database {
             ReloadFixLoader.setClassCache(true);
         }
 
-        executor.scheduleWithFixedDelay(new Runnable() {
-
-            @Override
-            public void run() {
-                updateTopList();
-            }
-        }, 0, 5, TimeUnit.MINUTES);
+        executor.scheduleWithFixedDelay(this::updateTopList, 0, 5, TimeUnit.MINUTES);
 
         registerEvents();
     }

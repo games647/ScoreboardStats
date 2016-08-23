@@ -40,9 +40,7 @@ public class RefreshTask implements Runnable {
         //let the players update smoother
         Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
         int remainingUpdates = getNextUpdates();
-        for (Iterator<Map.Entry<Player, MutableInt>> it = entrySet.iterator(); it.hasNext();) {
-            Map.Entry<Player, MutableInt> entry = it.next();
-
+        for (Map.Entry<Player, MutableInt> entry : entrySet) {
             Player player = entry.getKey();
             MutableInt remanigTicks = entry.getValue();
             if (remanigTicks.intValue() == 0) {
