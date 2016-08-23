@@ -35,6 +35,7 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         replaceEvent.setScoreOrText(playersCount);
+        replaceEvent.setConstant(true);
     }
 
     @Override

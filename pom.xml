@@ -50,7 +50,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <!--So many people still use Java 7 ;( http://mcstats.org/global/#Java+Version-->
                     <source>1.8</source>
                     <target>1.8</target>
                     <showWarnings>true</showWarnings>
@@ -143,6 +142,12 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+
+        <repository>
+            <id>bintray-tastybento-maven-repo</id>
+            <name>bintray</name>
+            <url>http://dl.bintray.com/tastybento/maven-repo</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -185,6 +190,12 @@
                 </exclusion>
             </exclusions>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wasteofplastic</groupId>
+            <artifactId>askyblock</artifactId>
+            <version>3.0.0.8</version>
         </dependency>
 
         <!--API for economy variables-->
