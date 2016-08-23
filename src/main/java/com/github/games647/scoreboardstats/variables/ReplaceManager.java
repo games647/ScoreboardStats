@@ -38,6 +38,7 @@ public class ReplaceManager implements Listener {
         tempMap.put(BukkitGlobalVariables.class, "");
         tempMap.put(GeneralVariables.class, "");
         tempMap.put(PlayerPingVariable.class, "");
+        tempMap.put(BungeeCordVariables.class, "");
 
         tempMap.put(VaultVariables.class, "Vault");
 
@@ -48,10 +49,13 @@ public class ReplaceManager implements Listener {
         tempMap.put(McPrisonVariables.class, "Prison");
         tempMap.put(BukkitGamesVariables.class, "BukkitGames");
         tempMap.put(CraftconomyVariables.class, "Craftconomy3");
+        tempMap.put(ASkyBlockVariables.class, "ASkyBlock");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         //factions will be automatically disabled if mcore isn't enabled
         tempMap.put(FactionsVariables.class, "Factions");
+
+        tempMap.put(PlaceHolderVariables.class, "PlaceholderAPI");
 
         //Prevent further modifications
         DEFAULTS = ImmutableMap.copyOf(tempMap);

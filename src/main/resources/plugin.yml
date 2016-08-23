@@ -16,6 +16,7 @@ softdepend:
     - ProtocolLib
     - InSigns
     # Variable dependencies
+    - PlaceholderAPI
     - mcMMO
     - Vault
     - SimpleClans
@@ -24,6 +25,7 @@ softdepend:
     - uSkyBlock
     - PlayerPoints
     - Craftconomy3
+    - ASkyBlock
 
 # Root commands to register automatically to Bukkit
 commands:
