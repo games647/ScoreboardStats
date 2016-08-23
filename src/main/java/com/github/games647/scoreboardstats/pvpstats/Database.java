@@ -9,12 +9,16 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.Collection;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -204,6 +208,33 @@ public class Database {
         }
 
         executor.scheduleWithFixedDelay(this::updateTopList, 0, 5, TimeUnit.MINUTES);
+
+        executor.scheduleWithFixedDelay(() -> {
+            if (ebeanConnection == null) {
+                return;
+            }
+
+            Future<Collection<? extends Player>> syncPlayers = Bukkit.getScheduler()
+                        .callSyncMethod(plugin, BackwardsCompatibleUtil::getOnlinePlayers);
+
+            try {
+                Collection<? extends Player> onlinePlayers = syncPlayers.get();
+                List<PlayerStats> toSave = Lists.newArrayListWithCapacity(onlinePlayers.size());
+
+                for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
+                    PlayerStats stats = getCachedStats(player);
+                    if (stats == null) {
+                        continue;
+                    }
+
+                    toSave.add(stats);
+                }
+                
+                ebeanConnection.save(toSave);
+            } catch (Exception ex) {
+                plugin.getLogger().log(Level.SEVERE, null, ex);
+            }
+        }, 0, 5, TimeUnit.MINUTES);
 
         registerEvents();
     }

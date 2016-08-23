@@ -143,10 +143,17 @@
             <url>https://jitpack.io</url>
         </repository>
 
+        <!--ASkyBlock-->
         <repository>
             <id>bintray-tastybento-maven-repo</id>
             <name>bintray</name>
             <url>http://dl.bintray.com/tastybento/maven-repo</url>
+        </repository>
+
+        <!--MyPet-->
+        <repository>
+            <id>mypet-repo</id>
+            <url>https://nexus.keyle.de/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -196,6 +203,12 @@
             <groupId>com.wasteofplastic</groupId>
             <artifactId>askyblock</artifactId>
             <version>3.0.0.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet</artifactId>
+            <version>2.2.4</version>
         </dependency>
 
         <!--API for economy variables-->
