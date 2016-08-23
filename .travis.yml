@@ -5,17 +5,9 @@ language: java
 
 script: mvn compile test -U
 
-# So many servers still have Java 7. So test if the code is Java 6 compatible.
-# http://mcstats.org/global/#Java+Version
-jdk: [openjdk7]
+jdk: [oraclejdk8]
 
 # if one build failed, exit testing
 matrix:
   fast_finish: true
-
-# Disable caching in order to get notified if there are some repo/dependency issues
-## Cache maven dependencies
-#sudo: false
-#cache:
-#  directories:
-#    - '$HOME/.m2/repository'
+  
