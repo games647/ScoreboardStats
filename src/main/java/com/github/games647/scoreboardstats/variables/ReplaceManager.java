@@ -39,6 +39,7 @@ public class ReplaceManager implements Listener {
         tempMap.put(GeneralVariables.class, "");
         tempMap.put(PlayerPingVariable.class, "");
         tempMap.put(BungeeCordVariables.class, "");
+        tempMap.put(VanishVariables.class, "");
 
         tempMap.put(VaultVariables.class, "Vault");
 
@@ -313,7 +314,7 @@ public class ReplaceManager implements Listener {
             plugin.getLogger().warning(Lang.get("unsupportedPluginVersion", replacerClass.getSimpleName(), ex.getMessage()));
         } catch (Exception | LinkageError replacerException) {
             //only catch these throwables, because they could probably happend
-            plugin.getLogger().log(Level.WARNING, Lang.get("noRegister"), replacerException);
+            plugin.getLogger().log(Level.WARNING, "Cannot register replacer", replacerException);
         }
 
         return false;
