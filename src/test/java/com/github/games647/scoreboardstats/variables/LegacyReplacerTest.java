@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.messaging.StandardMessenger;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,8 @@ public class LegacyReplacerTest {
     public void getVariable() throws UnknownVariableException {
         PowerMockito.mockStatic(Bukkit.class);
         Mockito.when(Bukkit.getPluginManager()).thenReturn(PowerMockito.mock(SimplePluginManager.class));
+        Mockito.when(Bukkit.getMessenger()).thenReturn(PowerMockito.mock(StandardMessenger.class));
+        Mockito.when(Bukkit.getScheduler()).thenReturn(PowerMockito.mock(BukkitScheduler.class));
 
         ScoreboardStats plugin = PowerMockito.mock(ScoreboardStats.class);
         PowerMockito.when(plugin.getLogger()).thenReturn(Logger.getGlobal());
