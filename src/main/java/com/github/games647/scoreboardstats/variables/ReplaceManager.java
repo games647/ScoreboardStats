@@ -39,7 +39,6 @@ public class ReplaceManager implements Listener {
         tempMap.put(GeneralVariables.class, "");
         tempMap.put(PlayerPingVariable.class, "");
         tempMap.put(BungeeCordVariables.class, "");
-        tempMap.put(VanishVariables.class, "");
 
         tempMap.put(VaultVariables.class, "Vault");
 
