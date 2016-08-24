@@ -50,6 +50,7 @@ public class ReplaceManager implements Listener {
         tempMap.put(BukkitGamesVariables.class, "BukkitGames");
         tempMap.put(CraftconomyVariables.class, "Craftconomy3");
         tempMap.put(ASkyBlockVariables.class, "ASkyBlock");
+        tempMap.put(MyPetVariables.class, "MyPet");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         //factions will be automatically disabled if mcore isn't enabled
