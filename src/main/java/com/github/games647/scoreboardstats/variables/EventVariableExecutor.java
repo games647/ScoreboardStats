@@ -24,22 +24,19 @@ public class EventVariableExecutor implements EventExecutor {
 
     @Override
     public void execute(Listener listener, final Event event) throws EventException {
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                Player eventPlayer = null;
-                if (event instanceof PlayerEvent) {
-                    eventPlayer = ((PlayerEvent) event).getPlayer();
-                }
-
-                ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, "", 0);
-                replacer.onReplace(eventPlayer, variable, replaceEvent);
-
-                if (eventPlayer == null) {
-                    plugin.getReplaceManager().updateScore(variable, replaceEvent.getScore());
-                } else {
-                    plugin.getReplaceManager().updateScore(eventPlayer, variable, replaceEvent.getScore());
-                }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player eventPlayer = null;
+            if (event instanceof PlayerEvent) {
+                eventPlayer = ((PlayerEvent) event).getPlayer();
+            }
+            
+            ReplaceEvent replaceEvent = new ReplaceEvent(variable, false, "", 0);
+            replacer.onReplace(eventPlayer, variable, replaceEvent);
+            
+            if (eventPlayer == null) {
+                plugin.getReplaceManager().updateScore(variable, replaceEvent.getScore());
+            } else {
+                plugin.getReplaceManager().updateScore(eventPlayer, variable, replaceEvent.getScore());
             }
         });
     }

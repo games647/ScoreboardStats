@@ -85,16 +85,13 @@ public class PacketListener extends PacketAdapter {
 
         //everything was read from the packet, so we don't need to access it anymore
         //we could now run a sync thread to sychronize with async packets
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                PlayerScoreboard scoreboard = manager.getScoreboard(player);
-                //scores actually only have two state id, because these
-                if (action == State.CREATE) {
-                    scoreboard.createOrUpdateScore(scoreName, parent, score);
-                } else if (action == State.REMOVE) {
-                    scoreboard.resetScore(scoreName);
-                }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            PlayerScoreboard scoreboard = manager.getScoreboard(player);
+            //scores actually only have two state id, because these
+            if (action == State.CREATE) {
+                scoreboard.createOrUpdateScore(scoreName, parent, score);
+            } else if (action == State.REMOVE) {
+                scoreboard.resetScore(scoreName);
             }
         });
     }
@@ -118,20 +115,17 @@ public class PacketListener extends PacketAdapter {
 
         //everything was read from the packet, so we don't need to access it anymore
         //we could now run a sync thread to sychronize with async packets
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                PlayerScoreboard scoreboard = manager.getScoreboard(player);
-                Objective objective = scoreboard.getObjective(objectiveName);
-                if (action == State.CREATE) {
-                    scoreboard.addObjective(objectiveName, displayName);
-                } else if (objective != null) {
-                    //Could cause a NPE at the client if the objective wasn't found
-                    if (action == State.REMOVE) {
-                        scoreboard.removeObjective(objectiveName);
-                    } else if (action == State.UPDATE_TITLE) {
-                        objective.setDisplayName(displayName, false);
-                    }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            PlayerScoreboard scoreboard = manager.getScoreboard(player);
+            Objective objective = scoreboard.getObjective(objectiveName);
+            if (action == State.CREATE) {
+                scoreboard.addObjective(objectiveName, displayName);
+            } else if (objective != null) {
+                //Could cause a NPE at the client if the objective wasn't found
+                if (action == State.REMOVE) {
+                    scoreboard.removeObjective(objectiveName);
+                } else if (action == State.UPDATE_TITLE) {
+                    objective.setDisplayName(displayName, false);
                 }
             }
         });
@@ -153,17 +147,14 @@ public class PacketListener extends PacketAdapter {
         }
 
         //we could now run a sync thread to sychronize with async packets
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                PlayerScoreboard scoreboard = manager.getScoreboard(player);
-                if (slot == DisplaySlot.SIDEBAR) {
-                    scoreboard.setSidebarObjective(objectiveName);
-                } else {
-                    Objective sidebarObjective = scoreboard.getSidebarObjective();
-                    if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
-                        scoreboard.clearSidebarObjective();
-                    }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            PlayerScoreboard scoreboard = manager.getScoreboard(player);
+            if (slot == DisplaySlot.SIDEBAR) {
+                scoreboard.setSidebarObjective(objectiveName);
+            } else {
+                Objective sidebarObjective = scoreboard.getSidebarObjective();
+                if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
+                    scoreboard.clearSidebarObjective();
                 }
             }
         });

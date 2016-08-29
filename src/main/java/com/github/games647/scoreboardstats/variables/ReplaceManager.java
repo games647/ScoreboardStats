@@ -219,7 +219,7 @@ public class ReplaceManager implements Listener {
      * @param newScore what should be the new score
      */
     public void updateScore(String variable, int newScore) {
-        BackwardsCompatibleUtil.getOnlinePlayers().forEach(pl -> updateScore(variable, newScore));
+        BackwardsCompatibleUtil.getOnlinePlayers().forEach(pl -> updateScore(pl, variable, newScore));
     }
 
     /**
