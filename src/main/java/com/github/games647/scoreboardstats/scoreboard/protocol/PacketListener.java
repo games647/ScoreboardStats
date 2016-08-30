@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -105,8 +104,6 @@ public class PacketListener extends PacketAdapter {
         final String displayName = packet.getStrings().read(1);
         final State action = State.fromId(packet.getIntegers().read(0));
 
-        System.out.println("RECEIVE DISPLAY " + new ReflectionToStringBuilder(packet.getHandle()));
-
         //Packet receiving validation
         if (objectiveName.length() > 16 || displayName.length() > 32) {
             //Invalid packet
@@ -134,8 +131,6 @@ public class PacketListener extends PacketAdapter {
     private void handleDisplayPacket(PacketEvent event) {
         final Player player = event.getPlayer();
         PacketContainer packet = event.getPacket();
-
-        System.out.println("RECEIVE DISPLAY " + new ReflectionToStringBuilder(packet.getHandle()));
 
         //Can be empty; if so it would just clear the slot
         final String objectiveName = packet.getStrings().read(0);
