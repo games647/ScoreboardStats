@@ -3,8 +3,10 @@ package com.github.games647.scoreboardstats.variables.defaults;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
+import com.wasteofplastic.askyblock.events.ChallengeCompleteEvent;
 import com.wasteofplastic.askyblock.events.IslandLevelEvent;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -20,15 +22,36 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
     private final ReplaceManager replaceManager;
 
     public ASkyBlockVariables(ReplaceManager replaceManager) {
-        super(Bukkit.getPluginManager().getPlugin("ASkyBlock"), "island_level");
+        super(Bukkit.getPluginManager().getPlugin("ASkyBlock")
+                , "island_level", "challenge_done", "challenge_incomplete", "challenge");
 
         this.replaceManager = replaceManager;
     }
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        replaceEvent.setScore(NumberConversions.round(skyBlockAPI.getIslandLevel(player.getUniqueId())));
         replaceEvent.setConstant(true);
+
+        if ("island_level".equals(variable)) {
+            replaceEvent.setScore(NumberConversions.round(skyBlockAPI.getIslandLevel(player.getUniqueId())));
+        } else if ("challenge_done".equals(variable)) {
+            Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
+            int completeChallenge = NumberConversions.toInt(challengeStatus.values().stream()
+                    .filter(complete -> complete)
+                    .count());
+            replaceEvent.setScore(completeChallenge);
+        } else if ("challenge_incomplete".equals(variable)) {
+            Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
+            int incomplete = NumberConversions.toInt(challengeStatus.values().stream()
+                    .filter(complete -> !complete)
+                    .count());
+            replaceEvent.setScore(incomplete);
+        } else {
+            Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
+            int allChallenges = NumberConversions.toInt(challengeStatus.values().stream()
+                    .count());
+            replaceEvent.setScore(allChallenges);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -40,5 +63,21 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
         }
 
         replaceManager.updateScore(receiver, "island_level", levelEvent.getLevel());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onChallengeComplete(ChallengeCompleteEvent completeEvent) {
+        Player player = completeEvent.getPlayer();
+
+        Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
+        int incomplete = NumberConversions.toInt(challengeStatus.values().stream()
+                .filter(complete -> !complete)
+                .count());
+        int completeChallenge = NumberConversions.toInt(challengeStatus.values().stream()
+                .filter(complete -> complete)
+                .count());
+
+        replaceManager.updateScore(player, "challenge_incomplete", incomplete);
+        replaceManager.updateScore(player, "challenge_done", completeChallenge);
     }
 }
