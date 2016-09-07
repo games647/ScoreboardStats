@@ -41,13 +41,8 @@ public class PacketSbManager extends SbManager {
      * @return the scoreboard instance
      */
     public PlayerScoreboard getScoreboard(Player player) {
-        PlayerScoreboard scoreboard = scoreboards.get(player.getUniqueId());
-        if (scoreboard == null) {
-            //lazy loading due potenially performance issues
-            scoreboard = new PlayerScoreboard(player);
-            scoreboards.put(player.getUniqueId(), scoreboard);
-        }
-
+        PlayerScoreboard scoreboard = scoreboards
+                .computeIfAbsent(player.getUniqueId(), (key) -> new PlayerScoreboard(player));
         return scoreboard;
     }
 

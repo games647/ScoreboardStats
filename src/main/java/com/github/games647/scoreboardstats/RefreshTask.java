@@ -3,9 +3,7 @@ package com.github.games647.scoreboardstats;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.Maps;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.bukkit.entity.Player;
@@ -38,9 +36,8 @@ public class RefreshTask implements Runnable {
     @Override
     public void run() {
         //let the players update smoother
-        Set<Map.Entry<Player, MutableInt>> entrySet = queue.entrySet();
         int remainingUpdates = getNextUpdates();
-        for (Map.Entry<Player, MutableInt> entry : entrySet) {
+        for (Map.Entry<Player, MutableInt> entry : queue.entrySet()) {
             Player player = entry.getKey();
             MutableInt remanigTicks = entry.getValue();
             if (remanigTicks.intValue() == 0) {

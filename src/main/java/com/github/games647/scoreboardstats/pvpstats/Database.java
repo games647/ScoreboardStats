@@ -139,7 +139,7 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void saveAsync(PlayerStats stats) {
-        executor.submit(new StatsSaver(stats, this));
+        executor.submit(() -> ebeanConnection.save(stats));
     }
 
     /**
@@ -163,7 +163,7 @@ public class Database {
 
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = BackwardsCompatibleUtil.getOnlinePlayers().stream()
-                    .map(player -> getCachedStats(player))
+                    .map(this::getCachedStats)
                     .collect(Collectors.toList());
 
             ebeanConnection.save(toSave);
@@ -221,7 +221,7 @@ public class Database {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();
 
                 List<PlayerStats> toSave = onlinePlayers.stream()
-                    .map(player -> getCachedStats(player))
+                    .map(this::getCachedStats)
                     .collect(Collectors.toList());
                 
                 ebeanConnection.save(toSave);
@@ -253,22 +253,22 @@ public class Database {
         switch (type) {
             case "killstreak":
                 newToplist = getTopList("killstreak").collect(Collectors.toMap(
-                        stats -> stats.getPlayername(),
-                        stats -> stats.getKillstreak()
+                        PlayerStats::getPlayername,
+                        PlayerStats::getKillstreak
                 ));
 
                 break;
             case "mob":
                 newToplist = getTopList("mobkills").collect(Collectors.toMap(
-                        stats -> stats.getPlayername(),
-                        stats -> stats.getMobkills()
+                        PlayerStats::getPlayername,
+                        PlayerStats::getMobkills
                 ));
 
                 break;
             default:
                 newToplist = getTopList("kills").collect(Collectors.toMap(
-                        stats -> stats.getPlayername(),
-                        stats -> stats.getKills()
+                        PlayerStats::getPlayername,
+                        PlayerStats::getKills
                 ));
 
                 break;

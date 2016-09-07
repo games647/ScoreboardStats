@@ -61,17 +61,16 @@ public abstract class SbManager {
      */
     public void registerAll() {
         boolean ispvpstats = Settings.isPvpStats();
-        for (Player player : BackwardsCompatibleUtil.getOnlinePlayers()) {
-            if (player.isOnline()) {
-                if (ispvpstats) {
-                    //maybe batch this
-                    player.removeMetadata("player_stats", plugin);
-                    plugin.getStatsDatabase().loadAccountAsync(player);
-                }
-
-                plugin.getRefreshTask().addToQueue(player);
+        //maybe batch this
+        BackwardsCompatibleUtil.getOnlinePlayers().stream().filter(Player::isOnline).forEach(player -> {
+            if (ispvpstats) {
+                //maybe batch this
+                player.removeMetadata("player_stats", plugin);
+                plugin.getStatsDatabase().loadAccountAsync(player);
             }
-        }
+
+            plugin.getRefreshTask().addToQueue(player);
+        });
     }
 
     /**

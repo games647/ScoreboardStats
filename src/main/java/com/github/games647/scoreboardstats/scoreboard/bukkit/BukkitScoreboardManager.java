@@ -9,7 +9,6 @@ import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -128,10 +127,10 @@ public class BukkitScoreboardManager extends SbManager {
         objective.setDisplayName(Settings.getTempTitle());
 
         //Colorize and send all elements
-        for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
+        plugin.getStatsDatabase().getTop().stream().forEach((entry) -> {
             String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue(), true);
-        }
+        });
 
         //schedule the next normal scoreboard show
         scheduleShowTask(player, false);

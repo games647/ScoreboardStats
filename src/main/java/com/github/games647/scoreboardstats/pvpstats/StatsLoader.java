@@ -5,9 +5,9 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import java.lang.ref.WeakReference;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * This class is used for loading the player stats.
@@ -50,23 +50,19 @@ public class StatsLoader implements Runnable {
                 stats.setUuid(player.getUniqueId());
             }
 
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    //possible not thread-safe, so reschedule it while setMetadata is thread-safe
-                    if (player.isOnline()) {
-                        //sets it only if the player is only
-                        player.setMetadata("player_stats", new FixedMetadataValue(plugin, stats));
-                        plugin.getReplaceManager().updateScore(player, "deaths", stats.getDeaths());
-                        plugin.getReplaceManager().updateScore(player, "kdr", stats.getKdr());
-                        plugin.getReplaceManager().updateScore(player, "kills", stats.getKills());
-                        plugin.getReplaceManager().updateScore(player, "killstreak", stats.getKillstreak());
-                        plugin.getReplaceManager().updateScore(player, "current_streak", stats.getLaststreak());
-                        plugin.getReplaceManager().updateScore(player, "mobkills", stats.getMobkills());
-                    }
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                //possible not thread-safe, so reschedule it while setMetadata is thread-safe
+                if (player.isOnline()) {
+                    //sets it only if the player is only
+                    player.setMetadata("player_stats", new FixedMetadataValue(plugin, stats));
+                    plugin.getReplaceManager().updateScore(player, "deaths", stats.getDeaths());
+                    plugin.getReplaceManager().updateScore(player, "kdr", stats.getKdr());
+                    plugin.getReplaceManager().updateScore(player, "kills", stats.getKills());
+                    plugin.getReplaceManager().updateScore(player, "killstreak", stats.getKillstreak());
+                    plugin.getReplaceManager().updateScore(player, "current_streak", stats.getLaststreak());
+                    plugin.getReplaceManager().updateScore(player, "mobkills", stats.getMobkills());
                 }
-            }.runTask(plugin);
+            });
         }
     }
 

@@ -36,7 +36,7 @@ public class PlaceHolderVariables extends DefaultReplaceAdapter<Plugin> {
             }
         }
 
-        return variables.stream().toArray(size -> new String[size]);
+        return variables.stream().toArray(String[]::new);
     }
 
     public PlaceHolderVariables() {

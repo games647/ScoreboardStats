@@ -129,9 +129,7 @@ public class PlayerScoreboard {
          * Very weird that minecraft always ignore the name of the parent objective and
          * will remove the score from the complete scoreboard
          */
-        for (Objective entry : objectivesByName.values()) {
-            entry.items.remove(scoreName);
-        }
+        objectivesByName.values().stream().forEach(entry -> entry.items.remove(scoreName));
     }
 
     protected void createOrUpdateScore(String scoreName, String parent, int score) {

@@ -1,12 +1,12 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
 import com.avaje.ebean.EbeanServer;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
+import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
+import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.google.common.collect.Lists;
 

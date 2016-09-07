@@ -7,6 +7,7 @@ import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelDownEvent;
 import com.gmail.nossr50.events.experience.McMMOPlayerLevelUpEvent;
 import com.gmail.nossr50.util.player.UserManager;
+
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class McmmoVariables extends DefaultReplaceAdapter<Plugin> implements Lis
                 .map(String::toLowerCase).collect(Collectors.toSet());
 
         skills.add("powlvl");
-        return skills.stream().toArray(size -> new String[size]);
+        return skills.stream().toArray(String[]::new);
     }
 
     private final ReplaceManager replaceManager;
