@@ -57,17 +57,17 @@ public class PacketListener extends PacketAdapter {
     }
 
     private void handleScorePacket(PacketEvent event) {
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
         PacketContainer packet = event.getPacket();
 
-        final String scoreName = packet.getStrings().read(0);
-        final String parent = packet.getStrings().read(1);
-        final int score = packet.getIntegers().read(0);
+        String scoreName = packet.getStrings().read(0);
+        String parent = packet.getStrings().read(1);
+        int score = packet.getIntegers().read(0);
 
         //state id
         Integer stateId = packet.getIntegers().readSafely(1);
 
-        final State action;
+        State action;
         if (stateId == null) {
             //an enum is used instead of an integer
             action = State.fromId(packet.getScoreboardActions().read(0).ordinal());
@@ -96,13 +96,13 @@ public class PacketListener extends PacketAdapter {
     }
 
     private void handleObjectivePacket(PacketEvent event) {
-        final Player player = event.getPlayer();
+        Player player = event.getPlayer();
         PacketContainer packet = event.getPacket();
 
-        final String objectiveName = packet.getStrings().read(0);
+        String objectiveName = packet.getStrings().read(0);
         //Can be empty
-        final String displayName = packet.getStrings().read(1);
-        final State action = State.fromId(packet.getIntegers().read(0));
+        String displayName = packet.getStrings().read(1);
+        State action = State.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
         if (objectiveName.length() > 16 || displayName.length() > 32) {
@@ -133,8 +133,8 @@ public class PacketListener extends PacketAdapter {
         PacketContainer packet = event.getPacket();
 
         //Can be empty; if so it would just clear the slot
-        final String objectiveName = packet.getStrings().read(0);
-        final DisplaySlot slot = SlotTransformer.fromId(packet.getIntegers().read(0));
+        String objectiveName = packet.getStrings().read(0);
+        DisplaySlot slot = SlotTransformer.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
         if (slot == null || objectiveName.length() > 16) {

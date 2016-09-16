@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
  * Represents a replacer to update display names or integer values of the
  * scoreboard.
  */
+@FunctionalInterface
 public interface VariableReplacer {
 
     /**

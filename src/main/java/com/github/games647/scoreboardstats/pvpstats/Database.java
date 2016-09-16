@@ -150,7 +150,13 @@ public class Database {
     public void save(PlayerStats stats) {
         if (stats != null && ebeanConnection != null) {
             //Save the stats to the database
-            ebeanConnection.save(stats);
+            if (stats.isSaved()) {
+                ebeanConnection.update(stats);
+            } else {
+                ebeanConnection.insert(stats);
+            }
+
+            stats.setSaved();
         }
     }
 
@@ -223,8 +229,11 @@ public class Database {
                 List<PlayerStats> toSave = onlinePlayers.stream()
                     .map(this::getCachedStats)
                     .collect(Collectors.toList());
-                
-                ebeanConnection.save(toSave);
+
+                toSave.stream().filter(stats -> !stats.isSaved()).forEach(ebeanConnection::insert);
+                toSave.stream().filter(PlayerStats::isSaved).forEach(ebeanConnection::update);
+
+                toSave.forEach(PlayerStats::setSaved);
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, null, ex);
             }

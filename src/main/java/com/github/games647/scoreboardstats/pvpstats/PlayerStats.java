@@ -72,6 +72,7 @@ public class PlayerStats {
     private Timestamp lastOnline;
 
     private transient int laststreak;
+    private transient boolean saved;
 
     /**
      * Get the auto incrementing id
@@ -275,6 +276,14 @@ public class PlayerStats {
         laststreak = 0;
         //triggers a change for ebean
         setDeaths(deaths + 1);
+    }
+
+    public boolean isSaved() {
+        return saved || id != 0;
+    }
+
+    public void setSaved() {
+        this.saved = true;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
-import com.github.games647.scoreboardstats.variables.defaults.*;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
+import com.github.games647.scoreboardstats.variables.defaults.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

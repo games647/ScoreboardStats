@@ -47,6 +47,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
                     .count());
             replaceEvent.setScore(incomplete);
         } else {
+            System.out.println("test");
             Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
             int allChallenges = NumberConversions.toInt(challengeStatus.values().stream()
                     .count());
