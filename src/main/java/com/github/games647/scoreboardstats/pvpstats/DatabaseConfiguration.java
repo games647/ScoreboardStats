@@ -10,7 +10,12 @@ import com.github.games647.scoreboardstats.Version;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.logging.Level;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -112,6 +117,9 @@ public class DatabaseConfiguration {
             config.setDriver(sqlSettingSection.getString("Driver"));
             config.setUrl(sqlSettingSection.getString("Url"));
 
+            String tablePrefix = sqlSettingSection.getString("tablePrefix", "");
+            setTablePrefix(tablePrefix);
+
             serverConfig.setDataSourceConfig(config);
         } else {
             //Create a new configuration based on the default settings form bukkit.yml
@@ -139,7 +147,6 @@ public class DatabaseConfiguration {
         }
 
         config.setWaitTimeoutMillis(sqlConfig.getInt("SQL-Settings.Timeout"));
-
         return config;
     }
 
@@ -149,5 +156,45 @@ public class DatabaseConfiguration {
         result = result.replaceAll("\\{NAME\\}", plugin.getDescription().getName().replaceAll("[^\\w-]", ""));
 
         return result;
+    }
+
+    private void setTablePrefix(String prefix) {
+        final Table oldAnnotation = PlayerStats.class.getAnnotation(Table.class);
+        Table newAnnotation = new Table() {
+            @Override
+            public String name() {
+                return prefix + '_' + oldAnnotation.name();
+            }
+
+            @Override
+            public String catalog() {
+                return "";
+            }
+
+            @Override
+            public String schema() {
+                return "";
+            }
+
+            @Override
+            public UniqueConstraint[] uniqueConstraints() {
+                return new UniqueConstraint[]{};
+            }
+
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return oldAnnotation.annotationType();
+            }
+        };
+
+        try {
+            Field field = Class.class.getDeclaredField("annotations");
+            field.setAccessible(true);
+
+            Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(Table.class);
+            annotations.put(Table.class, newAnnotation);
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.SEVERE, null, ex);
+        }
     }
 }

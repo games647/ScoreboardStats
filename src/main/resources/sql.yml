@@ -19,6 +19,7 @@ SQL-Settings:
   # Driver: 'com.mysql.jdbc.Driver'
   Url: 'jdbc:sqlite:{DIR}{NAME}.db'
   Timeout: 1000
+  tablePrefix: ''
 
 # This value is used for the pvpstats database. It's not used for the scoreboard features
 # If this value is true. The database will be searched by uuids.
