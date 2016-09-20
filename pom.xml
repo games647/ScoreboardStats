@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.9.11</version>
+    <version>0.9.12</version>
     <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -163,14 +163,6 @@
     </repositories>
 
     <dependencies>
-        <!--Server API-->
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.9-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!--Let us access to the updated javadoc-->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -339,6 +331,12 @@
                 </exclusion>
             </exclusions>
             <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.github.BigScary</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>-9ec0837038-1</version>
         </dependency>
 
         <!--dependencies in /lib-->

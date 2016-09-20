@@ -188,7 +188,7 @@ public class DatabaseConfiguration {
         };
 
         try {
-            Field field = Class.class.getDeclaredField("annotations");
+            Field field = PlayerStats.class.getDeclaredField("annotations");
             field.setAccessible(true);
 
             Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(Table.class);
