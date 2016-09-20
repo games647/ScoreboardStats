@@ -338,6 +338,12 @@
             <artifactId>GriefPrevention</artifactId>
             <version>-9ec0837038-1</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>McCombatLevel</artifactId>
+            <version>3ab946cf26</version>
+        </dependency>
 
         <!--dependencies in /lib-->
         <dependency>

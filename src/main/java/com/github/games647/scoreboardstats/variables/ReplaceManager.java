@@ -52,6 +52,7 @@ public class ReplaceManager implements Listener {
         tempMap.put(ASkyBlockVariables.class, "ASkyBlock");
         tempMap.put(MyPetVariables.class, "MyPet");
         tempMap.put(GriefPreventionVariables.class, "GriefPrevention");
+        tempMap.put(McCombatLevelVariables.class, "McCombatLevel");
 
         tempMap.put(SimpleClansVariables.class, "SimpleClans");
         //factions will be automatically disabled if mcore isn't enabled

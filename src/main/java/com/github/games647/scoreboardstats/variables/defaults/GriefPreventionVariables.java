@@ -10,14 +10,9 @@ import org.bukkit.entity.Player;
 
 public class GriefPreventionVariables extends DefaultReplaceAdapter<GriefPrevention> {
 
-    /**
-     * Creates a new vault replacer
-     */
     public GriefPreventionVariables() {
         super((GriefPrevention) Bukkit.getPluginManager().getPlugin("GriefPrevention")
                 , "accrued_claim_block", "bonus_claim_blocks", "group_bonus_blocks");
-
-
     }
 
     @Override
