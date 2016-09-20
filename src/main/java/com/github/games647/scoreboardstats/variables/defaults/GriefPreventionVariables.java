@@ -12,7 +12,7 @@ public class GriefPreventionVariables extends DefaultReplaceAdapter<GriefPrevent
 
     public GriefPreventionVariables() {
         super((GriefPrevention) Bukkit.getPluginManager().getPlugin("GriefPrevention")
-                , "accrued_claim_block", "bonus_claim_blocks", "group_bonus_blocks");
+                , "accrued_claim_block", "bonus_claim_blocks", "group_bonus_blocks", "remaining_blocks", "total_blocks");
     }
 
     @Override
@@ -21,6 +21,11 @@ public class GriefPreventionVariables extends DefaultReplaceAdapter<GriefPrevent
         if ("accrued_claim_block".equals(variable)) {
             replaceEvent.setScore(playerData.getAccruedClaimBlocks());
         } else if ("bonus_claim_blocks".equals(variable)) {
+            replaceEvent.setScore(playerData.getBonusClaimBlocks());
+        } else if ("remaining_blocks".equals(variable)) {
+            int totalBlocks = playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks();
+            replaceEvent.setScore(totalBlocks);
+        } else if ("total_blocks".equals(variable)) {
             replaceEvent.setScore(playerData.getBonusClaimBlocks());
         } else if ("group_bonus_blocks".equals(variable)) {
             replaceEvent.setScore(-1);
