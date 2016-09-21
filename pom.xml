@@ -334,9 +334,9 @@
         </dependency>
         
         <dependency>
-            <groupId>com.github.BigScary</groupId>
+            <groupId>com.github.TechFortress</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>-9ec0837038-1</version>
+            <version>5186739d3a</version>
         </dependency>
         
         <dependency>
