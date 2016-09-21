@@ -57,6 +57,7 @@ public class ReplaceManagerTest {
         Replaceable legacyReplaceable = (Player player, String variable) -> {
             throw new UnsupportedOperationException("Not supported yet");
         };
+
         LegacyReplaceWrapper legacyWrapper = new LegacyReplaceWrapper(Bukkit
                 .getPluginManager().getPlugin("pluginName"), legacyReplaceable);
         legacyWrapper.getVariables().add(SAMPLE_VARIABLE);

@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -118,6 +119,25 @@ public class PacketFactory {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
         }
+    }
+
+    public static void sendTeamPacket(Team team, State state) {
+        PacketContainer teamPacket = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM, true);
+        teamPacket.getStrings().write(0, team.getName());
+
+        if (state == State.CREATE) {
+            teamPacket.getStrings().write(2, team.getPrefix());
+            teamPacket.getStrings().write(3, team.getSuffix());
+
+            teamPacket.getSpecificModifier(Collection.class).write(0, team.getEntries());
+        } else if (state == State.REMOVE) {
+            //just write the teamName
+        } else if (state == State.UPDATE) {
+            teamPacket.getStrings().write(2, team.getPrefix());
+            teamPacket.getStrings().write(3, team.getSuffix());
+        }
+
+        teamPacket.getIntegers().write(1, state.ordinal());
     }
 
     private PacketFactory() {

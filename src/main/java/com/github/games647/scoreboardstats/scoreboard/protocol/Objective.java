@@ -114,7 +114,7 @@ public class Objective {
         if (!this.displayName.equals(displayName)) {
             this.displayName = displayName;
             if (send) {
-                PacketFactory.sendPacket(this, State.UPDATE_TITLE);
+                PacketFactory.sendPacket(this, State.UPDATE);
             }
         }
     }

@@ -20,7 +20,7 @@ public enum State {
     /**
      * The display name of the objective was changed
      */
-    UPDATE_TITLE;
+    UPDATE;
 
     /**
      * Get the enum from his id
