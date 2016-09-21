@@ -26,7 +26,8 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
     private Map<String, Integer> playersCount = Maps.newHashMap();
 
     public BungeeCordVariables(ReplaceManager replaceManager) {
-        super(null, "", true, false, true, "bungee-online", "bungee_*");
+        super(Bukkit.getPluginManager().getPlugin("ScoreboardStats"), "", true, false, true
+                , "bungee-online", "bungee_*");
 
         this.replaceManager = replaceManager;
         Bukkit.getMessenger().registerOutgoingPluginChannel(getPlugin(), BUNGEE_CHANNEL);
