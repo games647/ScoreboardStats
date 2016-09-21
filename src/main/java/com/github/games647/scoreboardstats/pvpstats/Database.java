@@ -15,6 +15,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -227,8 +228,9 @@ public class Database {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();
 
                 List<PlayerStats> toSave = onlinePlayers.stream()
-                    .map(this::getCachedStats)
-                    .collect(Collectors.toList());
+                        .map(this::getCachedStats)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
 
                 toSave.stream().filter(stats -> !stats.isSaved()).forEach(ebeanConnection::insert);
                 toSave.stream().filter(PlayerStats::isSaved).forEach(ebeanConnection::update);
