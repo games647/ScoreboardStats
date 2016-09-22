@@ -23,13 +23,12 @@ public class GriefPreventionVariables extends DefaultReplaceAdapter<GriefPrevent
         } else if ("bonus_claim_blocks".equals(variable)) {
             replaceEvent.setScore(playerData.getBonusClaimBlocks());
         } else if ("remaining_blocks".equals(variable)) {
-            int totalBlocks = playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks();
-            replaceEvent.setScore(totalBlocks);
+            replaceEvent.setScore(playerData.getRemainingClaimBlocks());
         } else if ("total_blocks".equals(variable)) {
-            replaceEvent.setScore(playerData.getBonusClaimBlocks());
+            int totalBlocks = playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks() + getPlugin().dataStore.getGroupBonusBlocks(player.getUniqueId());
+            replaceEvent.setScore(totalBlocks);
         } else if ("group_bonus_blocks".equals(variable)) {
-            replaceEvent.setScore(-1);
-//            replaceEvent.setScore(getPlugin().dataStore.getGroupBonusBlocks(player.getUniqueId()));
+            replaceEvent.setScore(getPlugin().dataStore.getGroupBonusBlocks(player.getUniqueId()));
         }
     }
 }
