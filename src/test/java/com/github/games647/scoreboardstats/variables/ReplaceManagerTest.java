@@ -54,8 +54,11 @@ public class ReplaceManagerTest {
 
     @SuppressWarnings("deprecation")
     private void testLegacy(ReplaceManager replaceManager) {
-        Replaceable legacyReplaceable = (Player player, String variable) -> {
-            throw new UnsupportedOperationException("Not supported yet");
+        Replaceable legacyReplaceable = new Replaceable() {
+            @Override
+            public int getScoreValue(Player player, String variable) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
 
         LegacyReplaceWrapper legacyWrapper = new LegacyReplaceWrapper(Bukkit
