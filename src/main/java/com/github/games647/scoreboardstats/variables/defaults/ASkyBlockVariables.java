@@ -23,7 +23,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
 
     public ASkyBlockVariables(ReplaceManager replaceManager) {
         super(Bukkit.getPluginManager().getPlugin("ASkyBlock")
-                , "island_level", "challenge_done", "challenge_incomplete", "challenge");
+                , "island_level", "challenge_done", "challenge_incomplete", "challenge_total", "challenge_unique");
 
         this.replaceManager = replaceManager;
     }
@@ -46,11 +46,17 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
                     .filter(complete -> !complete)
                     .count());
             replaceEvent.setScore(incomplete);
-        } else {
-            System.out.println("test");
-            Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
-            int allChallenges = NumberConversions.toInt(challengeStatus.values().stream()
+        } else if ("challenge_unique".equals(variable)) {
+            Map<String, Integer> challengeTimes = skyBlockAPI.getChallengeTimes(player.getUniqueId());
+            int unique = NumberConversions.toInt(challengeTimes.values().stream()
+                    .filter(times -> times > 0)
                     .count());
+            replaceEvent.setScore(unique);
+        } else {
+            Map<String, Integer> challengeTimes = skyBlockAPI.getChallengeTimes(player.getUniqueId());
+            int allChallenges = NumberConversions.toInt(challengeTimes.values().stream()
+                    .mapToInt(times -> times)
+                    .sum());
             replaceEvent.setScore(allChallenges);
         }
     }
