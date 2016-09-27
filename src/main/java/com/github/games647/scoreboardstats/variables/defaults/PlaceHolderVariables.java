@@ -9,8 +9,8 @@ import java.util.Set;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-import me.clip.placeholderapi.internal.IPlaceholderHook;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,8 +27,8 @@ public class PlaceHolderVariables extends DefaultReplaceAdapter<Plugin> {
             String variablePrefix = null;
             if (hook instanceof EZPlaceholderHook) {
                 variablePrefix = ((EZPlaceholderHook) hook).getPlaceholderName();
-            } else if (hook instanceof IPlaceholderHook) {
-                variablePrefix = ((IPlaceholderHook) hook).getIdentifier();
+            } else if (hook instanceof PlaceholderExpansion) {
+                variablePrefix = ((PlaceholderExpansion) hook).getIdentifier();
             }
 
             if (variablePrefix != null) {
