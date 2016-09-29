@@ -160,6 +160,16 @@
             <id>placeholderapi</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        
+        <repository>
+            <id>massive-repo</id>
+            <url>https://repo.dustplanet.de/artifactory/ext-release-local</url>
+        </repository>
+        
+        <repository>
+            <id>turt2live-repo</id>
+            <url>http://repo.turt2live.com/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -359,32 +369,23 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>FactionsUUID</artifactId>
+            <!--the name can't be the same because maven would automatically use the newer version-->
             <!--Factions-UUID fork of 1.6/1.8-->
             <version>1.6.9.5-U0.1.6</version>
-            <!--Make it possible to build automatically like https://github.com/drtshock/ObsidianDestroyer-->
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions-1.6.9.5-U0.1.15.jar</systemPath>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <!--the name can't be the same because maven would automatically use the newer version-->
-            <artifactId>factions-2.7</artifactId>
-            <!--2.7+-->
-            <version>2.7.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Factions.jar</systemPath>
-            <optional>true</optional>
+            <artifactId>factions</artifactId>
+            <version>2.8.16</version>
         </dependency>
+
         <!--MCore must be available for factions-->
         <dependency>
             <groupId>com.massivecraft</groupId>
-            <artifactId>mcore</artifactId>
-            <version>2.7.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/MassiveCore.jar</systemPath>
-            <optional>true</optional>
+            <artifactId>massivecore</artifactId>
+            <version>2.8.6</version>
         </dependency>
 
         <!--Testing environment-->
