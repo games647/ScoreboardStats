@@ -188,10 +188,10 @@ public class DatabaseConfiguration {
         };
 
         try {
-            Field field = PlayerStats.class.getDeclaredField("annotations");
+            Field field = Class.class.getDeclaredField("annotations");
             field.setAccessible(true);
 
-            Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(Table.class);
+            Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(PlayerStats.class);
             annotations.put(Table.class, newAnnotation);
         } catch (Exception ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
