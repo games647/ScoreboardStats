@@ -44,7 +44,7 @@ public class PacketListener extends PacketAdapter {
 
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
-        if (packetEvent.isCancelled() || packetEvent.getPlayer().getName().contains("UNKNOWN[")) {
+        if (packetEvent.isCancelled() || packetEvent.getPlayer().getPlayer() == null) {
             return;
         }
 
