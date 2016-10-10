@@ -118,7 +118,9 @@ public class DatabaseConfiguration {
             config.setUrl(sqlSettingSection.getString("Url"));
 
             String tablePrefix = sqlSettingSection.getString("tablePrefix", "");
-            setTablePrefix(tablePrefix);
+            if (!tablePrefix.isEmpty()) {
+                setTablePrefix(tablePrefix);
+            }
 
             serverConfig.setDataSourceConfig(config);
         } else {
@@ -159,7 +161,7 @@ public class DatabaseConfiguration {
     }
 
     private void setTablePrefix(String prefix) {
-        final Table oldAnnotation = PlayerStats.class.getAnnotation(Table.class);
+        Table oldAnnotation = PlayerStats.class.getAnnotation(Table.class);
         Table newAnnotation = new Table() {
             @Override
             public String name() {
