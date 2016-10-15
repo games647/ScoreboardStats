@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.persistence.Table;
@@ -190,11 +191,19 @@ public class DatabaseConfiguration {
         };
 
         try {
-            Field field = Class.class.getDeclaredField("annotations");
-            field.setAccessible(true);
-
-            Map<Class<? extends Annotation>, Annotation> annotations = (Map<Class<? extends Annotation>, Annotation>) field.get(PlayerStats.class);
-            annotations.put(Table.class, newAnnotation);
+            //In JDK8 Class has a private method called annotationData().
+            //We first need to invoke it to obtain a reference to AnnotationData class which is a private class
+            Method method = Class.class.getDeclaredMethod("annotationData", null);
+            method.setAccessible(true);
+            //Since AnnotationData is a private class we cannot create a direct reference to it. We will have to
+            //manage with just Object
+            Object annotationData = method.invoke(PlayerStats.class);
+            //We now look for the map called "annotations" within AnnotationData object.
+            Field annotations = annotationData.getClass().getDeclaredField("annotations");
+            annotations.setAccessible(true);
+            Map<Class<? extends Annotation>, Annotation> map
+                    = (Map<Class<? extends Annotation>, Annotation>) annotations.get(annotationData);
+            map.put(Table.class, newAnnotation);
         } catch (Exception ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
