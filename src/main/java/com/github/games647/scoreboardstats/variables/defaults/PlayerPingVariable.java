@@ -64,7 +64,7 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
         List<String> checkVersions = Lists.newArrayList(Bukkit.getVersion(), Bukkit.getName()
                 , Bukkit.getServer().toString());
 
-        return checkVersions.stream().anyMatch((version) -> (version.contains("MCPC") || version.contains("Cauldron")));
+        return checkVersions.stream().anyMatch(version -> (version.contains("MCPC") || version.contains("Cauldron")));
     }
 
     private void setMCPCPing(Object entityPlayer) {

@@ -239,7 +239,7 @@ public class Objective {
      * Unregister this objective.
      */
     public void unregister() {
-        if (scoreboard.getObjective(objectiveName) == this) {
+        if (exists()) {
             scoreboard.removeObjective(objectiveName);
             PacketFactory.sendPacket(this, State.REMOVE);
         }

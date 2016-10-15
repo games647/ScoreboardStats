@@ -42,7 +42,7 @@ public class PacketSbManager extends SbManager {
      */
     public PlayerScoreboard getScoreboard(Player player) {
         PlayerScoreboard scoreboard = scoreboards
-                .computeIfAbsent(player.getUniqueId(), (key) -> new PlayerScoreboard(player));
+                .computeIfAbsent(player.getUniqueId(), key -> new PlayerScoreboard(player));
         return scoreboard;
     }
 
@@ -66,7 +66,7 @@ public class PacketSbManager extends SbManager {
     @Override
     public void unregister(Player player) {
         PlayerScoreboard scoreboard = scoreboards.remove(player.getUniqueId());
-        if (player.isOnline() && scoreboard != null) {
+        if (scoreboard != null) {
             scoreboard.getObjectives().stream()
                     .filter(obj -> obj.getName().startsWith(SB_NAME))
                     .forEach(Objective::unregister);
