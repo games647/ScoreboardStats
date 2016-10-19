@@ -46,7 +46,6 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
             int count = playersCount.computeIfAbsent(serverName, key -> -1);
             replaceEvent.setScoreOrText(count);
         }
-
         
         replaceEvent.setConstant(true);
     }

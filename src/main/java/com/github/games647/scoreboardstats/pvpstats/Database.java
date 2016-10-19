@@ -173,7 +173,8 @@ public class Database {
                     .map(this::getCachedStats)
                     .collect(Collectors.toList());
 
-            ebeanConnection.save(toSave);
+            toSave.stream().filter(stats -> !stats.isSaved()).forEach(ebeanConnection::insert);
+            toSave.stream().filter(PlayerStats::isSaved).forEach(ebeanConnection::update);
             executor.shutdown();
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
