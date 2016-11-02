@@ -80,6 +80,7 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("PlayerCount");
                 out.writeUTF(serverName);
+
                 sender.sendPluginMessage(getPlugin(), BUNGEE_CHANNEL, out.toByteArray());
             }
         }
