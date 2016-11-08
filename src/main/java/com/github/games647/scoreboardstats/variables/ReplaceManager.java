@@ -336,7 +336,6 @@ public class ReplaceManager implements Listener {
 
             if (replaceEvent.isModified()) {
                 specificReplacer.put(variable, legacyReplacer);
-                legacyReplacer.getVariables().add(variable);
                 //fast return
                 return;
             }
