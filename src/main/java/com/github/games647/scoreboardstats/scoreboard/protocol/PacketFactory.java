@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 /**
  * Creates the specific packets and send it with help of ProtocolLib.
@@ -55,19 +56,11 @@ public class PacketFactory {
             scorePacket.getIntegers().write(1, state.ordinal());
         }
 
-        try {
-            UUID receiverId = item.getParent().getScoreboard().getOwner().getUniqueId();
-            //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(Bukkit.getPlayer(receiverId), scorePacket, false);
-        } catch (InvocationTargetException ex) {
-            //just log it for now.
-            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
-        }
+        sendPacket(item.getParent().getScoreboard().getOwner().getUniqueId(), scorePacket);
     }
 
     /**
-     * Sends a new scoreboard objective packet and a display packet (if the
-     * objective was created)
+     * Sends a new scoreboard objective packet and a display packet (if the objective was created)
      *
      * @param objective the scoreboard objective
      * @param state whether the objective was created, updated (displayname) or removed
@@ -87,15 +80,7 @@ public class PacketFactory {
 
         //state id
         objectivePacket.getIntegers().write(0, state.ordinal());
-        try {
-            UUID receiverId = objective.getScoreboard().getOwner().getUniqueId();
-            //false so we don't listen to our own packets
-            ProtocolLibrary.getProtocolManager().sendServerPacket(Bukkit.getPlayer(receiverId), objectivePacket, false);
-            sendDisplayPacket(objective);
-        } catch (InvocationTargetException ex) {
-            //just log it for now.
-            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
-        }
+        sendPacket(objective.getScoreboard().getOwner().getUniqueId(), objectivePacket);
     }
 
     /**
@@ -111,14 +96,7 @@ public class PacketFactory {
         displayPacket.getStrings().write(0, objective.getName());
 
         displayPacket.getIntegers().write(0, SIDEBAR_SLOT);
-        try {
-            UUID receiverId = objective.getScoreboard().getOwner().getUniqueId();
-            //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(Bukkit.getPlayer(receiverId), displayPacket, false);
-        } catch (InvocationTargetException ex) {
-            //just log it for now.
-            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
-        }
+        sendPacket(objective.getScoreboard().getOwner().getUniqueId(), displayPacket);
     }
 
     public static void sendTeamPacket(Team team, State state) {
@@ -138,6 +116,22 @@ public class PacketFactory {
         }
 
         teamPacket.getIntegers().write(1, state.ordinal());
+//        sendPacket(team, teamPacket);
+    }
+
+    private static void sendPacket(UUID receiverId, PacketContainer packet) {
+        Player receiver = Bukkit.getPlayer(receiverId);
+        if (receiver == null) {
+            return;
+        }
+
+        try {
+            //false so we don't listen to our own packets
+            PROTOCOL_MANAGER.sendServerPacket(receiver, packet, false);
+        } catch (InvocationTargetException ex) {
+            //just log it for now.
+            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
+        }
     }
 
     private PacketFactory() {

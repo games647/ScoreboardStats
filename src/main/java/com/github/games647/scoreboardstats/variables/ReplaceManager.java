@@ -119,7 +119,8 @@ public class ReplaceManager implements Listener {
      * @param plugin associated plugin instance
      * @param variables to replaced variables <b>without the variable identifiers (%)</b>
      */
-    public void register(VariableReplacer replacer, Plugin plugin, String description, boolean global, boolean async, boolean constant, String... variables) {
+    public void register(VariableReplacer replacer, Plugin plugin
+            , String description, boolean global, boolean async, boolean constant, String... variables) {
         register(new ReplaceWrapper(replacer, plugin, description, global, async, constant, variables));
     }
 
@@ -313,7 +314,8 @@ public class ReplaceManager implements Listener {
 
             return true;
         } catch (UnsupportedPluginException ex) {
-            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion", replacerClass.getSimpleName(), ex.getMessage()));
+            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
+                    , replacerClass.getSimpleName(), ex.getMessage()));
         } catch (Exception | LinkageError replacerException) {
             //only catch these throwables, because they could probably happend
             plugin.getLogger().log(Level.WARNING, "Cannot register replacer", replacerException);
