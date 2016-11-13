@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,9 +21,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -148,16 +149,10 @@ public class Database {
      *
      * @param stats PlayerStats data
      */
-    public void save(PlayerStats stats) {
+    public void save(Iterable<PlayerStats> stats) {
         if (stats != null && ebeanConnection != null) {
             //Save the stats to the database
-            if (stats.isSaved()) {
-                ebeanConnection.update(stats);
-            } else {
-                ebeanConnection.insert(stats);
-            }
-
-            stats.setSaved();
+            ebeanConnection.save(stats);
         }
     }
 
@@ -173,8 +168,7 @@ public class Database {
                     .map(this::getCachedStats)
                     .collect(Collectors.toList());
 
-            toSave.stream().filter(stats -> !stats.isSaved()).forEach(ebeanConnection::insert);
-            toSave.stream().filter(PlayerStats::isSaved).forEach(ebeanConnection::update);
+            save(toSave);
             executor.shutdown();
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
@@ -233,10 +227,7 @@ public class Database {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-                toSave.stream().filter(stats -> !stats.isSaved()).forEach(ebeanConnection::insert);
-                toSave.stream().filter(PlayerStats::isSaved).forEach(ebeanConnection::update);
-
-                toSave.forEach(PlayerStats::setSaved);
+                save(toSave);
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, null, ex);
             }
@@ -264,25 +255,13 @@ public class Database {
         Map<String, Integer> newToplist;
         switch (type) {
             case "killstreak":
-                newToplist = getTopList("killstreak").collect(Collectors.toMap(
-                        PlayerStats::getPlayername,
-                        PlayerStats::getKillstreak
-                ));
-
+                newToplist = getTopList("killstreak", PlayerStats::getKillstreak);
                 break;
             case "mob":
-                newToplist = getTopList("mobkills").collect(Collectors.toMap(
-                        PlayerStats::getPlayername,
-                        PlayerStats::getMobkills
-                ));
-
+                newToplist = getTopList("killstreak", PlayerStats::getMobkills);
                 break;
             default:
-                newToplist = getTopList("kills").collect(Collectors.toMap(
-                        PlayerStats::getPlayername,
-                        PlayerStats::getKills
-                ));
-
+                newToplist = getTopList("kills", PlayerStats::getKills);
                 break;
         }
 
@@ -293,9 +272,9 @@ public class Database {
         }
     }
 
-    private Stream<PlayerStats> getTopList(String type) {
+    private Map<String, Integer> getTopList(String type, Function<PlayerStats, Integer> valueMapper) {
         if (ebeanConnection == null) {
-            return Stream.empty();
+            return Collections.emptyMap();
         }
 
         return ebeanConnection.find(PlayerStats.class)
@@ -305,7 +284,9 @@ public class Database {
                 .setMaxRows(Settings.getTopitems())
                 //we won't use more of it at once
                 .setBufferFetchSizeHint(Settings.getTopitems())
-                .findList().stream();
+                .findList()
+                .stream()
+                .collect(Collectors.toMap(PlayerStats::getPlayername, valueMapper));
     }
 
     private void registerEvents() {
