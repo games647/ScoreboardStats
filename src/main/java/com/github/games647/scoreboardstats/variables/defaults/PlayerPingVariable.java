@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -68,6 +69,8 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
     }
 
     private void setMCPCPing(Object entityPlayer) {
+        getPlugin().getLogger().info("Looking for ping field");
+
         //this isn't a secure, because it detects the ping variable by the ordering
         //a remaping (deobfuscate the variables) would work, but it won't be forwardcompatible
         Class<?> lastType = null;
@@ -90,5 +93,7 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
             lastIntField = null;
             lastType = field.getType();
         }
+
+        getPlugin().getLogger().log(Level.INFO, "Ping field {0} for {1}", new Object[] {lastIntField, entityPlayer});
     }
 }
