@@ -59,15 +59,20 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subchannel = in.readUTF();
         if ("PlayerCount".equals(subchannel)) {
-            String server = in.readUTF();
-            int count = in.readInt();
-            //update variable for cache
-            playersCount.put(server, count);
+            try {
+                String server = in.readUTF();
+                int count = in.readInt();
+                //update variable for cache
+                playersCount.put(server, count);
 
-            if ("ALL".equals(server)) {
-                replaceManager.updateScore("bungee-online", count);
-            } else {
-                replaceManager.updateScore("bungee_" + server, count);
+                if ("ALL".equals(server)) {
+                    replaceManager.updateScore("bungee-online", count);
+                } else {
+                    replaceManager.updateScore("bungee_" + server, count);
+                }
+            } catch (Exception eofException) {
+                //happens if bungeecord doesn't know the server
+                //ignore the admin should be notified by seeing the -1
             }
         }
     }
