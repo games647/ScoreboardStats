@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables.defaults;
 
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Doubles;
 
 import java.util.Collection;
 import java.util.Set;
@@ -12,6 +11,7 @@ import me.clip.placeholderapi.PlaceholderHook;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -50,10 +50,7 @@ public class PlaceHolderVariables extends DefaultReplaceAdapter<Plugin> {
         String strip = ChatColor.stripColor(replaced);
         
         //try parse with a decimal in the case it's decimal if not it parsing will work too
-        Double score = Doubles.tryParse(strip);
-        if (score != null) {
-            //is not text variable and so this could be parsed to a number
-            replaceEvent.setScoreOrText(score.intValue());
-        }
+        double score = NumberUtils.toDouble(strip);
+        replaceEvent.setScoreOrText((int) score);
     }
 }
