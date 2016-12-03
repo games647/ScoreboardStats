@@ -23,7 +23,7 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
     private Field pingField;
 
     public PlayerPingVariable() {
-        super(null, "ping");
+        super(Bukkit.getPluginManager().getPlugin("ScoreboardStats"), "ping");
     }
 
     @Override
