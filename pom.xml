@@ -116,14 +116,14 @@
         <!--ProtocolLib-->
         <repository>
             <id>shadowvolt-repo</id>
-            <url>http://repo.dmulloy2.net//content/groups/public/</url>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
 
         <!--Player points-->
         <repository>
             <id>dakani</id>
             <name>Dakani Nexus Repo</name>
-            <url>http://repo.dakanilabs.com/content/repositories/public</url>
+            <url>https://repo.dakanilabs.com/repository/public/</url>
         </repository>
 
         <!--Repo for simpleclans-->
