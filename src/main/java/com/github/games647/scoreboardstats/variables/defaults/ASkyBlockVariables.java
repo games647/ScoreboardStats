@@ -23,7 +23,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
 
     public ASkyBlockVariables(ReplaceManager replaceManager) {
         super(Bukkit.getPluginManager().getPlugin("ASkyBlock")
-                , "island_level", "challenge_done", "challenge_incomplete", "challenge_total", "challenge_unique");
+                , "island-level", "challenge_done", "challenge_incomplete", "challenge_total", "challenge_unique");
 
         this.replaceManager = replaceManager;
     }

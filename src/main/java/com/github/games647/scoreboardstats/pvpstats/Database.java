@@ -152,7 +152,9 @@ public class Database {
     public void save(Iterable<PlayerStats> stats) {
         if (stats != null && ebeanConnection != null) {
             //Save the stats to the database
-            ebeanConnection.save(stats);
+            for (PlayerStats stat : stats) {
+                ebeanConnection.save(stat);
+            }
         }
     }
 
@@ -171,6 +173,7 @@ public class Database {
             if (!toSave.isEmpty()) {
                 save(toSave);
             }
+
             executor.shutdown();
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
