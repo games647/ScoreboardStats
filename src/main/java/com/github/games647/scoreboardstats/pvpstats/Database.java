@@ -168,7 +168,9 @@ public class Database {
                     .map(this::getCachedStats)
                     .collect(Collectors.toList());
 
-            save(toSave);
+            if (!toSave.isEmpty()) {
+                save(toSave);
+            }
             executor.shutdown();
 
             executor.awaitTermination(15, TimeUnit.MINUTES);
@@ -217,7 +219,7 @@ public class Database {
             }
 
             Future<Collection<? extends Player>> syncPlayers = Bukkit.getScheduler()
-                        .callSyncMethod(plugin, BackwardsCompatibleUtil::getOnlinePlayers);
+                    .callSyncMethod(plugin, BackwardsCompatibleUtil::getOnlinePlayers);
 
             try {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();
@@ -227,7 +229,9 @@ public class Database {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-                save(toSave);
+                if (!toSave.isEmpty()) {
+                    save(toSave);
+                }
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, null, ex);
             }
