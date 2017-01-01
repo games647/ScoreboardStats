@@ -243,13 +243,15 @@ public class Database {
                     + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             for (PlayerStats stat : stats) {
-                stmt.setInt(1, stat.getKills());
-                stmt.setInt(2, stat.getDeaths());
-                stmt.setInt(3, stat.getKillstreak());
-                stmt.setInt(4, stat.getMobkills());
+                stmt.setString(1, stat.getUuid() == null ? null : stat.getUuid().toString());
+                stmt.setString(2, stat.getPlayername());
 
-                stmt.setLong(5, stat.getLastOnline());
-                stmt.setString(6, stat.getPlayername());
+                stmt.setInt(3, stat.getKills());
+                stmt.setInt(4, stat.getDeaths());
+                stmt.setInt(5, stat.getKillstreak());
+                stmt.setInt(6, stat.getMobkills());
+
+                stmt.setLong(7, stat.getLastOnline());
                 stmt.addBatch();
             }
 
