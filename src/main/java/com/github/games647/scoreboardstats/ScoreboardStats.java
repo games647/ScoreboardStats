@@ -1,16 +1,11 @@
 package com.github.games647.scoreboardstats;
 
-import com.avaje.ebean.EbeanServer;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.pvpstats.PlayerStats;
 import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
 import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.google.common.collect.Lists;
-
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,20 +18,8 @@ public class ScoreboardStats extends JavaPlugin {
     //don't create instances here that accesses the bukkit API - it will be incomptible with older mc versions
     private RefreshTask refreshTask;
     private Settings settings;
-    private ReloadFixLoader classLoader;
     private SbManager scoreboardManager;
     private Database database;
-
-    /**
-     * Get the class loader for this plugin. This is a workaround to make
-     * it available for other classes, because getClassLoader is as default
-     * protected.
-     *
-     * @return the class loader for this plugin
-     */
-    public ReloadFixLoader getClassLoaderBypass() {
-        return classLoader;
-    }
 
     /**
      * Get the scoreboard manager.
@@ -78,23 +61,6 @@ public class ScoreboardStats extends JavaPlugin {
         return database;
     }
 
-    @Override
-    public EbeanServer getDatabase() {
-        if (database == null) {
-            return super.getDatabase();
-        }
-
-        //this method exists to make it easier access from another plugin
-        return database.getDatabaseInstance();
-    }
-
-    @Override
-    public List<Class<?>> getDatabaseClasses() {
-        List<Class<?>> classes = Lists.newArrayList();
-        classes.add(PlayerStats.class);
-        return classes;
-    }
-
     /**
      * Load the plugin.
      */
@@ -103,9 +69,6 @@ public class ScoreboardStats extends JavaPlugin {
         //Create a logger that is available by just the plugin name
         //have to be peformed before the first logging message by this plugin, so it prints it correctly
         Logger.getLogger(getName()).setParent(getLogger());
-
-        //this is needed by settings (for localized messages)
-        classLoader = new ReloadFixLoader(this, getClassLoader());
     }
 
     /**

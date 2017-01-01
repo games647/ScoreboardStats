@@ -1,22 +1,25 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.EbeanServerFactory;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
-import com.github.games647.scoreboardstats.ReloadFixLoader;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.zaxxer.hikari.HikariDataSource;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -45,7 +48,7 @@ public class Database {
     private final Map<String, Integer> toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
     private final DatabaseConfiguration dbConfig;
-    private EbeanServer ebeanConnection;
+    private HikariDataSource dataSource;
 
     public Database(ScoreboardStats plugin) {
         this.plugin = plugin;
@@ -55,15 +58,6 @@ public class Database {
         executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                 //Give the thread a name so we can find them
                 .setNameFormat(plugin.getName() + "-Database").build());
-    }
-
-    /**
-     * Get the database instance.
-     *
-     * @return the database instance
-     */
-    public EbeanServer getDatabaseInstance() {
-        return ebeanConnection;
     }
 
     /**
@@ -90,7 +84,7 @@ public class Database {
      * @param player the associated player
      */
     public void loadAccountAsync(Player player) {
-        if (getCachedStats(player) == null && ebeanConnection != null) {
+        if (getCachedStats(player) == null && dataSource != null) {
             executor.execute(new StatsLoader(plugin, dbConfig.isUuidUse(), player, this));
         }
     }
@@ -102,18 +96,56 @@ public class Database {
      * @return the loaded stats
      */
     public PlayerStats loadAccount(Object uniqueId) {
-        if (uniqueId == null || ebeanConnection == null) {
+        if (uniqueId == null || dataSource == null) {
             return null;
         } else {
-            PlayerStats stats = ebeanConnection.find(PlayerStats.class)
-                    .where().eq(dbConfig.isUuidUse() ? "uuid" : "playername", uniqueId).findUnique();
+            Connection conn = null;
+            PreparedStatement stmt = null;
+            ResultSet resultSet = null;
+            try {
+                conn = dataSource.getConnection();
 
-            if (stats == null) {
-                //If there are no existing stat create a new object with empty stats
-                stats = new PlayerStats();
+                stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
+                        + (dbConfig.isUuidUse() ? "uuid" : "playername")
+                        + "=?");
+                stmt.setString(1, uniqueId.toString());
+
+                resultSet = stmt.executeQuery();
+                return extractPlayerStats(resultSet);
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error loading player profile", ex);
+            } finally {
+                close(resultSet);
+                close(stmt);
+                close(conn);
             }
 
-            return stats;
+            return null;
+        }
+    }
+
+    private PlayerStats extractPlayerStats(ResultSet resultSet) throws SQLException {
+        if (resultSet.next()) {
+            int id = resultSet.getInt(1);
+
+            String unparsedUUID = resultSet.getString(2);
+            UUID uuid = null;
+            if (unparsedUUID != null) {
+                uuid = UUID.fromString(unparsedUUID);
+            }
+
+            String playerName = resultSet.getString(3);
+
+            int kills = resultSet.getInt(4);
+            int deaths = resultSet.getInt(5);
+            int mobkills = resultSet.getInt(6);
+            int killstreak = resultSet.getInt(7);
+
+            long lastOnline = resultSet.getLong(8);
+            return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline, killstreak);
+        } else {
+            //If there are no existing stat create a new object with empty stats
+            return new PlayerStats();
         }
     }
 
@@ -124,7 +156,7 @@ public class Database {
      * @return the loaded stats
      */
     public PlayerStats loadAccount(Player player) {
-        if (player == null || ebeanConnection == null) {
+        if (player == null || dataSource == null) {
             return null;
         } else {
             if (dbConfig.isUuidUse()) {
@@ -141,7 +173,7 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void saveAsync(PlayerStats stats) {
-        executor.submit(() -> ebeanConnection.save(stats));
+        executor.submit(() -> save(Lists.newArrayList(stats)));
     }
 
     /**
@@ -149,12 +181,95 @@ public class Database {
      *
      * @param stats PlayerStats data
      */
-    public void save(Iterable<PlayerStats> stats) {
-        if (stats != null && ebeanConnection != null) {
-            //Save the stats to the database
+    public void save(List<PlayerStats> stats) {
+        if (stats != null && dataSource != null) {
+            update(stats.stream()
+                    .filter(PlayerStats::isModified)
+                    .filter(stat -> !stat.isNew())
+                    .collect(Collectors.toList()));
+
+            insert(stats.stream()
+                    .filter(PlayerStats::isModified)
+                    .filter(PlayerStats::isNew)
+                    .collect(Collectors.toList()));
+        }
+    }
+
+    private void update(List<PlayerStats> stats) {
+        //Save the stats to the database
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+
+            stmt = conn.prepareStatement("UPDATE player_stats "
+                    + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
+                    + "WHERE id=?");
+
             for (PlayerStats stat : stats) {
-                ebeanConnection.save(stat);
+                stmt.setInt(1, stat.getKills());
+                stmt.setInt(2, stat.getDeaths());
+                stmt.setInt(3, stat.getKillstreak());
+                stmt.setInt(4, stat.getMobkills());
+
+                stmt.setLong(5, stat.getLastOnline());
+                stmt.setString(6, stat.getPlayername());
+
+                stmt.setInt(7, stat.getId());
+                stmt.addBatch();
             }
+
+            stmt.executeBatch();
+            conn.commit();
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.SEVERE, "Error updating profiles", ex);
+        } finally {
+            close(stmt);
+            close(conn);
+        }
+    }
+
+    private void insert(List<PlayerStats> stats) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet generatedKeys = null;
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+
+            stmt = conn.prepareStatement("INSERT INTO player_stats "
+                    + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
+                    + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+            for (PlayerStats stat : stats) {
+                stmt.setInt(1, stat.getKills());
+                stmt.setInt(2, stat.getDeaths());
+                stmt.setInt(3, stat.getKillstreak());
+                stmt.setInt(4, stat.getMobkills());
+
+                stmt.setLong(5, stat.getLastOnline());
+                stmt.setString(6, stat.getPlayername());
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            conn.commit();
+
+            generatedKeys = stmt.getGeneratedKeys();
+            for (PlayerStats stat : stats) {
+                if (!generatedKeys.next()) {
+                    break;
+                }
+
+                stat.setId(generatedKeys.getInt(1));
+            }
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.SEVERE, "Error inserting profiles", ex);
+        } finally {
+            close(generatedKeys);
+            close(stmt);
+            close(conn);
         }
     }
 
@@ -168,6 +283,7 @@ public class Database {
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = BackwardsCompatibleUtil.getOnlinePlayers().stream()
                     .map(this::getCachedStats)
+                    .filter(PlayerStats::isModified)
                     .collect(Collectors.toList());
 
             if (!toSave.isEmpty()) {
@@ -193,31 +309,39 @@ public class Database {
         //Check if pvpstats should be enabled
         dbConfig.loadConfiguration();
 
-        ClassLoader previous = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(plugin.getClassLoaderBypass());
+        dataSource = new HikariDataSource(dbConfig.getServerConfig());
 
-        //Disable the class caching temporialy, because after a reload
-        //(with plugin file replacement) it still reference to the old file
-        ReloadFixLoader.setClassCache(false);
-
+        Connection conn = null;
+        Statement stmt = null;
         try {
-            EbeanServer database = EbeanServerFactory.create(dbConfig.getServerConfig());
-            DdlGenerator gen = ((SpiEbeanServer) database).getDdlGenerator();
-            //only create the table if it doesn't exist
-            gen.runScript(false, gen.generateCreateDdl().replace("table", "table IF NOT EXISTS"));
+            conn = dataSource.getConnection();
+            stmt = conn.createStatement();
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS player_stats ( "
+                    + "id integer PRIMARY KEY AUTO_INCREMENT, "
+                    + "uuid varchar(40), "
+                    + "playername varchar(16) not null, "
+                    + "kills integer not null, "
+                    + "deaths integer not null, "
+                    + "mobkills integer not null, "
+                    + "killstreak integer not null, "
+                    + "last_online timestamp not null )";
 
-            ebeanConnection = database;
+            if (dbConfig.getServerConfig().getDriverClassName().contains("sqlite")) {
+                createTableQuery = createTableQuery.replace("AUTO_INCREMENT", "");
+            }
+
+            stmt.execute(createTableQuery);
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.WARNING, "Error creating database", ex);
+            plugin.getLogger().log(Level.SEVERE, "Error creating database ", ex);
         } finally {
-            Thread.currentThread().setContextClassLoader(previous);
-            ReloadFixLoader.setClassCache(true);
+            close(stmt);
+            close(conn);
         }
 
         executor.scheduleWithFixedDelay(this::updateTopList, 0, 5, TimeUnit.MINUTES);
 
         executor.scheduleWithFixedDelay(() -> {
-            if (ebeanConnection == null) {
+            if (dataSource == null) {
                 return;
             }
 
@@ -230,6 +354,7 @@ public class Database {
                 List<PlayerStats> toSave = onlinePlayers.stream()
                         .map(this::getCachedStats)
                         .filter(Objects::nonNull)
+                        .filter(PlayerStats::isModified)
                         .collect(Collectors.toList());
 
                 if (!toSave.isEmpty()) {
@@ -265,7 +390,7 @@ public class Database {
                 newToplist = getTopList("killstreak", PlayerStats::getKillstreak);
                 break;
             case "mob":
-                newToplist = getTopList("killstreak", PlayerStats::getMobkills);
+                newToplist = getTopList("mobkills", PlayerStats::getMobkills);
                 break;
             default:
                 newToplist = getTopList("kills", PlayerStats::getKills);
@@ -280,20 +405,37 @@ public class Database {
     }
 
     private Map<String, Integer> getTopList(String type, Function<PlayerStats, Integer> valueMapper) {
-        if (ebeanConnection == null) {
-            return Collections.emptyMap();
+        if (dataSource != null) {
+            Connection conn = null;
+            Statement stmt = null;
+            ResultSet resultSet = null;
+            try {
+                conn = dataSource.getConnection();
+                stmt = conn.createStatement();
+
+                resultSet = stmt.executeQuery("SELECT * FROM player_stats "
+                        + "ORDER BY " + type + " desc "
+                        + "LIMIT " + Settings.getTopitems());
+
+                List<PlayerStats> result = Lists.newArrayList();
+                for (int i = 0; i < Settings.getTopitems(); i++) {
+                    PlayerStats stats = extractPlayerStats(resultSet);
+                    if (!stats.isNew()) {
+                        result.add(stats);
+                    }
+                }
+
+                return result.stream().collect(Collectors.toMap(PlayerStats::getPlayername, valueMapper));
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.SEVERE, "Error loading top list", ex);
+            } finally {
+                close(resultSet);
+                close(stmt);
+                close(conn);
+            }
         }
 
-        return ebeanConnection.find(PlayerStats.class)
-                .order(type + " desc")
-                //we only need the name
-                .select("playername")
-                .setMaxRows(Settings.getTopitems())
-                //we won't use more of it at once
-                .setBufferFetchSizeHint(Settings.getTopitems())
-                .findList()
-                .stream()
-                .collect(Collectors.toMap(PlayerStats::getPlayername, valueMapper));
+        return Collections.emptyMap();
     }
 
     private void registerEvents() {
@@ -308,5 +450,15 @@ public class Database {
 
         plugin.getReplaceManager().register(new StatsVariables(plugin, this));
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
+    }
+
+    private void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception ex) {
+                //ignore
+            }
+        }
     }
 }

@@ -13,12 +13,10 @@
 SQL-Settings:
   Username: 'bukkit'
   Password: 'walrus'
-  Isolation: 'SERIALIZABLE'
   Driver: 'org.sqlite.JDBC'
   # If you use mysql, delete org.sqlite.JDBC, comment out
   # Driver: 'com.mysql.jdbc.Driver'
   Url: 'jdbc:sqlite:{DIR}{NAME}.db'
-  Timeout: 1000
   tablePrefix: ''
 
 # This value is used for the pvpstats database. It's not used for the scoreboard features

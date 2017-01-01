@@ -1,77 +1,57 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.avaje.ebean.annotation.UpdatedTimestamp;
-import com.avaje.ebean.validation.Length;
-import com.avaje.ebean.validation.NotNull;
-import com.avaje.ebean.validation.Pattern;
-import com.avaje.ebean.validation.Range;
 import com.google.common.base.Objects;
 
-import java.sql.Timestamp;
 import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.util.NumberConversions;
 
 /**
- * Represents the stats from a player. The stats are kills, deaths, mobkills and
- * killstreak. All stats are annotated to be validated on runtime to be
- * not invalid.
+ * Represents the stats from a player. The stats are kills, deaths, mobkills and killstreak. All stats are annotated to
+ * be validated on runtime to be not invalid.
  *
- * Maybe these stats also have to be validated to be not null, so we can prevent
- * some special cases while using it especially for SQL database, but this can
- * also occurs on using it as file database due incorrect format or
- * unexpected user modifications.
+ * Maybe these stats also have to be validated to be not null, so we can prevent some special cases while using it
+ * especially for SQL database, but this can also occurs on using it as file database due incorrect format or unexpected
+ * user modifications.
  */
-@Entity
-@Table(name = "player_stats")
 public class PlayerStats {
 
-    @Id
-    @GeneratedValue
-    private int id;
+    private int id = -1;
 
     //is null in non-uuid compatible servers or isn't updated yet
-    @Column(unique = true)
     private UUID uuid;
 
     //isn't unique since 1.7 anymore
-    @NotNull
-    //Tells ebean explicity that the string can only have 16 characters
-    @Length(min = 2, max = 16)
-    @Pattern(regex = "^\\w{2,16}$")
-    private String playername = "";
+    private String playername;
 
     //You can't have negative stats
-    @NotNull
-    @Range(min = 0)
     private int kills;
-
-    @NotNull
-    @Range(min = 0)
     private int deaths;
-
-    @NotNull
-    @Range(min = 0)
     private int mobkills;
-
-    @NotNull
-    @Range(min = 0)
     private int killstreak;
 
-    //in mysql this will be saved as datetime, but we actually only need date to calculate the difference
-    @UpdatedTimestamp
-    //can be null if the instance is just created and not in the database
-    //ebean currently defines this column as not null
-    private Timestamp lastOnline;
+    private long lastOnline;
 
     private transient int laststreak;
+    private transient boolean modified;
+
+    public PlayerStats(int id, UUID uuid, String playername,
+            int kills, int deaths, int mobkills, int killstreak, long lastOnline, int laststreak) {
+        this.id = id;
+        this.uuid = uuid;
+        this.playername = playername;
+        this.kills = kills;
+        this.deaths = deaths;
+        this.mobkills = mobkills;
+        this.killstreak = killstreak;
+        this.lastOnline = lastOnline;
+        this.laststreak = laststreak;
+    }
+
+    public PlayerStats() {
+
+    }
 
     /**
      * Get the auto incrementing id
@@ -139,30 +119,12 @@ public class PlayerStats {
     }
 
     /**
-     * Set the player kills
-     *
-     * @param kills the player kills
-     */
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    /**
      * Get the deaths
      *
      * @return the deaths
      */
     public int getDeaths() {
         return deaths;
-    }
-
-    /**
-     * Set the deaths
-     *
-     * @param deaths the deaths
-     */
-    public void setDeaths(int deaths) {
-        this.deaths = deaths;
     }
 
     /**
@@ -175,30 +137,12 @@ public class PlayerStats {
     }
 
     /**
-     * Set the mob kills
-     *
-     * @param mobkills the mob kills
-     */
-    public void setMobkills(int mobkills) {
-        this.mobkills = mobkills;
-    }
-
-    /**
      * Get the highest killstreak
      *
      * @return the highest killstreak
      */
     public int getKillstreak() {
         return killstreak;
-    }
-
-    /**
-     * Set the highest killstreak
-     *
-     * @param killstreak the highest killstreak
-     */
-    public void setKillstreak(int killstreak) {
-        this.killstreak = killstreak;
     }
 
     /**
@@ -226,23 +170,21 @@ public class PlayerStats {
     }
 
     /**
-     * Get the UNIX timestamp where this entry was last updated. This implies
-     * the last online value with a difference of a couple of minutes from
-     * the cache.
+     * Get the UNIX timestamp where this entry was last updated. This implies the last online value with a difference of
+     * a couple of minutes from the cache.
      *
      * @return the timestamp this eBean was last updated; can be null
      */
-    public Timestamp getLastOnline() {
+    public long getLastOnline() {
         return lastOnline;
     }
 
     /**
-     * Set the update timestamp value. This currently managed by eBean itself,
-     * which updates the value on every save.
+     * Set the update timestamp value. This currently managed by eBean itself, which updates the value on every save.
      *
      * @param lastOnline the player was online; can be null
      */
-    public void setLastOnline(Timestamp lastOnline) {
+    public void setLastOnline(long lastOnline) {
         this.lastOnline = lastOnline;
     }
 
@@ -250,13 +192,14 @@ public class PlayerStats {
      * Increment the kills
      */
     public void onKill() {
+        modified = true;
+
         //We need to use this to trigger ebean
-        setKills(kills + 1);
+        kills++;
 
         laststreak++;
         if (laststreak > killstreak) {
-            //triggers a change for ebean
-            setKillstreak(laststreak);
+            killstreak = laststreak;
         }
     }
 
@@ -264,17 +207,27 @@ public class PlayerStats {
      * Increment the mob kills
      */
     public void onMobKill() {
-        //triggers a change for ebean
-        setMobkills(mobkills + 1);
+        modified = true;
+
+        mobkills++;
     }
 
     /**
      * Increment the deaths
      */
     public void onDeath() {
+        modified = true;
+
         laststreak = 0;
-        //triggers a change for ebean
-        setDeaths(deaths + 1);
+        deaths++;
+    }
+
+    public boolean isModified() {
+        return modified;
+    }
+
+    public boolean isNew() {
+        return id == -1;
     }
 
     @Override
