@@ -62,20 +62,23 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
 
     private static boolean isModdedServer() {
         //aggressive checking for modded servers
-        List<String> checkVersions = Lists.newArrayList(Bukkit.getVersion(), Bukkit.getName()
-                , Bukkit.getServer().toString());
+        List<String> checkVersions = Lists.newArrayList(Bukkit.getVersion(), Bukkit.getName(),
+                Bukkit.getServer().toString());
 
         return checkVersions.stream().anyMatch(version -> (version.contains("MCPC") || version.contains("Cauldron")));
     }
 
-    private void setMCPCPing(Object entityPlayer) {
+    private void setMCPCPing(Object entityPlayer) throws IllegalAccessException {
         getPlugin().getLogger().info("Looking for ping field");
 
+        Class<?> entityPlayerClazz = findEntityPlayer(entityPlayer.getClass(), entityPlayer);
+        getPlugin().getLogger().info("Looking for player clazz " + entityPlayerClazz);
+        
         //this isn't a secure, because it detects the ping variable by the ordering
         //a remaping (deobfuscate the variables) would work, but it won't be forwardcompatible
         Class<?> lastType = null;
         Field lastIntField = null;
-        for (Field field : entityPlayer.getClass().getDeclaredFields()) {
+        for (Field field : entityPlayerClazz.getDeclaredFields()) {
             if (field.getType() == Integer.TYPE
                     && Modifier.isPublic(field.getModifiers())
                     && lastType == Boolean.TYPE) {
@@ -94,6 +97,23 @@ public class PlayerPingVariable extends DefaultReplaceAdapter<Plugin> {
             lastType = field.getType();
         }
 
-        getPlugin().getLogger().log(Level.INFO, "Ping field {0} for {1}", new Object[] {lastIntField, entityPlayer});
+        getPlugin().getLogger().log(Level.INFO, "Ping field {0} for {1}", new Object[]{lastIntField, entityPlayer});
+    }
+
+    private Class<?> findEntityPlayer(Class<?> startClazz, Object instance) throws IllegalAccessException {
+        if (startClazz != null) {
+            for (Field declaredField : startClazz.getDeclaredFields()) {
+                if (declaredField.getType() == String.class) {
+                    Object val = declaredField.get(instance);
+                    if ("en_US".equals(val)) {
+                        return startClazz;
+                    }
+                }
+            }
+            
+            return findEntityPlayer(startClazz.getSuperclass(), instance);
+        }
+        
+        return null;
     }
 }
