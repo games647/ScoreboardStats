@@ -84,6 +84,9 @@ public class DatabaseConfiguration {
         serverConfig.setPassword(sqlSettingSection.getString("Password"));
         serverConfig.setDriverClassName(sqlSettingSection.getString("Driver"));
         serverConfig.setJdbcUrl(replaceUrlString(sqlSettingSection.getString("Url")));
+        if (serverConfig.getDriverClassName().contains("sqlite")) {
+            serverConfig.setConnectionTestQuery("SELECT 1");
+        }
 
         tablePrefix = sqlSettingSection.getString("tablePrefix", "");
     }
