@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.scoreboard.protocol;
 
+import com.comphenix.net.sf.cglib.proxy.Proxy;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -45,17 +46,16 @@ public class PacketListener extends PacketAdapter {
 
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
-        if (packetEvent.isCancelled() || packetEvent.getPlayer().getPlayer() == null) {
+        Player player = packetEvent.getPlayer();
+        if (packetEvent.isCancelled() || Proxy.isProxyClass(player.getClass())) {
             return;
         }
 
-        Player player = packetEvent.getPlayer();
         PacketContainer packet = packetEvent.getPacket();
-
         PacketType packetType = packetEvent.getPacketType();
 
         //everything was read from the packet, so we don't need to access it anymore
-        //we could now run a sync thread to sychronize with async packets
+        //we could now run a sync thread to synchronize with async packets
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (packetType.equals(SCORE_TYPE)) {
                 handleScorePacket(player, packet);
