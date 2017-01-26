@@ -1,17 +1,17 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.Version;
+import com.github.games647.scoreboardstats.config.Lang;
 import com.zaxxer.hikari.HikariConfig;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.logging.Level;
 
 /**
  * Configuration for the SQL database.
@@ -58,14 +58,14 @@ public class DatabaseConfiguration {
     public void loadConfiguration() {
         serverConfig = new HikariConfig();
 
-        File file = new File(plugin.getDataFolder(), "sql.yml");
+        Path file = plugin.getDataFolder().toPath().resolve("sql.yml");
         //Check if the file exists. If so load the settings form there
-        if (!file.exists()) {
+        if (!Files.exists(file)) {
             //Create a new configuration based on the default settings form bukkit.yml
             plugin.saveResource("sql.yml", false);
         }
 
-        FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file);
+        FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file.toFile());
 
         uuidUse = sqlConfig.getBoolean("uuidUse", Version.isUUIDCompatible());
         if (Version.isUUIDCompatible() && !uuidUse) {
@@ -73,7 +73,7 @@ public class DatabaseConfiguration {
             uuidUse = true;
             plugin.getLogger().info("Forcing uuidUse to true, because the server is uuid compatible");
             try {
-                sqlConfig.save(file);
+                sqlConfig.save(file.toFile());
             } catch (IOException ex) {
                 plugin.getLogger().log(Level.WARNING, Lang.get("databaseConfigSaveError"), ex);
             }

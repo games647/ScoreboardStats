@@ -5,20 +5,21 @@ import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Represents an easy way to load and save to yaml configs. Furthermore support
@@ -52,15 +53,14 @@ public class CommentedYaml<T extends Plugin> {
      * @return the loaded file configuration
      */
     public FileConfiguration getConfigFromDisk() {
-        File file = new File(plugin.getDataFolder(), FILE_NAME);
+        Path file = plugin.getDataFolder().toPath().resolve(FILE_NAME);
 
         YamlConfiguration newConf = new YamlConfiguration();
         newConf.setDefaults(getDefaults());
 
         try {
             //UTF-8 should be available on all java running systems
-            List<String> lines = Files.readLines(file, Charsets.UTF_8);
-
+            List<String> lines = java.nio.file.Files.readAllLines(file);
             load(lines, newConf);
         } catch (InvalidConfigurationException | IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);

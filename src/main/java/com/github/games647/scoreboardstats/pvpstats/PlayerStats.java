@@ -1,11 +1,10 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.google.common.base.Objects;
-
-import java.util.UUID;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.util.NumberConversions;
+
+import java.util.UUID;
 
 /**
  * Represents the stats from a player. The stats are kills, deaths, mobkills and killstreak. All stats are annotated to
@@ -37,7 +36,7 @@ public class PlayerStats {
     private transient boolean modified;
 
     public PlayerStats(int id, UUID uuid, String playername,
-            int kills, int deaths, int mobkills, int killstreak, long lastOnline, int laststreak) {
+            int kills, int deaths, int mobkills, int killstreak, long lastOnline) {
         this.id = id;
         this.uuid = uuid;
         this.playername = playername;
@@ -46,7 +45,6 @@ public class PlayerStats {
         this.mobkills = mobkills;
         this.killstreak = killstreak;
         this.lastOnline = lastOnline;
-        this.laststreak = laststreak;
     }
 
     public PlayerStats() {

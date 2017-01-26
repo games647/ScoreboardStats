@@ -9,6 +9,10 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.zaxxer.hikari.HikariDataSource;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,19 +24,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
-
 /**
  * This represents a handler for saving player stats.
- *
- * @see EbeanServer
  */
 public class Database {
 
@@ -139,7 +141,7 @@ public class Database {
             int killstreak = resultSet.getInt(7);
 
             long lastOnline = resultSet.getLong(8);
-            return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline, killstreak);
+            return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline);
         } else {
             //If there are no existing stat create a new object with empty stats
             return new PlayerStats();
@@ -296,7 +298,8 @@ public class Database {
             plugin.getLogger().log(Level.SEVERE, "Couldn't save the stats to the database", ex);
         } finally {
             //Make rally sure we remove all even on error
-            BackwardsCompatibleUtil.getOnlinePlayers().stream()
+            BackwardsCompatibleUtil.getOnlinePlayers()
+                    .stream()
                     .forEach(player -> player.removeMetadata(METAKEY, plugin));
         }
     }
