@@ -60,7 +60,7 @@ public class DatabaseConfiguration {
 
         Path file = plugin.getDataFolder().toPath().resolve("sql.yml");
         //Check if the file exists. If so load the settings form there
-        if (!Files.exists(file)) {
+        if (Files.notExists(file)) {
             //Create a new configuration based on the default settings form bukkit.yml
             plugin.saveResource("sql.yml", false);
         }
