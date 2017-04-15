@@ -4,7 +4,7 @@ import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.events.ChallengeCompleteEvent;
-import com.wasteofplastic.askyblock.events.IslandLevelEvent;
+import com.wasteofplastic.askyblock.events.IslandPostLevelEvent;
 
 import java.util.Map;
 import java.util.UUID;
@@ -62,7 +62,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onLevelUp(IslandLevelEvent levelEvent) {
+    public void onLevelUp(IslandPostLevelEvent levelEvent) {
         UUID player = levelEvent.getPlayer();
         Player receiver = Bukkit.getPlayer(player);
         if (receiver == null) {
