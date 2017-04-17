@@ -32,7 +32,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
         replaceEvent.setConstant(true);
 
-        if ("island_level".equals(variable)) {
+        if ("island-level".equals(variable)) {
             replaceEvent.setScore(NumberConversions.round(skyBlockAPI.getIslandLevel(player.getUniqueId())));
         } else if ("challenge_done".equals(variable)) {
             Map<String, Boolean> challengeStatus = skyBlockAPI.getChallengeStatus(player.getUniqueId());
@@ -69,7 +69,7 @@ public class ASkyBlockVariables extends DefaultReplaceAdapter<Plugin> implements
             return;
         }
 
-        replaceManager.updateScore(receiver, "island_level", levelEvent.getLevel());
+        replaceManager.updateScore(receiver, "island-level", levelEvent.getLevel());
     }
 
     @EventHandler(ignoreCancelled = true)
