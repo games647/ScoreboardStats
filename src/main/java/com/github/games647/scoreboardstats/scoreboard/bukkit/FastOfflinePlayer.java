@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -59,12 +60,6 @@ public class FastOfflinePlayer implements OfflinePlayer {
     @Override
     public boolean isBanned() {
         return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void setBanned(boolean banned) {
-        //ignore
     }
 
     @Override
@@ -140,8 +135,8 @@ public class FastOfflinePlayer implements OfflinePlayer {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("playerName", playerName)
+        return new ToStringBuilder(this)
+                .append("playerName", playerName)
                 .toString();
     }
 }
