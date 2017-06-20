@@ -1,13 +1,11 @@
 # Use https://travis-ci.org/ for automatic testing
 
+# speed up testing http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+sudo: false
+
 # This is a java project
 language: java
 
 script: mvn compile test -U
 
 jdk: [oraclejdk8]
-
-# if one build failed, exit testing
-matrix:
-  fast_finish: true
-  
