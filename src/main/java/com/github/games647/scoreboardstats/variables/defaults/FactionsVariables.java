@@ -77,7 +77,7 @@ public class FactionsVariables extends DefaultReplaceAdapter<Plugin> {
     //factions 1.6.9 and 1.8.2
     private void getOldFactionScore(Player player, String variable, ReplaceEvent replaceEvent) {
         //If factions doesn't track the player yet return -1
-        FPlayer fPlayer = FPlayers.i.get(player);
+        FPlayer fPlayer = FPlayers.getInstance().getByPlayer(player);
         if (fPlayer == null) {
             return;
         }
