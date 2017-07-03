@@ -42,6 +42,7 @@ public class Objective {
 
         if (send) {
             PacketFactory.sendPacket(this, State.CREATE);
+            PacketFactory.sendDisplayPacket(this);
         }
     }
 
