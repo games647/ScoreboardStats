@@ -6,6 +6,7 @@ import com.github.games647.scoreboardstats.pvpstats.Database;
 import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
 import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
+
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;

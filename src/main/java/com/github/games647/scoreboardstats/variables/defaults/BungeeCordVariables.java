@@ -12,7 +12,6 @@ import com.google.common.io.ByteStreams;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;

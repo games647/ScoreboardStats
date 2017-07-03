@@ -3,15 +3,16 @@ package com.github.games647.scoreboardstats.pvpstats;
 import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.zaxxer.hikari.HikariConfig;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
+
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Configuration for the SQL database.

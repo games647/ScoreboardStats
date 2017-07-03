@@ -8,7 +8,6 @@ import com.greatmancode.craftconomy3.currency.CurrencyManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.NumberConversions;
 

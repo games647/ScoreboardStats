@@ -1,7 +1,7 @@
 package com.github.games647.scoreboardstats.commands;
 
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.ScoreboardStats;
+import com.github.games647.scoreboardstats.config.Lang;
 
 import org.bukkit.command.CommandSender;
 

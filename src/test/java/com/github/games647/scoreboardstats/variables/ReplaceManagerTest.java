@@ -1,6 +1,7 @@
 package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
+
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;

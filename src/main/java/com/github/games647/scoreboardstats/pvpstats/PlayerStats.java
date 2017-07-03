@@ -1,10 +1,11 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.google.common.base.Objects;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.bukkit.util.NumberConversions;
 
 import java.util.UUID;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.bukkit.util.NumberConversions;
 
 /**
  * Represents the stats from a player. The stats are kills, deaths, mobkills and killstreak. All stats are annotated to

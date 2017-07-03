@@ -8,8 +8,8 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
