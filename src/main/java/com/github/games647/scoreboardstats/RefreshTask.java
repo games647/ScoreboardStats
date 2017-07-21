@@ -39,16 +39,16 @@ public class RefreshTask implements Runnable {
         int remainingUpdates = getNextUpdates();
         for (Map.Entry<Player, MutableInt> entry : queue.entrySet()) {
             Player player = entry.getKey();
-            MutableInt remanigTicks = entry.getValue();
-            if (remanigTicks.intValue() == 0) {
+            MutableInt remainingTicks = entry.getValue();
+            if (remainingTicks.intValue() == 0) {
                 if (remainingUpdates != 0) {
                     //Smoother refreshing; limit the updates
                     plugin.getScoreboardManager().onUpdate(player);
-                    remanigTicks.setValue(20 * Settings.getInterval());
+                    remainingTicks.setValue(20 * Settings.getInterval());
                     remainingUpdates--;
                 }
             } else {
-                remanigTicks.decrement();
+                remainingTicks.decrement();
             }
         }
 

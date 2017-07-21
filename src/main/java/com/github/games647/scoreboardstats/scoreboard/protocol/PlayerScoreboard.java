@@ -57,7 +57,7 @@ public class PlayerScoreboard {
         }
 
         if (objectivesByName.containsKey(objectiveName)) {
-            //the objecive already exits. I assume that no other use this unique name
+            //the objective already exits. I assume that no other use this unique name
             //so we expect that a other sidebar was showing
             Objective objective = objectivesByName.get(objectiveName);
             PacketFactory.sendDisplayPacket(objective);
@@ -130,7 +130,7 @@ public class PlayerScoreboard {
          * Very weird that minecraft always ignore the name of the parent objective and
          * will remove the score from the complete scoreboard
          */
-        objectivesByName.values().stream().forEach(entry -> entry.items.remove(scoreName));
+        objectivesByName.values().forEach(entry -> entry.items.remove(scoreName));
     }
 
     void createOrUpdateScore(String scoreName, String parent, int score) {

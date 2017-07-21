@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
  *
  * @deprecated not fully featured and returns magic values. Will be removed in future versions
  */
+@FunctionalInterface
 @Deprecated
 public interface Replaceable {
 

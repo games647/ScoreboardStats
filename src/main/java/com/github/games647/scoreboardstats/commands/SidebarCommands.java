@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -78,7 +77,7 @@ public class SidebarCommands implements TabExecutor {
             suggestion = commandHandler.onTabComplete(sender, subCommand, Arrays.copyOfRange(args, 1, args.length));
             if (suggestion != null) {
                 //Prevent NPEs and the usage of this method in nearly every handler
-                Collections.sort(suggestion, String.CASE_INSENSITIVE_ORDER);
+                suggestion.sort(String.CASE_INSENSITIVE_ORDER);
             }
 
             return suggestion;

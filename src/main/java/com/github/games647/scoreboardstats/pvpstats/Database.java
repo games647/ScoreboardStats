@@ -6,7 +6,6 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
@@ -21,10 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -42,8 +38,6 @@ public class Database {
 
     private final ScoreboardStats plugin;
 
-    private final ScheduledExecutorService executor;
-
     private final Map<String, Integer> toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
     private final DatabaseConfiguration dbConfig;
@@ -52,11 +46,6 @@ public class Database {
     public Database(ScoreboardStats plugin) {
         this.plugin = plugin;
         this.dbConfig = new DatabaseConfiguration(plugin);
-
-        //SQL transactions are mainly blocking so there is no need to update them smooth
-        executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
-                //Give the thread a name so we can find them
-                .setNameFormat(plugin.getName() + "-Database").build());
     }
 
     /**
@@ -84,7 +73,8 @@ public class Database {
      */
     public void loadAccountAsync(Player player) {
         if (getCachedStats(player) == null && dataSource != null) {
-            executor.execute(new StatsLoader(plugin, dbConfig.isUuidUse(), player, this));
+            Runnable statsLoader = new StatsLoader(plugin, dbConfig.isUuidUse(), player, this);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, statsLoader);
         }
     }
 
@@ -172,7 +162,7 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void saveAsync(PlayerStats stats) {
-        executor.submit(() -> save(Lists.newArrayList(stats)));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> save(Lists.newArrayList(stats)));
     }
 
     /**
@@ -291,15 +281,10 @@ public class Database {
                 save(toSave);
             }
 
-            executor.shutdown();
-
-            executor.awaitTermination(15, TimeUnit.MINUTES);
-        } catch (InterruptedException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't save the stats to the database", ex);
+            dataSource.close();
         } finally {
             //Make rally sure we remove all even on error
             BackwardsCompatibleUtil.getOnlinePlayers()
-                    .stream()
                     .forEach(player -> player.removeMetadata(METAKEY, plugin));
         }
     }
@@ -340,9 +325,8 @@ public class Database {
             close(conn);
         }
 
-        executor.scheduleWithFixedDelay(this::updateTopList, 0, 5, TimeUnit.MINUTES);
-
-        executor.scheduleWithFixedDelay(() -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateTopList, 20 * 60 * 5, 0);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             if (dataSource == null) {
                 return;
             }
@@ -367,7 +351,7 @@ public class Database {
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, null, ex);
             }
-        }, 0, 1, TimeUnit.MINUTES);
+        }, 20 * 60, 0);
 
         registerEvents();
     }

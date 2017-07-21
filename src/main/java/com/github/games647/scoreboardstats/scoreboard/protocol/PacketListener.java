@@ -35,7 +35,7 @@ public class PacketListener extends PacketAdapter {
     /**
      * Creates a new packet listener
      *
-     * @param plugin plugin for registration into ProtcolLib
+     * @param plugin plugin for registration into ProtocolLib
      * @param manager packet manager instance
      */
     public PacketListener(Plugin plugin, PacketSbManager manager) {

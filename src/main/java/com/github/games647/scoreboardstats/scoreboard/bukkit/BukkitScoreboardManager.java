@@ -128,7 +128,7 @@ public class BukkitScoreboardManager extends SbManager {
         objective.setDisplayName(Settings.getTempTitle());
 
         //Colorize and send all elements
-        plugin.getStatsDatabase().getTop().stream().forEach((entry) -> {
+        plugin.getStatsDatabase().getTop().forEach((entry) -> {
             String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
             sendScore(objective, scoreName, entry.getValue(), true);
         });

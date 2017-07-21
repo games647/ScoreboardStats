@@ -31,7 +31,7 @@ public class PluginListener implements Listener {
         //Register the listener back again if the plugin is available
         String enablePluginName = enableEvent.getPlugin().getName();
         Map<Class<? extends VariableReplaceAdapter<?>>, String> defaults = replaceManager.getDefaults();
-        defaults.entrySet().stream().forEach(entry -> {
+        defaults.entrySet().forEach(entry -> {
             String pluginName = entry.getValue();
             if (enablePluginName.equals(entry.getValue())) {
                 replaceManager.registerDefault(entry.getKey(), pluginName);

@@ -31,7 +31,7 @@ public class McmmoVariables extends DefaultReplaceAdapter<Plugin> implements Lis
                 .map(String::toLowerCase).collect(Collectors.toSet());
 
         skills.add("powlvl");
-        return skills.stream().toArray(String[]::new);
+        return skills.toArray(new String[0]);
     }
 
     private final ReplaceManager replaceManager;

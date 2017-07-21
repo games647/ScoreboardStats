@@ -10,34 +10,13 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.10.1</version>
-    <url>http://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
+    <version>0.10.3</version>
+    <url>https://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.7.0</powermock.version>
-        <!--Possibility to deploy directly to the plugins folder-->
-        <outputDir>${basedir}/target</outputDir>
     </properties>
-
-    <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/games647/ScoreboardStats/issues</url>
-    </issueManagement>
-
-    <scm>
-        <url>https://github.com/games647/ScoreboardStats</url>
-        <connection>scm:git:git://github.com/games647/ScoreboardStats.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:games647/ScoreboardStats.git</developerConnection>
-    </scm>
-
-    <licenses>
-        <license>
-            <name>The MIT License</name>
-            <url>http://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -52,17 +31,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <outputDirectory>${outputDir}</outputDirectory>
                 </configuration>
             </plugin>
 
@@ -100,14 +68,6 @@
                 <!--Replace variables-->
                 <filtering>true</filtering>
             </resource>
-
-            <!--Add the license to jar in order to see it in the final jar-->
-            <resource>
-                <directory>${basedir}</directory>
-                <includes>
-                    <include>LICENSE</include>
-                </includes>
-            </resource>
         </resources>
     </build>
 
@@ -121,7 +81,7 @@
         <!--mcmmo-->
         <repository>
             <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
+            <url>https://repo.md-5.net/content/groups/public/</url>
         </repository>
 
         <!--Vault and Heroes-->
@@ -174,7 +134,7 @@
         <repository>
             <id>bintray-tastybento-maven-repo</id>
             <name>bintray</name>
-            <url>http://dl.bintray.com/tastybento/maven-repo</url>
+            <url>https://dl.bintray.com/tastybento/maven-repo</url>
         </repository>
 
         <!--MyPet-->

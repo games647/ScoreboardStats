@@ -41,9 +41,8 @@ public class PacketSbManager extends SbManager {
      * @return the scoreboard instance
      */
     public PlayerScoreboard getScoreboard(Player player) {
-        PlayerScoreboard scoreboard = scoreboards
+        return scoreboards
                 .computeIfAbsent(player.getUniqueId(), key -> new PlayerScoreboard(player));
-        return scoreboard;
     }
 
     @Override
