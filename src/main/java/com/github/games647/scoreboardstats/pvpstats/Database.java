@@ -274,6 +274,7 @@ public class Database {
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = BackwardsCompatibleUtil.getOnlinePlayers().stream()
                     .map(this::getCachedStats)
+                    .filter(Objects::nonNull)
                     .filter(PlayerStats::isModified)
                     .collect(Collectors.toList());
 
