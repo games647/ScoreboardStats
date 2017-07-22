@@ -173,11 +173,13 @@ public class Database {
     public void save(List<PlayerStats> stats) {
         if (stats != null && dataSource != null) {
             update(stats.stream()
+                    .filter(Objects::nonNull)
                     .filter(PlayerStats::isModified)
                     .filter(stat -> !stat.isNew())
                     .collect(Collectors.toList()));
 
             insert(stats.stream()
+                    .filter(Objects::nonNull)
                     .filter(PlayerStats::isModified)
                     .filter(PlayerStats::isNew)
                     .collect(Collectors.toList()));
