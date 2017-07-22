@@ -1,6 +1,6 @@
 package com.github.games647.scoreboardstats.scoreboard.protocol;
 
-import com.comphenix.net.sf.cglib.proxy.Proxy;
+import com.comphenix.net.sf.cglib.proxy.Factory;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
@@ -47,7 +47,7 @@ public class PacketListener extends PacketAdapter {
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
         Player player = packetEvent.getPlayer();
-        if (packetEvent.isCancelled() || Proxy.isProxyClass(player.getClass())) {
+        if (packetEvent.isCancelled() || player instanceof Factory) {
             return;
         }
 
