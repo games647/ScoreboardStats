@@ -10,7 +10,7 @@
     <name>ScoreboardStats</name>
     <inceptionYear>2013</inceptionYear>
     <description>Show the Scoreboard with many custom variables</description>
-    <version>0.10.3</version>
+    <version>0.10.5</version>
     <url>https://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>
 
     <properties>
@@ -41,6 +41,7 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>false</shadedArtifactAttached>
+                    <minimizeJar>true</minimizeJar>
                     <artifactSet>
                         <includes>
                             <!--Database pooling-->
@@ -298,7 +299,7 @@
         <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>1.5.01-SNAPSHOT</version>
+            <version>1.5.00</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

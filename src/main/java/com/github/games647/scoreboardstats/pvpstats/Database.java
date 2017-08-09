@@ -171,6 +171,8 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void save(List<PlayerStats> stats) {
+        System.out.println("Save player" + stats);
+
         if (stats != null && dataSource != null) {
             update(stats.stream()
                     .filter(Objects::nonNull)
@@ -187,17 +189,22 @@ public class Database {
     }
 
     private void update(List<PlayerStats> stats) {
+        if (stats.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Update player" + stats);
+
         //Save the stats to the database
         Connection conn = null;
         PreparedStatement stmt = null;
         try {
             conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-
             stmt = conn.prepareStatement("UPDATE player_stats "
                     + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
                     + "WHERE id=?");
 
+            conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setInt(1, stat.getKills());
                 stmt.setInt(2, stat.getDeaths());
@@ -222,17 +229,22 @@ public class Database {
     }
 
     private void insert(List<PlayerStats> stats) {
+        if (stats.isEmpty()) {
+            return;
+        }
+
+        System.out.println("Insert player" + stats);
+
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet generatedKeys = null;
         try {
             conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-
             stmt = conn.prepareStatement("INSERT INTO player_stats "
                     + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
                     + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
+            conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setString(1, stat.getUuid() == null ? null : stat.getUuid().toString());
                 stmt.setString(2, stat.getPlayername());
@@ -318,6 +330,7 @@ public class Database {
 
             if (dbConfig.getServerConfig().getDriverClassName().contains("sqlite")) {
                 createTableQuery = createTableQuery.replace("AUTO_INCREMENT", "");
+                dataSource.setMaximumPoolSize(1);
             }
 
             stmt.execute(createTableQuery);
@@ -354,7 +367,7 @@ public class Database {
             } catch (Exception ex) {
                 plugin.getLogger().log(Level.SEVERE, null, ex);
             }
-        }, 20 * 60, 0);
+        }, 20 * 60, 20 * 60 * 5);
 
         registerEvents();
     }
@@ -431,7 +444,7 @@ public class Database {
 
     private void registerEvents() {
         if (Bukkit.getPluginManager().isPluginEnabled("InSigns")) {
-            //Register this listerner if InSigns is available
+            //Register this listener if InSigns is available
             new SignListener(plugin, "[Kill]", this);
             new SignListener(plugin, "[Death]", this);
             new SignListener(plugin, "[KDR]", this);
