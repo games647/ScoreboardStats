@@ -171,8 +171,6 @@ public class Database {
      * @param stats PlayerStats data
      */
     public void save(List<PlayerStats> stats) {
-        System.out.println("Save player" + stats);
-
         if (stats != null && dataSource != null) {
             update(stats.stream()
                     .filter(Objects::nonNull)
@@ -192,8 +190,6 @@ public class Database {
         if (stats.isEmpty()) {
             return;
         }
-
-        System.out.println("Update player" + stats);
 
         //Save the stats to the database
         Connection conn = null;
@@ -232,8 +228,6 @@ public class Database {
         if (stats.isEmpty()) {
             return;
         }
-
-        System.out.println("Insert player" + stats);
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -421,15 +415,16 @@ public class Database {
                         + "ORDER BY " + type + " desc "
                         + "LIMIT " + Settings.getTopitems());
 
-                List<PlayerStats> result = Lists.newArrayList();
+                Map<String, Integer> result = Maps.newHashMap();
                 for (int i = 0; i < Settings.getTopitems(); i++) {
                     PlayerStats stats = extractPlayerStats(resultSet);
                     if (!stats.isNew()) {
-                        result.add(stats);
+                        String entry = (i + 1) + ". " + stats.getPlayername();
+                        result.put(entry, valueMapper.apply(stats));
                     }
                 }
 
-                return result.stream().collect(Collectors.toMap(PlayerStats::getPlayername, valueMapper));
+                return result;
             } catch (SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error loading top list", ex);
             } finally {
