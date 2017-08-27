@@ -19,14 +19,10 @@ import org.bukkit.scoreboard.Scoreboard;
 
 /**
  * Managing the scoreboard access.
- *
- * @see com.github.games647.scoreboardstats.protocol.PacketSbManager
  */
 public class BukkitScoreboardManager extends SbManager {
 
     private static final String CRITERIA = "dummy";
-
-    private final boolean oldBukkit = isOldScoreboardAPI();
 
     /**
      * Initialize scoreboard manager.
@@ -167,7 +163,7 @@ public class BukkitScoreboardManager extends SbManager {
                         sendScore(objective, displayText, replaceEvent.getScore(), false);
                     }
                 } catch (UnknownVariableException ex) {
-                    //Remove the variable becaue we can't replace it
+                    //Remove the variable because we can't replace it
                     iter.remove();
                     Settings.getMainScoreboard().getItemsByName().remove(variableItem.getDisplayText());
 
@@ -178,14 +174,7 @@ public class BukkitScoreboardManager extends SbManager {
     }
 
     private void sendScore(Objective objective, String title, int value, boolean complete) {
-        Score score;
-        if (oldBukkit) {
-            //Bukkit.getOfflinePlayer performance work around
-            score = objective.getScore(new FastOfflinePlayer(title));
-        } else {
-            score = objective.getScore(title);
-        }
-
+        Score score = objective.getScore(title);
         if (complete && value == 0) {
             /*
              * Workaround because the value from Bukkit is set as default to zero and Bukkit sends only
@@ -195,18 +184,5 @@ public class BukkitScoreboardManager extends SbManager {
         }
 
         score.setScore(value);
-    }
-
-    private boolean isOldScoreboardAPI() {
-        try {
-            Objective.class.getDeclaredMethod("getScore", String.class);
-        } catch (NoSuchMethodException noSuchMethodEx) {
-            //since we have an extra class for it (FastOfflinePlayer)
-            //we can fail silently
-            return true;
-        }
-
-        //We have access to the new method
-        return false;
     }
 }
