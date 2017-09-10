@@ -15,7 +15,7 @@ import org.bukkit.util.NumberConversions;
 /**
  * Replace the economy variable with Vault.
  *
- * http://dev.bukkit.org/bukkit-plugins/vault/
+ * https://dev.bukkit.org/bukkit-plugins/vault/
  *
  * @see Economy
  */

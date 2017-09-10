@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
@@ -280,7 +279,7 @@ public class Database {
             plugin.getLogger().info(Lang.get("savingStats"));
 
             //If pvpstats are enabled save all stats that are in the cache
-            List<PlayerStats> toSave = BackwardsCompatibleUtil.getOnlinePlayers().stream()
+            List<PlayerStats> toSave = Bukkit.getOnlinePlayers().stream()
                     .map(this::getCachedStats)
                     .filter(Objects::nonNull)
                     .filter(PlayerStats::isModified)
@@ -293,7 +292,7 @@ public class Database {
             dataSource.close();
         } finally {
             //Make rally sure we remove all even on error
-            BackwardsCompatibleUtil.getOnlinePlayers()
+            Bukkit.getOnlinePlayers()
                     .forEach(player -> player.removeMetadata(METAKEY, plugin));
         }
     }
@@ -342,7 +341,7 @@ public class Database {
             }
 
             Future<Collection<? extends Player>> syncPlayers = Bukkit.getScheduler()
-                    .callSyncMethod(plugin, BackwardsCompatibleUtil::getOnlinePlayers);
+                    .callSyncMethod(plugin, Bukkit::getOnlinePlayers);
 
             try {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();

@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Replace all variables that are associated with the faction plugin
  *
- * http://dev.bukkit.org/bukkit-plugins/factions/
+ * https://dev.bukkit.org/bukkit-plugins/factions/
 */
 public class FactionsVariables extends DefaultReplaceAdapter<Plugin> {
 

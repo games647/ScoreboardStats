@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.scoreboard.protocol;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
@@ -14,6 +13,11 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_TEAM;
 
 /**
  * Creates the specific packets and send it with help of ProtocolLib.
@@ -36,7 +40,7 @@ public class PacketFactory {
      * @param state whether the item should be send as removed or created/updated
      */
     public static void sendPacket(Item item, State state) {
-        PacketContainer scorePacket = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_SCORE, true);
+        PacketContainer scorePacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_SCORE, true);
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         scorePacket.getStrings().write(0, item.getScoreName());
         scorePacket.getStrings().write(1, item.getParent().getName());
@@ -66,8 +70,7 @@ public class PacketFactory {
      * @param state whether the objective was created, updated (displayname) or removed
      */
     public static void sendPacket(Objective objective, State state) {
-        PacketContainer objectivePacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_OBJECTIVE, true);
+        PacketContainer objectivePacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_OBJECTIVE, true);
         objectivePacket.getStrings().write(0, objective.getName());
 
         if (state != State.REMOVE) {
@@ -89,8 +92,7 @@ public class PacketFactory {
      * @param objective the displayed objective, if getName() is empty it will just clear the sidebar
      */
     public static void sendDisplayPacket(Objective objective) {
-        PacketContainer displayPacket = PROTOCOL_MANAGER
-                .createPacket(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE, true);
+        PacketContainer displayPacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_DISPLAY_OBJECTIVE, true);
         //Can be empty to clear the sidebar slot
         //max length 16 and since 1.7 UTF-8 instead of UTF-16
         displayPacket.getStrings().write(0, objective.getName());
@@ -100,7 +102,7 @@ public class PacketFactory {
     }
 
     public static void sendTeamPacket(Team team, State state) {
-        PacketContainer teamPacket = PROTOCOL_MANAGER.createPacket(PacketType.Play.Server.SCOREBOARD_TEAM, true);
+        PacketContainer teamPacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_TEAM, true);
         teamPacket.getStrings().write(0, team.getName());
 
         if (state == State.CREATE) {

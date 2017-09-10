@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
-import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.google.common.collect.Iterables;
@@ -78,7 +77,7 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
 
     @Override
     public void run() {
-        Player sender = Iterables.getFirst(BackwardsCompatibleUtil.getOnlinePlayers(), null);
+        Player sender = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
         if (sender != null) {
             for (String serverName : playersCount.keySet()) {
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();

@@ -21,7 +21,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 /**
  * Replace all variables that are associated with the prison plugin
  *
- * http://dev.bukkit.org/bukkit-plugins/mcprison/
+ * https://dev.bukkit.org/bukkit-plugins/mcprison/
  */
 public class McPrisonVariables extends DefaultReplaceAdapter<Plugin> {
 

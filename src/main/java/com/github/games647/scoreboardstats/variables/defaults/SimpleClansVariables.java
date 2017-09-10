@@ -7,14 +7,13 @@ import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import net.sacredlabyrinth.phaed.simpleclans.managers.ClanManager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
 
 /**
  * Replace all variables that are associated with the SimpleClans plugin
  *
- * http://dev.bukkit.org/bukkit-plugins/simpleclans/
+ * https://dev.bukkit.org/bukkit-plugins/simpleclans/
  *
  * @see SimpleClans
  * @see ClanPlayer
@@ -29,7 +28,7 @@ public class SimpleClansVariables extends DefaultReplaceAdapter<SimpleClans> {
      * Creates a new SimpleClans replacer
      */
     public SimpleClansVariables() {
-        super((SimpleClans) Bukkit.getPluginManager().getPlugin("SimpleClans")
+        super(SimpleClans.getInstance()
                 , "kills", "deaths", "kdr"
                 , "members", "clan_kdr", "rivals", "allies"
                 , "clan_money", "clan_kills", "allies_total", "members_online");

@@ -62,7 +62,7 @@ public abstract class SbManager {
     public void registerAll() {
         boolean ispvpstats = Settings.isPvpStats();
         //maybe batch this
-        BackwardsCompatibleUtil.getOnlinePlayers().stream().filter(Player::isOnline).forEach(player -> {
+        Bukkit.getOnlinePlayers().stream().filter(Player::isOnline).forEach(player -> {
             if (ispvpstats) {
                 //maybe batch this
                 player.removeMetadata("player_stats", plugin);
@@ -77,7 +77,7 @@ public abstract class SbManager {
      * Clear the scoreboard for all players
      */
     public void unregisterAll() {
-        BackwardsCompatibleUtil.getOnlinePlayers().forEach(this::unregister);
+        Bukkit.getOnlinePlayers().forEach(this::unregister);
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.variables;
 
-import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Lang;
@@ -222,7 +221,7 @@ public class ReplaceManager implements Listener {
      * @param newScore what should be the new score
      */
     public void updateScore(String variable, int newScore) {
-        BackwardsCompatibleUtil.getOnlinePlayers().forEach(pl -> updateScore(pl, variable, newScore));
+        Bukkit.getOnlinePlayers().forEach(pl -> updateScore(pl, variable, newScore));
     }
 
     /**

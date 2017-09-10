@@ -5,13 +5,13 @@ import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.PlayerData;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class GriefPreventionVariables extends DefaultReplaceAdapter<GriefPrevention> {
 
     public GriefPreventionVariables() {
-        super((GriefPrevention) Bukkit.getPluginManager().getPlugin("GriefPrevention")
+        super(JavaPlugin.getPlugin(GriefPrevention.class)
                 , "accrued_claim_block", "bonus_claim_blocks", "group_bonus_blocks", "remaining_blocks", "total_blocks");
     }
 

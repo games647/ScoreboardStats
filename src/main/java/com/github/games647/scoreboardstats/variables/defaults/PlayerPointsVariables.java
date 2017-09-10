@@ -10,18 +10,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents a replacer for the Plugin PlayerPoints
  *
- * http://dev.bukkit.org/bukkit-plugins/playerpoints/
+ * https://dev.bukkit.org/bukkit-plugins/playerpoints/
  */
 public class PlayerPointsVariables extends DefaultReplaceAdapter<PlayerPoints> implements Listener {
 
     private final ReplaceManager replaceManager;
 
     public PlayerPointsVariables(ReplaceManager replaceManager) {
-        super((PlayerPoints) Bukkit.getPluginManager().getPlugin("PlayerPoints"), "points");
+        super(JavaPlugin.getPlugin(PlayerPoints.class), "points");
 
         this.replaceManager = replaceManager;
     }

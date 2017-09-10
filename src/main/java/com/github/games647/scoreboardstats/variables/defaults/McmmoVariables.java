@@ -22,7 +22,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Replace all variables that are associated with the mcMMO plugin
  *
- * http://dev.bukkit.org/bukkit-plugins/mcmmo/
+ * https://dev.bukkit.org/bukkit-plugins/mcmmo/
  */
 public class McmmoVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 

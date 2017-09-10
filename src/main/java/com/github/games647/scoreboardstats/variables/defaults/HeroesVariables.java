@@ -11,7 +11,6 @@ import com.herocraftonline.heroes.characters.CharacterManager;
 import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +18,7 @@ import org.bukkit.event.Listener;
 /**
  * Replace all variables that are associated with the heroes plugin
  *
- * http://dev.bukkit.org/bukkit-plugins/heroes/
+ * https://dev.bukkit.org/bukkit-plugins/heroes/
  */
 public class HeroesVariables extends DefaultReplaceAdapter<Heroes> implements Listener {
 
@@ -32,7 +31,7 @@ public class HeroesVariables extends DefaultReplaceAdapter<Heroes> implements Li
      * @param replaceManager the replace manager from ScoreboardStats
      */
     public HeroesVariables(ReplaceManager replaceManager) {
-        super((Heroes) Bukkit.getPluginManager().getPlugin("Heroes"), "mana", "level", "max_mana");
+        super(Heroes.getInstance(), "mana", "level", "max_mana");
 
         this.replaceManager = replaceManager;
         characterManager = getPlugin().getCharacterManager();

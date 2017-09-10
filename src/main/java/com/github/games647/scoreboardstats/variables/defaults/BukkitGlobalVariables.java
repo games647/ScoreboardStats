@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.variables.defaults;
 
-import com.github.games647.scoreboardstats.BackwardsCompatibleUtil;
 import com.github.games647.scoreboardstats.TicksPerSecondTask;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
@@ -36,7 +35,7 @@ public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> impleme
         }
 
         if ("online".equals(variable)) {
-            replaceEvent.setScoreOrText(BackwardsCompatibleUtil.getOnlinePlayers().size());
+            replaceEvent.setScoreOrText(Bukkit.getOnlinePlayers().size());
             replaceEvent.setConstant(true);
             return;
         }
@@ -49,11 +48,11 @@ public class BukkitGlobalVariables extends DefaultReplaceAdapter<Plugin> impleme
 
     @EventHandler(ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent joinEvent) {
-        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size());
+        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().size());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent quitEvent) {
-        replaceManager.updateScore("online", BackwardsCompatibleUtil.getOnlinePlayers().size() - 1);
+        replaceManager.updateScore("online", Bukkit.getOnlinePlayers().size() - 1);
     }
 }

@@ -6,7 +6,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Separate the code and the messages.
@@ -44,8 +44,7 @@ public class Lang {
      * Initialize localization manager
      */
     public Lang() {
-        //JavaPlugin.getPlugin isn't available in 1.5
-        ScoreboardStats plugin = (ScoreboardStats) Bukkit.getPluginManager().getPlugin("ScoreboardStats");
+        ScoreboardStats plugin = JavaPlugin.getPlugin(ScoreboardStats.class);
         ClassLoader classLoader = plugin.getClass().getClassLoader();
 
         messages = ResourceBundle.getBundle("messages", Locale.getDefault(), classLoader);
