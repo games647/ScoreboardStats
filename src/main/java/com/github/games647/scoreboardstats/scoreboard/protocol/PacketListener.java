@@ -47,11 +47,16 @@ public class PacketListener extends PacketAdapter {
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
         Player player = packetEvent.getPlayer();
-        if (packetEvent.isCancelled() || player instanceof Factory) {
+        if (packetEvent.isCancelled() || player instanceof Factory ||) {
             return;
         }
 
         PacketContainer packet = packetEvent.getPacket();
+        if (packet.hasMetadata("ScoreboardStats")) {
+            //it's our own packet
+            return;
+        }
+
         PacketType packetType = packetEvent.getPacketType();
 
         //everything was read from the packet, so we don't need to access it anymore

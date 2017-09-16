@@ -127,9 +127,12 @@ public class PacketFactory {
             return;
         }
 
+        //add metadata that we ignore our packets on the listener
+        packet.addMetadata("ScoreboardStats", true);
+
         try {
             //false so we don't listen to our own packets
-            PROTOCOL_MANAGER.sendServerPacket(receiver, packet, false);
+            PROTOCOL_MANAGER.sendServerPacket(receiver, packet);
         } catch (InvocationTargetException ex) {
             //just log it for now.
             Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
