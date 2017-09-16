@@ -1,8 +1,9 @@
 package com.github.games647.scoreboardstats.scoreboard.protocol;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
+
+import java.util.Objects;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -103,7 +104,7 @@ public class Item implements Comparable<Item> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(scoreName);
+        return Objects.hash(scoreName);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class Item implements Comparable<Item> {
         //ignores also null
         if (obj instanceof Item) {
             Item other = (Item) obj;
-            return Objects.equal(scoreName, other.scoreName);
+            return Objects.equals(scoreName, other.scoreName);
         }
 
         return false;

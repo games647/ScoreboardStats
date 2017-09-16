@@ -4,11 +4,11 @@
 /.settings
 
 # netbeans
-/nbproject
+*/nbproject
 nb-configuration.xml
 
 # maven
-/target
+*/target
 
 # vim
 .*.sw[a-p]
@@ -17,7 +17,7 @@ nb-configuration.xml
 hs_err_pid*
 
 # various other potential build files
-/build
+*/build/
 /bin
 /dist
 /manifest.mf

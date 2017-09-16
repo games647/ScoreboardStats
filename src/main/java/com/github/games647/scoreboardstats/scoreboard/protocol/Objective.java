@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.scoreboard.protocol;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -9,6 +8,7 @@ import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -257,7 +257,7 @@ public class Objective {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(objectiveName);
+        return Objects.hash(objectiveName);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class Objective {
         //ignores also null
         if (obj instanceof Objective) {
             Objective other = (Objective) obj;
-            return Objects.equal(objectiveName, other.objectiveName);
+            return Objects.equals(objectiveName, other.objectiveName);
         }
 
         return false;

@@ -1,8 +1,8 @@
 package com.github.games647.scoreboardstats;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -191,7 +191,7 @@ public class Version implements Comparable<Version> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(major, minor, build);
+        return Objects.hash(major, minor, build);
     }
 
     @Override

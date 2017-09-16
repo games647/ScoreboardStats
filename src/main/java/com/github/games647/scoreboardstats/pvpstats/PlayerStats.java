@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.google.common.base.Objects;
-
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -231,7 +230,7 @@ public class PlayerStats {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, uuid, playername);
+        return Objects.hash(id, uuid, playername);
     }
 
     @Override
@@ -240,8 +239,8 @@ public class PlayerStats {
         if (obj instanceof PlayerStats) {
             PlayerStats other = (PlayerStats) obj;
             return id == other.id
-                    && Objects.equal(uuid, other.uuid)
-                    && Objects.equal(playername, other.playername);
+                    && Objects.equals(uuid, other.uuid)
+                    && Objects.equals(playername, other.playername);
         }
 
         return false;
