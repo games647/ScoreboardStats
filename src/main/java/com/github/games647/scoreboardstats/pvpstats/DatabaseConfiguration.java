@@ -1,13 +1,9 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
-import com.github.games647.scoreboardstats.Version;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.zaxxer.hikari.HikariConfig;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,7 +20,6 @@ public class DatabaseConfiguration {
     private final Plugin plugin;
 
     private HikariConfig serverConfig;
-    private boolean uuidUse;
     private String tablePrefix;
 
     DatabaseConfiguration(Plugin instance) {
@@ -38,15 +33,6 @@ public class DatabaseConfiguration {
      */
     public HikariConfig getServerConfig() {
         return serverConfig;
-    }
-
-    /**
-     * Get whether the stats should be searched by the UUID or name
-     *
-     * @return whether the stats should be searched by the UUID or name
-     */
-    public boolean isUuidUse() {
-        return uuidUse;
     }
 
     public String getTablePrefix() {
@@ -67,18 +53,6 @@ public class DatabaseConfiguration {
         }
 
         FileConfiguration sqlConfig = YamlConfiguration.loadConfiguration(file.toFile());
-
-        uuidUse = sqlConfig.getBoolean("uuidUse", Version.isUUIDCompatible());
-        if (Version.isUUIDCompatible() && !uuidUse) {
-            sqlConfig.set("uuidUse", true);
-            uuidUse = true;
-            plugin.getLogger().info("Forcing uuidUse to true, because the server is uuid compatible");
-            try {
-                sqlConfig.save(file.toFile());
-            } catch (IOException ex) {
-                plugin.getLogger().log(Level.WARNING, Lang.get("databaseConfigSaveError"), ex);
-            }
-        }
 
         ConfigurationSection sqlSettingSection = sqlConfig.getConfigurationSection("SQL-Settings");
         serverConfig.setUsername(sqlSettingSection.getString("Username"));

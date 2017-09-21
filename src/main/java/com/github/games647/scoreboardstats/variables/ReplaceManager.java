@@ -18,8 +18,6 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
@@ -191,12 +189,6 @@ public class ReplaceManager implements Listener {
         }
 
         return found;
-    }
-
-    public void addUpdateOnEvent(VariableReplacer replacer, Plugin plugin, String variable, Class<? extends Event> eventClass) {
-        EventVariableExecutor eventVariableExecutor = new EventVariableExecutor(this.plugin, replacer, variable);
-        Bukkit.getPluginManager()
-                .registerEvent(eventClass, new Listener() { }, EventPriority.MONITOR, eventVariableExecutor, plugin, true);
     }
 
     /**

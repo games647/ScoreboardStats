@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
@@ -72,7 +73,7 @@ public class Database {
      */
     public void loadAccountAsync(Player player) {
         if (getCachedStats(player) == null && dataSource != null) {
-            Runnable statsLoader = new StatsLoader(plugin, dbConfig.isUuidUse(), player, this);
+            Runnable statsLoader = new StatsLoader(plugin, player, this);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, statsLoader);
         }
     }
@@ -87,25 +88,16 @@ public class Database {
         if (uniqueId == null || dataSource == null) {
             return null;
         } else {
-            Connection conn = null;
-            PreparedStatement stmt = null;
-            ResultSet resultSet = null;
-            try {
-                conn = dataSource.getConnection();
+            try (Connection conn = dataSource.getConnection();
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
+                        + "uuid=?")) {
 
-                stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
-                        + (dbConfig.isUuidUse() ? "uuid" : "playername")
-                        + "=?");
                 stmt.setString(1, uniqueId.toString());
-
-                resultSet = stmt.executeQuery();
-                return extractPlayerStats(resultSet);
+                try (ResultSet resultSet = stmt.executeQuery()) {
+                    return extractPlayerStats(resultSet);
+                }
             } catch (SQLException ex) {
                 plugin.getLogger().log(Level.SEVERE, "Error loading player profile", ex);
-            } finally {
-                close(resultSet);
-                close(stmt);
-                close(conn);
             }
 
             return null;
@@ -147,11 +139,7 @@ public class Database {
         if (player == null || dataSource == null) {
             return null;
         } else {
-            if (dbConfig.isUuidUse()) {
                 return loadAccount(player.getUniqueId());
-            } else {
-                return loadAccount(player.getName());
-            }
         }
     }
 
@@ -169,7 +157,7 @@ public class Database {
      *
      * @param stats PlayerStats data
      */
-    public void save(List<PlayerStats> stats) {
+    public void save(Collection<PlayerStats> stats) {
         if (stats != null && dataSource != null) {
             update(stats.stream()
                     .filter(Objects::nonNull)
@@ -185,20 +173,16 @@ public class Database {
         }
     }
 
-    private void update(List<PlayerStats> stats) {
+    private void update(Collection<PlayerStats> stats) {
         if (stats.isEmpty()) {
             return;
         }
 
         //Save the stats to the database
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.prepareStatement("UPDATE player_stats "
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE player_stats "
                     + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
-                    + "WHERE id=?");
-
+                    + "WHERE id=?")) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setInt(1, stat.getKills());
@@ -217,26 +201,18 @@ public class Database {
             conn.commit();
         } catch (Exception ex) {
             plugin.getLogger().log(Level.SEVERE, "Error updating profiles", ex);
-        } finally {
-            close(stmt);
-            close(conn);
         }
     }
 
-    private void insert(List<PlayerStats> stats) {
+    private void insert(Collection<PlayerStats> stats) {
         if (stats.isEmpty()) {
             return;
         }
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet generatedKeys = null;
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO player_stats "
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO player_stats "
                     + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
-                    + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-
+                    + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setString(1, stat.getUuid() == null ? null : stat.getUuid().toString());
@@ -254,20 +230,17 @@ public class Database {
             stmt.executeBatch();
             conn.commit();
 
-            generatedKeys = stmt.getGeneratedKeys();
-            for (PlayerStats stat : stats) {
-                if (!generatedKeys.next()) {
-                    break;
-                }
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                for (PlayerStats stat : stats) {
+                    if (!generatedKeys.next()) {
+                        break;
+                    }
 
-                stat.setId(generatedKeys.getInt(1));
+                    stat.setId(generatedKeys.getInt(1));
+                }
             }
         } catch (Exception ex) {
             plugin.getLogger().log(Level.SEVERE, "Error inserting profiles", ex);
-        } finally {
-            close(generatedKeys);
-            close(stmt);
-            close(conn);
         }
     }
 
@@ -303,15 +276,11 @@ public class Database {
     public void setupDatabase() {
         //Check if pvpstats should be enabled
         dbConfig.loadConfiguration();
-
         dataSource = new HikariDataSource(dbConfig.getServerConfig());
 
-        Connection conn = null;
-        Statement stmt = null;
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.createStatement();
-            String createTableQuery = "CREATE TABLE IF NOT EXISTS player_stats ( "
+        try (Connection conn = dataSource.getConnection();
+            Statement stmt = conn.createStatement()) {
+            String createTableQuery = "CREATE TABLE IF NOT EXISTS " + dbConfig.getTablePrefix() + "player_stats ( "
                     + "id integer PRIMARY KEY AUTO_INCREMENT, "
                     + "uuid varchar(40), "
                     + "playername varchar(16) not null, "
@@ -329,9 +298,6 @@ public class Database {
             stmt.execute(createTableQuery);
         } catch (Exception ex) {
             plugin.getLogger().log(Level.SEVERE, "Error creating database ", ex);
-        } finally {
-            close(stmt);
-            close(conn);
         }
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateTopList, 20 * 60 * 5, 0);
@@ -370,7 +336,7 @@ public class Database {
      *
      * @return a iterable of the entries
      */
-    public Collection<Map.Entry<String, Integer>> getTop() {
+    public Iterable<Entry<String, Integer>> getTop() {
         synchronized (toplist) {
             return toplist.entrySet();
         }
@@ -402,18 +368,14 @@ public class Database {
     }
 
     private Map<String, Integer> getTopList(String type, Function<PlayerStats, Integer> valueMapper) {
-        if (dataSource != null) {
-            Connection conn = null;
-            Statement stmt = null;
-            ResultSet resultSet = null;
-            try {
-                conn = dataSource.getConnection();
-                stmt = conn.createStatement();
+        if (dataSource == null) {
+            return Collections.emptyMap();
+        }
 
-                resultSet = stmt.executeQuery("SELECT * FROM player_stats "
-                        + "ORDER BY " + type + " desc "
-                        + "LIMIT " + Settings.getTopitems());
-
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement()) {
+            try (ResultSet resultSet = stmt.executeQuery("SELECT * FROM player_stats ORDER BY " + type + " desc"
+                    + " LIMIT " + Settings.getTopitems())) {
                 Map<String, Integer> result = Maps.newHashMap();
                 for (int i = 0; i < Settings.getTopitems(); i++) {
                     PlayerStats stats = extractPlayerStats(resultSet);
@@ -424,13 +386,9 @@ public class Database {
                 }
 
                 return result;
-            } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading top list", ex);
-            } finally {
-                close(resultSet);
-                close(stmt);
-                close(conn);
             }
+        } catch (SQLException ex) {
+            plugin.getLogger().log(Level.SEVERE, "Error loading top list", ex);
         }
 
         return Collections.emptyMap();
@@ -448,15 +406,5 @@ public class Database {
 
         plugin.getReplaceManager().register(new StatsVariables(plugin, this));
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
-    }
-
-    private void close(AutoCloseable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (Exception ex) {
-                //ignore
-            }
-        }
     }
 }

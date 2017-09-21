@@ -16,21 +16,18 @@ public class StatsLoader implements Runnable {
 
     protected final ScoreboardStats plugin;
 
-    private final boolean uuidSearch;
     private final WeakReference<Player> weakPlayer;
     private final WeakReference<Database> weakDatabase;
 
     /**
      * Creates a new loader for a specific player
      *
-     * @param plugin the owning plugin to reschedule
-     * @param uuidSearch should it be searched by uuid
-     * @param player player instance
+     * @param plugin        the owning plugin to reschedule
+     * @param player        player instance
      * @param statsDatabase the pvp database
      */
-    public StatsLoader(ScoreboardStats plugin, boolean uuidSearch, Player player, Database statsDatabase) {
+    public StatsLoader(ScoreboardStats plugin, Player player, Database statsDatabase) {
         this.plugin = plugin;
-        this.uuidSearch = uuidSearch;
 
         //don't prevent the garbage collection of this player if he logs out
         this.weakPlayer = new WeakReference<>(player);
@@ -45,10 +42,8 @@ public class StatsLoader implements Runnable {
             final PlayerStats stats = statsDatabase.loadAccount(player);
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
-            if (uuidSearch) {
-                //Set the uuid if the server is uuid compatible
-                stats.setUuid(player.getUniqueId());
-            }
+            //Set the uuid if the server is uuid compatible
+            stats.setUuid(player.getUniqueId());
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 //possible not thread-safe, so reschedule it while setMetadata is thread-safe

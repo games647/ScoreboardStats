@@ -47,7 +47,7 @@ public class PacketListener extends PacketAdapter {
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
         Player player = packetEvent.getPlayer();
-        if (packetEvent.isCancelled() || player instanceof Factory ||) {
+        if (packetEvent.isCancelled() || player instanceof Factory) {
             return;
         }
 
@@ -80,16 +80,7 @@ public class PacketListener extends PacketAdapter {
         int score = packet.getIntegers().read(0);
 
         //state id
-        Integer stateId = packet.getIntegers().readSafely(1);
-
-        State action;
-        if (stateId == null) {
-            //an enum is used instead of an integer
-            action = State.fromId(packet.getScoreboardActions().read(0).ordinal());
-        } else {
-            //old system no enum -> 1.5-1.7
-            action = State.fromId(stateId);
-        }
+        State action = State.fromId(packet.getScoreboardActions().read(0).ordinal());
 
         //Packet receiving validation
         if (action == State.CREATE && parent.length() > 16) {

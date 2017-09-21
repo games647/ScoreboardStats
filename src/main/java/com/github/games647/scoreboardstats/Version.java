@@ -17,25 +17,6 @@ public class Version implements Comparable<Version> {
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
 
-    private static boolean UUID_COMPATIBLE;
-
-    static {
-        try {
-            UUID_COMPATIBLE = compare("1.7", getMinecraftVersionString()) >= 0;
-        } catch (Exception ex) {
-            UUID_COMPATIBLE = false;
-        }
-    }
-
-    /**
-     * Gets whether server supports UUIDs
-     *
-     * @return whether server supports UUIDs
-     */
-    public static boolean isUUIDCompatible() {
-        return UUID_COMPATIBLE;
-    }
-
     /**
      * Gets the Minecraft version
      *

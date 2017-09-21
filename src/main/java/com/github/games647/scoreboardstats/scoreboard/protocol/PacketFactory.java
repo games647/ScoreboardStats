@@ -51,15 +51,7 @@ public class PacketFactory {
         }
 
         //state id
-        Integer stateId = scorePacket.getIntegers().readSafely(1);
-        if (stateId == null) {
-            //an enum is used instead of an integer
-            scorePacket.getScoreboardActions().write(0, ScoreboardAction.values()[state.ordinal()]);
-        } else {
-            //old system -> no enum -> 1.5-1.7
-            scorePacket.getIntegers().write(1, state.ordinal());
-        }
-
+        scorePacket.getScoreboardActions().write(0, ScoreboardAction.values()[state.ordinal()]);
         sendPacket(item.getParent().getScoreboard().getOwner().getUniqueId(), scorePacket);
     }
 
@@ -77,8 +69,8 @@ public class PacketFactory {
             //only send the title if needed, so while creating the objective or update the title
             //max length 32 and since 1.7 UTF-8 instead of UTF-16
             objectivePacket.getStrings().write(1, objective.getDisplayName());
-            //introduced in 1.8 don't fail on versions for 1.7 or below
-            objectivePacket.getStrings().writeSafely(2, "integer");
+            //introduced in 1.8
+            objectivePacket.getStrings().write(2, "integer");
         }
 
         //state id
@@ -110,8 +102,6 @@ public class PacketFactory {
             teamPacket.getStrings().write(3, team.getSuffix());
 
             teamPacket.getSpecificModifier(Collection.class).write(0, team.getEntries());
-        } else if (state == State.REMOVE) {
-            //just write the teamName
         } else if (state == State.UPDATE) {
             teamPacket.getStrings().write(2, team.getPrefix());
             teamPacket.getStrings().write(3, team.getSuffix());

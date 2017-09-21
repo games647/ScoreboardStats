@@ -169,9 +169,6 @@ public class Objective {
 
         Preconditions.checkNotNull(name);
         //Since 1.8 the name can be up to 40 characters long. UUID in the future?
-        ////newer minecraft versions support longer names - TODO: version specific check
-//        Preconditions.checkArgument(name.length() <= 16);
-
         Preconditions.checkState(items.size() <= MAX_ITEM_SIZE);
 
         Item scoreItem = new Item(this, name, score, send);

@@ -159,14 +159,14 @@ public class PlayerScoreboard {
         }
     }
 
-    void addPlayerTeam(String teamName, Collection<String> changedPlayer) {
+    void addPlayerTeam(String teamName, Iterable<String> changedPlayer) {
         Team team = teamByName.get(teamName);
         if (team != null) {
             changedPlayer.forEach(team::addEntry);
         }
     }
 
-    void removePlayerTeam(String teamName, Collection<String> changedPlayer) {
+    void removePlayerTeam(String teamName, Iterable<String> changedPlayer) {
         Team team = teamByName.get(teamName);
         if (team != null) {
             changedPlayer.forEach(team::removeEntry);

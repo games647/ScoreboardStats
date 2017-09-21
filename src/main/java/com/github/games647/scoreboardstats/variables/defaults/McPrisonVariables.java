@@ -15,6 +15,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -23,7 +24,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
  *
  * https://dev.bukkit.org/bukkit-plugins/mcprison/
  */
-public class McPrisonVariables extends DefaultReplaceAdapter<Plugin> {
+public class McPrisonVariables extends DefaultReplaceAdapter<Plugin> implements Listener {
 
     private final ReplaceManager replaceManager;
 

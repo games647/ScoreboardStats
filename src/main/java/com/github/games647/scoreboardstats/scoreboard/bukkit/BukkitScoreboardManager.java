@@ -48,7 +48,8 @@ public class BukkitScoreboardManager extends SbManager {
             player.setScoreboard(board);
         } catch (IllegalStateException stateEx) {
             //the player logged out - fail silently
-            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/CraftBukkit-Patches/0066-Disable-Connected-Check-on-setScoreboard.patch
+            //https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/CraftBukkit-Patches/
+            // 0066-Disable-Connected-Check-on-setScoreboard.patch
             return;
         }
 

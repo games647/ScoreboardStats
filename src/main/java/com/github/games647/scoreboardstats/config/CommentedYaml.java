@@ -11,11 +11,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -95,7 +96,8 @@ public class CommentedYaml<T extends Plugin> {
 
         //todo add comment support
         try {
-            Files.write(plugin.getDataFolder().toPath().resolve(FILE_NAME), Arrays.asList(config.saveToString()));
+            List<String> lines = Collections.singletonList(config.saveToString());
+            Files.write(plugin.getDataFolder().toPath().resolve(FILE_NAME), lines);
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, null, ex);
         }
@@ -117,7 +119,7 @@ public class CommentedYaml<T extends Plugin> {
         }
     }
 
-    private void load(List<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
+    private void load(Iterable<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             //remove the silly tab error from yaml
@@ -134,7 +136,7 @@ public class CommentedYaml<T extends Plugin> {
      *
      * @return the default configuration
      */
-    private FileConfiguration getDefaults() {
+    private Configuration getDefaults() {
         YamlConfiguration defaults = new YamlConfiguration();
         InputStream defConfigStream = plugin.getResource(FILE_NAME);
         if (defConfigStream != null) {

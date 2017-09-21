@@ -18,10 +18,7 @@ public class PlayerStats {
 
     private int id = -1;
 
-    //is null in non-uuid compatible servers or isn't updated yet
     private UUID uuid;
-
-    //isn't unique since 1.7 anymore
     private String playername;
 
     //You can't have negative stats
