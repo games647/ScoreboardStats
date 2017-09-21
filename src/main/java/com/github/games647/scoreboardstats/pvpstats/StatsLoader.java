@@ -42,6 +42,7 @@ public class StatsLoader implements Runnable {
             final PlayerStats stats = statsDatabase.loadAccount(player);
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
+            stats.setLastOnline(System.currentTimeMillis());
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 //possible not thread-safe, so reschedule it while setMetadata is thread-safe

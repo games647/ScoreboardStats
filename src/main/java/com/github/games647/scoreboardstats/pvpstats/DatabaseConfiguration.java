@@ -40,7 +40,7 @@ public class DatabaseConfiguration {
     }
 
     /**
-     * Loads the eBean configuration
+     * Loads the configuration
      */
     public void loadConfiguration() {
         serverConfig = new HikariConfig();

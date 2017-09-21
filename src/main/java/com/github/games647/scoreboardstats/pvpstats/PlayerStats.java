@@ -152,14 +152,14 @@ public class PlayerStats {
      * Get the UNIX timestamp where this entry was last updated. This implies the last online value with a difference of
      * a couple of minutes from the cache.
      *
-     * @return the timestamp this eBean was last updated; can be null
+     * @return the timestamp this was last saved; can be null
      */
     public long getLastOnline() {
         return lastOnline;
     }
 
     /**
-     * Set the update timestamp value. This currently managed by eBean itself, which updates the value on every save.
+     * Set the update timestamp value. This value is updated on every save.
      *
      * @param lastOnline the player was online; can be null
      */
