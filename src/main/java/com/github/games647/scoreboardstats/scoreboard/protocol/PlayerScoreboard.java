@@ -40,7 +40,7 @@ public class PlayerScoreboard {
      * @throws NullPointerException name is null
      * @throws NullPointerException displayName is null
      * @throws IllegalArgumentException name is longer than 16 characters
-     * @throws IllegalArgumentException displayname is longer than 32 characters
+     * @throws IllegalArgumentException display-name is longer than 32 characters
      * @throws IllegalStateException if there is already a objective with that name
      * @throws IllegalStateException if there is already a sidebar objective active
      */

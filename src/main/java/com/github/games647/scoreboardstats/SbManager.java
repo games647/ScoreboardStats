@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.scoreboard.DelayedShowTask;
-import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,29 +17,12 @@ public abstract class SbManager {
     private static final int MAX_ITEM_LENGTH = 16;
 
     protected final ScoreboardStats plugin;
-    protected final ReplaceManager replaceManager;
 
     private final String permission;
 
     public SbManager(ScoreboardStats plugin) {
         this.plugin = plugin;
-        this.replaceManager = new ReplaceManager(this, plugin);
-
         this.permission = plugin.getName().toLowerCase() + ".use";
-    }
-
-    /**
-     * Get the replace manager.
-     *
-     * Warning: The replace manger is bounded to this scoreboard manager.
-     * Every time the built-in reload command is executed it will create also
-     * a new instance of replace manager.
-     *
-     * @return the replace manager
-     * @deprecated Use ScoreboardStats.getReplaceManager
-     */
-    public ReplaceManager getReplaceManager() {
-        return replaceManager;
     }
 
     /**
@@ -99,14 +81,14 @@ public abstract class SbManager {
             return;
         }
 
-        int intervall;
+        int interval;
         if (action) {
-            intervall = Settings.getTempAppear();
+            interval = Settings.getTempAppear();
         } else {
-            intervall = Settings.getTempDisappear();
+            interval = Settings.getTempDisappear();
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, new DelayedShowTask(player, action, this), intervall * 20L);
+        Bukkit.getScheduler().runTaskLater(plugin, new DelayedShowTask(player, action, this), interval * 20L);
     }
 
     protected String stripLength(String check) {

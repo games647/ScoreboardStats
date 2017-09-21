@@ -63,9 +63,9 @@ public class Version implements Comparable<Version> {
      * @throws IllegalArgumentException if the version doesn't contains only positive numbers separated by max. 5 dots.
      */
     public static int[] parse(String version) throws IllegalArgumentException {
-        //exludes spaces which could be added by mistake and exclude build suffixes
-        String trimedVersion = version.trim().split("(\\-|[a-zA-Z])")[0];
-        if (!trimedVersion.matches("\\d+(\\.\\d+){0,5}")) {
+        //excludes spaces which could be added by mistake and exclude build suffixes
+        String trimmedVersion = version.trim().split("(\\-|[a-zA-Z])")[0];
+        if (!trimmedVersion.matches("\\d+(\\.\\d+){0,5}")) {
             //check if it's a format like '1.5'
             throw new IllegalArgumentException("Invalid format: " + version);
         }
@@ -73,7 +73,7 @@ public class Version implements Comparable<Version> {
         int[] versionParts = new int[3];
 
         //escape regEx and split by dots
-        String[] split = trimedVersion.split("\\.");
+        String[] split = trimmedVersion.split("\\.");
         //We check if the length has min 1 entry.
         for (int i = 0; i < split.length && i < versionParts.length; i++) {
             versionParts[i] = Integer.parseInt(split[i]);

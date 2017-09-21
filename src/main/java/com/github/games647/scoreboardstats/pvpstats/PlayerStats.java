@@ -18,7 +18,7 @@ public class PlayerStats {
 
     private int id = -1;
 
-    private UUID uuid;
+    private final UUID uuid;
     private String playername;
 
     //You can't have negative stats
@@ -29,14 +29,13 @@ public class PlayerStats {
 
     private long lastOnline;
 
-    private transient int laststreak;
-    private transient boolean modified;
+    private int laststreak;
 
     public PlayerStats(int id, UUID uuid, String playername,
             int kills, int deaths, int mobkills, int killstreak, long lastOnline) {
+        this(uuid, playername);
+
         this.id = id;
-        this.uuid = uuid;
-        this.playername = playername;
         this.kills = kills;
         this.deaths = deaths;
         this.mobkills = mobkills;
@@ -44,8 +43,9 @@ public class PlayerStats {
         this.lastOnline = lastOnline;
     }
 
-    public PlayerStats() {
-
+    public PlayerStats(UUID uuid, String playername) {
+        this.uuid = uuid;
+        this.playername = playername;
     }
 
     /**
@@ -57,11 +57,6 @@ public class PlayerStats {
         return id;
     }
 
-    /**
-     * Set id. Should be only be used by eBean
-     *
-     * @param id database id
-     */
     public void setId(int id) {
         this.id = id;
     }
@@ -73,17 +68,6 @@ public class PlayerStats {
      */
     public UUID getUuid() {
         return uuid;
-    }
-
-    /**
-     * Sets the UUID of this player
-     *
-     * @param uuid the Mojang UUID for this player if onlinemode
-     *
-     * @see org.bukkit.Bukkit#getOnlineMode()
-     */
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     /**
@@ -187,9 +171,6 @@ public class PlayerStats {
      * Increment the kills
      */
     public void onKill() {
-        modified = true;
-
-        //We need to use this to trigger ebean
         kills++;
 
         laststreak++;
@@ -202,8 +183,6 @@ public class PlayerStats {
      * Increment the mob kills
      */
     public void onMobKill() {
-        modified = true;
-
         mobkills++;
     }
 
@@ -211,14 +190,8 @@ public class PlayerStats {
      * Increment the deaths
      */
     public void onDeath() {
-        modified = true;
-
         laststreak = 0;
         deaths++;
-    }
-
-    public boolean isModified() {
-        return modified;
     }
 
     public boolean isNew() {

@@ -16,11 +16,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class ScoreboardStats extends JavaPlugin {
 
-    //don't create instances here that accesses the bukkit API - it will be incomptible with older mc versions
+    //don't create instances here that accesses the bukkit API - it will be incompatible with older mc versions
     private RefreshTask refreshTask;
     private Settings settings;
     private SbManager scoreboardManager;
     private Database database;
+
+    private ReplaceManager replaceManager;
 
     /**
      * Get the scoreboard manager.
@@ -37,11 +39,7 @@ public class ScoreboardStats extends JavaPlugin {
      * @return the manager
      */
     public ReplaceManager getReplaceManager() {
-        if (scoreboardManager == null) {
-            return null;
-        }
-
-        return scoreboardManager.getReplaceManager();
+        return replaceManager;
     }
 
     /**
@@ -68,7 +66,7 @@ public class ScoreboardStats extends JavaPlugin {
     @Override
     public void onLoad() {
         //Create a logger that is available by just the plugin name
-        //have to be peformed before the first logging message by this plugin, so it prints it correctly
+        //have to be performed before the first logging message by this plugin, so it prints it correctly
         Logger.getLogger(getName()).setParent(getLogger());
     }
 
@@ -77,7 +75,7 @@ public class ScoreboardStats extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        //Load the config + needs to be initialised to get the configurated value for update-checking
+        //Load the config + needs to be initialised to get the configured value for update-checking
         settings = new Settings(this);
         settings.loadConfig();
 
@@ -99,6 +97,8 @@ public class ScoreboardStats extends JavaPlugin {
         } else {
             scoreboardManager = new BukkitScoreboardManager(this);
         }
+
+        replaceManager = new ReplaceManager(scoreboardManager, this);
 
         if (Settings.isPvpStats()) {
             database = new Database(this);

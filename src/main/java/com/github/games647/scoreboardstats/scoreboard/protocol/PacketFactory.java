@@ -59,7 +59,7 @@ public class PacketFactory {
      * Sends a new scoreboard objective packet and a display packet (if the objective was created)
      *
      * @param objective the scoreboard objective
-     * @param state whether the objective was created, updated (displayname) or removed
+     * @param state whether the objective was created, updated (display-name) or removed
      */
     public static void sendPacket(Objective objective, State state) {
         PacketContainer objectivePacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_OBJECTIVE, true);

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Reprents a replacer for non Minecraft related variables
+ * Represents a replacer for non Minecraft related variables
  */
 public class GeneralVariables extends DefaultReplaceAdapter<Plugin> {
 

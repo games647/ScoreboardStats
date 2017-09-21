@@ -34,7 +34,7 @@ For this method, you'll need ProtocolLib. It's used to prevent conflicts with
 other plugins which also access the sidebar objective. Otherwise the client
 could crash.
 
-These plugins are (tested) compatible (just activate comaptibilityMode):
+These plugins are (tested) compatible (just activate compatibilityMode):
 * HealthBar (https://dev.bukkit.org/bukkit-plugins/health-bar/)
 * ColoredTags (https://dev.bukkit.org/bukkit-plugins/colored-tags/)
 * GhostPlayer (https://dev.bukkit.org/bukkit-plugins/ghost-player/)
@@ -43,7 +43,7 @@ These plugins are (tested) compatible (just activate comaptibilityMode):
 ### Building
 
 ScoreboardStats uses Maven 3 to manage building configurations,
-  general project informations and dependencies.
+  general project details and dependencies.
 You can compile this project yourself by using Maven.
 
 

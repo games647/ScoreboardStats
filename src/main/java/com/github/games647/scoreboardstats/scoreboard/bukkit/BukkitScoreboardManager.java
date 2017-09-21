@@ -6,6 +6,7 @@ import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
 
 import java.util.Iterator;
@@ -69,12 +70,13 @@ public class BukkitScoreboardManager extends SbManager {
                 update(player, displayText, defScore);
             } else {
                 try {
+                    ReplaceManager replaceManager = plugin.getReplaceManager();
                     ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, defScore, true);
                     if (replaceEvent.isModified()) {
                         sendScore(objective, displayText, replaceEvent.getScore(), true);
                     }
                 } catch (UnknownVariableException ex) {
-                    //Remove the variable becaue we can't replace it
+                    //Remove the variable because we can't replace it
                     iter.remove();
                     Settings.getMainScoreboard().getItemsByVariable().remove(scoreItem.getVariable());
 
@@ -83,7 +85,7 @@ public class BukkitScoreboardManager extends SbManager {
             }
         }
 
-        //Schedule the next tempscoreboard show
+        //Schedule the next temp scoreboard show
         scheduleShowTask(player, true);
     }
 
@@ -159,6 +161,7 @@ public class BukkitScoreboardManager extends SbManager {
                 int score = variableItem.getScore();
 
                 try {
+                    ReplaceManager replaceManager = plugin.getReplaceManager();
                     ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, score, false);
                     if (replaceEvent.isModified()) {
                         sendScore(objective, displayText, replaceEvent.getScore(), false);

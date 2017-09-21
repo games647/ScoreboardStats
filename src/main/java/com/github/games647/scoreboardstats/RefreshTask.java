@@ -64,16 +64,12 @@ public class RefreshTask implements Runnable {
      * Add a player to the queue for updating him.
      *
      * @param request the player that should be added.
-     * @return true if it was successfully queued
      */
-    public boolean addToQueue(Player request) {
-        boolean alreadyQueued = queue.containsKey(request);
-        if (!alreadyQueued) {
+    public void addToQueue(Player request) {
+        if (queue.containsKey(request)) {
             //check if it isn't already in the queue
             queue.put(request, new MutableInt(20 * Settings.getInterval()));
         }
-
-        return !alreadyQueued;
     }
 
     /**
@@ -87,7 +83,7 @@ public class RefreshTask implements Runnable {
     }
 
     /**
-     * Explicity removes the player from the refresh queue.
+     * Explicit removes the player from the refresh queue.
      *
      * @param request player who should be removed
      * @return if the last entry exists

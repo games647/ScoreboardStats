@@ -1,5 +1,5 @@
 # These settings aren't required if you disable pvpstats.
-# Here can you configurate your sql setting.
+# Here can you configure your sql setting.
 # If you don't have or want to use a mysql database you can also use a sqlite database
 # MySQL example
 # The default port for a mysql database is 3306

@@ -40,7 +40,7 @@ public class SimpleClansVariables extends DefaultReplaceAdapter<SimpleClans> {
 
     @Override
     public void onReplace(Player player, String variable, ReplaceEvent replaceEvent) {
-        //If simpleclans doesn't track the player yet return -1
+        //If SimpleClans doesn't track the player yet return -1
         ClanPlayer clanPlayer = clanManager.getClanPlayer(player);
         if (clanPlayer == null) {
             replaceEvent.setScore(-1);

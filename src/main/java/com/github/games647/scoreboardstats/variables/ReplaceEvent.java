@@ -40,7 +40,7 @@ public class ReplaceEvent {
     }
 
     /**
-     * Get hether the variable is in the display name
+     * Get whether the variable is in the display name
      *
      * @return whether the variable is in the display name
      */
@@ -129,7 +129,7 @@ public class ReplaceEvent {
      */
     public void setScoreOrText(String replacedVariable) {
         if (textVariable) {
-            //StringUtil.replace is fater because it doesn't create a pattern in the background
+            //StringUtil.replace is faster because it doesn't create a pattern in the background
             //and we need the performance as the replace method is called often
             setDisplayText(StringUtils.replace(displayText, variable, replacedVariable, 1));
         } else {

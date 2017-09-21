@@ -112,7 +112,7 @@
             <url>https://repo.dakanilabs.com/repository/public/</url>
         </repository>
 
-        <!--Repo for simpleclans-->
+        <!--Repo for SimpleClans-->
         <repository>
             <id>simpleclans-repo</id>
             <url>http://104.236.246.108:8081/artifactory/plugins-release-local</url>

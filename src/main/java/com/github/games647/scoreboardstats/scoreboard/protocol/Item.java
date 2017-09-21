@@ -98,7 +98,7 @@ public class Item implements Comparable<Item> {
 
     @Override
     public int compareTo(Item other) {
-        //Reverse order - first the highest element like the scoreboard ingame
+        //Reverse order - first the highest element like the scoreboard in-game
         return Ints.compare(other.score, score);
     }
 

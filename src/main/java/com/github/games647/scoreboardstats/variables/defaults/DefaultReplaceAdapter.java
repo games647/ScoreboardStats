@@ -33,7 +33,7 @@ public abstract class DefaultReplaceAdapter<P extends Plugin> extends VariableRe
             }
         } catch (IllegalArgumentException illegalArgumentException) {
             Logger.getLogger("ScoreboardStats").log(Level.INFO
-                    , "Failed to parse version for {0} - assumming your are using a recent version Reason: {1}",
+                    , "Failed to parse version for {0} - assuming your are using a recent version Reason: {1}",
                     new Object[]{getPlugin(), illegalArgumentException.getMessage()});
         }
     }

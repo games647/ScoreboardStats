@@ -21,7 +21,7 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
     private static final String BUNGEE_CHANNEL = "BungeeCord";
 
     private final ReplaceManager replaceManager;
-    private Map<String, Integer> playersCount = Maps.newHashMap();
+    private final Map<String, Integer> playersCount = Maps.newHashMap();
 
     public BungeeCordVariables(ReplaceManager replaceManager) {
         super(Bukkit.getPluginManager().getPlugin("ScoreboardStats"), "", true, false, true
@@ -55,8 +55,8 @@ public class BungeeCordVariables extends DefaultReplaceAdapter<Plugin> implement
         }
 
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
-        String subchannel = in.readUTF();
-        if ("PlayerCount".equals(subchannel)) {
+        String subChannel = in.readUTF();
+        if ("PlayerCount".equals(subChannel)) {
             try {
                 String server = in.readUTF();
                 int count = in.readInt();

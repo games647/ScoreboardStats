@@ -181,7 +181,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     }
 
     private String trimLength(String check, int limit) {
-        //Check if the string is longer, so we don't end up with a indexoutofboundex
+        //Check if the string is longer, so we don't end up with a IndexOutOfBoundEx
         if (check.length() > limit) {
             //If the string check is longer cut it down
             String cut = check.substring(0, limit);
@@ -247,7 +247,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         }
     }
 
-    //Inform the user that he should use compatibility modus to be compatible with some plugins
+    //Inform the user that he should use compatibility mode to be compatible with some plugins
     private boolean isCompatibilityMode(boolean active) {
         if (active) {
             if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {

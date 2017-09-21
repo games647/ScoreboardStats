@@ -54,8 +54,8 @@ public class Lang {
         if (messages.containsKey(key)) {
             String result = messages.getString(key);
             if (arguments.length != 0) {
-                //If there are arguments use messageformat to replace
-                //proparly cache the formatting instance
+                //If there are arguments use message format to replace
+                //properly cache the formatting instance
                 result = MessageFormat.format(result, arguments);
             }
 

@@ -34,7 +34,7 @@ public class FactionsVariables extends DefaultReplaceAdapter<Plugin> {
         if (newVersion && Version.compare("2.7", version) < 0) {
             throw new UnsupportedPluginException("Due the newest changes from "
                     + "Factions, you have to upgrade your version to a version above 2.7. "
-                    + "If explicity want to use this version. Create a ticket on "
+                    + "If explicitly want to use this version. Create a ticket on "
                     + "the project page of this plugin");
         }
     }

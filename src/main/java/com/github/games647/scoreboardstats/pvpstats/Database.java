@@ -89,8 +89,8 @@ public class Database {
             return null;
         } else {
             try (Connection conn = dataSource.getConnection();
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
-                        + "uuid=?")) {
+                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
+                         + "uuid=?")) {
 
                 stmt.setString(1, uniqueId.toString());
                 try (ResultSet resultSet = stmt.executeQuery()) {
@@ -105,28 +105,23 @@ public class Database {
     }
 
     private PlayerStats extractPlayerStats(ResultSet resultSet) throws SQLException {
-        if (resultSet.next()) {
-            int id = resultSet.getInt(1);
+        int id = resultSet.getInt(1);
 
-            String unparsedUUID = resultSet.getString(2);
-            UUID uuid = null;
-            if (unparsedUUID != null) {
-                uuid = UUID.fromString(unparsedUUID);
-            }
-
-            String playerName = resultSet.getString(3);
-
-            int kills = resultSet.getInt(4);
-            int deaths = resultSet.getInt(5);
-            int mobkills = resultSet.getInt(6);
-            int killstreak = resultSet.getInt(7);
-
-            long lastOnline = resultSet.getLong(8);
-            return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline);
-        } else {
-            //If there are no existing stat create a new object with empty stats
-            return new PlayerStats();
+        String unparsedUUID = resultSet.getString(2);
+        UUID uuid = null;
+        if (unparsedUUID != null) {
+            uuid = UUID.fromString(unparsedUUID);
         }
+
+        String playerName = resultSet.getString(3);
+
+        int kills = resultSet.getInt(4);
+        int deaths = resultSet.getInt(5);
+        int mobkills = resultSet.getInt(6);
+        int killstreak = resultSet.getInt(7);
+
+        long lastOnline = resultSet.getLong(8);
+        return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline);
     }
 
     /**
@@ -139,7 +134,7 @@ public class Database {
         if (player == null || dataSource == null) {
             return null;
         } else {
-                return loadAccount(player.getUniqueId());
+            return loadAccount(player.getUniqueId());
         }
     }
 
@@ -161,13 +156,11 @@ public class Database {
         if (stats != null && dataSource != null) {
             update(stats.stream()
                     .filter(Objects::nonNull)
-                    .filter(PlayerStats::isModified)
                     .filter(stat -> !stat.isNew())
                     .collect(Collectors.toList()));
 
             insert(stats.stream()
                     .filter(Objects::nonNull)
-                    .filter(PlayerStats::isModified)
                     .filter(PlayerStats::isNew)
                     .collect(Collectors.toList()));
         }
@@ -180,9 +173,9 @@ public class Database {
 
         //Save the stats to the database
         try (Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement("UPDATE player_stats "
-                    + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
-                    + "WHERE id=?")) {
+             PreparedStatement stmt = conn.prepareStatement("UPDATE player_stats "
+                     + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
+                     + "WHERE id=?")) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setInt(1, stat.getKills());
@@ -210,9 +203,9 @@ public class Database {
         }
 
         try (Connection conn = dataSource.getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO player_stats "
-                    + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
-                    + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement("INSERT INTO player_stats "
+                     + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
+                     + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
                 stmt.setString(1, stat.getUuid() == null ? null : stat.getUuid().toString());
@@ -255,7 +248,6 @@ public class Database {
             List<PlayerStats> toSave = Bukkit.getOnlinePlayers().stream()
                     .map(this::getCachedStats)
                     .filter(Objects::nonNull)
-                    .filter(PlayerStats::isModified)
                     .collect(Collectors.toList());
 
             if (!toSave.isEmpty()) {
@@ -279,16 +271,16 @@ public class Database {
         dataSource = new HikariDataSource(dbConfig.getServerConfig());
 
         try (Connection conn = dataSource.getConnection();
-            Statement stmt = conn.createStatement()) {
+             Statement stmt = conn.createStatement()) {
             String createTableQuery = "CREATE TABLE IF NOT EXISTS " + dbConfig.getTablePrefix() + "player_stats ( "
                     + "id integer PRIMARY KEY AUTO_INCREMENT, "
-                    + "uuid varchar(40), "
-                    + "playername varchar(16) not null, "
-                    + "kills integer not null, "
-                    + "deaths integer not null, "
-                    + "mobkills integer not null, "
-                    + "killstreak integer not null, "
-                    + "last_online timestamp not null )";
+                    + "uuid varchar(40) NOT NULL, "
+                    + "playername varchar(16) NOT NULL, "
+                    + "kills integer NOT NULL, "
+                    + "deaths integer NOT NULL, "
+                    + "mobkills integer NOT NULL, "
+                    + "killstreak integer NOT NULL, "
+                    + "last_online timestamp NOT NULL )";
 
             if (dbConfig.getServerConfig().getDriverClassName().contains("sqlite")) {
                 createTableQuery = createTableQuery.replace("AUTO_INCREMENT", "");
@@ -315,7 +307,6 @@ public class Database {
                 List<PlayerStats> toSave = onlinePlayers.stream()
                         .map(this::getCachedStats)
                         .filter(Objects::nonNull)
-                        .filter(PlayerStats::isModified)
                         .collect(Collectors.toList());
 
                 if (!toSave.isEmpty()) {
@@ -378,6 +369,10 @@ public class Database {
                     + " LIMIT " + Settings.getTopitems())) {
                 Map<String, Integer> result = Maps.newHashMap();
                 for (int i = 0; i < Settings.getTopitems(); i++) {
+                    if (!resultSet.next()) {
+                        return result;
+                    }
+
                     PlayerStats stats = extractPlayerStats(resultSet);
                     if (!stats.isNew()) {
                         String entry = (i + 1) + ". " + stats.getPlayername();

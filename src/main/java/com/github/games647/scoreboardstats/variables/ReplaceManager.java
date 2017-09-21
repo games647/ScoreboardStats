@@ -84,17 +84,6 @@ public class ReplaceManager implements Listener {
     }
 
     /**
-     * @param replacer the variable replacer
-     * @param pluginName the name of the associated plugin
-     *
-     * @deprecated no longer supported. Lack of features
-     */
-    @Deprecated
-    public void register(Replaceable replacer, String pluginName) {
-        legacyReplacers.add(new LegacyReplaceWrapper(Bukkit.getPluginManager().getPlugin(pluginName), replacer));
-    }
-
-    /**
      * Register a new replacer
      *
      * @param replacer the variable replacer
@@ -142,32 +131,6 @@ public class ReplaceManager implements Listener {
                 }
             }
         }
-    }
-
-    /**
-     * @param replacer the replacer instance
-     * @return if the replacer existed
-     *
-     * @deprecated no longer supported. Will be removed in future versions
-     */
-    @Deprecated
-    public boolean unregister(Replaceable replacer) {
-        boolean found = false;
-
-        Iterator<VariableReplaceAdapter<?>> iterator = specificReplacer.values().iterator();
-        while (iterator.hasNext()) {
-            VariableReplaceAdapter<?> next = iterator.next();
-            if (next.equals(replacer)) {
-                iterator.remove();
-                found = true;
-            }
-        }
-
-        if (legacyReplacers.remove(replacer)) {
-            found = true;
-        }
-
-        return found;
     }
 
     /**
@@ -308,7 +271,7 @@ public class ReplaceManager implements Listener {
             plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
                     , replacerClass.getSimpleName(), ex.getMessage()));
         } catch (Exception | LinkageError replacerException) {
-            //only catch these throwables, because they could probably happend
+            //only catch these throwables, because they could probably happened
             plugin.getLogger().log(Level.WARNING, "Cannot register replacer", replacerException);
         }
 
@@ -348,7 +311,7 @@ public class ReplaceManager implements Listener {
             if (pluginName.isEmpty() || Bukkit.getPluginManager().isPluginEnabled(pluginName)) {
                 Class<? extends VariableReplaceAdapter<?>> clazz = entry.getKey();
                 if (registerDefault(clazz, pluginName)) {
-                    //just add it if it was succesfull
+                    //just add it if it was successful
                     replacersName.add(clazz.getSimpleName());
                 }
             }

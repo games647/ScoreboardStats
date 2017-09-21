@@ -67,7 +67,7 @@ public class DatabaseConfiguration {
     }
 
     private String replaceUrlString(String input) {
-        //Replace the windows seperators ('\') with a '/'; \\ escape regEx --> \\\\ escape java
+        //Replace the windows separators ('\') with a '/'; \\ escape regEx --> \\\\ escape java
         String result = input.replaceAll("\\{DIR\\}", plugin.getDataFolder().getPath().replaceAll("\\\\", "/") + '/');
         result = result.replaceAll("\\{NAME\\}", plugin.getDescription().getName().replaceAll("[^\\w-]", ""));
 
