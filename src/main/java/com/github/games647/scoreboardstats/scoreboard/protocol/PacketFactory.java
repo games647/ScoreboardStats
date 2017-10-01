@@ -4,15 +4,16 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
@@ -125,7 +126,7 @@ public class PacketFactory {
             PROTOCOL_MANAGER.sendServerPacket(receiver, packet);
         } catch (InvocationTargetException ex) {
             //just log it for now.
-            Logger.getLogger("ScoreboardStats").log(Level.SEVERE, null, ex);
+            JavaPlugin.getPlugin(ScoreboardStats.class).getLogger().log(Level.SEVERE, null, ex);
         }
     }
 

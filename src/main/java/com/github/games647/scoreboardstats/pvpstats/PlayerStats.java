@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,12 +28,12 @@ public class PlayerStats {
     private int mobkills;
     private int killstreak;
 
-    private long lastOnline;
+    private Instant lastOnline;
 
     private int laststreak;
 
     public PlayerStats(int id, UUID uuid, String playername,
-            int kills, int deaths, int mobkills, int killstreak, long lastOnline) {
+            int kills, int deaths, int mobkills, int killstreak, Instant lastOnline) {
         this(uuid, playername);
 
         this.id = id;
@@ -149,13 +150,21 @@ public class PlayerStats {
     }
 
     /**
-     * Get the UNIX timestamp where this entry was last updated. This implies the last online value with a difference of
-     * a couple of minutes from the cache.
+     * Get the UNIX timestamp where this entry was last updated.
      *
      * @return the timestamp this was last saved; can be null
      */
+    @Deprecated
     public long getLastOnline() {
+        return lastOnline.toEpochMilli();
+    }
+
+    public Instant getLastOnlineDate() {
         return lastOnline;
+    }
+
+    public void setLastOnline(Instant lastOnline) {
+        this.lastOnline = lastOnline;
     }
 
     /**
@@ -163,8 +172,9 @@ public class PlayerStats {
      *
      * @param lastOnline the player was online; can be null
      */
+    @Deprecated
     public void setLastOnline(long lastOnline) {
-        this.lastOnline = lastOnline;
+        this.lastOnline = Instant.ofEpochMilli(lastOnline);
     }
 
     /**

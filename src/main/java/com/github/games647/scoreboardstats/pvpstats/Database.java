@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -120,7 +122,7 @@ public class Database {
         int mobkills = resultSet.getInt(6);
         int killstreak = resultSet.getInt(7);
 
-        long lastOnline = resultSet.getLong(8);
+        Instant lastOnline = resultSet.getTimestamp(8).toInstant();
         return new PlayerStats(id, uuid, playerName, kills, deaths, mobkills, killstreak, lastOnline);
     }
 
@@ -183,7 +185,7 @@ public class Database {
                 stmt.setInt(3, stat.getKillstreak());
                 stmt.setInt(4, stat.getMobkills());
 
-                stmt.setLong(5, stat.getLastOnline());
+                stmt.setTimestamp(5, Timestamp.from(stat.getLastOnlineDate()));
                 stmt.setString(6, stat.getPlayername());
 
                 stmt.setInt(7, stat.getId());
@@ -216,7 +218,7 @@ public class Database {
                 stmt.setInt(5, stat.getKillstreak());
                 stmt.setInt(6, stat.getMobkills());
 
-                stmt.setLong(7, stat.getLastOnline());
+                stmt.setTimestamp(7, Timestamp.from(stat.getLastOnlineDate()));
                 stmt.addBatch();
             }
 

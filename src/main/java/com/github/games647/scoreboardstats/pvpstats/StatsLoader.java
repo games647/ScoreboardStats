@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.lang.ref.WeakReference;
+import java.time.Instant;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class StatsLoader implements Runnable {
             final PlayerStats stats = statsDatabase.loadAccount(player);
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
-            stats.setLastOnline(System.currentTimeMillis());
+            stats.setLastOnline(Instant.now());
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 //possible not thread-safe, so reschedule it while setMetadata is thread-safe

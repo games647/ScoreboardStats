@@ -9,9 +9,9 @@ This plugin simplifies, adds many new features and possible ways to improve
 
 Project page:
 
-  http://dev.bukkit.org/bukkit-mods/scoreboardstats/
+  https://dev.bukkit.org/bukkit-mods/scoreboardstats/
 
-  http://www.curse.com/bukkit-plugins/minecraft/scoreboardstats
+  https://www.curse.com/bukkit-plugins/minecraft/scoreboardstats
 
 Build status:
   [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg)](https://travis-ci.org/games647/ScoreboardStats/)
@@ -28,7 +28,7 @@ Feel free to contribute there too.
 This plugin is compatible with all Minecraft versions above 1.5, where the
   scoreboard feature was introduced by [Mojang](https://mojang.com/).
 
-Based on vanilla servers (like Craftbukkit) doesn't allow individual and global
+Based on vanilla servers (like CraftBukkit) doesn't allow individual and global
 objectives at the same time. By operating over packets, we can workaround this.
 For this method, you'll need ProtocolLib. It's used to prevent conflicts with
 other plugins which also access the sidebar objective. Otherwise the client

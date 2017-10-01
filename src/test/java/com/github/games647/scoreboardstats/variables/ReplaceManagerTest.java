@@ -35,8 +35,6 @@ public class ReplaceManagerTest {
         PowerMockito.when(plugin.getLogger()).thenReturn(Logger.getGlobal());
 
         ReplaceManager replaceManager = new ReplaceManager(null, plugin);
-
-        testLegacy(replaceManager);
         testAbstract(plugin, replaceManager);
     }
 
@@ -51,18 +49,5 @@ public class ReplaceManagerTest {
 
         replaceManager.register(replaceAdapter);
         Assert.assertTrue(replaceManager.unregister(replaceAdapter));
-    }
-
-    @SuppressWarnings("deprecation")
-    private void testLegacy(ReplaceManager replaceManager) {
-        Replaceable legacyReplaceable = (player, variable) -> {
-            throw new UnsupportedOperationException("Not supported yet.");
-        };
-
-        LegacyReplaceWrapper legacyWrapper = new LegacyReplaceWrapper(Bukkit
-                .getPluginManager().getPlugin("pluginName"), legacyReplaceable);
-        legacyWrapper.getVariables().add(SAMPLE_VARIABLE);
-        replaceManager.register(legacyWrapper);
-        Assert.assertTrue(replaceManager.unregister(legacyReplaceable));
     }
 }

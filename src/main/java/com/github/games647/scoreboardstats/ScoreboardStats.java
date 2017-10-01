@@ -7,8 +7,6 @@ import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardMan
 import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
-import java.util.logging.Logger;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -58,16 +56,6 @@ public class ScoreboardStats extends JavaPlugin {
      */
     public Database getStatsDatabase() {
         return database;
-    }
-
-    /**
-     * Load the plugin.
-     */
-    @Override
-    public void onLoad() {
-        //Create a logger that is available by just the plugin name
-        //have to be performed before the first logging message by this plugin, so it prints it correctly
-        Logger.getLogger(getName()).setParent(getLogger());
     }
 
     /**

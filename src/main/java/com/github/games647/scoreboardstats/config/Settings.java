@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -250,7 +251,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     //Inform the user that he should use compatibility mode to be compatible with some plugins
     private boolean isCompatibilityMode(boolean active) {
         if (active) {
-            if (!plugin.getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            if (!Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                 //we cannot active compatibilityMode without ProtocolLib
                 plugin.getLogger().info(Lang.get("missingProtocolLib"));
                 return false;
@@ -260,7 +261,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
             String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player", "TablistPrefix"
                      ,"ColoredPlayerNames", "PingTest", "NovaGuilds", "sTablist"};
             for (String name : plugins) {
-                if (plugin.getServer().getPluginManager().getPlugin(name) == null) {
+                if (Bukkit.getPluginManager().getPlugin(name) == null) {
                     //just check if the plugin is available not if it's active
                     continue;
                 }
