@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 
 import java.util.Arrays;
 import java.util.List;
@@ -84,7 +83,7 @@ public abstract class CommandHandler {
             return true;
         }
 
-        sender.sendMessage(Lang.get("noPermission"));
+        sender.sendMessage("§4 You don't have enough permissions to do that");
         return false;
     }
 

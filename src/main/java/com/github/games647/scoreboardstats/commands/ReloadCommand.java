@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.commands;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 
 import org.bukkit.command.CommandSender;
 
@@ -17,6 +16,6 @@ public class ReloadCommand extends CommandHandler {
     @Override
     public void onCommand(CommandSender sender, String subCommand, String... args) {
         plugin.onReload();
-        sender.sendMessage(Lang.get("onReload"));
+        sender.sendMessage("§2 The configuration was successfully reloaded \\u2714");
     }
 }

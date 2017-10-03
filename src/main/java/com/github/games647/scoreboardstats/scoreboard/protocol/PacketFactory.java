@@ -9,7 +9,6 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -126,7 +125,7 @@ public class PacketFactory {
             PROTOCOL_MANAGER.sendServerPacket(receiver, packet);
         } catch (InvocationTargetException ex) {
             //just log it for now.
-            JavaPlugin.getPlugin(ScoreboardStats.class).getLogger().log(Level.SEVERE, null, ex);
+            JavaPlugin.getPlugin(ScoreboardStats.class).getLog().info("Failed to send packet", ex);
         }
     }
 

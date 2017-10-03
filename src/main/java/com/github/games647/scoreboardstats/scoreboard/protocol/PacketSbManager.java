@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats.scoreboard.protocol;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
@@ -105,7 +104,7 @@ public class PacketSbManager extends SbManager {
                     iter.remove();
                     Settings.getMainScoreboard().getItemsByVariable().remove(scoreItem.getVariable());
 
-                    plugin.getLogger().info(Lang.get("unknownVariable", scoreItem));
+                    plugin.getLog().info(UNKNOWN_VARIABLE, scoreItem);
                 }
             }
         }
@@ -178,7 +177,7 @@ public class PacketSbManager extends SbManager {
                     iter.remove();
                     Settings.getMainScoreboard().getItemsByName().remove(variableItem.getDisplayText());
 
-                    plugin.getLogger().info(Lang.get("unknownVariable", variableItem));
+                    plugin.getLog().info(UNKNOWN_VARIABLE, variableItem);
                 }
             }
         }

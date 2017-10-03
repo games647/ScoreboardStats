@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.commands;
 
 import com.github.games647.scoreboardstats.RefreshTask;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,6 +12,8 @@ import org.bukkit.scoreboard.DisplaySlot;
  */
 public class ToggleCommand extends CommandHandler {
 
+    public static final String TOGGLE_MSG = "§2Toggling the scoreboard";
+
     public ToggleCommand(ScoreboardStats plugin) {
         super("toggle", "&aToggles the sidebar", plugin, "hide", "show");
     }
@@ -21,7 +22,7 @@ public class ToggleCommand extends CommandHandler {
     public void onCommand(CommandSender sender, String subCommand, String... args) {
         if (!(sender instanceof Player)) {
             //the console cannot have a scoreboard
-            sender.sendMessage(Lang.get("noConsole"));
+            sender.sendMessage("§4This command can only be executed by Players");
             return;
         }
 
@@ -32,10 +33,10 @@ public class ToggleCommand extends CommandHandler {
             if ("hide".equals(subCommand) || "toggle".equals(subCommand)) {
                 refreshTask.remove(player);
                 player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-                player.sendMessage(Lang.get("onToggle"));
+                player.sendMessage(TOGGLE_MSG);
             }
         } else if ("show".equals(subCommand) || "toggle".equals(subCommand)) {
-            player.sendMessage(Lang.get("onToggle"));
+            player.sendMessage(TOGGLE_MSG);
             refreshTask.addToQueue(player);
         }
     }

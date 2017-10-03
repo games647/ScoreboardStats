@@ -1,7 +1,6 @@
 package com.github.games647.scoreboardstats.pvpstats;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -99,7 +97,7 @@ public class Database {
                     return extractPlayerStats(resultSet);
                 }
             } catch (SQLException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Error loading player profile", ex);
+                plugin.getLog().error("Error loading player profile", ex);
             }
 
             return null;
@@ -195,7 +193,7 @@ public class Database {
             stmt.executeBatch();
             conn.commit();
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.SEVERE, "Error updating profiles", ex);
+            plugin.getLog().error("Error updating profiles", ex);
         }
     }
 
@@ -235,7 +233,7 @@ public class Database {
                 }
             }
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.SEVERE, "Error inserting profiles", ex);
+            plugin.getLog().error("Error inserting profiles", ex);
         }
     }
 
@@ -244,7 +242,7 @@ public class Database {
      */
     public void saveAll() {
         try {
-            plugin.getLogger().info(Lang.get("savingStats"));
+            plugin.getLog().info("Now saving the stats to the database. This could take a while.");
 
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = Bukkit.getOnlinePlayers().stream()
@@ -291,7 +289,7 @@ public class Database {
 
             stmt.execute(createTableQuery);
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.SEVERE, "Error creating database ", ex);
+            plugin.getLog().error("Error creating database ", ex);
         }
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateTopList, 20 * 60 * 5, 0);
@@ -317,7 +315,7 @@ public class Database {
             } catch (CancellationException cancelEx) {
                 //ignore it on shutdown
             } catch (Exception ex) {
-                plugin.getLogger().log(Level.SEVERE, null, ex);
+                plugin.getLog().error("Error fetching top list", ex);
             }
         }, 20 * 60, 20 * 60 * 5);
 
@@ -385,7 +383,7 @@ public class Database {
                 return result;
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Error loading top list", ex);
+            plugin.getLog().error("Error loading top list", ex);
         }
 
         return Collections.emptyMap();

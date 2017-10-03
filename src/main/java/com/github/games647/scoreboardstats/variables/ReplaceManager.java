@@ -2,7 +2,6 @@ package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
-import com.github.games647.scoreboardstats.config.Lang;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.config.VariableItem;
 import com.github.games647.scoreboardstats.variables.defaults.*;
@@ -14,7 +13,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,6 +25,8 @@ import org.bukkit.plugin.Plugin;
 public class ReplaceManager implements Listener {
 
     private static final Map<Class<? extends VariableReplaceAdapter<?>>, String> DEFAULTS;
+    public static final String UNSUPPORTED_VERSION = "The Replacer: {} cannot be registered - the plugin version isn't supported \n\t({})";
+    public static final String REPLACER_EXCEPTION = "Replacer occurred an error: {} for {} So it will be removed to prevent future errors";
 
     static {
         Map<Class<? extends VariableReplaceAdapter<?>>, String> tempMap = Maps.newHashMap();
@@ -209,7 +209,7 @@ public class ReplaceManager implements Listener {
             } catch (LinkageError | Exception replacerException) {
                 //remove the replacer if it throws exceptions, to prevent future ones
                 //Maybe we need to catch compiler "errors"
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", replacer), replacerException);
+                plugin.getLog().warn(REPLACER_EXCEPTION, replacerException, replacer);
                 unregister(replacer);
             }
         }
@@ -268,11 +268,10 @@ public class ReplaceManager implements Listener {
 
             return true;
         } catch (UnsupportedPluginException ex) {
-            plugin.getLogger().warning(Lang.get("unsupportedPluginVersion"
-                    , replacerClass.getSimpleName(), ex.getMessage()));
+            plugin.getLog().warn(UNSUPPORTED_VERSION, replacerClass.getSimpleName(), ex.getMessage());
         } catch (Exception | LinkageError replacerException) {
             //only catch these throwables, because they could probably happened
-            plugin.getLogger().log(Level.WARNING, "Cannot register replacer", replacerException);
+            plugin.getLog().warn("Cannot register replacer", replacerException);
         }
 
         return false;
@@ -286,7 +285,7 @@ public class ReplaceManager implements Listener {
             try {
                 legacyReplacer.onReplace(player, variable, replaceEvent);
             } catch (LinkageError | Exception replacerException) {
-                plugin.getLogger().log(Level.WARNING, Lang.get("replacerException", legacyReplacer), replacerException);
+                plugin.getLog().warn(REPLACER_EXCEPTION, replacerException, legacyReplacer);
                 iterator.remove();
             }
 
@@ -318,7 +317,7 @@ public class ReplaceManager implements Listener {
         }
 
         //log registered replacers
-        plugin.getLogger().log(Level.INFO, "Registered replacers: {0}", replacersName);
+        plugin.getLog().info("Registered replacers: {}", replacersName);
     }
 
     private VariableReplaceAdapter<?> createInstance(Class<? extends VariableReplaceAdapter<?>> replacerClass)

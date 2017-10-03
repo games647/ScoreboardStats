@@ -1,5 +1,6 @@
 package com.github.games647.scoreboardstats.config;
 
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
@@ -13,31 +14,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Represents an easy way to load and save to yaml configs. Furthermore support
  * this class UTF-8 even before Bukkit introduced it and will also support comments
  * soon.
- *
- * @param <T> the plugin type
  */
-public class CommentedYaml<T extends Plugin> {
+public class CommentedYaml {
 
     private static final String COMMENT_PREFIX = "# ";
     private static final String FILE_NAME = "config.yml";
 
-    protected final transient T plugin;
+    protected final transient ScoreboardStats plugin;
     protected transient FileConfiguration config;
 
-    public CommentedYaml(T plugin) {
+    public CommentedYaml(ScoreboardStats plugin) {
         this.plugin = plugin;
     }
 
@@ -63,7 +60,7 @@ public class CommentedYaml<T extends Plugin> {
             List<String> lines = Files.readAllLines(file);
             load(lines, newConf);
         } catch (InvalidConfigurationException | IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
+            plugin.getLog().error("Couldn't load the configuration", ex);
         }
 
         return newConf;
@@ -99,7 +96,7 @@ public class CommentedYaml<T extends Plugin> {
             List<String> lines = Collections.singletonList(config.saveToString());
             Files.write(plugin.getDataFolder().toPath().resolve(FILE_NAME), lines);
         } catch (IOException ex) {
-            plugin.getLogger().log(Level.SEVERE, null, ex);
+            plugin.getLog().error("Failed to save config", ex);
         }
     }
 
@@ -112,10 +109,10 @@ public class CommentedYaml<T extends Plugin> {
                     field.set(this, config.get(path));
                 }
             } catch (IllegalAccessException ex) {
-                plugin.getLogger().log(Level.SEVERE, null, ex);
+                plugin.getLog().error("Error setting field", ex);
             }
         } else {
-            plugin.getLogger().log(Level.INFO, "Path not fond {0}", path);
+            plugin.getLog().info("Path not fond {}", path);
         }
     }
 
@@ -147,9 +144,9 @@ public class CommentedYaml<T extends Plugin> {
                 load(lines, defaults);
                 return defaults;
             } catch (InvalidConfigurationException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Invalid Configuration", ex);
+                plugin.getLog().error("Invalid Configuration", ex);
             } catch (IOException ex) {
-                plugin.getLogger().log(Level.SEVERE, "Couldn't load the configuration", ex);
+                plugin.getLog().error("Couldn't load the configuration", ex);
             }
         }
 

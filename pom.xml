@@ -342,7 +342,7 @@
         <dependency>
             <groupId>com.github.TechFortress</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>5186739d3a</version>
+            <version>16.7.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

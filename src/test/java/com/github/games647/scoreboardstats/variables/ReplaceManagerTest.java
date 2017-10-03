@@ -2,8 +2,6 @@ package com.github.games647.scoreboardstats.variables;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -17,6 +15,7 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.slf4j.LoggerFactory;
 
 @PrepareForTest({Bukkit.class, SimplePluginManager.class, Plugin.class, ScoreboardStats.class})
 @RunWith(PowerMockRunner.class)
@@ -32,7 +31,7 @@ public class ReplaceManagerTest {
         Mockito.when(Bukkit.getScheduler()).thenReturn(PowerMockito.mock(BukkitScheduler.class));
 
         ScoreboardStats plugin = PowerMockito.mock(ScoreboardStats.class);
-        PowerMockito.when(plugin.getLogger()).thenReturn(Logger.getGlobal());
+        PowerMockito.when(plugin.getLog()).thenReturn(LoggerFactory.getLogger("ScoreboardStats"));
 
         ReplaceManager replaceManager = new ReplaceManager(null, plugin);
         testAbstract(plugin, replaceManager);

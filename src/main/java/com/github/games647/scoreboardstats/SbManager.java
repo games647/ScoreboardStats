@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
  */
 public abstract class SbManager {
 
+    public static final String UNKNOWN_VARIABLE = "Cannot find variable with name: ({}) Maybe you misspelled it or the replacer isn't available yet";
+
     protected static final String SB_NAME = "Stats";
     protected static final String TEMP_SB_NAME = SB_NAME + 'T';
 

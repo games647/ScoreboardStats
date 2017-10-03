@@ -5,8 +5,6 @@ import com.github.games647.scoreboardstats.Version;
 import com.github.games647.scoreboardstats.variables.UnsupportedPluginException;
 import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
-import java.util.logging.Level;
-
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,9 +31,9 @@ public abstract class DefaultReplaceAdapter<P extends Plugin> extends VariableRe
                         + "Please update it");
             }
         } catch (IllegalArgumentException illegalArgumentException) {
-            JavaPlugin.getPlugin(ScoreboardStats.class).getLogger().log(Level.INFO
-                    , "Failed to parse version for {0} - assuming your are using a recent version Reason: {1}",
-                    new Object[]{getPlugin(), illegalArgumentException.getMessage()});
+            JavaPlugin.getPlugin(ScoreboardStats.class).getLog().info("Failed to parse version for {} " +
+                            "- assuming your are using a recent version Reason: {}",
+                    getPlugin(), illegalArgumentException.getMessage());
         }
     }
 }

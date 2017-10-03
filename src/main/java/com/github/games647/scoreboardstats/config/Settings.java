@@ -4,7 +4,6 @@ import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,7 +11,10 @@ import org.bukkit.configuration.ConfigurationSection;
 /**
  * Managing all general configurations of this plugin.
  */
-public class Settings extends CommentedYaml<ScoreboardStats> {
+public class Settings extends CommentedYaml {
+
+    private static final String TOO_MANY_ITEMS = "Scoreboard can't have more than 15 items";
+    public static final String MIN_ITEMS = "A scoreboard have to display min. 1 item ({})";
 
     private static boolean compatibilityMode;
 
@@ -186,7 +188,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         if (check.length() > limit) {
             //If the string check is longer cut it down
             String cut = check.substring(0, limit);
-            plugin.getLogger().warning(Lang.get("tooLongName", cut, limit));
+            plugin.getLog().warn("{} was longer than {} characters. We remove the overlapping characters", cut, limit);
 
             return cut;
         }
@@ -197,12 +199,12 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
     private int checkItems(int input) {
         if (input >= 16) {
             //Only 15 items per sidebar objective are allowed
-            plugin.getLogger().warning(Lang.get("tooManyItems"));
+            plugin.getLog().warn(TOO_MANY_ITEMS);
             return 16 - 1;
         }
 
         if (input <= 0) {
-            plugin.getLogger().warning(Lang.get("notEnoughItems", "tempscoreboard"));
+            plugin.getLog().warn(MIN_ITEMS, "tempscoreboard");
             return 5;
         }
 
@@ -218,7 +220,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         for (String key : config.getKeys(false)) {
             if (mainScoreboard.size() == 15) {
                 //Only 15 items per sidebar objective are allowed
-                plugin.getLogger().warning(Lang.get("tooManyItems"));
+                plugin.getLog().warn(TOO_MANY_ITEMS);
                 break;
             }
 
@@ -237,14 +239,14 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                     mainScoreboard.addItem(displayName, score);
                 } catch (NumberFormatException numberFormatException) {
                     //Prevent user mistakes
-                    plugin.getLogger().info(Lang.get("missingVariableSymbol", displayName));
+                    plugin.getLog().info("Variable {} has to contain % at the beginning and at the end", displayName);
                 }
             }
         }
 
         if (mainScoreboard.size() == 0) {
             //It won't show up if there isn't at least one item
-            plugin.getLogger().info(Lang.get("notEnoughItems", "scoreboard"));
+            plugin.getLog().info(MIN_ITEMS, "scoreboard");
         }
     }
 
@@ -253,7 +255,7 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
         if (active) {
             if (!Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                 //we cannot active compatibilityMode without ProtocolLib
-                plugin.getLogger().info(Lang.get("missingProtocolLib"));
+                plugin.getLog().info("You need ProtocolLib for compatibilityMode");
                 return false;
             }
         } else {
@@ -267,10 +269,10 @@ public class Settings extends CommentedYaml<ScoreboardStats> {
                 }
 
                 //Found minimum one plugin. Inform the adminstrator
-                plugin.getLogger().log(Level.INFO, "Found plugin: {0}", name);
-                plugin.getLogger().info("You are using plugins that requires to activate compatibilityMode");
-                plugin.getLogger().info("Otherwise the plugins won't work");
-                plugin.getLogger().info("Enable it in the config of this plugin: compatibilityMode");
+                plugin.getLog().info("Found plugin: {}", name);
+                plugin.getLog().info("You are using plugins that requires to activate compatibilityMode");
+                plugin.getLog().info("Otherwise the plugins won't work");
+                plugin.getLog().info("Enable it in the config of this plugin: compatibilityMode");
                 //one plugin is enough
                 break;
             }
