@@ -23,6 +23,13 @@ import org.slf4j.Logger;
  */
 public class ReplaceManager implements Listener {
 
+    //todo: only temporarily
+    private static ReplaceManager instance;
+
+    public static ReplaceManager getInstance() {
+        return instance;
+    }
+
     public static final String UNSUPPORTED_VERSION = "The Replacer: {} cannot be registered - the plugin version isn't supported \n\t({})";
     public static final String REPLACER_EXCEPTION = "Replacer occurred an error: {} for {} So it will be removed to prevent future errors";
 
@@ -43,6 +50,8 @@ public class ReplaceManager implements Listener {
      * @param plugin            ScoreboardStats plugin
      */
     public ReplaceManager(BoardManager scoreboardManager, Plugin plugin, Logger logger) {
+        instance = this;
+
         this.plugin = plugin;
         this.sbManager = scoreboardManager;
         this.logger = logger;

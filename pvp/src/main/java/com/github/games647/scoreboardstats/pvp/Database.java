@@ -1,7 +1,7 @@
-package com.github.games647.scoreboardstats.pvpstats;
+package com.github.games647.scoreboardstats.pvp;
 
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
+import org.slf4j.Logger;
 
 /**
  * This represents a handler for saving player stats.
@@ -36,16 +38,19 @@ public class Database {
 
     private static final String METAKEY = "player_stats";
 
-    private final ScoreboardStats plugin;
+    private final Plugin plugin;
+    private final Logger logger;
 
-    private final Map<String, Integer> toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
-
+    private final Map<String, Integer> toplist;
     private final DatabaseConfiguration dbConfig;
     private HikariDataSource dataSource;
 
-    public Database(ScoreboardStats plugin) {
+    public Database(Plugin plugin, Logger logger) {
         this.plugin = plugin;
+        this.logger = logger;
+
         this.dbConfig = new DatabaseConfiguration(plugin);
+        this.toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
     }
 
     /**
@@ -97,7 +102,7 @@ public class Database {
                     return extractPlayerStats(resultSet);
                 }
             } catch (SQLException ex) {
-                plugin.getLog().error("Error loading player profile", ex);
+                logger.error("Error loading player profile", ex);
             }
 
             return null;
@@ -193,7 +198,7 @@ public class Database {
             stmt.executeBatch();
             conn.commit();
         } catch (Exception ex) {
-            plugin.getLog().error("Error updating profiles", ex);
+            logger.error("Error updating profiles", ex);
         }
     }
 
@@ -233,7 +238,7 @@ public class Database {
                 }
             }
         } catch (Exception ex) {
-            plugin.getLog().error("Error inserting profiles", ex);
+            logger.error("Error inserting profiles", ex);
         }
     }
 
@@ -242,7 +247,7 @@ public class Database {
      */
     public void saveAll() {
         try {
-            plugin.getLog().info("Now saving the stats to the database. This could take a while.");
+            logger.info("Now saving the stats to the database. This could take a while.");
 
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = Bukkit.getOnlinePlayers().stream()
@@ -289,7 +294,7 @@ public class Database {
 
             stmt.execute(createTableQuery);
         } catch (Exception ex) {
-            plugin.getLog().error("Error creating database ", ex);
+            logger.error("Error creating database ", ex);
         }
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateTopList, 20 * 60 * 5, 0);
@@ -315,7 +320,7 @@ public class Database {
             } catch (CancellationException cancelEx) {
                 //ignore it on shutdown
             } catch (Exception ex) {
-                plugin.getLog().error("Error fetching top list", ex);
+                logger.error("Error fetching top list", ex);
             }
         }, 20 * 60, 20 * 60 * 5);
 
@@ -383,7 +388,7 @@ public class Database {
                 return result;
             }
         } catch (SQLException ex) {
-            plugin.getLog().error("Error loading top list", ex);
+            logger.error("Error loading top list", ex);
         }
 
         return Collections.emptyMap();
@@ -399,7 +404,7 @@ public class Database {
             new SignListener(plugin, "[Mob]", this);
         }
 
-        plugin.getReplaceManager().register(new StatsVariables(plugin, this));
+        ReplaceManager.getInstance().register(new StatsVariables(plugin, this));
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
     }
 }

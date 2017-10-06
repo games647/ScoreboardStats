@@ -66,12 +66,6 @@
             <id>shadowvolt-repo</id>
             <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
-
-        <!--Github releases automatic maven repo-->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -87,6 +81,18 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>scoreboardstats-config</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>scoreboardstats-pvp</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!--Library for listening and sending Minecraft packets to workaround
         the Bukkit API, so we can make scoreboard compatible with other
         scoreboard plugins -->
@@ -94,27 +100,6 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.3.0</version>
-            <optional>true</optional>
-        </dependency>
-
-        <!--Database pooling-->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>2.7.1</version>
-        </dependency>
-
-        <!--stats on signs-->
-        <dependency>
-            <groupId>com.github.blablubbabc</groupId>
-            <artifactId>IndividualSigns</artifactId>
-            <version>91ea396307</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
             <optional>true</optional>
         </dependency>
     </dependencies>

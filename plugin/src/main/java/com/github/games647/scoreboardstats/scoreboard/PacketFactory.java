@@ -7,7 +7,6 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -17,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
-import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_TEAM;
 
 /**
  * Creates the specific packets and send it with help of ProtocolLib.
@@ -91,24 +89,6 @@ public class PacketFactory {
 
         displayPacket.getIntegers().write(0, SIDEBAR_SLOT);
         sendPacket(objective.getScoreboard().getOwner().getUniqueId(), displayPacket);
-    }
-
-    public static void sendTeamPacket(Team team, State state) {
-        PacketContainer teamPacket = PROTOCOL_MANAGER.createPacket(SCOREBOARD_TEAM, true);
-        teamPacket.getStrings().write(0, team.getName());
-
-        if (state == State.CREATE) {
-            teamPacket.getStrings().write(2, team.getPrefix());
-            teamPacket.getStrings().write(3, team.getSuffix());
-
-            teamPacket.getSpecificModifier(Collection.class).write(0, team.getEntries());
-        } else if (state == State.UPDATE) {
-            teamPacket.getStrings().write(2, team.getPrefix());
-            teamPacket.getStrings().write(3, team.getSuffix());
-        }
-
-        teamPacket.getIntegers().write(1, state.ordinal());
-//        sendPacket(team, teamPacket);
     }
 
     private static void sendPacket(UUID receiverId, PacketContainer packet) {

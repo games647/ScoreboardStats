@@ -1,4 +1,4 @@
-package com.github.games647.scoreboardstats.pvpstats;
+package com.github.games647.scoreboardstats.pvp;
 
 import de.blablubbabc.insigns.SimpleChanger;
 

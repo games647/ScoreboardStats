@@ -1,11 +1,12 @@
 package com.github.games647.scoreboardstats.config;
 
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
+import org.slf4j.Logger;
 
 /**
  * Managing all general configurations of this plugin.
@@ -131,8 +132,8 @@ public class Settings extends CommentedYaml {
         return tempDisapper;
     }
 
-    public Settings(ScoreboardStats instance) {
-        super(instance);
+    public Settings(Plugin plugin, Logger logger) {
+        super(logger, plugin.getDataFolder().toPath());
 
         plugin.saveDefaultConfig();
     }
@@ -165,7 +166,7 @@ public class Settings extends CommentedYaml {
         if (check.length() > limit) {
             //If the string check is longer cut it down
             String cut = check.substring(0, limit);
-            plugin.getLog().warn("{} was longer than {} characters. We remove the overlapping characters", cut, limit);
+            logger.warn("{} was longer than {} characters. We remove the overlapping characters", cut, limit);
 
             return cut;
         }
@@ -176,12 +177,12 @@ public class Settings extends CommentedYaml {
     private int checkItems(int input) {
         if (input >= 16) {
             //Only 15 items per sidebar objective are allowed
-            plugin.getLog().warn(TOO_MANY_ITEMS);
+            logger.warn(TOO_MANY_ITEMS);
             return 16 - 1;
         }
 
         if (input <= 0) {
-            plugin.getLog().warn(MIN_ITEMS, "tempscoreboard");
+            logger.warn(MIN_ITEMS, "tempscoreboard");
             return 5;
         }
 
@@ -197,7 +198,7 @@ public class Settings extends CommentedYaml {
         for (String key : config.getKeys(false)) {
             if (mainScoreboard.size() == 15) {
                 //Only 15 items per sidebar objective are allowed
-                plugin.getLog().warn(TOO_MANY_ITEMS);
+                logger.warn(TOO_MANY_ITEMS);
                 break;
             }
 
@@ -216,14 +217,14 @@ public class Settings extends CommentedYaml {
                     mainScoreboard.addItem(displayName, score);
                 } catch (NumberFormatException numberFormatException) {
                     //Prevent user mistakes
-                    plugin.getLog().info("Variable {} has to contain % at the beginning and at the end", displayName);
+                    logger.info("Variable {} has to contain % at the beginning and at the end", displayName);
                 }
             }
         }
 
         if (mainScoreboard.size() == 0) {
             //It won't show up if there isn't at least one item
-            plugin.getLog().info(MIN_ITEMS, "scoreboard");
+            logger.info(MIN_ITEMS, "scoreboard");
         }
     }
 }

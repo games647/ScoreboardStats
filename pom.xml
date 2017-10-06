@@ -25,6 +25,8 @@
     <modules>
         <module>plugin</module>
         <module>variables</module>
+        <module>pvp</module>
+        <module>config</module>
         <module>defaults</module>
     </modules>
 

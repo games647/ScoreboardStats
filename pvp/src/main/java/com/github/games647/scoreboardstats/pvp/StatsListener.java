@@ -1,7 +1,7 @@
-package com.github.games647.scoreboardstats.pvpstats;
+package com.github.games647.scoreboardstats.pvp;
 
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -13,16 +13,17 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 /**
  * If enabled this class counts the kills.
  */
 public class StatsListener implements Listener {
 
-    private final ScoreboardStats plugin;
+    private final Plugin plugin;
     private final Database database;
 
-    public StatsListener(ScoreboardStats plugin, Database database) {
+    public StatsListener(Plugin plugin, Database database) {
         this.plugin = plugin;
         this.database = database;
     }
@@ -71,13 +72,12 @@ public class StatsListener implements Listener {
         Player killer = entity.getKiller();
 
         //Check if it's not player because we are already handling it
-        if (entity.getType() != EntityType.PLAYER && Settings.isPvpStats()
-                && Settings.isActiveWorld(entity.getWorld().getName())) {
+        if (entity.getType() != EntityType.PLAYER && Settings.isActiveWorld(entity.getWorld().getName())) {
             PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
                 killercache.onMobKill();
-                plugin.getReplaceManager().updateScore(killer, "mob", killercache.getMobkills());
+                ReplaceManager.getInstance().updateScore(killer, "mob", killercache.getMobkills());
             }
         }
     }
@@ -96,24 +96,24 @@ public class StatsListener implements Listener {
             return;
         }
 
-        if (Settings.isPvpStats() && Settings.isActiveWorld(killed.getWorld().getName())) {
+        if (Settings.isActiveWorld(killed.getWorld().getName())) {
             PlayerStats killedcache = database.getCachedStats(killed);
             if (killedcache != null) {
                 killedcache.onDeath();
-                plugin.getReplaceManager().updateScore(killed, "deaths", killedcache.getDeaths());
-                plugin.getReplaceManager().updateScore(killed, "kdr", killedcache.getKdr());
+                ReplaceManager.getInstance().updateScore(killed, "deaths", killedcache.getDeaths());
+                ReplaceManager.getInstance().updateScore(killed, "kdr", killedcache.getKdr());
                 //will reset
-                plugin.getReplaceManager().updateScore(killed, "current_streak", killedcache.getLaststreak());
+                ReplaceManager.getInstance().updateScore(killed, "current_streak", killedcache.getLaststreak());
             }
 
             PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.onKill();
-                plugin.getReplaceManager().updateScore(killer, "kills", killercache.getKills());
-                plugin.getReplaceManager().updateScore(killer, "kdr", killercache.getKdr());
+                ReplaceManager.getInstance().updateScore(killer, "kills", killercache.getKills());
+                ReplaceManager.getInstance().updateScore(killer, "kdr", killercache.getKdr());
                 //maybe the player reaches a new high score
-                plugin.getReplaceManager().updateScore(killer, "killstreak", killercache.getKillstreak());
-                plugin.getReplaceManager().updateScore(killer, "current_streak", killercache.getLaststreak());
+                ReplaceManager.getInstance().updateScore(killer, "killstreak", killercache.getKillstreak());
+                ReplaceManager.getInstance().updateScore(killer, "current_streak", killercache.getLaststreak());
             }
         }
     }

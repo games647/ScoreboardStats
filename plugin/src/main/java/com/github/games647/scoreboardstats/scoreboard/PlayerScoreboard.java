@@ -17,7 +17,6 @@ public class PlayerScoreboard {
     private final Player player;
 
     private final Map<String, Objective> objectivesByName = Maps.newHashMap();
-    private final Map<String, Team> teamByName = Maps.newHashMap();
 
     private Objective sidebarObjective;
 
@@ -139,37 +138,6 @@ public class PlayerScoreboard {
             Item item = new Item(objective, scoreName, score, false);
             //This automatically replace the old one
             objective.items.put(scoreName, item);
-        }
-    }
-
-    void createTeam(String teamName, String prefix, String suffix, Collection<String> changedPlayer) {
-        Team team = new Team(teamName, prefix, suffix);
-        teamByName.put(teamName, team);
-    }
-
-    void removeTeam(String teamName) {
-        teamByName.remove(teamName);
-    }
-
-    void updateTeamInfo(String teamName, String prefix, String suffix) {
-        Team team = teamByName.get(teamName);
-        if (team != null) {
-            team.setPrefix(prefix);
-            team.setSuffix(suffix);
-        }
-    }
-
-    void addPlayerTeam(String teamName, Iterable<String> changedPlayer) {
-        Team team = teamByName.get(teamName);
-        if (team != null) {
-            changedPlayer.forEach(team::addEntry);
-        }
-    }
-
-    void removePlayerTeam(String teamName, Iterable<String> changedPlayer) {
-        Team team = teamByName.get(teamName);
-        if (team != null) {
-            changedPlayer.forEach(team::removeEntry);
         }
     }
 }

@@ -1,21 +1,19 @@
-package com.github.games647.scoreboardstats.pvpstats;
+package com.github.games647.scoreboardstats.pvp;
 
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.VariableReplaceAdapter;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Replace the self tracking stats variables
- *
- * @see Database
  */
-public class StatsVariables extends VariableReplaceAdapter<ScoreboardStats> {
+public class StatsVariables extends VariableReplaceAdapter<Plugin> {
 
     private final Database statsDatabase;
 
-    public StatsVariables(ScoreboardStats plugin, Database statsDatabase) {
+    public StatsVariables(Plugin plugin, Database statsDatabase) {
         super(plugin
                 , "kills", "deaths", "mob", "kdr", "killstreak", "current_streak");
 

@@ -88,7 +88,6 @@ public class SidebarCommands implements TabExecutor {
 
     private void registerSubCommands() {
         register(new ToggleCommand(plugin));
-        register(new ReloadCommand(plugin));
     }
 
     private void register(CommandHandler handler) {

@@ -2,7 +2,7 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.pvpstats.Database;
+import com.github.games647.scoreboardstats.pvp.Database;
 import com.github.games647.scoreboardstats.scoreboard.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.tasks.TicksPerSecondTask;
@@ -76,7 +76,7 @@ public class ScoreboardStats extends JavaPlugin {
     @Override
     public void onEnable() {
         //Load the config + needs to be initialised to get the configured value for update-checking
-        settings = new Settings(this);
+        settings = new Settings(this, logger);
         settings.loadConfig();
 
         refreshTask = new RefreshTask(this);
@@ -96,7 +96,7 @@ public class ScoreboardStats extends JavaPlugin {
         replaceManager = new ReplaceManager(scoreboardManager, this, getLog());
 
         if (Settings.isPvpStats()) {
-            database = new Database(this);
+            database = new Database(this, logger);
             database.setupDatabase();
         }
 
@@ -138,7 +138,7 @@ public class ScoreboardStats extends JavaPlugin {
 
         scoreboardManager = new PacketSbManager(this);
         if (database == null) {
-            database = new Database(this);
+            database = new Database(this, logger);
             database.setupDatabase();
         } else {
             database.setupDatabase();

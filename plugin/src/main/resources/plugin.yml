@@ -2,14 +2,13 @@
 # ${project.name} are variables from Maven (pom.xml) which will be replaced after the build
 name: ${project.name}
 version: ${project.version}
-main: ${project.groupId}.${project.artifactId}.${project.name}
+main: ${project.groupId}.${project.parent.artifactId}.${project.name}
 
 # meta data for plugin managers
-authors: [games647, 'https://github.com/games647/ScoreboardStats/graphs/contributors']
-description: |
-    ${project.description}
 website: ${project.url}
 dev-url: ${project.url}
+description: |
+    ${project.description}
 
 # Required for the packets
 depend: [ProtocolLib]

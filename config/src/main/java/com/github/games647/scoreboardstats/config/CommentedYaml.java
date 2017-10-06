@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.config;
 
-import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
@@ -20,6 +19,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.slf4j.Logger;
 
 /**
  * Represents an easy way to load and save to yaml configs. Furthermore support
@@ -31,11 +31,13 @@ public class CommentedYaml {
     private static final String COMMENT_PREFIX = "# ";
     private static final String FILE_NAME = "config.yml";
 
-    protected final transient ScoreboardStats plugin;
+    protected final transient Logger logger;
+    protected final transient Path dataFolder;
     protected transient FileConfiguration config;
 
-    public CommentedYaml(ScoreboardStats plugin) {
-        this.plugin = plugin;
+    public CommentedYaml(Logger logger, Path dataFolder) {
+        this.logger = logger;
+        this.dataFolder = dataFolder;
     }
 
     /**
@@ -51,7 +53,7 @@ public class CommentedYaml {
      * @return the loaded file configuration
      */
     public FileConfiguration getConfigFromDisk() {
-        Path file = plugin.getDataFolder().toPath().resolve(FILE_NAME);
+        Path file = dataFolder.resolve(FILE_NAME);
 
         YamlConfiguration newConf = new YamlConfiguration();
         newConf.setDefaults(getDefaults());
@@ -60,7 +62,7 @@ public class CommentedYaml {
             List<String> lines = Files.readAllLines(file);
             load(lines, newConf);
         } catch (InvalidConfigurationException | IOException ex) {
-            plugin.getLog().error("Couldn't load the configuration", ex);
+            logger.error("Couldn't load the configuration", ex);
         }
 
         return newConf;
@@ -94,9 +96,9 @@ public class CommentedYaml {
         //todo add comment support
         try {
             List<String> lines = Collections.singletonList(config.saveToString());
-            Files.write(plugin.getDataFolder().toPath().resolve(FILE_NAME), lines);
+            Files.write(dataFolder.resolve(FILE_NAME), lines);
         } catch (IOException ex) {
-            plugin.getLog().error("Failed to save config", ex);
+            logger.error("Failed to save config", ex);
         }
     }
 
@@ -109,10 +111,10 @@ public class CommentedYaml {
                     field.set(this, config.get(path));
                 }
             } catch (IllegalAccessException ex) {
-                plugin.getLog().error("Error setting field", ex);
+                logger.error("Error setting field", ex);
             }
         } else {
-            plugin.getLog().info("Path not fond {}", path);
+            logger.error("Path not fond {}", path);
         }
     }
 
@@ -135,8 +137,8 @@ public class CommentedYaml {
      */
     private Configuration getDefaults() {
         YamlConfiguration defaults = new YamlConfiguration();
-        InputStream defConfigStream = plugin.getResource(FILE_NAME);
-        if (defConfigStream != null) {
+
+        try (InputStream defConfigStream = getClass().getResourceAsStream("/" + FILE_NAME)) {
             try {
                 InputStreamReader reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
                 //stream will be closed in this method
@@ -144,10 +146,12 @@ public class CommentedYaml {
                 load(lines, defaults);
                 return defaults;
             } catch (InvalidConfigurationException ex) {
-                plugin.getLog().error("Invalid Configuration", ex);
+                logger.error("Invalid Configuration", ex);
             } catch (IOException ex) {
-                plugin.getLog().error("Couldn't load the configuration", ex);
+                logger.error("Couldn't load the configuration", ex);
             }
+        } catch (IOException ioEx) {
+            logger.error("Failed to find default", ioEx);
         }
 
         return defaults;
