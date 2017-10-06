@@ -3,7 +3,6 @@ package com.github.games647.scoreboardstats;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.pvpstats.Database;
-import com.github.games647.scoreboardstats.scoreboard.bukkit.BukkitScoreboardManager;
 import com.github.games647.scoreboardstats.scoreboard.protocol.PacketSbManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
@@ -92,12 +91,7 @@ public class ScoreboardStats extends JavaPlugin {
         //Start the refresh task; it should run on every tick, because it's smoothly update the variables with limit
         getServer().getScheduler().runTaskTimer(this, refreshTask, 5 * 20L, 1L);
 
-        if (Settings.isCompatibilityMode()) {
-            scoreboardManager = new PacketSbManager(this);
-        } else {
-            scoreboardManager = new BukkitScoreboardManager(this);
-        }
-
+        scoreboardManager = new PacketSbManager(this);
         replaceManager = new ReplaceManager(scoreboardManager, this);
 
         if (Settings.isPvpStats()) {
@@ -141,12 +135,7 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager.unregisterAll();
         }
 
-        if (Settings.isCompatibilityMode()) {
-            scoreboardManager = new PacketSbManager(this);
-        } else {
-            scoreboardManager = new BukkitScoreboardManager(this);
-        }
-
+        scoreboardManager = new PacketSbManager(this);
         if (database == null) {
             database = new Database(this);
             database.setupDatabase();

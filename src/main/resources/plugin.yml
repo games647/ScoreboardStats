@@ -11,9 +11,11 @@ description: |
 website: ${project.url}
 dev-url: ${project.url}
 
+# Required for the packets
+depend: [ProtocolLib]
+
 # depending on them - load after them to make sure they are initialized
 softdepend:
-    - ProtocolLib
     - InSigns
     # Variable dependencies
     - PlaceholderAPI

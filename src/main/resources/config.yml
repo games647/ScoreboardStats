@@ -1,10 +1,4 @@
-# Main configuration
-
-# Compatible mode for other plugins like HealthBar, ColoredTags, GhostPlayer, McCombatLevel, etc. ......
-# or the vanilla scoreboard
-# In case you miss the log message: this option requires the plugin called ProtocolLib
-# This option will work around the Bukkit API and will send raw packets
-compatibilityMode: false
+# ${project.name} configuration
 
 # Should be the node disabled-worlds handled as whitelist or blacklist
 disabled-worlds-whitelist: false

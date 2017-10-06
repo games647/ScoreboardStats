@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 /**
@@ -15,8 +14,6 @@ public class Settings extends CommentedYaml {
 
     private static final String TOO_MANY_ITEMS = "Scoreboard can't have more than 15 items";
     public static final String MIN_ITEMS = "A scoreboard have to display min. 1 item ({})";
-
-    private static boolean compatibilityMode;
 
     @ConfigNode(path = "enable-pvpstats")
     private static boolean pvpStats;
@@ -73,16 +70,6 @@ public class Settings extends CommentedYaml {
      */
     public static boolean isPvpStats() {
         return pvpStats;
-    }
-
-    /**
-     * Check whether compatibility mode that ScoreboardStats should operate
-     * over raw packets instead of using the Bukkit API.
-     *
-     * @return whether compatibility mode that ScoreboardStats should operate over raw packets
-     */
-    public static boolean isCompatibilityMode() {
-        return compatibilityMode;
     }
 
     /**
@@ -164,9 +151,6 @@ public class Settings extends CommentedYaml {
     public void loadConfig() {
         super.loadConfig();
 
-        //check if compatibilityMode can be activated
-        compatibilityMode = isCompatibilityMode(compatibilityMode);
-
         //This set only changes after another call to loadConfig so this set can be immutable
         worlds = ImmutableSet.copyOf(config.getStringList("disabled-worlds"));
 
@@ -216,7 +200,7 @@ public class Settings extends CommentedYaml {
         mainScoreboard.clear();
 
         //not implemented yet in compatibility mode
-        int maxLength = compatibilityMode ? 16 : 48;
+        int maxLength = 40;
         for (String key : config.getKeys(false)) {
             if (mainScoreboard.size() == 15) {
                 //Only 15 items per sidebar objective are allowed
@@ -248,36 +232,5 @@ public class Settings extends CommentedYaml {
             //It won't show up if there isn't at least one item
             plugin.getLog().info(MIN_ITEMS, "scoreboard");
         }
-    }
-
-    //Inform the user that he should use compatibility mode to be compatible with some plugins
-    private boolean isCompatibilityMode(boolean active) {
-        if (active) {
-            if (!Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-                //we cannot active compatibilityMode without ProtocolLib
-                plugin.getLog().info("You need ProtocolLib for compatibilityMode");
-                return false;
-            }
-        } else {
-            //These plugins won't work without compatibilityMode, but do with it, so suggest it
-            String[] plugins = {"HealthBar", "ColoredTags", "McCombatLevel", "Ghost_Player", "TablistPrefix"
-                     ,"ColoredPlayerNames", "PingTest", "NovaGuilds", "sTablist"};
-            for (String name : plugins) {
-                if (Bukkit.getPluginManager().getPlugin(name) == null) {
-                    //just check if the plugin is available not if it's active
-                    continue;
-                }
-
-                //Found minimum one plugin. Inform the adminstrator
-                plugin.getLog().info("Found plugin: {}", name);
-                plugin.getLog().info("You are using plugins that requires to activate compatibilityMode");
-                plugin.getLog().info("Otherwise the plugins won't work");
-                plugin.getLog().info("Enable it in the config of this plugin: compatibilityMode");
-                //one plugin is enough
-                break;
-            }
-        }
-
-        return active;
     }
 }

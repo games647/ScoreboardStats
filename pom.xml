@@ -8,7 +8,7 @@
     <packaging>jar</packaging>
 
     <name>ScoreboardStats</name>
-    <inceptionYear>2013</inceptionYear>
+
     <description>Show the Scoreboard with many custom variables</description>
     <version>0.10.6</version>
     <url>https://dev.bukkit.org/bukkit-plugins/scoreboardstats</url>

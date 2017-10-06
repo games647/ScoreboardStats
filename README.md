@@ -23,23 +23,6 @@ https://github.com/games647/ScoreboardStats/wiki
 Feel free to contribute there too.
   Just click the edit button after you login into your Github account
 
-### Compatibility
-
-This plugin is compatible with all Minecraft versions above 1.5, where the
-  scoreboard feature was introduced by [Mojang](https://mojang.com/).
-
-Based on vanilla servers (like CraftBukkit) doesn't allow individual and global
-objectives at the same time. By operating over packets, we can workaround this.
-For this method, you'll need ProtocolLib. It's used to prevent conflicts with
-other plugins which also access the sidebar objective. Otherwise the client
-could crash.
-
-These plugins are (tested) compatible (just activate compatibilityMode):
-* HealthBar (https://dev.bukkit.org/bukkit-plugins/health-bar/)
-* ColoredTags (https://dev.bukkit.org/bukkit-plugins/colored-tags/)
-* GhostPlayer (https://dev.bukkit.org/bukkit-plugins/ghost-player/)
-* McCombatLevel (https://dev.bukkit.org/bukkit-plugins/mccombatlevel/)
-
 ### Building
 
 ScoreboardStats uses Maven 3 to manage building configurations,
