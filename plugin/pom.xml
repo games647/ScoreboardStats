@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.games647</groupId>
+        <artifactId>scoreboardstats-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>scoreboardstats-plugin</artifactId>
+    <packaging>jar</packaging>
+
+    <build>
+        <!--Just use the project name to replace an old version of the plugin if the user does only copy-paste-->
+        <finalName>${project.name}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
+                    <artifactSet>
+                        <includes>
+                            <include>com.github.games647:*</include>
+                            <!--Database pooling-->
+                            <include>com.zaxxer:HikariCP</include>
+                            <!--Logging framework implements slf4j which is required by hikari-->
+                            <include>org.slf4j:slf4j-jdk14</include>
+                            <include>org.slf4j:slf4j-api</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--Replace variables-->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <!--mcmmo-->
+        <repository>
+            <id>md_5-releases</id>
+            <url>https://repo.md-5.net/content/groups/public/</url>
+        </repository>
+
+        <!--ProtocolLib-->
+        <repository>
+            <id>shadowvolt-repo</id>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
+        </repository>
+
+        <!--Github releases automatic maven repo-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>scoreboardstats-variables</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>scoreboardstats-defaults</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!--Library for listening and sending Minecraft packets to workaround
+        the Bukkit API, so we can make scoreboard compatible with other
+        scoreboard plugins -->
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.3.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!--Database pooling-->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+
+        <!--stats on signs-->
+        <dependency>
+            <groupId>com.github.blablubbabc</groupId>
+            <artifactId>IndividualSigns</artifactId>
+            <version>91ea396307</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

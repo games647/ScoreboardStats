@@ -13,9 +13,6 @@ Project page:
 
   https://www.curse.com/bukkit-plugins/minecraft/scoreboardstats
 
-Build status:
-  [![Build Status](https://travis-ci.org/games647/ScoreboardStats.svg)](https://travis-ci.org/games647/ScoreboardStats/)
-
 ### For Plugin Developers
 
 https://github.com/games647/ScoreboardStats/wiki

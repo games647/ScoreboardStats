@@ -1,0 +1,331 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.games647</groupId>
+        <artifactId>scoreboardstats-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>scoreboardstats-defaults</artifactId>
+    <packaging>jar</packaging>
+
+    <repositories>
+        <!--mcmmo-->
+        <repository>
+            <id>md_5-releases</id>
+            <url>https://repo.md-5.net/content/groups/public/</url>
+        </repository>
+
+        <!--Vault and Heroes-->
+        <repository>
+            <id>vault-repo</id>
+            <url>http://nexus.hc.to/content/repositories/pub_releases/</url>
+        </repository>
+
+        <repository>
+            <id>heroes-repo</id>
+            <url>http://nexus.hc.to/content/repositories/pub_snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>sonatype-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>xephi-repo</id>
+            <url>https://ci.xephi.fr/plugin/repository/everything/</url>
+        </repository>
+
+        <!--Player points-->
+        <repository>
+            <id>dakani</id>
+            <name>Dakani Nexus Repo</name>
+            <url>https://repo.dakanilabs.com/repository/public/</url>
+        </repository>
+
+        <!--Repo for SimpleClans-->
+        <repository>
+            <id>simpleclans-repo</id>
+            <url>http://104.236.246.108:8081/artifactory/plugins-release-local</url>
+        </repository>
+
+        <repository>
+            <id>uSkyBlock-mvn-repo</id>
+            <url>https://raw.github.com/rlf/uSkyBlock/mvn-repo/</url>
+        </repository>
+
+        <!--Github releases automatic maven repo-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+
+        <!--ASkyBlock-->
+        <repository>
+            <id>bintray-tastybento-maven-repo</id>
+            <url>https://dl.bintray.com/tastybento/maven-repo</url>
+        </repository>
+
+        <!--MyPet-->
+        <repository>
+            <id>mypet-repo</id>
+            <url>http://repo.keyle.de/</url>
+        </repository>
+
+        <repository>
+            <id>placeholderapi</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+
+        <repository>
+            <id>dustplanet</id>
+            <url>https://repo.dustplanet.de/artifactory/ext-release-local/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>scoreboardstats-variables</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.wasteofplastic</groupId>
+            <artifactId>askyblock</artifactId>
+            <version>3.0.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.8.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet</artifactId>
+            <version>2.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--API for economy variables-->
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.7.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.black_ixx</groupId>
+            <artifactId>PlayerPoints</artifactId>
+            <version>2.1.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.greatmancode</groupId>
+            <artifactId>craftconomy3</artifactId>
+            <version>3.3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.herocraftonline.heroes</groupId>
+            <artifactId>Heroes</artifactId>
+            <version>1.5.5.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gmail.nossr50.mcMMO</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>1.5.00</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>uSkyBlock</groupId>
+            <artifactId>uSkyBlock</artifactId>
+            <version>2.4.5</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--stats on signs-->
+        <dependency>
+            <groupId>com.github.blablubbabc</groupId>
+            <artifactId>IndividualSigns</artifactId>
+            <version>91ea396307</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.SirFaizdat</groupId>
+            <artifactId>Prison</artifactId>
+            <version>v2.4.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.TechFortress</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.7.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>McCombatLevel</artifactId>
+            <version>3ab946cf26</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--dependencies in /lib-->
+        <dependency>
+            <groupId>BukkitGames</groupId>
+            <artifactId>BukkitGames</artifactId>
+            <version>2.3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/BukkitGames-2.3.2.jar</systemPath>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--Factions:-->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <!-- FactionsUUID -->
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-U0.1.21</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>factions</artifactId>
+            <version>2.12.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--MCore must be available for factions-->
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>massivecore</artifactId>
+            <version>2.12.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>
