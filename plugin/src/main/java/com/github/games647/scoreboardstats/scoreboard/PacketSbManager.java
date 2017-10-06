@@ -4,14 +4,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.github.games647.scoreboardstats.SbManager;
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.variables.VariableItem;
 import com.github.games647.scoreboardstats.variables.ReplaceEvent;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.UnknownVariableException;
+import com.github.games647.scoreboardstats.variables.VariableItem;
 import com.google.common.collect.Maps;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -34,12 +35,6 @@ public class PacketSbManager extends SbManager {
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketListener(plugin, this));
     }
 
-    /**
-     * Gets the scoreboard from a player.
-     *
-     * @param player who owns the scoreboard
-     * @return the scoreboard instance
-     */
     public PlayerScoreboard getScoreboard(Player player) {
         return scoreboards
                 .computeIfAbsent(player.getUniqueId(), key -> new PlayerScoreboard(player));
@@ -47,11 +42,10 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void onUpdate(Player player) {
-        Objective sidebar = getScoreboard(player).getSidebarObjective();
-        if (sidebar == null) {
-            createScoreboard(player);
-        } else {
+        if (getScoreboard(player).getSidebarObjective().isPresent()) {
             sendUpdate(player);
+        } else {
+            createScoreboard(player);
         }
     }
 
@@ -67,21 +61,23 @@ public class PacketSbManager extends SbManager {
         PlayerScoreboard scoreboard = scoreboards.remove(player.getUniqueId());
         if (scoreboard != null) {
             scoreboard.getObjectives().stream()
-                    .filter(obj -> obj.getName().startsWith(SB_NAME))
-                    .forEach(Objective::unregister);
+                    .filter(obj -> obj.getId().startsWith(SB_NAME))
+                    .map(Objective::getId)
+                    .forEach(scoreboard::removeObjective);
         }
     }
 
     @Override
     public void createScoreboard(Player player) {
         PlayerScoreboard scoreboard = getScoreboard(player);
-        Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isAllowed(player) || oldObjective != null && !TEMP_SB_NAME.equals(oldObjective.getName())) {
+        Optional<Objective> oldObjective = scoreboard.getSidebarObjective();
+        if (!isAllowed(player) || oldObjective.map(Objective::getId).map(TEMP_SB_NAME::equals).orElse(false)) {
             //Check if another scoreboard is showing
             return;
         }
 
-        Objective objective = scoreboard.createSidebarObjective(SB_NAME, Settings.getMainScoreboard().getTitle(), true);
+        Objective objective = scoreboard.getOrCreateObjective(SB_NAME);
+        objective.setDisplayName(Settings.getTempTitle());
         Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByName().values().iterator();
         while (iter.hasNext()) {
             VariableItem scoreItem = iter.next();
@@ -97,7 +93,7 @@ public class PacketSbManager extends SbManager {
                     ReplaceManager replaceManager = plugin.getReplaceManager();
                     ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, defScore, true);
                     if (replaceEvent.isModified()) {
-                        sendScore(objective, displayText, replaceEvent.getScore());
+                        objective.setScores(displayText, replaceEvent.getScore());
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable because we can't replace it
@@ -116,29 +112,25 @@ public class PacketSbManager extends SbManager {
     @Override
     public void createTopListScoreboard(Player player) {
         PlayerScoreboard scoreboard = getScoreboard(player);
-        Objective oldObjective = scoreboard.getSidebarObjective();
-        if (!isAllowed(player) || oldObjective == null
-                || !oldObjective.getName().startsWith(SB_NAME)) {
+        Optional<Objective> oldObjective = scoreboard.getSidebarObjective();
+        if (!isAllowed(player) || oldObjective.map(Objective::getId).map(SB_NAME::equals).orElse(false)) {
             //Check if another scoreboard is showing
             return;
         }
 
-        Objective objective = scoreboard.getObjective(TEMP_SB_NAME);
-        if (objective != null) {
-            //It's better to send an unregister and let the client handle the remove than sending up to 15
-            //item remove packets
-            objective.unregister();
-        }
+        //Unregister objective instead of sending 15 remove score packets
+        scoreboard.getObjective(TEMP_SB_NAME).map(Objective::getId).ifPresent(scoreboard::removeObjective);
 
         //We are checking if another object is shown. If it's our scoreboard the code will continue to this
         //were the force the replacement, because the scoreboard management in minecraft right now is sync,
         //so we don't expect any crashes by other plugins.
-        objective = scoreboard.createSidebarObjective(TEMP_SB_NAME, Settings.getTempTitle(), true);
+        Objective objective = scoreboard.getOrCreateObjective(TEMP_SB_NAME);
+        objective.setDisplayName(Settings.getTempTitle());
 
         //Colorize and send all elements
         for (Map.Entry<String, Integer> entry : plugin.getStatsDatabase().getTop()) {
             String scoreName = stripLength(Settings.getTempColor() + entry.getKey());
-            sendScore(objective, scoreName, entry.getValue());
+            objective.setScores(scoreName, entry.getValue());
         }
 
         //schedule the next normal scoreboard show
@@ -147,17 +139,13 @@ public class PacketSbManager extends SbManager {
 
     @Override
     public void update(Player player, String title, int newScore) {
-        PlayerScoreboard scoreboard = getScoreboard(player);
-        Objective objective = scoreboard.getObjective(SB_NAME);
-        if (objective != null) {
-            sendScore(objective, title, newScore);
-        }
+        getScoreboard(player).getObjective(SB_NAME).ifPresent(objective -> objective.setScores(title, newScore));
     }
 
     @Override
     public void sendUpdate(Player player) {
-        Objective sidebar = getScoreboard(player).getSidebarObjective();
-        if (SB_NAME.equals(sidebar.getName())) {
+        Optional<Objective> sidebar = getScoreboard(player).getSidebarObjective();
+        if (sidebar.filter(objective -> SB_NAME.equals(objective.getId())).isPresent()) {
             Iterator<VariableItem> iter = Settings.getMainScoreboard().getItemsByVariable().values().iterator();
             while (iter.hasNext()) {
                 VariableItem variableItem = iter.next();
@@ -170,7 +158,7 @@ public class PacketSbManager extends SbManager {
                     ReplaceManager replaceManager = plugin.getReplaceManager();
                     ReplaceEvent replaceEvent = replaceManager.getScore(player, variable, displayText, score, false);
                     if (replaceEvent.isModified()) {
-                        sendScore(sidebar, displayText, replaceEvent.getScore());
+                        sidebar.get().setScores(displayText, replaceEvent.getScore());
                     }
                 } catch (UnknownVariableException ex) {
                     //Remove the variable because we can't replace it
@@ -180,15 +168,6 @@ public class PacketSbManager extends SbManager {
                     plugin.getLog().info(UNKNOWN_VARIABLE, variableItem);
                 }
             }
-        }
-    }
-
-    private void sendScore(Objective objective, String title, int value) {
-        Item item = objective.getItem(title);
-        if (item == null) {
-            objective.registerItem(title, value);
-        } else {
-            item.setScore(value);
         }
     }
 }

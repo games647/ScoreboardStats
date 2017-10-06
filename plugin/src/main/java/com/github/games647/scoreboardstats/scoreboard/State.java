@@ -1,26 +1,26 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
 /**
- * Represents the state of a scoreboard packet
+ * Represents the state of a scoreboard objective packet
  *
  * Protocol specifications can be found here http://wiki.vg/Protocol
  */
 public enum State {
 
     /**
-     * The objective or the item was created
+     * The objective was created
      */
     CREATE,
 
     /**
-     * The objective or the item was removed
+     * The objective was removed
      */
     REMOVE,
 
     /**
      * The display name of the objective was changed
      */
-    UPDATE;
+    UPDATE_DISPLAY_NAME;
 
     /**
      * Get the enum from his id

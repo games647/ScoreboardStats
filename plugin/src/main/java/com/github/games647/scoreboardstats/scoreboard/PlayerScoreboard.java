@@ -1,13 +1,17 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.google.common.collect.Maps;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents the scoreboard overview in a server-side perspective.
@@ -16,128 +20,67 @@ public class PlayerScoreboard {
 
     private final Player player;
 
-    private final Map<String, Objective> objectivesByName = Maps.newHashMap();
+    final Map<String, Objective> objectivesByName = Maps.newHashMap();
+    Objective sidebarObjective;
 
-    private Objective sidebarObjective;
-
-    /**
-     * Creates a new scoreboard for specific player.
-     *
-     * @param player the player for the scoreboard
-     */
     public PlayerScoreboard(Player player) {
         this.player = player;
     }
 
-    /**
-     * Creates a new sidebar objective.
-     *
-     * @param objectiveName the objective name. have to be unique
-     * @param displayName the displayed name
-     * @param replace overwrite the sidebar slot. Conflicts if you overwrite scoreboards from other plugins
-     * @return the created objective
-     * @throws NullPointerException name is null
-     * @throws NullPointerException displayName is null
-     * @throws IllegalArgumentException name is longer than 16 characters
-     * @throws IllegalArgumentException display-name is longer than 32 characters
-     * @throws IllegalStateException if there is already a objective with that name
-     * @throws IllegalStateException if there is already a sidebar objective active
-     */
-    public Objective createSidebarObjective(String objectiveName, String displayName, boolean replace)
-            throws NullPointerException, IllegalArgumentException, IllegalStateException {
-        Preconditions.checkNotNull(objectiveName, "objective name cannot be null");
-        Preconditions.checkNotNull(displayName, "display name cannot be null");
-
-        Preconditions.checkArgument(objectiveName.length() <= 16, "objective name is longer than 16 characters");
-        Preconditions.checkArgument(displayName.length() <= 32, "display name is longer than 32 characters");
-
-        if (!replace) {
-            Preconditions.checkState(sidebarObjective == null, "There is already an sidebar objective");
+    public Objective getOrCreateObjective(String objectiveId) {
+        Objective objective = objectivesByName.get(objectiveId);
+        if (objective == null) {
+            objective = addObjective(objectiveId);
         }
 
-        if (objectivesByName.containsKey(objectiveName)) {
-            //the objective already exits. I assume that no other use this unique name
-            //so we expect that a other sidebar was showing
-            Objective objective = objectivesByName.get(objectiveName);
-            PacketFactory.sendDisplayPacket(objective);
-            sidebarObjective = objective;
-            return objective;
-        }
-
-        Objective objective = new Objective(this, objectiveName, displayName);
-        sidebarObjective = objective;
-        objectivesByName.put(objectiveName, objective);
         return objective;
     }
 
-    /**
-     * Gets the current sidebar objective
-     *
-     * @return current sidebar objective or null
-     */
-    public Objective getSidebarObjective() {
-        return sidebarObjective;
+    public Optional<Objective> getObjective(String objectiveId) {
+        return Optional.ofNullable(objectivesByName.get(objectiveId));
     }
 
-    /**
-     * Gets all objectives that the player have as immutable collection.
-     *
-     * @return the objectives
-     */
+    public Objective addObjective(String objectiveId) {
+        return addObjective(objectiveId, objectiveId);
+    }
+
+    public Objective addObjective(String objectiveId, String display) {
+        Objective objective = new Objective(this, objectiveId, display);
+        sidebarObjective = objective;
+        objectivesByName.put(objectiveId, objective);
+
+        objective.sendObjectivePacket(State.CREATE);
+        objective.sendShowPacket();
+        return objective;
+    }
+
     public Collection<Objective> getObjectives() {
-        return ImmutableSet.copyOf(objectivesByName.values());
+        return objectivesByName.values();
     }
 
-    /**
-     * Gets the owner of this scoreboard
-     *
-     * @return the owner of the scoreboard
-     */
+    public Optional<Objective> getSidebarObjective() {
+        return Optional.ofNullable(sidebarObjective);
+    }
+
+    public void removeObjective(String objectiveId) {
+        Objective objective = objectivesByName.remove(objectiveId);
+        objective.sendObjectivePacket(State.REMOVE);
+    }
+
     public Player getOwner() {
         return player;
     }
 
-    void addObjective(String objectiveName, String displayName) {
-        objectivesByName.put(objectiveName, new Objective(this, objectiveName, displayName, false));
-    }
+    void sendPacket(PacketContainer packet) {
+        //add metadata that we ignore our packets on the listener
+        packet.addMetadata("ScoreboardStats", true);
 
-    Objective getObjective(String name) {
-        return objectivesByName.get(name);
-    }
-
-    void removeObjective(String objectiveName) {
-        objectivesByName.remove(objectiveName);
-        if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
-            clearSidebarObjective();
-        }
-    }
-
-    void setSidebarObjective(String objectiveName) {
-        if (objectiveName.isEmpty()) {
-            clearSidebarObjective();
-        } else {
-            sidebarObjective = objectivesByName.get(objectiveName);
-        }
-    }
-
-    void clearSidebarObjective() {
-        sidebarObjective = null;
-    }
-
-    void resetScore(String scoreName) {
-        /*
-         * Very weird that minecraft always ignore the name of the parent objective and
-         * will remove the score from the complete scoreboard
-         */
-        objectivesByName.values().forEach(entry -> entry.items.remove(scoreName));
-    }
-
-    void createOrUpdateScore(String scoreName, String parent, int score) {
-        Objective objective = objectivesByName.get(parent);
-        if (objective != null) {
-            Item item = new Item(objective, scoreName, score, false);
-            //This automatically replace the old one
-            objective.items.put(scoreName, item);
+        try {
+            //false so we don't listen to our own packets
+            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        } catch (InvocationTargetException ex) {
+            //just log it for now.
+            JavaPlugin.getPlugin(ScoreboardStats.class).getLog().info("Failed to send packet", ex);
         }
     }
 }

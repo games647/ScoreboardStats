@@ -5,38 +5,29 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.DisplaySlot;
 
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
+
 /**
  * Listening all outgoing packets and check + handle for possibly client crash cases. This Listener should only read and
  * listen to relevant packets.
  *
  * Protocol specifications can be found here http://wiki.vg/Protocol
- *
- * @see PacketFactory
- * @see PacketAdapter
  */
 public class PacketListener extends PacketAdapter {
 
-    //Shorter access
-    private static final PacketType DISPLAY_TYPE = PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
-    private static final PacketType OBJECTIVE_TYPE = PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
-    private static final PacketType SCORE_TYPE = PacketType.Play.Server.SCOREBOARD_SCORE;
+    private final PacketSbManager manager;
 
-    protected final PacketSbManager manager;
-
-    /**
-     * Creates a new packet listener
-     *
-     * @param plugin plugin for registration into ProtocolLib
-     * @param manager packet manager instance
-     */
-    public PacketListener(Plugin plugin, PacketSbManager manager) {
-        super(plugin, DISPLAY_TYPE, OBJECTIVE_TYPE, SCORE_TYPE);
+    PacketListener(Plugin plugin, PacketSbManager manager) {
+        super(plugin, SCOREBOARD_DISPLAY_OBJECTIVE, SCOREBOARD_OBJECTIVE, SCOREBOARD_SCORE);
 
         this.manager = manager;
     }
@@ -59,11 +50,11 @@ public class PacketListener extends PacketAdapter {
         //everything was read from the packet, so we don't need to access it anymore
         //we could now run a sync thread to synchronize with async packets
         Bukkit.getScheduler().runTask(plugin, () -> {
-            if (packetType.equals(SCORE_TYPE)) {
+            if (packetType.equals(SCOREBOARD_SCORE)) {
                 handleScorePacket(player, packet);
-            } else if (packetType.equals(OBJECTIVE_TYPE)) {
+            } else if (packetType.equals(SCOREBOARD_OBJECTIVE)) {
                 handleObjectivePacket(player, packet);
-            } else if (packetType.equals(DISPLAY_TYPE)) {
+            } else if (packetType.equals(SCOREBOARD_DISPLAY_OBJECTIVE)) {
                 handleDisplayPacket(player, packet);
             }
         });
@@ -75,67 +66,64 @@ public class PacketListener extends PacketAdapter {
         int score = packet.getIntegers().read(0);
 
         //state id
-        State action = State.fromId(packet.getScoreboardActions().read(0).ordinal());
+        ScoreboardAction action = packet.getScoreboardActions().read(0);
 
         //Packet receiving validation
-        if (action == State.CREATE && parent.length() > 16) {
+        if (parent.length() > 16) {
             //Invalid packet
             return;
         }
 
         PlayerScoreboard scoreboard = manager.getScoreboard(player);
         //scores actually only have two state id, because these
-        if (action == State.CREATE) {
-            scoreboard.createOrUpdateScore(scoreName, parent, score);
-        } else if (action == State.REMOVE) {
-            scoreboard.resetScore(scoreName);
+        if (action == ScoreboardAction.CHANGE) {
+            scoreboard.getObjective(parent).ifPresent(objective -> objective.scores.put(scoreName, score));
+        } else if (action == ScoreboardAction.REMOVE) {
+            scoreboard.getObjective(parent).ifPresent(objective -> objective.scores.remove(scoreName, score));
         }
     }
 
     private void handleObjectivePacket(Player player, PacketContainer packet) {
-        String objectiveName = packet.getStrings().read(0);
+        String objectiveId = packet.getStrings().read(0);
         //Can be empty
         String displayName = packet.getStrings().read(1);
         State action = State.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
-        if (objectiveName.length() > 16 || displayName.length() > 32) {
+        if (objectiveId.length() > 16 || displayName.length() > 32) {
             //Invalid packet
             return;
         }
 
         PlayerScoreboard scoreboard = manager.getScoreboard(player);
-        Objective objective = scoreboard.getObjective(objectiveName);
         if (action == State.CREATE) {
-            scoreboard.addObjective(objectiveName, displayName);
-        } else if (objective != null) {
-            //Could cause a NPE at the client if the objective wasn't found
+            Objective objective = new Objective(scoreboard, objectiveId, displayName);
+            scoreboard.objectivesByName.put(objectiveId, objective);
+        } else {
             if (action == State.REMOVE) {
-                scoreboard.removeObjective(objectiveName);
-            } else if (action == State.UPDATE) {
-                objective.setDisplayName(displayName, false);
+                scoreboard.objectivesByName.remove(objectiveId);
+            } else {
+                scoreboard.getObjective(objectiveId).ifPresent(obj -> obj.displayName = displayName);
             }
         }
     }
 
     private void handleDisplayPacket(Player player, PacketContainer packet) {
         //Can be empty; if so it would just clear the slot
-        String objectiveName = packet.getStrings().read(0);
+        String objectiveId = packet.getStrings().read(0);
         DisplaySlot slot = SlotTransformer.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
-        if (slot == null || objectiveName.length() > 16) {
+        if (slot == null || objectiveId.length() > 16) {
             return;
         }
 
         PlayerScoreboard scoreboard = manager.getScoreboard(player);
         if (slot == DisplaySlot.SIDEBAR) {
-            scoreboard.setSidebarObjective(objectiveName);
+            scoreboard.getObjective(objectiveId).ifPresent(obj -> scoreboard.sidebarObjective = obj);
         } else {
-            Objective sidebarObjective = scoreboard.getSidebarObjective();
-            if (sidebarObjective != null && sidebarObjective.getName().equals(objectiveName)) {
-                scoreboard.clearSidebarObjective();
-            }
+            scoreboard.getSidebarObjective().filter(objective -> objective.getId().equals(objectiveId))
+                    .ifPresent(objective -> scoreboard.sidebarObjective = null);
         }
     }
 }

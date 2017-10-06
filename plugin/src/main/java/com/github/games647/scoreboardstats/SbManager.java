@@ -2,8 +2,9 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.BoardManager;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.scoreboard.DelayedShowTask;
 import com.github.games647.scoreboardstats.variables.VariableItem;
+
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -64,14 +65,24 @@ public abstract class SbManager implements BoardManager {
             return;
         }
 
-        int interval;
+        int interval = Settings.getTempDisappear();
         if (action) {
             interval = Settings.getTempAppear();
-        } else {
-            interval = Settings.getTempDisappear();
         }
 
-        Bukkit.getScheduler().runTaskLater(plugin, new DelayedShowTask(player, action, this), interval * 20L);
+        UUID uuid = player.getUniqueId();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Player localPlayer = Bukkit.getPlayer(uuid);
+            if (localPlayer == null) {
+                return;
+            }
+
+            if (action) {
+                createTopListScoreboard(player);
+            } else {
+                createScoreboard(player);
+            }
+        }, interval * 20L);
     }
 
     protected String stripLength(String check) {
