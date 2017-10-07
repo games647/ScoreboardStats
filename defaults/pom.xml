@@ -221,20 +221,6 @@
             </exclusions>
         </dependency>
 
-        <!--stats on signs-->
-        <dependency>
-            <groupId>com.github.blablubbabc</groupId>
-            <artifactId>IndividualSigns</artifactId>
-            <version>91ea396307</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-            <optional>true</optional>
-        </dependency>
-
         <dependency>
             <groupId>com.github.SirFaizdat</groupId>
             <artifactId>Prison</artifactId>
