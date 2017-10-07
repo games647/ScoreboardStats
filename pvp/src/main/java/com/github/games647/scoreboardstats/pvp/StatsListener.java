@@ -77,7 +77,8 @@ public class StatsListener implements Listener {
             if (killercache != null) {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
                 killercache.onMobKill();
-                ReplaceManager.getInstance().updateScore(killer, "mob", killercache.getMobkills());
+
+                ReplaceManager.getInstance().forceUpdate(killer, "mob", killercache.getMobkills());
             }
         }
     }
@@ -98,22 +99,23 @@ public class StatsListener implements Listener {
 
         if (Settings.isActiveWorld(killed.getWorld().getName())) {
             PlayerStats killedcache = database.getCachedStats(killed);
+            ReplaceManager replaceManager = ReplaceManager.getInstance();
             if (killedcache != null) {
                 killedcache.onDeath();
-                ReplaceManager.getInstance().updateScore(killed, "deaths", killedcache.getDeaths());
-                ReplaceManager.getInstance().updateScore(killed, "kdr", killedcache.getKdr());
+                replaceManager.forceUpdate(killed, "deaths", killedcache.getDeaths());
+                replaceManager.forceUpdate(killed, "kdr", killedcache.getKdr());
                 //will reset
-                ReplaceManager.getInstance().updateScore(killed, "current_streak", killedcache.getLaststreak());
+                replaceManager.forceUpdate(killed, "current_streak", killedcache.getCurrentStreak());
             }
 
             PlayerStats killercache = database.getCachedStats(killer);
             if (killercache != null) {
                 killercache.onKill();
-                ReplaceManager.getInstance().updateScore(killer, "kills", killercache.getKills());
-                ReplaceManager.getInstance().updateScore(killer, "kdr", killercache.getKdr());
+                replaceManager.forceUpdate(killer, "kills", killercache.getKills());
+                replaceManager.forceUpdate(killer, "kdr", killercache.getKdr());
                 //maybe the player reaches a new high score
-                ReplaceManager.getInstance().updateScore(killer, "killstreak", killercache.getKillstreak());
-                ReplaceManager.getInstance().updateScore(killer, "current_streak", killercache.getLaststreak());
+                replaceManager.forceUpdate(killer, "killstreak", killercache.getKillstreak());
+                replaceManager.forceUpdate(killer, "current_streak", killercache.getCurrentStreak());
             }
         }
     }

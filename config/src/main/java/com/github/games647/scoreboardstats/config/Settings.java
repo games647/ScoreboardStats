@@ -217,7 +217,7 @@ public class Settings extends CommentedYaml {
                     mainScoreboard.addItem(displayName, score);
                 } catch (NumberFormatException numberFormatException) {
                     //Prevent user mistakes
-                    logger.info("Variable {} has to contain % at the beginning and at the end", displayName);
+                    logger.info("Replacer {} has to contain % at the beginning and at the end", displayName);
                 }
             }
         }

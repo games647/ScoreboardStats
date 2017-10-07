@@ -3,9 +3,9 @@ package com.github.games647.scoreboardstats;
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.pvp.Database;
-import com.github.games647.scoreboardstats.scoreboard.PacketSbManager;
+import com.github.games647.scoreboardstats.scoreboard.PacketManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.variables.tasks.TicksPerSecondTask;
+import com.github.games647.scoreboardstats.defaults.TicksPerSecondTask;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
@@ -92,7 +92,7 @@ public class ScoreboardStats extends JavaPlugin {
         //Start the refresh task; it should run on every tick, because it's smoothly update the variables with limit
         getServer().getScheduler().runTaskTimer(this, refreshTask, 5 * 20L, 1L);
 
-        scoreboardManager = new PacketSbManager(this);
+        scoreboardManager = new PacketManager(this);
         replaceManager = new ReplaceManager(scoreboardManager, this, getLog());
 
         if (Settings.isPvpStats()) {
@@ -112,6 +112,10 @@ public class ScoreboardStats extends JavaPlugin {
         if (scoreboardManager != null) {
             //Clear all scoreboards
             scoreboardManager.unregisterAll();
+        }
+
+        if (replaceManager != null) {
+            replaceManager.close();
         }
 
         if (database != null) {
@@ -136,7 +140,7 @@ public class ScoreboardStats extends JavaPlugin {
             scoreboardManager.unregisterAll();
         }
 
-        scoreboardManager = new PacketSbManager(this);
+        scoreboardManager = new PacketManager(this);
         if (database == null) {
             database = new Database(this, logger);
             database.setupDatabase();

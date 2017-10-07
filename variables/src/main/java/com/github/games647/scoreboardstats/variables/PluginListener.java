@@ -1,8 +1,5 @@
 package com.github.games647.scoreboardstats.variables;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
@@ -28,15 +25,8 @@ public class PluginListener implements Listener {
     @EventHandler
     public void onPluginDisable(PluginDisableEvent disableEvent) {
         //Remove the listener if the associated plugin was disabled
-        String disablePluginName = disableEvent.getPlugin().getName();
+        Plugin disablePlugin = disableEvent.getPlugin();
 
-        Map<String, VariableReplaceAdapter<? extends Plugin>> specificReplacers = replaceManager.getReplacers();
-        Iterator<VariableReplaceAdapter<? extends Plugin>> iterator = specificReplacers.values().iterator();
-        while (iterator.hasNext()) {
-            Plugin plugin = iterator.next().getPlugin();
-            if (plugin != null && plugin.getName().equals(disablePluginName)) {
-                iterator.remove();
-            }
-        }
+        replaceManager.unregisterAll(disablePlugin);
     }
 }

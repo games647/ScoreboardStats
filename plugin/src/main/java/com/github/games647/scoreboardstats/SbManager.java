@@ -1,8 +1,7 @@
 package com.github.games647.scoreboardstats;
 
-import com.github.games647.BoardManager;
 import com.github.games647.scoreboardstats.config.Settings;
-import com.github.games647.scoreboardstats.variables.VariableItem;
+import com.github.games647.scoreboardstats.config.VariableItem;
 
 import java.util.UUID;
 
@@ -51,10 +50,18 @@ public abstract class SbManager implements BoardManager {
     }
 
     @Override
-    public void updateByVariable(Player player, String variable, int newScore) {
+    public void updateVariable(Player player, String variable, int newScore) {
         VariableItem variableItem = Settings.getMainScoreboard().getItemsByVariable().get(variable);
         if (variableItem != null) {
             update(player, variableItem.getDisplayText(), newScore);
+        }
+    }
+
+    @Override
+    public void updateVariable(Player player, String variable, String newScore) {
+        VariableItem variableItem = Settings.getMainScoreboard().getItemsByName().get(variable);
+        if (variableItem != null) {
+            // update(player, variableItem.getDisplayText(), newScore);
         }
     }
 

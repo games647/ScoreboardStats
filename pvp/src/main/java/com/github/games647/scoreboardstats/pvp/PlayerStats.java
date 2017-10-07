@@ -30,7 +30,7 @@ public class PlayerStats {
 
     private Instant lastOnline;
 
-    private int laststreak;
+    private int currentStreak;
 
     public PlayerStats(int id, UUID uuid, String playername,
             int kills, int deaths, int mobkills, int killstreak, Instant lastOnline) {
@@ -130,8 +130,8 @@ public class PlayerStats {
      *
      * @return current killstreak
      */
-    public int getLaststreak() {
-        return laststreak;
+    public int getCurrentStreak() {
+        return currentStreak;
     }
 
     /**
@@ -183,9 +183,9 @@ public class PlayerStats {
     public void onKill() {
         kills++;
 
-        laststreak++;
-        if (laststreak > killstreak) {
-            killstreak = laststreak;
+        currentStreak++;
+        if (currentStreak > killstreak) {
+            killstreak = currentStreak;
         }
     }
 
@@ -200,7 +200,7 @@ public class PlayerStats {
      * Increment the deaths
      */
     public void onDeath() {
-        laststreak = 0;
+        currentStreak = 0;
         deaths++;
     }
 

@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.pvp;
 
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
+import com.github.games647.scoreboardstats.variables.Replacer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.Future;
@@ -69,6 +71,10 @@ public class Database {
         }
 
         return null;
+    }
+
+    private Optional<PlayerStats> getStats(Player request) {
+        return Optional.ofNullable(getCachedStats(request));
     }
 
     /**
@@ -397,14 +403,22 @@ public class Database {
     private void registerEvents() {
         if (Bukkit.getPluginManager().isPluginEnabled("InSigns")) {
             //Register this listener if InSigns is available
-            new SignListener(plugin, "[Kill]", this);
-            new SignListener(plugin, "[Death]", this);
-            new SignListener(plugin, "[KDR]", this);
-            new SignListener(plugin, "[Streak]", this);
-            new SignListener(plugin, "[Mob]", this);
+            Bukkit.getPluginManager().registerEvents(new SignListener(plugin, this), plugin);
         }
 
-        ReplaceManager.getInstance().register(new StatsVariables(plugin, this));
+        ReplaceManager replaceManager = ReplaceManager.getInstance();
+        replaceManager.register(newVariable("kills", PlayerStats::getKills));
+        replaceManager.register(newVariable("deaths", PlayerStats::getDeaths));
+        replaceManager.register(newVariable("kdr", PlayerStats::getKdr));
+        replaceManager.register(newVariable("mob-kills", PlayerStats::getMobkills));
+        replaceManager.register(newVariable("killstreak", PlayerStats::getKillstreak));
+        replaceManager.register(newVariable("current-streak", PlayerStats::getCurrentStreak));
+
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
+    }
+
+    private Replacer newVariable(String variable, Function<PlayerStats, Integer> fct){
+        return new Replacer(plugin,"kills")
+                .scoreSupply(player -> getStats(player).map(fct).orElse(-1));
     }
 }

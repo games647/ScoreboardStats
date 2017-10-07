@@ -24,9 +24,9 @@ import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
  */
 public class PacketListener extends PacketAdapter {
 
-    private final PacketSbManager manager;
+    private final PacketManager manager;
 
-    PacketListener(Plugin plugin, PacketSbManager manager) {
+    PacketListener(Plugin plugin, PacketManager manager) {
         super(plugin, SCOREBOARD_DISPLAY_OBJECTIVE, SCOREBOARD_OBJECTIVE, SCOREBOARD_SCORE);
 
         this.manager = manager;

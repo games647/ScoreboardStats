@@ -51,12 +51,12 @@ public class StatsLoader implements Runnable {
                 if (player.isOnline()) {
                     //sets it only if the player is only
                     player.setMetadata("player_stats", new FixedMetadataValue(plugin, stats));
-                    ReplaceManager.getInstance().updateScore(player, "deaths", stats.getDeaths());
-                    ReplaceManager.getInstance().updateScore(player, "kdr", stats.getKdr());
-                    ReplaceManager.getInstance().updateScore(player, "kills", stats.getKills());
-                    ReplaceManager.getInstance().updateScore(player, "killstreak", stats.getKillstreak());
-                    ReplaceManager.getInstance().updateScore(player, "current_streak", stats.getLaststreak());
-                    ReplaceManager.getInstance().updateScore(player, "mobkills", stats.getMobkills());
+                    ReplaceManager.getInstance().forceUpdate(player, "deaths", stats.getDeaths());
+                    ReplaceManager.getInstance().forceUpdate(player, "kdr", stats.getKdr());
+                    ReplaceManager.getInstance().forceUpdate(player, "kills", stats.getKills());
+                    ReplaceManager.getInstance().forceUpdate(player, "killstreak", stats.getKillstreak());
+                    ReplaceManager.getInstance().forceUpdate(player, "current_streak", stats.getCurrentStreak());
+                    ReplaceManager.getInstance().forceUpdate(player, "mobkills", stats.getMobkills());
                 }
             });
         }

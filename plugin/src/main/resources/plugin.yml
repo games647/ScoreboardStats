@@ -16,7 +16,7 @@ depend: [ProtocolLib]
 # depending on them - load after them to make sure they are initialized
 softdepend:
     - InSigns
-    # Variable dependencies
+    # Replacer dependencies
     - PlaceholderAPI
     - mcMMO
     - Vault

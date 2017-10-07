@@ -118,7 +118,7 @@ public class CommentedYaml {
         }
     }
 
-    private void load(Iterable<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
+    private void load(List<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             //remove the silly tab error from yaml

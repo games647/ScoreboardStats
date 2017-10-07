@@ -1,6 +1,5 @@
 package com.github.games647.scoreboardstats.config;
 
-import com.github.games647.scoreboardstats.variables.VariableItem;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
