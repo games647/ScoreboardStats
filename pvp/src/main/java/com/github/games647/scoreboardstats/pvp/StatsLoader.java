@@ -4,6 +4,7 @@ import com.github.games647.scoreboardstats.variables.ReplaceManager;
 
 import java.lang.ref.WeakReference;
 import java.time.Instant;
+import java.util.Optional;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.bukkit.Bukkit;
@@ -41,7 +42,13 @@ public class StatsLoader implements Runnable {
         final Player player = weakPlayer.get();
         Database statsDatabase = weakDatabase.get();
         if (player != null && statsDatabase != null) {
-            final PlayerStats stats = statsDatabase.loadAccount(player);
+            Optional<PlayerStats> optStats = statsDatabase.loadAccount(player);
+            if (!optStats.isPresent()) {
+                return;
+            }
+
+            final PlayerStats stats = optStats.get();
+
             //update player name on every load, because it's changeable
             stats.setPlayername(player.getName());
             stats.setLastOnline(Instant.now());

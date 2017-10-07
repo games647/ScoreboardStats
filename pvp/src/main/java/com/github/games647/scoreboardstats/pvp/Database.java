@@ -61,20 +61,21 @@ public class Database {
      * @param request the associated player
      * @return the stats if they are in the cache
      */
+    @Deprecated
     public PlayerStats getCachedStats(Player request) {
+        return getStats(request).orElse(null);
+    }
+
+    public Optional<PlayerStats> getStats(Player request) {
         if (request != null) {
             for (MetadataValue metadata : request.getMetadata(METAKEY)) {
                 if (metadata.value() instanceof PlayerStats) {
-                    return (PlayerStats) metadata.value();
+                    return Optional.of((PlayerStats) metadata.value());
                 }
             }
         }
 
-        return null;
-    }
-
-    private Optional<PlayerStats> getStats(Player request) {
-        return Optional.ofNullable(getCachedStats(request));
+        return Optional.empty();
     }
 
     /**
@@ -83,9 +84,8 @@ public class Database {
      * @param player the associated player
      */
     public void loadAccountAsync(Player player) {
-        if (getCachedStats(player) == null && dataSource != null) {
-            Runnable statsLoader = new StatsLoader(plugin, player, this);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, statsLoader);
+        if (dataSource != null && !getStats(player).isPresent()) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, new StatsLoader(plugin, player, this));
         }
     }
 
@@ -95,9 +95,9 @@ public class Database {
      * @param uniqueId the associated playername or uuid
      * @return the loaded stats
      */
-    public PlayerStats loadAccount(Object uniqueId) {
+    public Optional<PlayerStats> loadAccount(Object uniqueId) {
         if (uniqueId == null || dataSource == null) {
-            return null;
+            return Optional.empty();
         } else {
             try (Connection conn = dataSource.getConnection();
                  PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
@@ -105,13 +105,13 @@ public class Database {
 
                 stmt.setString(1, uniqueId.toString());
                 try (ResultSet resultSet = stmt.executeQuery()) {
-                    return extractPlayerStats(resultSet);
+                    return Optional.of(extractPlayerStats(resultSet));
                 }
             } catch (SQLException ex) {
                 logger.error("Error loading player profile", ex);
             }
 
-            return null;
+            return Optional.empty();
         }
     }
 
@@ -141,9 +141,9 @@ public class Database {
      * @param player the associated player
      * @return the loaded stats
      */
-    public PlayerStats loadAccount(Player player) {
+    public Optional<PlayerStats> loadAccount(Player player) {
         if (player == null || dataSource == null) {
-            return null;
+            return Optional.empty();
         } else {
             return loadAccount(player.getUniqueId());
         }
@@ -257,8 +257,9 @@ public class Database {
 
             //If pvpstats are enabled save all stats that are in the cache
             List<PlayerStats> toSave = Bukkit.getOnlinePlayers().stream()
-                    .map(this::getCachedStats)
-                    .filter(Objects::nonNull)
+                    .map(this::getStats)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .collect(Collectors.toList());
 
             if (!toSave.isEmpty()) {
@@ -316,8 +317,9 @@ public class Database {
                 Collection<? extends Player> onlinePlayers = syncPlayers.get();
 
                 List<PlayerStats> toSave = onlinePlayers.stream()
-                        .map(this::getCachedStats)
-                        .filter(Objects::nonNull)
+                        .map(this::getStats)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList());
 
                 if (!toSave.isEmpty()) {

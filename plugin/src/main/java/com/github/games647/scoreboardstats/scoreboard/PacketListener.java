@@ -7,6 +7,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
+import java.util.Optional;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -111,15 +113,15 @@ class PacketListener extends PacketAdapter {
     private void handleDisplayPacket(Player player, PacketContainer packet) {
         //Can be empty; if so it would just clear the slot
         String objectiveId = packet.getStrings().read(0);
-        DisplaySlot slot = SlotTransformer.fromId(packet.getIntegers().read(0));
+        Optional<DisplaySlot> slot = SlotTransformer.fromId(packet.getIntegers().read(0));
 
         //Packet receiving validation
-        if (slot == null || objectiveId.length() > 16) {
+        if (!slot.isPresent() || objectiveId.length() > 16) {
             return;
         }
 
         PlayerScoreboard scoreboard = manager.getScoreboard(player);
-        if (slot == DisplaySlot.SIDEBAR) {
+        if (slot.get() == DisplaySlot.SIDEBAR) {
             scoreboard.getObjective(objectiveId).ifPresent(obj -> scoreboard.sidebarObjective = obj);
         } else {
             scoreboard.getSidebarObjective().filter(objective -> objective.getId().equals(objectiveId))

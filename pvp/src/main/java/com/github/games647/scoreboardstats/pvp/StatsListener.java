@@ -54,7 +54,7 @@ public class StatsListener implements Listener {
     public void onQuit(PlayerQuitEvent quitEvent) {
         Player player = quitEvent.getPlayer();
 
-        database.saveAsync(database.getCachedStats(player));
+        database.getStats(player).ifPresent(database::saveAsync);
 
         //just remove our metadata to prevent memory leaks
         player.removeMetadata("player_stats", plugin);
@@ -73,13 +73,12 @@ public class StatsListener implements Listener {
 
         //Check if it's not player because we are already handling it
         if (entity.getType() != EntityType.PLAYER && Settings.isActiveWorld(entity.getWorld().getName())) {
-            PlayerStats killercache = database.getCachedStats(killer);
-            if (killercache != null) {
+            database.getStats(killer).ifPresent(stats -> {
                 //If the cache entry is loaded and the player isn't null, increase the mob kills
-                killercache.onMobKill();
+                stats.onMobKill();
 
-                ReplaceManager.getInstance().forceUpdate(killer, "mob", killercache.getMobkills());
-            }
+                ReplaceManager.getInstance().forceUpdate(killer, "mob", stats.getMobkills());
+            });
         }
     }
 
@@ -98,25 +97,25 @@ public class StatsListener implements Listener {
         }
 
         if (Settings.isActiveWorld(killed.getWorld().getName())) {
-            PlayerStats killedcache = database.getCachedStats(killed);
             ReplaceManager replaceManager = ReplaceManager.getInstance();
-            if (killedcache != null) {
-                killedcache.onDeath();
-                replaceManager.forceUpdate(killed, "deaths", killedcache.getDeaths());
-                replaceManager.forceUpdate(killed, "kdr", killedcache.getKdr());
-                //will reset
-                replaceManager.forceUpdate(killed, "current_streak", killedcache.getCurrentStreak());
-            }
 
-            PlayerStats killercache = database.getCachedStats(killer);
-            if (killercache != null) {
+            database.getStats(killed).ifPresent(killedCache -> {
+                killedCache.onDeath();
+                replaceManager.forceUpdate(killed, "deaths", killedCache.getDeaths());
+                replaceManager.forceUpdate(killed, "kdr", killedCache.getKdr());
+                //will reset
+                replaceManager.forceUpdate(killed, "current_streak", killedCache.getCurrentStreak());
+            });
+
+
+            database.getStats(killer).ifPresent(killercache -> {
                 killercache.onKill();
                 replaceManager.forceUpdate(killer, "kills", killercache.getKills());
                 replaceManager.forceUpdate(killer, "kdr", killercache.getKdr());
                 //maybe the player reaches a new high score
                 replaceManager.forceUpdate(killer, "killstreak", killercache.getKillstreak());
                 replaceManager.forceUpdate(killer, "current_streak", killercache.getCurrentStreak());
-            }
+            });
         }
     }
 }

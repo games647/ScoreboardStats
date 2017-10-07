@@ -1,5 +1,7 @@
 package com.github.games647.scoreboardstats.scoreboard;
 
+import java.util.Optional;
+
 import org.bukkit.scoreboard.DisplaySlot;
 
 /**
@@ -19,16 +21,16 @@ class SlotTransformer {
      * @param slotId the id
      * @return the representing enum or null if the id isn't valid
      */
-    public static DisplaySlot fromId(int slotId) {
+    public static Optional<DisplaySlot> fromId(int slotId) {
         switch (slotId) {
             case 0:
-                return DisplaySlot.PLAYER_LIST;
+                return Optional.of(DisplaySlot.PLAYER_LIST);
             case 1:
-                return DisplaySlot.SIDEBAR;
+                return Optional.of(DisplaySlot.SIDEBAR);
             case 2:
-                return DisplaySlot.BELOW_NAME;
+                return Optional.of(DisplaySlot.BELOW_NAME);
             default:
-                return null;
+                return Optional.empty();
         }
     }
 }

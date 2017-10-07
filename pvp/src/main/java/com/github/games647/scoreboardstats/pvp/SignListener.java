@@ -54,13 +54,11 @@ public class SignListener implements Listener {
     private Optional<String> replace(Player player, String line) {
         for (Map.Entry<String, Function<PlayerStats, Integer>> entry : variables.entrySet()) {
             if (line.contains(entry.getKey())) {
-                PlayerStats playerCache = database.getCachedStats(player);
-                if (playerCache == null) {
-                    //The stats aren't loaded yet
-                    return Optional.of("Not loaded");
-                }
-
-                return Optional.of(Integer.toString(entry.getValue().apply(playerCache)));
+                Function<PlayerStats, Integer> fct = entry.getValue();
+                return Optional.of(database.getStats(player)
+                        .map(fct::apply)
+                        .map(value -> Integer.toString(value))
+                        .orElse("Not loaded"));
             }
         }
 
