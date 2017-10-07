@@ -10,16 +10,15 @@ import org.bukkit.util.NumberConversions;
 /**
  * Represents the stats from a player. The stats are kills, deaths, mobkills and killstreak. All stats are annotated to
  * be validated on runtime to be not invalid.
- *
+ * <p>
  * Maybe these stats also have to be validated to be not null, so we can prevent some special cases while using it
  * especially for SQL database, but this can also occurs on using it as file database due incorrect format or unexpected
  * user modifications.
  */
 public class PlayerStats {
 
-    private int id = -1;
-
     private final UUID uuid;
+    private int id = -1;
     private String playername;
 
     //You can't have negative stats
@@ -33,7 +32,7 @@ public class PlayerStats {
     private int currentStreak;
 
     public PlayerStats(int id, UUID uuid, String playername,
-            int kills, int deaths, int mobkills, int killstreak, Instant lastOnline) {
+                       int kills, int deaths, int mobkills, int killstreak, Instant lastOnline) {
         this(uuid, playername);
 
         this.id = id;
@@ -159,10 +158,6 @@ public class PlayerStats {
         return lastOnline.toEpochMilli();
     }
 
-    public Instant getLastOnlineDate() {
-        return lastOnline;
-    }
-
     public void setLastOnline(Instant lastOnline) {
         this.lastOnline = lastOnline;
     }
@@ -175,6 +170,10 @@ public class PlayerStats {
     @Deprecated
     public void setLastOnline(long lastOnline) {
         this.lastOnline = Instant.ofEpochMilli(lastOnline);
+    }
+
+    public Instant getLastOnlineDate() {
+        return lastOnline;
     }
 
     /**

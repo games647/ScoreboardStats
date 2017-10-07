@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 /**
  * Listening to players events.
  */
-public class PlayerListener implements Listener {
+class PlayerListener implements Listener {
 
     private final ScoreboardStats plugin;
 

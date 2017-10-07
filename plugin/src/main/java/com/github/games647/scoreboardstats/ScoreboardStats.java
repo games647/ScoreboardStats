@@ -2,10 +2,10 @@ package com.github.games647.scoreboardstats;
 
 import com.github.games647.scoreboardstats.commands.SidebarCommands;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.github.games647.scoreboardstats.defaults.TicksPerSecondTask;
 import com.github.games647.scoreboardstats.pvp.Database;
 import com.github.games647.scoreboardstats.scoreboard.PacketManager;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
-import com.github.games647.scoreboardstats.defaults.TicksPerSecondTask;
 
 import java.lang.reflect.Constructor;
 import java.util.logging.Level;
@@ -30,12 +30,25 @@ public class ScoreboardStats extends JavaPlugin {
 
     private ReplaceManager replaceManager;
 
+    private static Logger createLoggerFromJDK(java.util.logging.Logger parent) {
+        try {
+            Class<JDK14LoggerAdapter> adapterClass = JDK14LoggerAdapter.class;
+            Constructor<JDK14LoggerAdapter> cons = adapterClass.getDeclaredConstructor(java.util.logging.Logger.class);
+            cons.setAccessible(true);
+            return cons.newInstance(parent);
+        } catch (ReflectiveOperationException reflectEx) {
+            parent.log(Level.WARNING, "Cannot create slf4j logging adapter", reflectEx);
+            parent.log(Level.WARNING, "Creating logger instance manually...");
+            return LoggerFactory.getLogger(parent.getName());
+        }
+    }
+
     /**
      * Get the scoreboard manager.
      *
      * @return the manager
      */
-    public SbManager getScoreboardManager() {
+    public BoardManager getScoreboardManager() {
         return scoreboardManager;
     }
 
@@ -93,7 +106,7 @@ public class ScoreboardStats extends JavaPlugin {
         getServer().getScheduler().runTaskTimer(this, refreshTask, 5 * 20L, 1L);
 
         scoreboardManager = new PacketManager(this);
-        replaceManager = new ReplaceManager(scoreboardManager, this, getLog());
+        replaceManager = new ReplaceManager(scoreboardManager, this, logger);
 
         if (Settings.isPvpStats()) {
             database = new Database(this, logger);
@@ -149,18 +162,5 @@ public class ScoreboardStats extends JavaPlugin {
         }
 
         scoreboardManager.registerAll();
-    }
-
-    private static Logger createLoggerFromJDK(java.util.logging.Logger parent) {
-        try {
-            Class<JDK14LoggerAdapter> adapterClass = JDK14LoggerAdapter.class;
-            Constructor<JDK14LoggerAdapter> cons = adapterClass.getDeclaredConstructor(java.util.logging.Logger.class);
-            cons.setAccessible(true);
-            return cons.newInstance(parent);
-        } catch (ReflectiveOperationException reflectEx) {
-            parent.log(Level.WARNING, "Cannot create slf4j logging adapter", reflectEx);
-            parent.log(Level.WARNING, "Creating logger instance manually...");
-            return LoggerFactory.getLogger(parent.getName());
-        }
     }
 }

@@ -5,7 +5,6 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,12 +23,10 @@ public class Objective {
 
     private static final int MAX_ITEM_SIZE = 15;
     private static final int SIDEBAR_SLOT = 1;
-
-    private final PlayerScoreboard scoreboard;
-    private final String objectiveId;
-
     //A scoreboard can only hold < 16 scores
     final Map<String, Integer> scores = Maps.newHashMapWithExpectedSize(MAX_ITEM_SIZE);
+    private final PlayerScoreboard scoreboard;
+    private final String objectiveId;
     String displayName;
 
     Objective(PlayerScoreboard scoreboard, String objectiveId, String displayName) {
@@ -99,8 +96,8 @@ public class Objective {
 
     public List<Map.Entry<String, Integer>> getScores() {
         List<Map.Entry<String, Integer>> values = Lists.newArrayListWithExpectedSize(scores.size());
-        scores.entrySet().forEach(values::add);
-        Collections.sort(values, (score1, score2) -> Integer.compare(score2.getValue(), score1.getValue()));
+        values.addAll(scores.entrySet());
+        values.sort((score1, score2) -> Integer.compare(score2.getValue(), score1.getValue()));
         return values;
     }
 

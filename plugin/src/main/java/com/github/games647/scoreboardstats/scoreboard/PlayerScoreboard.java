@@ -18,9 +18,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class PlayerScoreboard {
 
-    private final Player player;
-
     final Map<String, Objective> objectivesByName = Maps.newHashMap();
+    private final Player player;
     Objective sidebarObjective;
 
     public PlayerScoreboard(Player player) {

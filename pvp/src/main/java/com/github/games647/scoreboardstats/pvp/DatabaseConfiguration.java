@@ -15,7 +15,7 @@ import org.bukkit.plugin.Plugin;
  *
  * @see Database
  */
-public class DatabaseConfiguration {
+class DatabaseConfiguration {
 
     private final Plugin plugin;
 

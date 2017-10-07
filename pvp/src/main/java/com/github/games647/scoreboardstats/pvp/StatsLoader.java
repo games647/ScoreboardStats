@@ -16,7 +16,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class StatsLoader implements Runnable {
 
-    protected final Plugin plugin;
+    private final Plugin plugin;
 
     private final WeakReference<Player> weakPlayer;
     private final WeakReference<Database> weakDatabase;

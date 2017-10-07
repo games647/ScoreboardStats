@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfigNode {
+@interface ConfigNode {
 
     /**
      * Defines the path to the node if it has another as the variable name.

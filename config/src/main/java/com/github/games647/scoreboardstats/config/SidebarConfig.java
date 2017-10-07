@@ -8,10 +8,9 @@ import org.bukkit.ChatColor;
 
 public class SidebarConfig {
 
-    private String displayName;
-
     private final Map<String, VariableItem> itemsByName = Maps.newHashMapWithExpectedSize(15);
     private final Map<String, VariableItem> itemsByVariable = Maps.newHashMapWithExpectedSize(15);
+    private String displayName;
 
     public SidebarConfig(String displayName) {
         this.displayName = ChatColor.translateAlternateColorCodes('&', displayName);
@@ -34,7 +33,7 @@ public class SidebarConfig {
 
     public void addVariableItem(boolean textVariable, String variable, String displayText, int defaultScore) {
         String coloredDisplay = ChatColor.translateAlternateColorCodes('&', displayText);
-        
+
         VariableItem variableItem = new VariableItem(textVariable, variable, coloredDisplay, defaultScore);
         itemsByName.put(coloredDisplay, variableItem);
         itemsByVariable.put(variable, variableItem);

@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.DisplaySlot;
  */
 public class ToggleCommand extends CommandHandler {
 
-    public static final String TOGGLE_MSG = "§2Toggling the scoreboard";
+    private static final String TOGGLE_MSG = "§2Toggling the scoreboard";
 
     public ToggleCommand(ScoreboardStats plugin) {
         super("toggle", "&aToggles the sidebar", plugin, "hide", "show");
@@ -26,7 +26,7 @@ public class ToggleCommand extends CommandHandler {
             return;
         }
 
-         //We checked that it can only be players
+        //We checked that it can only be players
         Player player = (Player) sender;
         RefreshTask refreshTask = plugin.getRefreshTask();
         if (refreshTask.contains(player)) {

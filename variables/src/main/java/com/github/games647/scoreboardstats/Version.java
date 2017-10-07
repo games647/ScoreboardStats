@@ -15,15 +15,45 @@ public class Version implements Comparable<Version> {
 
     //thanks to the author of ProtocolLib aadnk
     private static final String VERSION_REGEX = ".*\\(.*MC.\\s*([a-zA-z0-9\\-\\.]+)\\s*\\)";
+    private final int major;
+    private final int minor;
+    private final int build;
+
+    /**
+     * Creates a new version based on this string.
+     *
+     * @param version the version string
+     * @throws IllegalArgumentException if the string doesn't match a version format
+     */
+    public Version(String version) throws IllegalArgumentException {
+        int[] versionParts = parse(version);
+
+        major = versionParts[0];
+        minor = versionParts[1];
+        build = versionParts[2];
+    }
+
+    /**
+     * Creates a new version based on these values.
+     *
+     * @param major the major version
+     * @param minor the minor version
+     * @param build the build version
+     */
+    public Version(int major, int minor, int build) {
+        this.major = major;
+        this.minor = minor;
+        this.build = build;
+    }
 
     /**
      * Compares the version with checking the first three numbers
      *
      * @param expected the object to be compared.
-     * @param version the object to be compared.
+     * @param version  the object to be compared.
      * @return 1 version is higher; 0 both are equal; -1 version is lower<br>
-     *          a negative integer, zero, or a positive integer as this object
-     *          is less than, equal to, or greater than the specified object.
+     * a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
      */
     public static int compare(String expected, String version) {
         int[] expectedParts = parse(stripVersionDetails(version));
@@ -82,37 +112,6 @@ public class Version implements Comparable<Version> {
         }
 
         return version.substring(0, end);
-    }
-
-    private final int major;
-    private final int minor;
-    private final int build;
-
-    /**
-     * Creates a new version based on this string.
-     *
-     * @param version the version string
-     * @throws IllegalArgumentException if the string doesn't match a version format
-     */
-    public Version(String version) throws IllegalArgumentException {
-        int[] versionParts = parse(version);
-
-        major = versionParts[0];
-        minor = versionParts[1];
-        build = versionParts[2];
-    }
-
-    /**
-     * Creates a new version based on these values.
-     *
-     * @param major the major version
-     * @param minor the minor version
-     * @param build the build version
-     */
-    public Version(int major, int minor, int build) {
-        this.major = major;
-        this.minor = minor;
-        this.build = build;
     }
 
     /**

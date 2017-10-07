@@ -13,8 +13,8 @@ import org.slf4j.Logger;
  */
 public class Settings extends CommentedYaml {
 
+    private static final String MIN_ITEMS = "A scoreboard have to display min. 1 item ({})";
     private static final String TOO_MANY_ITEMS = "Scoreboard can't have more than 15 items";
-    public static final String MIN_ITEMS = "A scoreboard have to display min. 1 item ({})";
 
     @ConfigNode(path = "enable-pvpstats")
     private static boolean pvpStats;
@@ -39,13 +39,19 @@ public class Settings extends CommentedYaml {
     @ConfigNode(path = "Temp-Scoreboard.Items")
     private static int topItems;
 
-    @ConfigNode(path = "Temp-Scoreboard.Intervall-show")
+    @ConfigNode(path = "Temp-Scoreboard.Interval-show")
     private static int tempShow;
 
-    @ConfigNode(path = "Temp-Scoreboard.Intervall-disappear")
-    private static int tempDisapper;
+    @ConfigNode(path = "Temp-Scoreboard.Interval-Disappear")
+    private static int tempDisappear;
 
     private static Set<String> disabledWorlds;
+
+    public Settings(Plugin plugin, Logger logger) {
+        super(logger, plugin.getDataFolder().toPath());
+
+        plugin.saveDefaultConfig();
+    }
 
     /**
      * Check if a world is from ScoreboardStats active
@@ -129,13 +135,7 @@ public class Settings extends CommentedYaml {
      * @return the seconds after the temp-scoreboard should disappear
      */
     public static int getTempDisappear() {
-        return tempDisapper;
-    }
-
-    public Settings(Plugin plugin, Logger logger) {
-        super(logger, plugin.getDataFolder().toPath());
-
-        plugin.saveDefaultConfig();
+        return tempDisappear;
     }
 
     /**
@@ -153,7 +153,7 @@ public class Settings extends CommentedYaml {
         String title = config.getString("Scoreboard.Title");
         mainScoreboard = new SidebarConfig(trimLength(title, 32));
         //Load all normal scoreboard variables
-        loaditems(config.getConfigurationSection("Scoreboard.Items"));
+        loadItems(config.getConfigurationSection("Scoreboard.Items"));
 
         //temp-scoreboard
         tempScoreboard = tempScoreboard && pvpStats;
@@ -189,7 +189,7 @@ public class Settings extends CommentedYaml {
         return input;
     }
 
-    private void loaditems(ConfigurationSection config) {
+    private void loadItems(ConfigurationSection config) {
         //clear all existing items
         mainScoreboard.clear();
 

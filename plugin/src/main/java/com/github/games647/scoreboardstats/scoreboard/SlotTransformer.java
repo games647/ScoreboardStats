@@ -4,10 +4,14 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 /**
  * Represent the three different sides a scoreboard objective can have
- *
+ * <p>
  * Protocol specifications can be found here http://wiki.vg/Protocol
  */
-public class SlotTransformer {
+class SlotTransformer {
+
+    private SlotTransformer() {
+        //singleton
+    }
 
     /**
      * Get the enum from his id
@@ -26,9 +30,5 @@ public class SlotTransformer {
             default:
                 return null;
         }
-    }
-
-    private SlotTransformer() {
-        //singleton
     }
 }

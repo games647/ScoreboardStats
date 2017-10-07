@@ -15,11 +15,11 @@ import org.bukkit.entity.Player;
 
 /**
  * Replace all variables that are associated with the heroes plugin
- *
+ * <p>
  * https://dev.bukkit.org/bukkit-plugins/heroes/
  */
 @DefaultReplacer(plugin = "Heroes")
-public class HeroesVariables extends DefaultReplacers<Heroes>  {
+public class HeroesVariables extends DefaultReplacers<Heroes> {
 
     private final CharacterManager characterManager;
 

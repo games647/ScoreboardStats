@@ -28,18 +28,9 @@ public class ReplaceManager extends ReplacerAPI implements Closeable {
     //todo: only temporarily
     @Deprecated
     private static ReplaceManager instance;
-
-    @Deprecated
-    public static ReplaceManager getInstance() {
-        return instance;
-    }
-
-    public void close() {
-        instance = null;
-    }
-
     private final Plugin plugin;
     private final BoardManager boardManager;
+
     /**
      * Creates a new replace manager
      *
@@ -56,6 +47,15 @@ public class ReplaceManager extends ReplacerAPI implements Closeable {
 
         Bukkit.getPluginManager().registerEvents(new PluginListener(this), plugin);
         addDefaultReplacers();
+    }
+
+    @Deprecated
+    public static ReplaceManager getInstance() {
+        return instance;
+    }
+
+    public void close() {
+        instance = null;
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ReplaceManager extends ReplacerAPI implements Closeable {
                     .stream()
                     .map(ClassInfo::load)
                     .filter(DefaultReplacers.class::isAssignableFrom)
-                    .map(clazz -> (Class<DefaultReplacers>) clazz)
+                    .map(clazz -> (Class<DefaultReplacers<?>>) clazz)
                     .filter(this::registerDefault)
                     .map(Class::getSimpleName)
                     .collect(Collectors.toSet());
@@ -99,7 +99,7 @@ public class ReplaceManager extends ReplacerAPI implements Closeable {
         logger.info("Registered default replacers: {}", defaultReplacers);
     }
 
-    private boolean registerDefault(Class<DefaultReplacers> replacerClass) {
+    private boolean registerDefault(Class<DefaultReplacers<?>> replacerClass) {
         try {
             DefaultReplacer annotation = replacerClass.getAnnotation(DefaultReplacer.class);
 
@@ -117,7 +117,7 @@ public class ReplaceManager extends ReplacerAPI implements Closeable {
                     return false;
                 }
 
-                Constructor<DefaultReplacers> cons = replacerClass.getConstructor(ReplacerAPI.class, Plugin.class);
+                Constructor<DefaultReplacers<?>> cons = replacerClass.getConstructor(ReplacerAPI.class, Plugin.class);
                 cons.newInstance(this, replacerPlugin).register();
             }
 

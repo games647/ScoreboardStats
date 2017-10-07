@@ -2,7 +2,7 @@ package com.github.games647.scoreboardstats.scoreboard;
 
 /**
  * Represents the state of a scoreboard objective packet
- *
+ * <p>
  * Protocol specifications can be found here http://wiki.vg/Protocol
  */
 public enum State {

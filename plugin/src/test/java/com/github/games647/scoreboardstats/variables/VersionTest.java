@@ -47,16 +47,16 @@ public class VersionTest {
         Version low = new Version(1, 5, 4);
         Version high = new Version(1, 8, 5);
 
-        Assert.assertSame("Higher Compare: " + high + ' ' + low, high.compareTo(low), 1);
-        Assert.assertSame("Lower Compare: " + low + ' ' + high, low.compareTo(high), -1);
+        Assert.assertSame("Higher Compare: " + high + ' ' + low, 1, high.compareTo(low));
+        Assert.assertSame("Lower Compare: " + low + ' ' + high, -1, low.compareTo(high));
 
         Version higher = new Version(1, 5, 5);
-        Assert.assertSame("Higher Compare: " + higher + ' ' + low, higher.compareTo(low), 1);
-        Assert.assertSame("Lower Compare: " + low + ' ' + higher, low.compareTo(higher), -1);
+        Assert.assertSame("Higher Compare: " + higher + ' ' + low, 1, higher.compareTo(low));
+        Assert.assertSame("Lower Compare: " + low + ' ' + higher, -1, low.compareTo(higher));
 
         Version equal = new Version(1, 2, 3);
         Version equal1 = new Version(1, 2, 3);
-        Assert.assertSame("Equal Compare: " + equal + ' ' + equal1, equal.compareTo(equal1), 0);
-        Assert.assertSame("Equal Compare: " + equal1 + ' ' + equal, equal1.compareTo(equal1), 0);
+        Assert.assertSame("Equal Compare: " + equal + ' ' + equal1, 0, equal.compareTo(equal1));
+        Assert.assertSame("Equal Compare: " + equal1 + ' ' + equal, 0, equal1.compareTo(equal1));
     }
 }

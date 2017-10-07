@@ -12,11 +12,15 @@ import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
 
 /**
  * Replace all variables that are associated with the uSkyBlock plugin
- *
+ * <p>
  * https://dev.bukkit.org/bukkit-plugins/uskyblock/
  */
 @DefaultReplacer(plugin = "uSkyblock")
 public class SkyblockVariables extends DefaultReplacers<uSkyBlockAPI> {
+
+    public SkyblockVariables(ReplacerAPI replaceManager, uSkyBlockAPI plugin) {
+        super(replaceManager, plugin);
+    }
 
     private static uSkyBlockAPI getCheckVersion(Plugin plugin) throws UnsupportedPluginException {
         if (plugin instanceof uSkyBlockAPI) {
@@ -24,10 +28,6 @@ public class SkyblockVariables extends DefaultReplacers<uSkyBlockAPI> {
         } else {
             throw new UnsupportedPluginException("Your uSkyBlock version is outdated");
         }
-    }
-
-    public SkyblockVariables(ReplacerAPI replaceManager, uSkyBlockAPI plugin) {
-        super(replaceManager, plugin);
     }
 
     @Override

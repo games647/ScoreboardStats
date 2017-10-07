@@ -66,10 +66,10 @@ public abstract class ReplacerAPI {
     }
 
     public abstract void forceUpdate(Player player, String variable, int score);
+
     public abstract void forceUpdate(Player player, String variable, String value);
 
-    public Optional<String> replace(Player player, String variable, boolean complete)
-            throws UnknownVariableException, ReplacerException {
+    public Optional<String> replace(Player player, String variable, boolean complete) throws ReplacerException {
         Replacer replacer = this.replacers.get(variable);
         if (replacer == null) {
             throw new UnknownVariableException(variable);
@@ -86,8 +86,7 @@ public abstract class ReplacerAPI {
         }
     }
 
-    public OptionalInt scoreReplace(Player player, String variable, boolean complete)
-            throws UnknownVariableException, ReplacerException {
+    public OptionalInt scoreReplace(Player player, String variable, boolean complete) throws ReplacerException {
         Replacer replacer = this.replacers.get(variable);
         if (replacer == null) {
             throw new UnknownVariableException(variable);

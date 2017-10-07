@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,7 +41,7 @@
 
         <!--Player points-->
         <repository>
-            <id>dakani</id>
+            <id>Dakani</id>
             <name>Dakani Nexus Repo</name>
             <url>https://repo.dakanilabs.com/repository/public/</url>
         </repository>
@@ -76,12 +76,12 @@
         </repository>
 
         <repository>
-            <id>placeholderapi</id>
+            <id>extendedclip-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
 
         <repository>
-            <id>dustplanet</id>
+            <id>dustplanet-repo</id>
             <url>https://repo.dustplanet.de/artifactory/ext-release-local/</url>
         </repository>
     </repositories>

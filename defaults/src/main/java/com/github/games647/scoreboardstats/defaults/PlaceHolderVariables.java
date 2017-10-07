@@ -41,7 +41,7 @@ public class PlaceHolderVariables extends DefaultReplacers<Plugin> {
         }
 
         for (String variable : variables) {
-            register(variable).supply(player -> PlaceholderAPI.setPlaceholders(player,'%' + variable + '%'));
+            register(variable).supply(player -> PlaceholderAPI.setPlaceholders(player, '%' + variable + '%'));
         }
     }
 }

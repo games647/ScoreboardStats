@@ -118,10 +118,10 @@ public class Database {
     private PlayerStats extractPlayerStats(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(1);
 
-        String unparsedUUID = resultSet.getString(2);
+        String rawUUID = resultSet.getString(2);
         UUID uuid = null;
-        if (unparsedUUID != null) {
-            uuid = UUID.fromString(unparsedUUID);
+        if (rawUUID != null) {
+            uuid = UUID.fromString(rawUUID);
         }
 
         String playerName = resultSet.getString(3);
@@ -347,7 +347,7 @@ public class Database {
     /**
      * Updates the toplist
      */
-    public void updateTopList() {
+    private void updateTopList() {
         String type = Settings.getTopType();
         Map<String, Integer> newToplist;
         switch (type) {
@@ -417,8 +417,8 @@ public class Database {
         Bukkit.getPluginManager().registerEvents(new StatsListener(plugin, this), plugin);
     }
 
-    private Replacer newVariable(String variable, Function<PlayerStats, Integer> fct){
-        return new Replacer(plugin,"kills")
+    private Replacer newVariable(String variable, Function<PlayerStats, Integer> fct) {
+        return new Replacer(plugin, "kills")
                 .scoreSupply(player -> getStats(player).map(fct).orElse(-1));
     }
 }

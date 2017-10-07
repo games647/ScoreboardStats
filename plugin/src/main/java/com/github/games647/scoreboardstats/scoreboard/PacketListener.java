@@ -19,10 +19,10 @@ import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
 /**
  * Listening all outgoing packets and check + handle for possibly client crash cases. This Listener should only read and
  * listen to relevant packets.
- *
+ * <p>
  * Protocol specifications can be found here http://wiki.vg/Protocol
  */
-public class PacketListener extends PacketAdapter {
+class PacketListener extends PacketAdapter {
 
     private final PacketManager manager;
 

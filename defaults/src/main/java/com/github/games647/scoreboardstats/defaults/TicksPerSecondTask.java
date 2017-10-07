@@ -6,6 +6,8 @@ package com.github.games647.scoreboardstats.defaults;
 public class TicksPerSecondTask implements Runnable {
 
     private static float lastTicks = 20.0F;
+    //the last time we updated the ticks
+    private long lastCheck;
 
     /**
      * Get the ticks count of the last check. 20 Ticks should pass per second
@@ -16,13 +18,10 @@ public class TicksPerSecondTask implements Runnable {
         return lastTicks;
     }
 
-    //the last time we updated the ticks
-    private long lastCheck;
-
     @Override
     public void run() {
         //nanoTime is more accurate
-        long currentTime = System.nanoTime() ;
+        long currentTime = System.nanoTime();
         long timeSpent = currentTime - lastCheck;
         //update the last check
         lastCheck = currentTime;

@@ -28,5 +28,5 @@ Temp-Scoreboard:
   Color: '&9'
   # How many Players would be displayed
   Items: 5
-  Intervall-show: 300
-  Intervall-disappear: 300
+  Interval-show: 300
+  Interval-disappear: 300

@@ -10,7 +10,7 @@ import org.black_ixx.playerpoints.event.PlayerPointsResetEvent;
 
 /**
  * Represents a replacer for the Plugin PlayerPoints
- *
+ * <p>
  * https://dev.bukkit.org/bukkit-plugins/playerpoints/
  */
 @DefaultReplacer(plugin = "PlayerPoints")
@@ -25,7 +25,7 @@ public class PlayerPointsVariables extends DefaultReplacers<PlayerPoints> {
         register("points")
                 .scoreSupply(player -> plugin.getAPI().look(player.getUniqueId()))
                 .eventScore(PlayerPointsResetEvent.class, () -> 0)
-                .eventScore(PlayerPointsChangeEvent.class, event ->  {
+                .eventScore(PlayerPointsChangeEvent.class, event -> {
                     int lastBal = plugin.getAPI().look(event.getPlayerId());
                     return lastBal + event.getChange();
                 });

@@ -26,7 +26,7 @@ import org.slf4j.Logger;
  * this class UTF-8 even before Bukkit introduced it and will also support comments
  * soon.
  */
-public class CommentedYaml {
+class CommentedYaml {
 
     private static final String COMMENT_PREFIX = "# ";
     private static final String FILE_NAME = "config.yml";
@@ -35,7 +35,7 @@ public class CommentedYaml {
     protected final transient Path dataFolder;
     protected transient FileConfiguration config;
 
-    public CommentedYaml(Logger logger, Path dataFolder) {
+    CommentedYaml(Logger logger, Path dataFolder) {
         this.logger = logger;
         this.dataFolder = dataFolder;
     }
@@ -44,7 +44,7 @@ public class CommentedYaml {
      * Gets the YAML file configuration from the disk while loading it
      * explicit with UTF-8. This allows umlauts and other UTF-8 characters
      * for all Bukkit versions.
-     *
+     * <p>
      * Bukkit add also this feature since
      * https://github.com/Bukkit/Bukkit/commit/24883a61704f78a952e948c429f63c4a2ab39912
      * To be allow the same feature for all Bukkit version, this method was
@@ -118,7 +118,7 @@ public class CommentedYaml {
         }
     }
 
-    private void load(List<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
+    private void load(Iterable<String> lines, YamlConfiguration newConf) throws InvalidConfigurationException {
         StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             //remove the silly tab error from yaml
@@ -138,9 +138,9 @@ public class CommentedYaml {
     private Configuration getDefaults() {
         YamlConfiguration defaults = new YamlConfiguration();
 
-        try (InputStream defConfigStream = getClass().getResourceAsStream("/" + FILE_NAME)) {
+        try (InputStream defConfigStream = getClass().getResourceAsStream('/' + FILE_NAME)) {
             try {
-                InputStreamReader reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
+                Readable reader = new InputStreamReader(defConfigStream, Charsets.UTF_8);
                 //stream will be closed in this method
                 List<String> lines = CharStreams.readLines(reader);
                 load(lines, defaults);

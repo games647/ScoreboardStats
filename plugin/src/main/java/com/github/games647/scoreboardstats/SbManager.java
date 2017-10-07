@@ -13,7 +13,8 @@ import org.bukkit.entity.Player;
  */
 public abstract class SbManager implements BoardManager {
 
-    public static final String UNKNOWN_VARIABLE = "Cannot find variable with name: ({}) Maybe you misspelled it or the replacer isn't available yet";
+    protected static final String UNKNOWN_VARIABLE = "Cannot find variable with name: ({}) Maybe you misspelled it " +
+            "or the replacer isn't available yet";
 
     protected static final String SB_NAME = "Stats";
     protected static final String TEMP_SB_NAME = SB_NAME + 'T';
@@ -24,17 +25,17 @@ public abstract class SbManager implements BoardManager {
 
     private final String permission;
 
-    public SbManager(ScoreboardStats plugin) {
+    protected SbManager(ScoreboardStats plugin) {
         this.plugin = plugin;
         this.permission = plugin.getName().toLowerCase() + ".use";
     }
 
     @Override
     public void registerAll() {
-        boolean ispvpstats = Settings.isPvpStats();
+        boolean isPvpStats = Settings.isPvpStats();
         //maybe batch this
         Bukkit.getOnlinePlayers().stream().filter(Player::isOnline).forEach(player -> {
-            if (ispvpstats) {
+            if (isPvpStats) {
                 //maybe batch this
                 player.removeMetadata("player_stats", plugin);
                 plugin.getStatsDatabase().loadAccountAsync(player);

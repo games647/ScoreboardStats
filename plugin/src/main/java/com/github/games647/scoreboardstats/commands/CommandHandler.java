@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 /**
  * Represents a handler for sub commands
  */
-public abstract class CommandHandler {
+abstract class CommandHandler {
 
     protected final ScoreboardStats plugin;
 
@@ -21,11 +21,11 @@ public abstract class CommandHandler {
 
     private final List<String> aliases;
 
-    public CommandHandler(String command, ScoreboardStats plugin, String... aliases) {
+    CommandHandler(String command, ScoreboardStats plugin, String... aliases) {
         this(command, "&cNo description", plugin, aliases);
     }
 
-    public CommandHandler(String command, String description, ScoreboardStats plugin, String... aliases) {
+    CommandHandler(String command, String description, ScoreboardStats plugin, String... aliases) {
         this.plugin = plugin;
         this.description = ChatColor.translateAlternateColorCodes('&', description);
         this.permission = plugin.getName().toLowerCase() + ".command." + command;
@@ -49,7 +49,7 @@ public abstract class CommandHandler {
      *
      * @return all aliases
      */
-    public List<String> getAliases() {
+    public Iterable<String> getAliases() {
         return aliases;
     }
 
@@ -90,19 +90,18 @@ public abstract class CommandHandler {
     /**
      * Executes the given subcommand
      *
-     * @param sender Source of the command
+     * @param sender     Source of the command
      * @param subCommand Command which was executed
-     * @param args The arguments passed to the command, including final partial argument to be completed
+     * @param args       The arguments passed to the command, including final partial argument to be completed
      */
     public abstract void onCommand(CommandSender sender, String subCommand, String... args);
 
     /**
      * Requests a list of possible completions for a command argument.
      *
-     * @param sender Source of the command
+     * @param sender     Source of the command
      * @param subCommand Command which was executed
-     * @param args The arguments passed to the command, including final partial argument to be completed
-     *
+     * @param args       The arguments passed to the command, including final partial argument to be completed
      * @return A List of possible completions for the final argument, or null to default to the command executor
      */
     public List<String> onTabComplete(CommandSender sender, String subCommand, String... args) {

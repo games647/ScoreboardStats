@@ -14,7 +14,7 @@ public abstract class DefaultReplacers<T extends Plugin> {
 
     public abstract void register();
 
-    public Replacer register(String variable) {
+    protected Replacer register(String variable) {
         return new Replacer(plugin, variable);
     }
 }

@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
  * Keeps track of plugin disables and enables. It will register default replacers
  * back again or removes replacers of disabled plugins.
  */
-public class PluginListener implements Listener {
+class PluginListener implements Listener {
 
     private final ReplaceManager replaceManager;
 
