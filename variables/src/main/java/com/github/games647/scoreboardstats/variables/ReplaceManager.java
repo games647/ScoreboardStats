@@ -6,7 +6,6 @@ import com.google.common.collect.Sets;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Set;
@@ -20,7 +19,7 @@ import org.slf4j.Logger;
 /**
  * Handling the replace management
  */
-public class ReplaceManager extends ReplacerAPI implements Closeable {
+public class ReplaceManager extends ReplacerAPI {
 
     private static final String UNSUPPORTED_VERSION = "The Replacer: {} cannot be registered -" +
             " the plugin version isn't supported {} {}";

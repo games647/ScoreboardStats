@@ -10,6 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEvent;
 
+/**
+ * Manages the variable updating if an a specific event is fired.
+ *
+ * @param <T> event class - this have to the exact type
+ */
 class EventReplacer<T extends Event> {
 
     private final Replacer replacer;
@@ -17,16 +22,16 @@ class EventReplacer<T extends Event> {
     private final Set<Function<T, String>> functions = Sets.newHashSet();
     private final Set<Function<T, Integer>> scoreFunctions = Sets.newHashSet();
 
-    public EventReplacer(Replacer replacer, Class<T> eventClass) {
+    EventReplacer(Replacer replacer, Class<T> eventClass) {
         this.replacer = replacer;
         this.eventClass = eventClass;
     }
 
-    public void addFct(Function<T, String> fct) {
+    void addFct(Function<T, String> fct) {
         functions.add(fct);
     }
 
-    public void addScoreFct(Function<T, Integer> fct) {
+    void addScoreFct(Function<T, Integer> fct) {
         scoreFunctions.add(fct);
     }
 
@@ -38,7 +43,7 @@ class EventReplacer<T extends Event> {
         return scoreFunctions;
     }
 
-    public void execute(ReplacerAPI replaceManager, Event event) {
+    void execute(ReplacerAPI replaceManager, Event event) {
         executeUnsafe(replaceManager, eventClass.cast(event));
     }
 
@@ -56,7 +61,7 @@ class EventReplacer<T extends Event> {
         }
     }
 
-    public Class<T> getEventClass() {
+    Class<T> getEventClass() {
         return eventClass;
     }
 }

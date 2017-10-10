@@ -23,8 +23,10 @@ public class Objective {
 
     private static final int MAX_ITEM_SIZE = 15;
     private static final int SIDEBAR_SLOT = 1;
+
     //A scoreboard can only hold < 16 scores
     final Map<String, Integer> scores = Maps.newHashMapWithExpectedSize(MAX_ITEM_SIZE);
+
     private final PlayerScoreboard scoreboard;
     private final String objectiveId;
     String displayName;

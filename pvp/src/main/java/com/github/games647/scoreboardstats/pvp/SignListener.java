@@ -56,7 +56,7 @@ public class SignListener implements Listener {
             if (line.contains(entry.getKey())) {
                 Function<PlayerStats, Integer> fct = entry.getValue();
                 return Optional.of(database.getStats(player)
-                        .map(fct::apply)
+                        .map(fct)
                         .map(value -> Integer.toString(value))
                         .orElse("Not loaded"));
             }

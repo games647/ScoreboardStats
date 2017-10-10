@@ -19,6 +19,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PlayerScoreboard {
 
     final Map<String, Objective> objectivesByName = Maps.newHashMap();
+    final Map<String, Team> teamsByName = Maps.newHashMap();
+
     private final Player player;
     Objective sidebarObjective;
 
@@ -27,12 +29,7 @@ public class PlayerScoreboard {
     }
 
     public Objective getOrCreateObjective(String objectiveId) {
-        Objective objective = objectivesByName.get(objectiveId);
-        if (objective == null) {
-            objective = addObjective(objectiveId);
-        }
-
-        return objective;
+        return objectivesByName.computeIfAbsent(objectiveId, this::addObjective);
     }
 
     public Optional<Objective> getObjective(String objectiveId) {
@@ -63,7 +60,32 @@ public class PlayerScoreboard {
 
     public void removeObjective(String objectiveId) {
         Objective objective = objectivesByName.remove(objectiveId);
-        objective.sendObjectivePacket(State.REMOVE);
+        if (objective != null) {
+            objective.sendObjectivePacket(State.REMOVE);
+        }
+    }
+
+    public Optional<Team> getTeam(String teamId) {
+        return Optional.ofNullable(teamsByName.get(teamId));
+    }
+
+    public Team addTeam(String teamId) {
+        Team team = new Team(this, teamId);
+        teamsByName.put(teamId, team);
+
+        team.sendCreatePacket();
+        return team;
+    }
+
+    public Collection<Team> getTeams() {
+        return teamsByName.values();
+    }
+
+    public void removeTeam(String teamId) {
+        Team team = teamsByName.remove(teamId);
+        if (team != null) {
+            team.sendRemovePacket();
+        }
     }
 
     public Player getOwner() {

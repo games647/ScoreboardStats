@@ -7,6 +7,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_OBJECTIVE;
 import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_SCORE;
+import static com.comphenix.protocol.PacketType.Play.Server.SCOREBOARD_TEAM;
 
 /**
  * Listening all outgoing packets and check + handle for possibly client crash cases. This Listener should only read and
@@ -29,7 +31,7 @@ class PacketListener extends PacketAdapter {
     private final PacketManager manager;
 
     PacketListener(Plugin plugin, PacketManager manager) {
-        super(plugin, SCOREBOARD_DISPLAY_OBJECTIVE, SCOREBOARD_OBJECTIVE, SCOREBOARD_SCORE);
+        super(plugin, SCOREBOARD_DISPLAY_OBJECTIVE, SCOREBOARD_OBJECTIVE, SCOREBOARD_SCORE, SCOREBOARD_TEAM);
 
         this.manager = manager;
     }
@@ -58,6 +60,8 @@ class PacketListener extends PacketAdapter {
                 handleObjectivePacket(player, packet);
             } else if (packetType.equals(SCOREBOARD_DISPLAY_OBJECTIVE)) {
                 handleDisplayPacket(player, packet);
+            } else if (packetType.equals(SCOREBOARD_TEAM)) {
+                handleTeamPacket(player, packet);
             }
         });
     }
@@ -126,6 +130,31 @@ class PacketListener extends PacketAdapter {
         } else {
             scoreboard.getSidebarObjective().filter(objective -> objective.getId().equals(objectiveId))
                     .ifPresent(objective -> scoreboard.sidebarObjective = null);
+        }
+    }
+
+    private void handleTeamPacket(Player player, PacketContainer packet) {
+        String teamId = packet.getStrings().read(0);
+        Optional<TeamMode> optMode = TeamMode.getMode(packet.getIntegers().read(0));
+
+        if (!optMode.isPresent() || teamId.length() > 16) {
+            return;
+        }
+
+        TeamMode mode = optMode.get();
+
+        PlayerScoreboard scoreboard = manager.getScoreboard(player);
+        if (mode == TeamMode.CREATE) {
+            Collection<String> members = packet.getSpecificModifier(Collection.class).read(0);
+            scoreboard.teamsByName.put(teamId, new Team(scoreboard, teamId, members));
+        } else if (mode == TeamMode.REMOVE) {
+            scoreboard.teamsByName.remove(teamId);
+        } else if (mode == TeamMode.ADD_MEMBER) {
+            Collection<String> members = packet.getSpecificModifier(Collection.class).read(0);
+            scoreboard.getTeam(teamId).ifPresent(team -> team.members.addAll(members));
+        } else if (mode == TeamMode.REMOVE_MEMBER) {
+            Collection<String> members = packet.getSpecificModifier(Collection.class).read(0);
+            scoreboard.getTeam(teamId).ifPresent(team -> team.members.removeAll(members));
         }
     }
 }
