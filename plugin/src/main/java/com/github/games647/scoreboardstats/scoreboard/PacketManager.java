@@ -38,7 +38,7 @@ public class PacketManager extends SbManager {
 
     public PlayerScoreboard getScoreboard(Player player) {
         return scoreboards
-                .computeIfAbsent(player.getUniqueId(), key -> new PlayerScoreboard(player));
+                .computeIfAbsent(player.getUniqueId(), key -> new PlayerScoreboard(plugin, player));
     }
 
     @Override

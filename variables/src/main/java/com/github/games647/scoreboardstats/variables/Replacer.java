@@ -90,29 +90,27 @@ public class Replacer {
     }
 
     public <T extends Event> Replacer event(Class<T> eventClass, Function<T, String> function) {
-        String eventName = eventClass.getCanonicalName();
-        EventReplacer<?> replacer = eventsReplacers.get(eventName);
-        if (replacer == null) {
-            EventReplacer<T> checkedReplacer = new EventReplacer<>(this, eventClass);
-            checkedReplacer.addFct(function);
-        } else {
-            ((EventReplacer<T>) replacer).addFct(function);
-        }
-
+        EventReplacer<T> checkedReplacer = getEventReplacer(eventClass);
+        checkedReplacer.addFct(function);
         return this;
     }
 
     public <T extends Event> Replacer eventScore(Class<T> eventClass, Function<T, Integer> function) {
+        EventReplacer<T> checkedReplacer = getEventReplacer(eventClass);
+        checkedReplacer.addScoreFct(function);
+        return this;
+    }
+
+    private <T extends Event> EventReplacer<T> getEventReplacer(Class<T> eventClass) {
         String eventName = eventClass.getCanonicalName();
         EventReplacer<?> replacer = eventsReplacers.get(eventName);
+
+        EventReplacer<T> checkedReplacer;
         if (replacer == null) {
-            EventReplacer<T> checkedReplacer = new EventReplacer<>(this, eventClass);
-            checkedReplacer.addScoreFct(function);
-        } else {
-            ((EventReplacer<T>) replacer).addScoreFct(function);
+            return new EventReplacer<>(this, eventClass);
         }
 
-        return this;
+        return ((EventReplacer<T>) replacer);
     }
 
     public String replace(Player player) {

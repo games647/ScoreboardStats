@@ -11,20 +11,22 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Represents the scoreboard overview in a server-side perspective.
  */
 public class PlayerScoreboard {
 
+    private final ScoreboardStats plugin;
+    private final Player player;
+
     final Map<String, Objective> objectivesByName = Maps.newHashMap();
     final Map<String, Team> teamsByName = Maps.newHashMap();
 
-    private final Player player;
     Objective sidebarObjective;
 
-    public PlayerScoreboard(Player player) {
+    public PlayerScoreboard(ScoreboardStats plugin, Player player) {
+        this.plugin = plugin;
         this.player = player;
     }
 
@@ -101,7 +103,7 @@ public class PlayerScoreboard {
             ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException ex) {
             //just log it for now.
-            JavaPlugin.getPlugin(ScoreboardStats.class).getLog().info("Failed to send packet", ex);
+            plugin.getLog().info("Failed to send packet", ex);
         }
     }
 }

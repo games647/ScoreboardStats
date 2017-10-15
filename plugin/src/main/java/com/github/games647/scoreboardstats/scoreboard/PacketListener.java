@@ -9,6 +9,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ScoreboardAction;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -49,21 +50,33 @@ class PacketListener extends PacketAdapter {
             return;
         }
 
-        PacketType packetType = packetEvent.getPacketType();
+        UUID playerUUID = player.getUniqueId();
 
-        //everything was read from the packet, so we don't need to access it anymore
-        //we could now run a sync thread to synchronize with async packets
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            if (packetType.equals(SCOREBOARD_SCORE)) {
-                handleScorePacket(player, packet);
-            } else if (packetType.equals(SCOREBOARD_OBJECTIVE)) {
-                handleObjectivePacket(player, packet);
-            } else if (packetType.equals(SCOREBOARD_DISPLAY_OBJECTIVE)) {
-                handleDisplayPacket(player, packet);
-            } else if (packetType.equals(SCOREBOARD_TEAM)) {
-                handleTeamPacket(player, packet);
-            }
-        });
+        //handle async packets by other plugins
+        if (Bukkit.isPrimaryThread()) {
+            ensureMainThread(playerUUID, packet);
+        } else {
+            PacketContainer clone = packet.deepClone();
+            Bukkit.getScheduler().runTask(plugin, () -> ensureMainThread(playerUUID, clone));
+        }
+    }
+
+    private void ensureMainThread(UUID uuid, PacketContainer packet) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            return;
+        }
+
+        PacketType packetType = packet.getType();
+        if (packetType.equals(SCOREBOARD_SCORE)) {
+            handleScorePacket(player, packet);
+        } else if (packetType.equals(SCOREBOARD_OBJECTIVE)) {
+            handleObjectivePacket(player, packet);
+        } else if (packetType.equals(SCOREBOARD_DISPLAY_OBJECTIVE)) {
+            handleDisplayPacket(player, packet);
+        } else if (packetType.equals(SCOREBOARD_TEAM)) {
+            handleTeamPacket(player, packet);
+        }
     }
 
     private void handleScorePacket(Player player, PacketContainer packet) {

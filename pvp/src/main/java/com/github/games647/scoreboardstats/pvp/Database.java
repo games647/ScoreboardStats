@@ -3,6 +3,7 @@ package com.github.games647.scoreboardstats.pvp;
 import com.github.games647.scoreboardstats.config.Settings;
 import com.github.games647.scoreboardstats.variables.ReplaceManager;
 import com.github.games647.scoreboardstats.variables.Replacer;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
@@ -12,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
@@ -95,13 +95,12 @@ public class Database {
      * @param uniqueId the associated playername or uuid
      * @return the loaded stats
      */
-    public Optional<PlayerStats> loadAccount(Object uniqueId) {
-        if (uniqueId == null || dataSource == null) {
+    public Optional<PlayerStats> loadAccount(UUID uniqueId) {
+        if (dataSource == null) {
             return Optional.empty();
         } else {
             try (Connection conn = dataSource.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE "
-                         + "uuid=?")) {
+                 PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_stats WHERE uuid=?")) {
 
                 stmt.setString(1, uniqueId.toString());
                 try (ResultSet resultSet = stmt.executeQuery()) {
@@ -142,11 +141,7 @@ public class Database {
      * @return the loaded stats
      */
     public Optional<PlayerStats> loadAccount(Player player) {
-        if (player == null || dataSource == null) {
-            return Optional.empty();
-        } else {
-            return loadAccount(player.getUniqueId());
-        }
+        return loadAccount(player.getUniqueId());
     }
 
     /**
@@ -185,7 +180,7 @@ public class Database {
         //Save the stats to the database
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement("UPDATE player_stats "
-                     + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=?, playername=? "
+                     + "SET kills=?, deaths=?, killstreak=?, mobkills=?, last_online=CURRENT_TIMESTAMP, playername=? "
                      + "WHERE id=?")) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
@@ -194,10 +189,9 @@ public class Database {
                 stmt.setInt(3, stat.getKillstreak());
                 stmt.setInt(4, stat.getMobkills());
 
-                stmt.setTimestamp(5, Timestamp.from(stat.getLastOnlineDate()));
-                stmt.setString(6, stat.getPlayername());
+                stmt.setString(5, stat.getPlayername());
 
-                stmt.setInt(7, stat.getId());
+                stmt.setInt(6, stat.getId());
                 stmt.addBatch();
             }
 
@@ -216,10 +210,10 @@ public class Database {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement("INSERT INTO player_stats "
                      + "(uuid, playername, kills, deaths, killstreak, mobkills, last_online) VALUES "
-                     + "(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+                     + "(?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)", Statement.RETURN_GENERATED_KEYS)) {
             conn.setAutoCommit(false);
             for (PlayerStats stat : stats) {
-                stmt.setString(1, stat.getUuid() == null ? null : stat.getUuid().toString());
+                stmt.setString(1, stat.getUuid().toString());
                 stmt.setString(2, stat.getPlayername());
 
                 stmt.setInt(3, stat.getKills());
@@ -227,7 +221,6 @@ public class Database {
                 stmt.setInt(5, stat.getKillstreak());
                 stmt.setInt(6, stat.getMobkills());
 
-                stmt.setTimestamp(7, Timestamp.from(stat.getLastOnlineDate()));
                 stmt.addBatch();
             }
 
@@ -292,7 +285,7 @@ public class Database {
                     + "deaths integer NOT NULL, "
                     + "mobkills integer NOT NULL, "
                     + "killstreak integer NOT NULL, "
-                    + "last_online timestamp NOT NULL )";
+                    + "last_online timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP )";
 
             if (dbConfig.getServerConfig().getDriverClassName().contains("sqlite")) {
                 createTableQuery = createTableQuery.replace("AUTO_INCREMENT", "");
@@ -302,14 +295,11 @@ public class Database {
             stmt.execute(createTableQuery);
         } catch (Exception ex) {
             logger.error("Error creating database ", ex);
+            return;
         }
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::updateTopList, 20 * 60 * 5, 0);
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-            if (dataSource == null) {
-                return;
-            }
-
             Future<Collection<? extends Player>> syncPlayers = Bukkit.getScheduler()
                     .callSyncMethod(plugin, Bukkit::getOnlinePlayers);
 
@@ -342,7 +332,7 @@ public class Database {
      */
     public Iterable<Entry<String, Integer>> getTop() {
         synchronized (toplist) {
-            return toplist.entrySet();
+            return ImmutableMap.copyOf(toplist).entrySet();
         }
     }
 
@@ -421,6 +411,8 @@ public class Database {
 
     private Replacer newVariable(String variable, Function<PlayerStats, Integer> fct) {
         return new Replacer(plugin, "kills")
-                .scoreSupply(player -> getStats(player).map(fct).orElse(-1));
+                .scoreSupply(player -> getStats(player)
+                        .map(fct)
+                        .orElse(-1));
     }
 }
