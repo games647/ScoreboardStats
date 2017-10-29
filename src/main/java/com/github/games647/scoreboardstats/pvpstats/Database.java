@@ -2,6 +2,7 @@ package com.github.games647.scoreboardstats.pvpstats;
 
 import com.github.games647.scoreboardstats.ScoreboardStats;
 import com.github.games647.scoreboardstats.config.Settings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
@@ -37,7 +38,6 @@ public class Database {
     private static final String METAKEY = "player_stats";
 
     private final ScoreboardStats plugin;
-
     private final Map<String, Integer> toplist = Maps.newHashMapWithExpectedSize(Settings.getTopitems());
 
     private final DatabaseConfiguration dbConfig;
@@ -329,7 +329,7 @@ public class Database {
      */
     public Iterable<Entry<String, Integer>> getTop() {
         synchronized (toplist) {
-            return toplist.entrySet();
+            return ImmutableMap.copyOf(toplist).entrySet();
         }
     }
 
