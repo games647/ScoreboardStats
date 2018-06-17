@@ -75,14 +75,22 @@
             <url>http://repo.keyle.de/</url>
         </repository>
 
+        <!--PlaceholderAPI-->
         <repository>
             <id>extendedclip-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
 
+        <!--Factions|MassiveCore-->
         <repository>
             <id>dustplanet-repo</id>
             <url>https://repo.dustplanet.de/artifactory/ext-release-local/</url>
+        </repository>
+        
+        <!--FactionsUUID-->
+        <repository>
+            <id>enderzone-repo</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
     </repositories>
 
@@ -279,7 +287,7 @@
             <groupId>com.massivecraft</groupId>
             <!-- FactionsUUID -->
             <artifactId>Factions</artifactId>
-            <version>1.6.9.5-U0.1.21</version>
+            <version>1.6.9.5-U0.2.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
